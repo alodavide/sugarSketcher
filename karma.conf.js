@@ -28,7 +28,9 @@ module.exports = function(config) {
 
 
         // list of files to exclude
+        // Warning: Exclude views from test! (Possible change in the future).
         exclude: [
+            'src/js/views/**/*.js'
         ],
 
 

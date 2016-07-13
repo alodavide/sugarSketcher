@@ -6,3 +6,6 @@ src/js/dataStructure/Graph.js
 
 #Remove karma config
 karma.conf.js
+
+#Remove views TODO: fix it!
+src/js/views
