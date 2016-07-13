@@ -5,6 +5,6 @@
 
 import {Enum} from 'enumify';
 
-class Isomer extends Enum {}
+export default class Isomer extends Enum {}
 
 Isomer.initEnum(['L', 'D', 'UNDEFINED']);
