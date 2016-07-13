@@ -3,6 +3,8 @@
  * Version: 0.0.1
  */
 
+import Node from '../../dataStructure/Node';
+
 class Monosaccharide extends Node{
 
 

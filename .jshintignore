@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+node_modules
+
+#Remove sigma.js class to be scanned by jshint
+src/js/dataStructure/Graph.js
+
+#Remove karma config
+karma.conf.js

@@ -5,6 +5,6 @@
 
 import {Enum} from 'enumify';
 
-class Anomericity extends Enum {}
+export default class Anomericity extends Enum {}
 
 Anomericity.initEnum(['ALPHA', 'BETA', 'UNDEFINED']);

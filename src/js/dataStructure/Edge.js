@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-class Edge {
+export default class Edge {
     constructor(id, source, target){
         this.id = id;
         this.source = source;
