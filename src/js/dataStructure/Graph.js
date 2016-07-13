@@ -869,10 +869,9 @@
      * EXPORT:
      * *******
      *
-     * Added by dalocci: Commented export to use this as standalone class.
      */
 
-    /*if (typeof sigma !== 'undefined') {
+    if (typeof sigma !== 'undefined') {
         sigma.classes = sigma.classes || Object.create(null);
         sigma.classes.graph = graph;
     } else if (typeof exports !== 'undefined') {
@@ -880,9 +879,8 @@
             exports = module.exports = graph;
         exports.graph = graph;
     } else
-        this.graph = graph;*/
+        this.graph = graph;
 
-    //Added by dalocci
-    this.graph = graph;
+
 
 }).call(this);

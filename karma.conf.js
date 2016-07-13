@@ -36,8 +36,8 @@ module.exports = function(config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'src/js/**/*.js' : ['browserify'],
-            'src/test/**/test.js' : ['browserify'],
-            'src/test/**/test-*.js' : ['browserify']
+            'src/test/**/*.js' : ['browserify'],
+            'src/test/test.js' : ['browserify']
         },
 
 
@@ -66,7 +66,8 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome','PhantomJS'],
+        browsers: ['PhantomJS'],
+
 
         customLaunchers: {
             'PhantomJS_debug': {
@@ -81,7 +82,6 @@ module.exports = function(config) {
                 debug: true
             }
         },
-
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
         singleRun: false

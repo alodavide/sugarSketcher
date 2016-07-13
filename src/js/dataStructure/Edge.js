@@ -22,3 +22,4 @@ export default class Edge {
         return this.target;
     }
 }
+
