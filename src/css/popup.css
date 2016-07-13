@@ -1,0 +1,25 @@
+/* Styles for our labels */
+.label {
+    font-family: arial,helvetica,'sans-serif';
+    font-size: 24px;
+    text-anchor: middle;
+    alignment-baseline: text-before-edge;
+}
+
+.firstChoice, .secondChoice {
+    fill:black;
+    stroke: white;
+}
+
+.label {
+    stroke:white;
+}
+
+.bar:hover {
+    cursor: pointer;
+}
+
+svg {
+    border: 1px #000 solid;
+}
+
