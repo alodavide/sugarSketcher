@@ -21,7 +21,7 @@ export default class GlycosidicLinkage extends Edge{
         if(linkedCarbon instanceof LinkedCarbon){
             this.linkedCarbon = linkedCarbon;
         } else {
-            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbon.js";
+            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
         }
     }
 

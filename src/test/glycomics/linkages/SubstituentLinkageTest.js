@@ -15,6 +15,13 @@ QUnit.test( "Create new substituents linakge" , function( assert ) {
 
     assert.ok(edge.getLinkedCarbon() === LinkedCarbon.ONE,"Correct number of paths are returned");
     assert.ok(edge.getLinkedCarbon().value === 1,"Correct number of paths are returned");
+    assert.notOk(edge.getLinkedCarbon().value === LinkedCarbon.SIX,"Uncorrect value ok");
+    assert.notOk(edge.getLinkedCarbon().value === 3,"Uncorrect value ok");
+
+    var edge2 = new SubstituentLinkage('test','source1','target1',LinkedCarbon.UNDEFINED);
+    assert.ok(edge2.getLinkedCarbon() === LinkedCarbon.UNDEFINED,"Correct number of paths are returned");
+    assert.ok(edge2.getLinkedCarbon().value === 'undefined',"Correct number of paths are returned");
+    assert.notOk(edge2.getLinkedCarbon().value === 3,"Uncorrect value ok");
 });
 
 QUnit.test( "Create new glycosidic linkage Error Linakge" , function(assert) {
