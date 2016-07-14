@@ -1,27 +1,36 @@
+var shapeDivisions = [{
+        division: "circleShape",
+        display_division: "Circle"
+    }, {
+        division: "squareShape",
+        display_division: "Square"
+    }, {
+        division: "triangleShape",
+        display_division: "Triangle"
+    }, {
+        division: "starShape",
+        display_division: "Star"
+    }, {
+        division: "rectangleShape",
+        display_division: "Rectangle"
+    }, {
+        division: "diamondShape",
+        display_division: "Diamond"
+    }
+];
+
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
     division: "addNode",
     display_division: "Add Node",
     subDivisions : [{
-        division: "subNode",
-        display_division: "SubNode",
-        subDivisions: [{
-            division: "subNode1",
-            display_division: "SubNode 1"
-        },{
-            division: "subNode2",
-            display_division:"SubNode 2"
-        }]
+        division: "substituentNode",
+        display_division: "Substituent",
+        subDivisions: shapeDivisions
     }, {
-        division: "newNode",
-        display_division: "New Node",
-        subDivisions: [{
-            division: "newNode1",
-            display_division: "newNode 1"
-        },{
-            division: "newNode2",
-            display_division:"newNode 2"
-        }]
+        division: "monosaccharideNode",
+        display_division: "Monosaccharide",
+        subDivisions: shapeDivisions
     }]
 }, {
     division: "addStructure",
