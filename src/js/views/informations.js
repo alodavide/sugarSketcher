@@ -184,7 +184,7 @@ function updateMenu(chosenDivision) {
     // bars.exit().remove();
     //textNodes.exit().remove();
 }
-
+/*
 function loadTableInformations() {
     var cDim = {
         height: 40,
@@ -193,8 +193,8 @@ function loadTableInformations() {
     };
 
     d3.select("#titlesInfos").selectAll("*").remove(); // Reinitialize the svg actions menu
-    d3.select("#infosProposal").selectAll("*").remove(); // Reinitialize the svg labels menu
-    var infos = d3.select("#infosProposal"); // Infos
+    d3.select("#titlesInfosLabel").selectAll("*").remove(); // Reinitialize the svg labels menu
+    var infos = d3.select("#titlesInfosLabel"); // Infos
     var titles = d3.select("#titlesInfos"); // Titles
 
     // Height of our menu
@@ -233,10 +233,9 @@ function loadTableInformations() {
         })
         .attr("class", function() {
             return "info"
-        })
-    /*
-     *  Label drawing block
-     */
+        });
+
+    //Label drawing block
 
     var textNodes = infos.selectAll("text").data(tableInformations);
 
@@ -254,7 +253,7 @@ function loadTableInformations() {
     // remove old elements
     // bars.exit().remove();
     //textNodes.exit().remove();
-}
+}*/
 
 /**
  * Get SubDivisions of a searched division, using recursive calls
@@ -279,7 +278,6 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
 }
 
 d3.select("#svgMenu").style("display", "none");
-loadTableInformations();
 //d3.select("#svgTableInfos").style("display", "none");
 
 
@@ -291,6 +289,7 @@ document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
-        d3.selectAll('#nodeMenu').style("display", "none");
+        d3.selectAll('#nodeMenu').style("opacity", .9);
+        d3.select("#svgTableInfos").style("display", "none");
     }
 };

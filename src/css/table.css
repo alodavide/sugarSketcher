@@ -1,0 +1,19 @@
+.infoChoiceTitle {
+    width:30%;
+    text-align: center;
+    border-right: 1px solid white;
+}
+
+#rowTitleInfos {
+    width:1000px;
+    height:40px;
+}
+
+#tableChoice {
+    width:1000px;
+    background:black;
+    color:white;
+    font-family: arial,helvetica,'sans-serif';
+    font-size: 20px;
+    text-align:center;
+}

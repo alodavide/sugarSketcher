@@ -5,6 +5,7 @@
     <title>Directed Graph Editor</title>
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" href="../css/popup.css">
+    <link rel="stylesheet" href="../css/table.css">
 </head>
 
 <body>
@@ -15,10 +16,15 @@
             <g id="labels" />
         </g>
     </svg>
-    <svg id="svgTableInfos">
-        <g id="titlesInfos"/>
-        <g id="infosProposal"/>
-    </svg>
+    <div id="tableInformations">
+        <table id="tableChoice">
+            <tr id="rowTitleInfos">
+                <td class="infoChoiceTitle">Anomericity</td>
+                <td class="infoChoiceTitle">Isomer</td>
+                <td class="infoChoiceTitle">RNCType</td>
+            </tr>
+        </table>
+    </div>
 </div>
 <div id="viz"></div>
 </body>
