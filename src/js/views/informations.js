@@ -49,10 +49,21 @@ var colorDivisions = [{
         division:"brownColor",
         display_division: "Brown"
     }, {
-        division:"redCOlor",
+        division:"redColor",
         display_division: "Red"
     }
 ];
+
+var tableInformations = [{
+    information: "Anomericity",
+    possibilities: ['Alpha', 'Beta', '?']
+}, {
+    information: "Isomer",
+    possibilities: ['d', 'l', '?']
+}, {
+    information: "RNCType",
+    possibilities: ['p', 'l', '?']
+}];
 
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
@@ -90,8 +101,8 @@ var menuAction = [{
 function updateMenu(chosenDivision) {
     // Size and margin properties
     var cDim = {
-        height: 50,
-        width: 500,
+        height: 40,
+        width: 1000,
         barMargin: 0
     };
 
@@ -114,11 +125,13 @@ function updateMenu(chosenDivision) {
     });
     var newMenuAction = [];
 
+    // This case happens when update is called with no parameter (first update)
     if (typeof chosenDivision === 'undefined') { // First menu
         newMenuAction = menuAction;
-    } else {
+    } else { // Get SubDivisions that we want to update menu
         newMenuAction = getSubDivisions(menuAction, chosenDivision)
     }
+    // If there are no subdivisions to show, then hide the menu
     if (typeof newMenuAction === 'undefined') {
         d3.select("#svgMenu").style("display", "none");
         return;
@@ -126,15 +139,15 @@ function updateMenu(chosenDivision) {
     // Figure out how much space is actually available for the divisions
     var marginlessWidth = cDim.width - (cDim.barMargin * (newMenuAction.length - 1));
     cDim.barWidth = marginlessWidth / newMenuAction.length;
-    bars = actions.selectAll("rect").data(newMenuAction);
+    var bars = actions.selectAll("rect").data(newMenuAction);
     bars.enter().append("rect")
-        .attr("width", function (d, i) {
+        .attr("width", function () {
             return cDim.barWidth
         })
-        .attr("height", function (d, i) {
+        .attr("height", function () {
             return barHeight(10)
         })
-        .attr("y", function (d, i) {
+        .attr("y", function () {
             return cDim.height - barHeight(10);
         })
         .attr("x", function (d, i) {
@@ -143,7 +156,7 @@ function updateMenu(chosenDivision) {
         .attr("id", function (d) {
             return d.division;
         })
-        .attr("class", function(d) {
+        .attr("class", function() {
             return "bar choice"
         })
         .on("click", function(d) {
@@ -154,22 +167,93 @@ function updateMenu(chosenDivision) {
      *  Label drawing block
      */
 
-    textNodes = labels.selectAll("text").data(newMenuAction);
+    var textNodes = labels.selectAll("text").data(newMenuAction);
 
     textNodes.enter().append("text")
         .attr("class", "label")
         .attr("x", function (d, i) {
             return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
         })
-        .attr("y", function (d, i) {
+        .attr("y", function () {
             return cDim.height - barHeight(10) + 8;
         })
-        .text(function (d, i) {
+        .text(function (d)  {
             return d.display_division;
         });
     // remove old elements
-    bars.exit().remove();
-    textNodes.exit().remove();
+    // bars.exit().remove();
+    //textNodes.exit().remove();
+}
+
+function loadTableInformations() {
+    var cDim = {
+        height: 40,
+        width: 1000,
+        barMargin: 0
+    };
+
+    d3.select("#titlesInfos").selectAll("*").remove(); // Reinitialize the svg actions menu
+    d3.select("#infosProposal").selectAll("*").remove(); // Reinitialize the svg labels menu
+    var infos = d3.select("#infosProposal"); // Infos
+    var titles = d3.select("#titlesInfos"); // Titles
+
+    // Height of our menu
+    var maxHeight = 10;
+
+    // Scale function with heights.
+    var barHeight = d3.scale.linear()
+        .domain([0, maxHeight])
+        .range([0, cDim.height]);
+
+    // Set the height and width of our SVG element
+    var svgTableInfos = d3.select("#svgTableInfos").attr({
+        height: cDim.height,
+        width: cDim.width
+    });
+
+    // Figure out how much space is actually available for the divisions
+    var marginlessWidth = cDim.width - (cDim.barMargin * (tableInformations.length - 1));
+    cDim.barWidth = marginlessWidth / tableInformations.length;
+    var bars = titles.selectAll("rect").data(tableInformations);
+    bars.enter().append("rect")
+        .attr("width", function () {
+            return cDim.barWidth
+        })
+        .attr("height", function () {
+            return barHeight(10)
+        })
+        .attr("y", function () {
+            return cDim.height - barHeight(10);
+        })
+        .attr("x", function (d, i) {
+            return (cDim.barWidth + cDim.barMargin) * i;
+        })
+        .attr("id", function (d) {
+            return d.information;
+        })
+        .attr("class", function() {
+            return "info"
+        })
+    /*
+     *  Label drawing block
+     */
+
+    var textNodes = infos.selectAll("text").data(tableInformations);
+
+    textNodes.enter().append("text")
+        .attr("class", "label")
+        .attr("x", function (d, i) {
+            return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
+        })
+        .attr("y", function () {
+            return cDim.height - barHeight(10) + 8;
+        })
+        .text(function (d)  {
+            return d.information;
+        });
+    // remove old elements
+    // bars.exit().remove();
+    //textNodes.exit().remove();
 }
 
 /**
@@ -195,3 +279,18 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
 }
 
 d3.select("#svgMenu").style("display", "none");
+loadTableInformations();
+//d3.select("#svgTableInfos").style("display", "none");
+
+
+/**
+ * Just to allow if you clicked on a node by mistake to shut down the appeared menus
+ * @param e
+ */
+document.onkeydown = function (e) {
+    // Key code of escape
+    if (e.keyCode == 27) {
+        d3.select('#svgMenu').style("display", "none");
+        d3.selectAll('#nodeMenu').style("display", "none");
+    }
+};
