@@ -10,7 +10,7 @@ import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
 QUnit.module("Test GlycosidicLinkage object", {
 });
 
-QUnit.test( "Create new glycosidic linakge" , function( assert ) {
+QUnit.test( "Create new glycosidic linkage" , function( assert ) {
 
     var edge = new GlycosidicLinkages('test','source1','target1',AnomerCarbon.ONE,LinkedCarbon.TWO);
     assert.ok(edge.getAnomerCarbon() === AnomerCarbon.ONE,"Correct AnomerCarbon");
@@ -21,6 +21,10 @@ QUnit.test( "Create new glycosidic linakge" , function( assert ) {
     assert.notOk(edge.getAnomerCarbon().value === 5,"Uncorrect value ok");
 
     var edgeUndefined = new GlycosidicLinkages('test','source1','target1');
+    assert.ok(edgeUndefined.getAnomerCarbon() === AnomerCarbon.UNDEFINED,"Correct AnomerCarbon");
+    assert.ok(edgeUndefined.getLinkedCarbon() === LinkedCarbon.UNDEFINED,"Correct LinkedCarbon");
+    assert.notOk(edgeUndefined.getLinkedCarbon().value === 3,"Uncorrect value ok");
+    assert.notOk(edgeUndefined.getAnomerCarbon().value === 5,"Uncorrect value ok");
 });
 
 QUnit.test( "Create new glycosidic linkage Error Linakge" , function(assert) {

@@ -6,12 +6,12 @@
 import Node from '../../dataStructure/Node';
 import SubstituentType from '../../glycomics/dictionary/SubstituentType';
 
-class Substituent extends Node{
+export default class Substituent extends Node{
 
     constructor(id,substituentType){
         super(id);
 
-        if(substituentType instanceof SubstituentTypeb){
+        if(substituentType instanceof SubstituentType){
             this.substituentType = substituentType;
         } else if(typeof substituentType == 'undefined') {
             this.substituentType = SubstituentType.UNDEFINED;

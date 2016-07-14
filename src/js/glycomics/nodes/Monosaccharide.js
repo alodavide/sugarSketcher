@@ -9,7 +9,7 @@ import Isomer from '../../glycomics/dictionary/Isomer';
 import RingType from '../../glycomics/dictionary/RingType';
 import MonosaccharideType from '../../glycomics/dictionary/MonosaccharideType';
 
-class Monosaccharide extends Node{
+export default class Monosaccharide extends Node{
 
     constructor(id,monosaccharideType,anomericity,isomer,ringType){
         super(id);

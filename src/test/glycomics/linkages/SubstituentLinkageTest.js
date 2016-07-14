@@ -9,7 +9,7 @@ import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
 QUnit.module("Test SubstituentLinkage object", {
 });
 
-QUnit.test( "Create new substituents linakge" , function( assert ) {
+QUnit.test( "Create new substituents linkage" , function( assert ) {
 
     var edge = new SubstituentLinkage('test','source1','target1',LinkedCarbon.ONE);
 
@@ -22,6 +22,11 @@ QUnit.test( "Create new substituents linakge" , function( assert ) {
     assert.ok(edge2.getLinkedCarbon() === LinkedCarbon.UNDEFINED,"Correct number of paths are returned");
     assert.ok(edge2.getLinkedCarbon().value === 'undefined',"Correct number of paths are returned");
     assert.notOk(edge2.getLinkedCarbon().value === 3,"Uncorrect value ok");
+
+    var edge3 = new SubstituentLinkage('test','source1','target1');
+    assert.ok(edge3.getLinkedCarbon() === LinkedCarbon.UNDEFINED,"Correct number of paths are returned");
+    assert.ok(edge3.getLinkedCarbon().value === 'undefined',"Correct number of paths are returned");
+    assert.notOk(edge3.getLinkedCarbon().value === 3,"Uncorrect value ok");
 });
 
 QUnit.test( "Create new glycosidic linkage Error Linakge" , function(assert) {
