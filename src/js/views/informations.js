@@ -1,3 +1,4 @@
+// Shape Divisions with all possible monosaccharide shapes
 var shapeDivisions = [{
         division: "circleShape",
         display_division: "Circle"
@@ -16,6 +17,40 @@ var shapeDivisions = [{
     }, {
         division: "diamondShape",
         display_division: "Diamond"
+    }
+];
+
+// Color Divisions with all possible colors
+var colorDivisions = [{
+        division: "whiteColor",
+        display_division: "White"
+    }, {
+        division: "blueColor",
+        display_division: "Blue"
+    }, {
+        division: "greenColor",
+        display_division: "Green"
+    }, {
+        division: "yellowColor",
+        display_division: "Yellow"
+    }, {
+        division: "orangeColor",
+        display_division: "Orange"
+    }, {
+        division: "pinkColor",
+        display_division: "Pink"
+    }, {
+        division: "purpleColor",
+        display_division: "Purple"
+    }, {
+        division:"lightBlueColor",
+        display_division: "Light Blue"
+    }, {
+        division:"brownColor",
+        display_division: "Brown"
+    }, {
+        division:"redCOlor",
+        display_division: "Red"
     }
 ];
 
@@ -144,6 +179,9 @@ function updateMenu(chosenDivision) {
  * @returns {*}
  */
 function getSubDivisions (divisionToCheck, searchedDivision) {
+    if (searchedDivision.indexOf("Shape") > -1) {
+        return colorDivisions;
+    }
     if (divisionToCheck) {
         for (var div of divisionToCheck) {
             if (div.division == searchedDivision) {
