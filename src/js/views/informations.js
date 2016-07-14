@@ -1,20 +1,45 @@
-menuFirstAction = [{
+menuAction = [{
     division: "addNode",
-    display_division: "Add Node"
-}, {
-    division: "addStructure",
-    display_division: "Add Structure"
-}, {
-    division: "changeMono",
-    display_division: "Change Mono"
-}];
-
-menuSecondAction  = [{
-    division: "sub",
-    display_division: "Sub"
-}, {
-    division: "new",
-    display_division: "New"
+    display_division: "Add Node",
+    subDivisions : [{
+        division: "subNode",
+        display_division: "SubNode",
+        subDivisions: [{
+            division: "subNode1",
+            display_division: "SubNode 1"
+        },{
+            division: "subNode2",
+            display_division:"SubNode 2"
+        }]
+    }, {
+        division: "newNode",
+        display_division: "New Node",
+        subDivisions: [{
+            division: "newNode1",
+            display_division: "newNode 1"
+        },{
+            division: "newNode2",
+            display_division:"newNode 2"
+        }]
+    }]
+    }, {
+        division: "addStructure",
+        display_division: "Add Structure",
+        subDivisions : [{
+            division: "subStruct",
+            display_division: "Sub Struct",
+            subDivisions: [{
+                division: "subStruct1",
+                display_division: "SubStruct 1"
+            },{
+                division: "subStruct2",
+                display_division:"SubStruct 2"
+            }
+            ]
+        }]
+    }, {
+        division: "changeMono",
+        display_division: "Change Mono"
 }];
 
 function updateMenu(chosenDivision) {
@@ -33,26 +58,25 @@ function updateMenu(chosenDivision) {
 
     // Let's make a scale so the bar data fills the chart space.
     // First, we need to get the maximum value of our data set
-    maxHeight = 10;
+    var maxHeight = 10;
 
     // Now make the scale function.
-    barHeight = d3.scale.linear()
+    var barHeight = d3.scale.linear()
         .domain([0, maxHeight])
         .range([0, cDim.height]);
     // Set the height and width of our SVG element
-    svgMenu = d3.select("#svgMenu").attr({
+    var svgMenu = d3.select("#svgMenu").attr({
         height: cDim.height,
         width: cDim.width
     });
 
-    if (typeof chosenDivision === 'undefined') {
+    if (typeof chosenDivision === 'undefined') { // First menu
         // Figure out how much space is actually available
         // for the bars.
-        marginlessWidth = cDim.width - (cDim.barMargin * (menuFirstAction.length - 1));
-        cDim.barWidth = marginlessWidth / menuFirstAction.length;
-        console.log("undefined");
+        var marginlessWidth = cDim.width - (cDim.barMargin * (menuAction.length - 1));
+        cDim.barWidth = marginlessWidth / menuAction.length;
         // Join our data to the rectangles
-        bars = actions.selectAll("rect").data(menuFirstAction);
+        var bars = actions.selectAll("rect").data(menuAction);
 
         bars.enter().append("rect")
             .attr("width", function (d, i) {
@@ -71,7 +95,7 @@ function updateMenu(chosenDivision) {
                 return d.division;
             })
             .attr("class", function(d) {
-                return "bar firstChoice"
+                return "bar choice"
             })
             .on('click', function(d) {
                 updateMenu(d.division)
@@ -82,7 +106,7 @@ function updateMenu(chosenDivision) {
          *  Place some simple labels
          */
 
-        textNodes = labels.selectAll("text").data(menuFirstAction);
+        var textNodes = labels.selectAll("text").data(menuAction);
 
         textNodes.enter().append("text")
             .attr("class", "label")
@@ -96,11 +120,14 @@ function updateMenu(chosenDivision) {
                 return d.display_division;
             });
     } else {
+        var newMenuAction = getSubDivisions(menuAction,chosenDivision);
+        console.log("je recois :");
+        console.log(newMenuAction);
         // Figure out how much space is actually available
         // for the bars.
-        marginlessWidth = cDim.width - (cDim.barMargin * (menuSecondAction.length - 1));
-        cDim.barWidth = marginlessWidth / menuSecondAction.length;
-        bars = actions.selectAll("rect").data(menuSecondAction);
+        marginlessWidth = cDim.width - (cDim.barMargin * (newMenuAction.length - 1));
+        cDim.barWidth = marginlessWidth / newMenuAction.length;
+        bars = actions.selectAll("rect").data(newMenuAction);
         console.log("clicked on " + chosenDivision);
         bars.enter().append("rect")
             .attr("width", function (d, i) {
@@ -119,10 +146,11 @@ function updateMenu(chosenDivision) {
                 return d.division;
             })
             .attr("class", function(d) {
-                return "bar secondChoice"
+                return "bar choice"
             })
             .on("click", function(d) {
                 console.log("clicked on " + d.display_division);
+                updateMenu(d.division);
             });
 
         /*
@@ -130,7 +158,7 @@ function updateMenu(chosenDivision) {
          *  Place some simple labels
          */
 
-        textNodes = labels.selectAll("text").data(menuSecondAction);
+        textNodes = labels.selectAll("text").data(newMenuAction);
 
         textNodes.enter().append("text")
             .attr("class", "label")
@@ -149,7 +177,26 @@ function updateMenu(chosenDivision) {
     }
 }
 
+/**
+ * Get SubDivisions of a searched division, using recursive calls
+ * @param divisionToCheck
+ * @param searchedDivision
+ * @returns {*}
+ */
+function getSubDivisions (divisionToCheck, searchedDivision) {
+    console.log("Searching the subdivs");
+    console.log(divisionToCheck);
+    if (divisionToCheck) {
+        for (var div of divisionToCheck) {
+            if (div.division == searchedDivision) {
+                return div.subDivisions;
+            }
+
+            var found = getSubDivisions(div.subDivisions, searchedDivision);
+            if (found) return found;
+        }
+    }
+}
+
+
 updateMenu();
-
-
-

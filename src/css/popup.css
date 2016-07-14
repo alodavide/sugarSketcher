@@ -6,7 +6,7 @@
     alignment-baseline: text-before-edge;
 }
 
-.firstChoice, .secondChoice {
+.choice {
     fill:black;
     stroke: white;
 }
