@@ -19,6 +19,8 @@ QUnit.test( "Create new glycosidic linakge" , function( assert ) {
     assert.ok(edge.getLinkedCarbon().value === 2,"Correct value");
     assert.notOk(edge.getLinkedCarbon().value === 3,"Uncorrect value ok");
     assert.notOk(edge.getAnomerCarbon().value === 5,"Uncorrect value ok");
+
+    var edgeUndefined = new GlycosidicLinkages('test','source1','target1');
 });
 
 QUnit.test( "Create new glycosidic linkage Error Linakge" , function(assert) {

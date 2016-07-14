@@ -4,10 +4,14 @@
  */
 
 export default class Edge {
-    constructor(id, source, target){
+    constructor(id, sourceNode, targetNode){
+        if (typeof id == 'undefined' || typeof sourceNode == 'undefined' || typeof targetNode  == 'undefined'){
+            throw "The parameter id, sourceNode and targetNode cannot be undefined";
+        }
+
         this.id = id;
-        this.source = source;
-        this.target = target;
+        this.source = sourceNode;
+        this.target = targetNode;
     }
 
     getEdgeId(){

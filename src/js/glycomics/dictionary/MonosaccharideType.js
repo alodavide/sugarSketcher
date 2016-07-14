@@ -5,9 +5,9 @@
 
 import {Enum} from 'enumify';
 
-export default class LinkedCarbon extends Enum {}
+export default class MonosaccharideType extends Enum {}
 
-LinkedCarbon.initEnum({
+MonosaccharideType.initEnum({
     Hex: {
         shape: 'circle',
         color: '#FFFFFF',
@@ -402,6 +402,11 @@ LinkedCarbon.initEnum({
     Psi: {
         shape: 'Pentagon',
         color: '#FF87C2',
+        bisected: false
+    },
+    UNDEFINED: {
+        shape: 'undefined',
+        color: 'undefined',
         bisected: false
     }
 });

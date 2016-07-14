@@ -12,6 +12,8 @@ export default class SubstituentLinkage extends Edge{
 
         if(linkedCarbon instanceof LinkedCarbon){
             this.linkedCarbon = linkedCarbon;
+        } else if(typeof linkedCarbon == 'undefined') {
+            this.linkedCarbon = LinkedCarbon.UNDEFINED;
         } else {
             throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
         }
