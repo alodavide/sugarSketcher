@@ -11,15 +11,24 @@ export default class SubstituentLinkage extends Edge{
         super(id,target,source);
 
         if(linkedCarbon instanceof LinkedCarbon){
-            this.linkedCarbon = linkedCarbon;
+            this._linkedCarbon = linkedCarbon;
         } else if(typeof linkedCarbon == 'undefined') {
-            this.linkedCarbon = LinkedCarbon.UNDEFINED;
+            this._linkedCarbon = LinkedCarbon.UNDEFINED;
         } else {
             throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
         }
     }
 
-    getLinkedCarbon(){
-        return this.linkedCarbon;
+    get linkedCarbon(){
+        return this._linkedCarbon;
+    }
+
+    set linkedCarbon(linkedCarbon){
+        if(linkedCarbon instanceof LinkedCarbon) {
+            this._linkedCarbon = linkedCarbon;
+        } else {
+            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+        }
+        return linkedCarbon;
     }
 }

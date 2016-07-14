@@ -13,27 +13,45 @@ export default class GlycosidicLinkage extends Edge{
         super(id,sourceNode,targetNode);
 
         if(anomerCarbon instanceof AnomerCarbon){
-            this.anomerCarbon = anomerCarbon;
+            this._anomerCarbon = anomerCarbon;
         } else if(typeof anomerCarbon == 'undefined') {
-            this.anomerCarbon = AnomerCarbon.UNDEFINED;
+            this._anomerCarbon = AnomerCarbon.UNDEFINED;
         } else {
             throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
         }
 
         if(linkedCarbon instanceof LinkedCarbon){
-            this.linkedCarbon = linkedCarbon;
+            this._linkedCarbon = linkedCarbon;
         } else if(typeof linkedCarbon == 'undefined') {
-            this.linkedCarbon = LinkedCarbon.UNDEFINED;
+            this._linkedCarbon = LinkedCarbon.UNDEFINED;
         } else {
             throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
         }
     }
 
-    getAnomerCarbon(){
-        return this.anomerCarbon;
+    get anomerCarbon(){
+        return this._anomerCarbon;
     }
 
-    getLinkedCarbon(){
-        return this.linkedCarbon;
+    get linkedCarbon(){
+        return this._linkedCarbon;
+    }
+
+    set anomerCarbon(anomerCarbon){
+        if(anomerCarbon instanceof AnomerCarbon) {
+            this._anomerCarbon = anomerCarbon;
+        } else {
+            throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
+        }
+        return anomerCarbon;
+    }
+
+    set linkedCarbon(linkedCarbon){
+        if(linkedCarbon instanceof LinkedCarbon) {
+            this._linkedCarbon = linkedCarbon;
+        } else {
+            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+        }
+        return linkedCarbon;
     }
 }

@@ -9,6 +9,8 @@ export default class Edge {
             throw "The parameter id, sourceNode and targetNode cannot be undefined";
         }
 
+        //WARNING: Do not change this properties name !
+        //They are used by the graph class in Sigma.js
         this.id = id;
         this.source = sourceNode;
         this.target = targetNode;

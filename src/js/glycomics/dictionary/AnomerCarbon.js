@@ -14,7 +14,7 @@ AnomerCarbon.initEnum({
     TWO: {
         value: 2
     },
-    TREE: {
+    THREE: {
         value: 3
     },
     FOUR:{

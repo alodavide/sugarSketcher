@@ -1,4 +1,0 @@
-/**
- * Author:  Davide Alocci
- * Version: 0.0.1
- */
