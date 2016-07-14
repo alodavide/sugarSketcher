@@ -68,12 +68,16 @@ function updateMenu(chosenDivision) {
         height: cDim.height,
         width: cDim.width
     });
-    var newMenuAction;
+    var newMenuAction = [];
 
     if (typeof chosenDivision === 'undefined') { // First menu
         newMenuAction = menuAction;
     } else {
         newMenuAction = getSubDivisions(menuAction, chosenDivision)
+    }
+    if (typeof newMenuAction === 'undefined') {
+        d3.select("#svgMenu").style("display", "none");
+        return;
     }
     // Figure out how much space is actually available for the divisions
     var marginlessWidth = cDim.width - (cDim.barMargin * (newMenuAction.length - 1));
@@ -131,8 +135,6 @@ function updateMenu(chosenDivision) {
  * @returns {*}
  */
 function getSubDivisions (divisionToCheck, searchedDivision) {
-    console.log("Searching the subdivs");
-    console.log(divisionToCheck);
     if (divisionToCheck) {
         for (var div of divisionToCheck) {
             if (div.division == searchedDivision) {
@@ -145,5 +147,4 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
     }
 }
 
-
-updateMenu();
+d3.select("#svgMenu").style("display", "none");
