@@ -11,9 +11,18 @@
     cursor:pointer;
 }
 
+.infoChoiceCell:hover {
+    background:white;
+    color:black;
+}
+
 #rowTitleInfos {
     width:1000px;
     height:40px;
+}
+
+#tableInformations {
+    display:none;
 }
 
 #tableChoice {

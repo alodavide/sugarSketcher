@@ -1,3 +1,37 @@
+// Event listener for td
+var choiceCells = document.getElementsByClassName("infoChoiceCell");
+for (var cell of choiceCells) {
+    cell.addEventListener('click', function(e) {
+        // Select or unselect a cell
+        var clickedCell = d3.select("#"+e.target.id);
+        // Gets classes of the clicked cell
+        var classNames =  $(e.target).attr("class").split(' ');
+        //Remove the selected classes of the list, because unneeded
+        var indexSelected = classNames.indexOf("selectedChoice");
+        if(indexSelected > -1) {
+            classNames.splice(indexSelected, 1);
+        }
+        var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
+        for (var other of otherCells[0]) {
+            console.log(other);
+            if (other.id != e.target.id) {
+                if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
+                    d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
+                }
+            }
+        }
+        console.log("yo");
+        console.log(otherCells);
+        // Invert color and background
+        if (clickedCell.classed("selectedChoice")) {
+            clickedCell.style("background", "black").style("color", "white").classed("selectedChoice", false);
+        } else {
+            clickedCell.style("background", "white").style("color", "black").classed("selectedChoice", true);
+        }
+    });
+}
+
+
 // Shape Divisions with all possible monosaccharide shapes
 var shapeDivisions = [{
         division: "circleShape",
@@ -129,7 +163,13 @@ function updateMenu(chosenDivision) {
     if (typeof chosenDivision === 'undefined') { // First menu
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
-        newMenuAction = getSubDivisions(menuAction, chosenDivision)
+        if (chosenDivision.indexOf("Color") > -1) {
+            d3.select("#tableInformations").transition().duration(200).style("display", "block");
+            d3.select("#svgMenu").transition().duration(200).style("display", "none");
+            return;
+        } else {
+            newMenuAction = getSubDivisions(menuAction, chosenDivision)
+        }
     }
     // If there are no subdivisions to show, then hide the menu
     if (typeof newMenuAction === 'undefined') {
@@ -207,7 +247,6 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
 }
 
 d3.select("#svgMenu").style("display", "none");
-//d3.select("#svgTableInfos").style("display", "none");
 
 
 /**
@@ -220,6 +259,7 @@ document.onkeydown = function (e) {
         d3.select('#svgMenu').style("display", "none");
         console.log(d3.selectAll('#nodeMenu'));
         d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
-        d3.select("#svgTableInfos").style("display", "none");
+        d3.select("#tableInformations").style("display", "none");
     }
 };
+
