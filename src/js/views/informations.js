@@ -184,77 +184,6 @@ function updateMenu(chosenDivision) {
     // bars.exit().remove();
     //textNodes.exit().remove();
 }
-/*
-function loadTableInformations() {
-    var cDim = {
-        height: 40,
-        width: 1000,
-        barMargin: 0
-    };
-
-    d3.select("#titlesInfos").selectAll("*").remove(); // Reinitialize the svg actions menu
-    d3.select("#titlesInfosLabel").selectAll("*").remove(); // Reinitialize the svg labels menu
-    var infos = d3.select("#titlesInfosLabel"); // Infos
-    var titles = d3.select("#titlesInfos"); // Titles
-
-    // Height of our menu
-    var maxHeight = 10;
-
-    // Scale function with heights.
-    var barHeight = d3.scale.linear()
-        .domain([0, maxHeight])
-        .range([0, cDim.height]);
-
-    // Set the height and width of our SVG element
-    var svgTableInfos = d3.select("#svgTableInfos").attr({
-        height: cDim.height,
-        width: cDim.width
-    });
-
-    // Figure out how much space is actually available for the divisions
-    var marginlessWidth = cDim.width - (cDim.barMargin * (tableInformations.length - 1));
-    cDim.barWidth = marginlessWidth / tableInformations.length;
-    var bars = titles.selectAll("rect").data(tableInformations);
-    bars.enter().append("rect")
-        .attr("width", function () {
-            return cDim.barWidth
-        })
-        .attr("height", function () {
-            return barHeight(10)
-        })
-        .attr("y", function () {
-            return cDim.height - barHeight(10);
-        })
-        .attr("x", function (d, i) {
-            return (cDim.barWidth + cDim.barMargin) * i;
-        })
-        .attr("id", function (d) {
-            return d.information;
-        })
-        .attr("class", function() {
-            return "info"
-        });
-
-    //Label drawing block
-
-    var textNodes = infos.selectAll("text").data(tableInformations);
-
-    textNodes.enter().append("text")
-        .attr("class", "label")
-        .attr("x", function (d, i) {
-            return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
-        })
-        .attr("y", function () {
-            return cDim.height - barHeight(10) + 8;
-        })
-        .text(function (d)  {
-            return d.information;
-        });
-    // remove old elements
-    // bars.exit().remove();
-    //textNodes.exit().remove();
-}*/
-
 /**
  * Get SubDivisions of a searched division, using recursive calls
  * @param divisionToCheck
@@ -289,7 +218,8 @@ document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
-        d3.selectAll('#nodeMenu').style("opacity", .9);
+        console.log(d3.selectAll('#nodeMenu'));
+        d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
         d3.select("#svgTableInfos").style("display", "none");
     }
 };
