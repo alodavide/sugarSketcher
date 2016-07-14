@@ -11,17 +11,16 @@ for (var cell of choiceCells) {
         if(indexSelected > -1) {
             classNames.splice(indexSelected, 1);
         }
+        // Get the other cells with same classes (i.e for the same choice)
         var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
         for (var other of otherCells[0]) {
-            console.log(other);
+            // If one is selected, it's unselected
             if (other.id != e.target.id) {
                 if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
                     d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
                 }
             }
         }
-        console.log("yo");
-        console.log(otherCells);
         // Invert color and background
         if (clickedCell.classed("selectedChoice")) {
             clickedCell.style("background", "black").style("color", "white").classed("selectedChoice", false);
