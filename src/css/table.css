@@ -1,0 +1,37 @@
+.infoChoiceTitle {
+    width:30%;
+    text-align: center;
+    border-right: 1px solid white;
+}
+
+.infoChoiceCell {
+    text-align: center;
+    border-right:1px solid white;
+    border-top: 1px solid white;
+    cursor:pointer;
+}
+
+.infoChoiceCell:hover {
+    background:white;
+    color:black;
+}
+
+#rowTitleInfos {
+    width:1000px;
+    height:40px;
+}
+
+#tableInformations {
+    display:none;
+    margin-bottom: 10px;
+}
+
+#tableChoice {
+    width:1000px;
+    background:black;
+    color:white;
+    font-family: arial,helvetica,'sans-serif';
+    font-size: 20px;
+    text-align:center;
+    border-bottom:1px solid white;
+}

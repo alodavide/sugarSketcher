@@ -1,7 +1,7 @@
 /* Styles for our labels */
 .label {
     font-family: arial,helvetica,'sans-serif';
-    font-size: 24px;
+    font-size: 20px;
     text-anchor: middle;
     alignment-baseline: text-before-edge;
 }
@@ -21,5 +21,9 @@
 
 svg {
     border: 1px #000 solid;
+}
+
+#svgMenu {
+    margin-bottom: 10px;
 }
 

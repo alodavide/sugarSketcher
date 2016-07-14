@@ -5,6 +5,8 @@
     <title>Directed Graph Editor</title>
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" href="../css/popup.css">
+    <link rel="stylesheet" href="../css/table.css">
+    <script type="text/javascript" src="../js/views/jquery.min.js"></script>
 </head>
 
 <body>
@@ -15,6 +17,26 @@
             <g id="labels" />
         </g>
     </svg>
+    <div id="tableInformations">
+        <table id="tableChoice">
+            <tr id="rowTitleInfos">
+                <th colspan="3" class="infoChoiceTitle">Anomericity</th>
+                <th colspan="3" class="infoChoiceTitle">Isomer</th>
+                <th colspan="3" class="infoChoiceTitle">RNCType</th>
+            </tr>
+            <tr id="rowChoiceInfos">
+                <td id="alphaAnom" class="infoChoiceCell choiceAnomericity">α</td>
+                <td id="betaAnom" class="infoChoiceCell choiceAnomericity">β</td>
+                <td id="unknownAnom" class="infoChoiceCell choiceAnomericity">?</td>
+                <td id="dIsomer" class="infoChoiceCell choiceIsomer">d</td>
+                <td id="lIsomer" class="infoChoiceCell choiceIsomer">l</td>
+                <td id="unknownIso" class="infoChoiceCell choiceIsomer">?</td>
+                <td id="PType" class="infoChoiceCell choiceType">P</td>
+                <td id="LType" class="infoChoiceCell choiceType">L</td>
+                <td id="unknownType" class="infoChoiceCell choiceType">?</td>
+            </tr>
+        </table>
+    </div>
 </div>
 <div id="viz"></div>
 </body>

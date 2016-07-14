@@ -39,7 +39,9 @@ var addNewNode = function() {
         })
         .on('click', function(d){
             d3.event.stopPropagation();
-
+            updateMenu();
+            d3.select("#tableInformations").style("display","none");
+            d3.select("#svgMenu").style("display", "block");
             if (d3.event.defaultPrevented) return; // click suppressed
 
             if (d3.event.defaultPrevented) return; // click suppressed
@@ -164,6 +166,9 @@ var node = vis.selectAll("g.node")
     .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
     .on('click', function(d){
         d3.event.stopPropagation();
+        updateMenu();
+        d3.select("#tableInformations").style("display","none");
+        d3.select("#svgMenu").style("display", "block");
         if (d3.event.defaultPrevented) return; // click suppressed
         console.log(d);
         if(d3.select('#nodeMenu').style("opacity") == 0) {

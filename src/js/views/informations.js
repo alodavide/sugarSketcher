@@ -1,27 +1,115 @@
+// Event listener for td
+var choiceCells = document.getElementsByClassName("infoChoiceCell");
+for (var cell of choiceCells) {
+    cell.addEventListener('click', function(e) {
+        // Select or unselect a cell
+        var clickedCell = d3.select("#"+e.target.id);
+        // Gets classes of the clicked cell
+        var classNames =  $(e.target).attr("class").split(' ');
+        //Remove the selected classes of the list, because unneeded
+        var indexSelected = classNames.indexOf("selectedChoice");
+        if(indexSelected > -1) {
+            classNames.splice(indexSelected, 1);
+        }
+        // Get the other cells with same classes (i.e for the same choice)
+        var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
+        for (var other of otherCells[0]) {
+            // If one is selected, it's unselected
+            if (other.id != e.target.id) {
+                if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
+                    d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
+                }
+            }
+        }
+        // Invert color and background
+        if (clickedCell.classed("selectedChoice")) {
+            clickedCell.style("background", "black").style("color", "white").classed("selectedChoice", false);
+        } else {
+            clickedCell.style("background", "white").style("color", "black").classed("selectedChoice", true);
+        }
+    });
+}
+
+
+// Shape Divisions with all possible monosaccharide shapes
+var shapeDivisions = [{
+        division: "circleShape",
+        display_division: "Circle"
+    }, {
+        division: "squareShape",
+        display_division: "Square"
+    }, {
+        division: "triangleShape",
+        display_division: "Triangle"
+    }, {
+        division: "starShape",
+        display_division: "Star"
+    }, {
+        division: "rectangleShape",
+        display_division: "Rectangle"
+    }, {
+        division: "diamondShape",
+        display_division: "Diamond"
+    }
+];
+
+// Color Divisions with all possible colors
+var colorDivisions = [{
+        division: "whiteColor",
+        display_division: "White"
+    }, {
+        division: "blueColor",
+        display_division: "Blue"
+    }, {
+        division: "greenColor",
+        display_division: "Green"
+    }, {
+        division: "yellowColor",
+        display_division: "Yellow"
+    }, {
+        division: "orangeColor",
+        display_division: "Orange"
+    }, {
+        division: "pinkColor",
+        display_division: "Pink"
+    }, {
+        division: "purpleColor",
+        display_division: "Purple"
+    }, {
+        division:"lightBlueColor",
+        display_division: "Light Blue"
+    }, {
+        division:"brownColor",
+        display_division: "Brown"
+    }, {
+        division:"redColor",
+        display_division: "Red"
+    }
+];
+
+var tableInformations = [{
+    information: "Anomericity",
+    possibilities: ['Alpha', 'Beta', '?']
+}, {
+    information: "Isomer",
+    possibilities: ['d', 'l', '?']
+}, {
+    information: "RNCType",
+    possibilities: ['p', 'l', '?']
+}];
+
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
     division: "addNode",
     display_division: "Add Node",
     subDivisions : [{
-        division: "subNode",
-        display_division: "SubNode",
-        subDivisions: [{
-            division: "subNode1",
-            display_division: "SubNode 1"
-        },{
-            division: "subNode2",
-            display_division:"SubNode 2"
-        }]
+        division: "substituentNode",
+        display_division: "Substituent",
+        subDivisions: shapeDivisions
     }, {
-        division: "newNode",
-        display_division: "New Node",
-        subDivisions: [{
-            division: "newNode1",
-            display_division: "newNode 1"
-        },{
-            division: "newNode2",
-            display_division:"newNode 2"
-        }]
+        division: "monosaccharideNode",
+        display_division: "Monosaccharide",
+        subDivisions: shapeDivisions
     }]
 }, {
     division: "addStructure",
@@ -46,8 +134,8 @@ var menuAction = [{
 function updateMenu(chosenDivision) {
     // Size and margin properties
     var cDim = {
-        height: 50,
-        width: 500,
+        height: 40,
+        width: 1000,
         barMargin: 0
     };
 
@@ -68,25 +156,37 @@ function updateMenu(chosenDivision) {
         height: cDim.height,
         width: cDim.width
     });
-    var newMenuAction;
+    var newMenuAction = [];
 
+    // This case happens when update is called with no parameter (first update)
     if (typeof chosenDivision === 'undefined') { // First menu
         newMenuAction = menuAction;
-    } else {
-        newMenuAction = getSubDivisions(menuAction, chosenDivision)
+    } else { // Get SubDivisions that we want to update menu
+        if (chosenDivision.indexOf("Color") > -1) {
+            d3.select("#tableInformations").transition().duration(200).style("display", "block");
+            d3.select("#svgMenu").transition().duration(200).style("display", "none");
+            return;
+        } else {
+            newMenuAction = getSubDivisions(menuAction, chosenDivision)
+        }
+    }
+    // If there are no subdivisions to show, then hide the menu
+    if (typeof newMenuAction === 'undefined') {
+        d3.select("#svgMenu").style("display", "none");
+        return;
     }
     // Figure out how much space is actually available for the divisions
     var marginlessWidth = cDim.width - (cDim.barMargin * (newMenuAction.length - 1));
     cDim.barWidth = marginlessWidth / newMenuAction.length;
-    bars = actions.selectAll("rect").data(newMenuAction);
+    var bars = actions.selectAll("rect").data(newMenuAction);
     bars.enter().append("rect")
-        .attr("width", function (d, i) {
+        .attr("width", function () {
             return cDim.barWidth
         })
-        .attr("height", function (d, i) {
+        .attr("height", function () {
             return barHeight(10)
         })
-        .attr("y", function (d, i) {
+        .attr("y", function () {
             return cDim.height - barHeight(10);
         })
         .attr("x", function (d, i) {
@@ -95,7 +195,7 @@ function updateMenu(chosenDivision) {
         .attr("id", function (d) {
             return d.division;
         })
-        .attr("class", function(d) {
+        .attr("class", function() {
             return "bar choice"
         })
         .on("click", function(d) {
@@ -106,24 +206,23 @@ function updateMenu(chosenDivision) {
      *  Label drawing block
      */
 
-    textNodes = labels.selectAll("text").data(newMenuAction);
+    var textNodes = labels.selectAll("text").data(newMenuAction);
 
     textNodes.enter().append("text")
         .attr("class", "label")
         .attr("x", function (d, i) {
             return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
         })
-        .attr("y", function (d, i) {
+        .attr("y", function () {
             return cDim.height - barHeight(10) + 8;
         })
-        .text(function (d, i) {
+        .text(function (d)  {
             return d.display_division;
         });
     // remove old elements
-    bars.exit().remove();
-    textNodes.exit().remove();
+    // bars.exit().remove();
+    //textNodes.exit().remove();
 }
-
 /**
  * Get SubDivisions of a searched division, using recursive calls
  * @param divisionToCheck
@@ -131,8 +230,9 @@ function updateMenu(chosenDivision) {
  * @returns {*}
  */
 function getSubDivisions (divisionToCheck, searchedDivision) {
-    console.log("Searching the subdivs");
-    console.log(divisionToCheck);
+    if (searchedDivision.indexOf("Shape") > -1) {
+        return colorDivisions;
+    }
     if (divisionToCheck) {
         for (var div of divisionToCheck) {
             if (div.division == searchedDivision) {
@@ -145,5 +245,20 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
     }
 }
 
+d3.select("#svgMenu").style("display", "none");
 
-updateMenu();
+
+/**
+ * Just to allow if you clicked on a node by mistake to shut down the appeared menus
+ * @param e
+ */
+document.onkeydown = function (e) {
+    // Key code of escape
+    if (e.keyCode == 27) {
+        d3.select('#svgMenu').style("display", "none");
+        console.log(d3.selectAll('#nodeMenu'));
+        d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
+        d3.select("#tableInformations").style("display", "none");
+    }
+};
+
