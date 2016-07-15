@@ -267,15 +267,21 @@ document.onkeydown = function (e) {
 
 function checkSelectedThreeValues() {
     var selectedCells = d3.selectAll(".selectedChoice");
+    // The user selected the three values
     if(selectedCells[0].length === 3) {
-        console.log("He chose one of each");
+        var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
+        var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
+        var type = selectedCells.filter(".choiceType")[0][0].innerText;
+        console.log("Anomericity chosen: " + anomericity);
+        console.log("Isomer chosen: " + isomer);
+        console.log("Type chosen: " + type);
     }
 }
 
 function unselectChoices() {
-    var selectedChoices = d3.selectAll(".selectedChoice");
+    var selectedChoices = d3.selectAll(".selectedChoice")[0];
     console.log("selected");
-    for (var selected of selectedChoices[0]) {
+    for (var selected of selectedChoices) {
         d3.select("#" + selected.id).style("background","black").style("color", "white").classed("selectedChoice", false);
     }
 }
