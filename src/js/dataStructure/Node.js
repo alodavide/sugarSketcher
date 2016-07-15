@@ -12,7 +12,7 @@ export default class Node {
         }
     }
 
-    getNodeId(){
+    getId(){
         return this.id;
     }
 }

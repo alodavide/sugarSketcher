@@ -10,8 +10,8 @@ QUnit.module("Test Node object", {});
 QUnit.test( "Create new Node" , function( assert ) {
 
     var node = new Node('test');
-    assert.ok(node.getNodeId() === 'test',"Correct id");
-    assert.notOk(node.getNodeId() === 'id',"Wrong id");
+    assert.ok(node.getId() === 'test',"Correct id");
+    assert.notOk(node.getId() === 'id',"Wrong id");
 });
 
 QUnit.test( "Create Node - Missing id" , function(assert) {

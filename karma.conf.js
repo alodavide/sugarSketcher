@@ -38,8 +38,8 @@ module.exports = function(config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'src/js/**/*.js' : ['browserify','coverage'],
-            'src/test/**/*.js' : ['browserify','coverage'],
-            'src/test/test.js' : ['browserify','coverage']
+            'src/test/**/*.js' : ['browserify'],
+            'src/test/test.js' : ['browserify']
         },
 
 

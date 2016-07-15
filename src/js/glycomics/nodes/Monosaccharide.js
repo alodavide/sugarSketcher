@@ -15,53 +15,84 @@ export default class Monosaccharide extends Node{
         super(id);
 
         if(monosaccharideType instanceof MonosaccharideType){
-            this.monosaccharideType = monosaccharideType;
+            this._monosaccharideType = monosaccharideType;
         } else if(typeof monosaccharideType == 'undefined') {
-            this.monosaccharideType = MonosaccharideType.UNDEFINED;
+            this._monosaccharideType = MonosaccharideType.UNDEFINED;
         } else{
-            throw 'Please use the Anomericity class and forget about string. Extend the enum if you need a specific value';
+            throw 'Please use the MonosaccharideType class and forget about string. Extend the enum if you need a specific value';
         }
 
         if(anomericity instanceof Anomericity){
-            this.anomericity = anomericity;
+            this._anomericity = anomericity;
         } else if(typeof anomericity == 'undefined') {
-            this.anomericity = Anomericity.UNDEFINED;
+            this._anomericity = Anomericity.UNDEFINED;
         } else {
             throw 'Please use the Anomericity class and forget about string. Extend the enum if you need a specific value';
         }
 
         if(isomer instanceof Isomer){
-            this.isomer = isomer;
+            this._isomer = isomer;
         } else if(typeof isomer == 'undefined') {
-            this.isomer = Isomer.UNDEFINED;
+            this._isomer = Isomer.UNDEFINED;
         } else {
             throw 'Please use the Isomer class and forget about string. Extend the enum if you need a specific value';
         }
 
         if(ringType instanceof RingType){
-            this.ringType = ringType;
+            this._ringType = ringType;
         } else if(typeof ringType == 'undefined') {
-            this.ringType = RingType.UNDEFINED;
+            this._ringType = RingType.UNDEFINED;
         } else{
             throw 'Please use the RingType class and forget about string. Extend the enum if you need a specific value';
         }
 
     }
 
-    getRingType(){
-        return this.ringType;
+    get ringType(){
+        return this._ringType;
     }
 
-    getMonosaccharideType(){
-        return this.monosaccharideType;
+    get monosaccharideType(){
+        return this._monosaccharideType;
     }
 
-    getIsomer(){
-        return this.isomer;
+    get isomer(){
+        return this._isomer;
     }
 
-    getAnomericity(){
-        return this.anomericity;
+    get anomericity(){
+        return this._anomericity;
     }
 
+    set ringType(ringType){
+        if(ringType instanceof RingType){
+            this._ringType = ringType;
+        } else{
+            throw 'Please use the RingType class and forget about string. Extend the enum if you need a specific value';
+        }
+    }
+
+    set monosaccharideType(monosaccharideType){
+        if(monosaccharideType instanceof MonosaccharideType){
+            this._monosaccharideType = monosaccharideType;
+        } else{
+            throw 'Please use the MonosaccharideType class and forget about string. Extend the enum if you need a specific value';
+        }
+    }
+
+    set isomer(isomer){
+        if(isomer instanceof Isomer){
+            this._isomer = isomer;
+        } else {
+            throw 'Please use the Isomer class and forget about string. Extend the enum if you need a specific value';
+        }
+    }
+
+    set anomericity(anomericity){
+        if(anomericity instanceof Anomericity){
+            this._anomericity = anomericity;
+        } else {
+            throw 'Please use the Anomericity class and forget about string. Extend the enum if you need a specific value';
+        }
+    }
 }

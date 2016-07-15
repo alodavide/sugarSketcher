@@ -12,16 +12,24 @@ export default class Substituent extends Node{
         super(id);
 
         if(substituentType instanceof SubstituentType){
-            this.substituentType = substituentType;
+            this._substituentType = substituentType;
         } else if(typeof substituentType == 'undefined') {
-            this.substituentType = SubstituentType.UNDEFINED;
+            this._substituentType = SubstituentType.UNDEFINED;
         } else{
-            throw 'Please use the Anomericity class and forget about string. Extend the enum if you need a specific value';
+            throw 'Please use the SubstituentType class and forget about string. Extend the enum if you need a specific value';
         }
     }
 
-    getSubstituentType(){
-        return this.substituentType;
+    get substituentType(){
+        return this._substituentType;
+    }
+
+    set substituentType(substituentType){
+        if(substituentType instanceof SubstituentType){
+            this._substituentType = substituentType;
+        } else{
+            throw 'Please use the SubstituentType class and forget about string. Extend the enum if you need a specific value';
+        }
     }
 
 }

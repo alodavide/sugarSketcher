@@ -142,7 +142,7 @@ export default class Sugar{
     addMonosaccharideWithLinkage(parentNode, childNode, anomerCarbon, linkedCarbon){
         if(childNode instanceof Monosaccharide ){
          try{
-             var glycosidicLinkage = new GlycosidicLinkage('EDGE:'+parentNode.getNodeId()+'-'+childNode.getNodeId(),parentNode,childNode,anomerCarbon,linkedCarbon);
+             var glycosidicLinkage = new GlycosidicLinkage('EDGE:'+parentNode.getId()+'-'+childNode.getId(),parentNode,childNode,anomerCarbon,linkedCarbon);
              this.addMonosaccharide(childNode,glycosidicLinkage);
              return glycosidicLinkage;
          } catch(err) {
