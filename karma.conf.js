@@ -10,7 +10,7 @@ module.exports = function(config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['qunit','browserify'],
 
-        plugins: ['karma-qunit','karma-browserify','karma-phantomjs-launcher','karma-chrome-launcher'],
+        plugins: ['karma-qunit','karma-browserify','karma-phantomjs-launcher','karma-chrome-launcher', 'karma-coverage', 'karma-coveralls'],
 
         browserify : {
             debug: true,
@@ -37,17 +37,21 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'src/js/**/*.js' : ['browserify'],
-            'src/test/**/*.js' : ['browserify'],
-            'src/test/test.js' : ['browserify']
+            'src/js/**/*.js' : ['browserify','coverage'],
+            'src/test/**/*.js' : ['browserify','coverage'],
+            'src/test/test.js' : ['browserify','coverage']
         },
 
 
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-        reporters: ['progress'],
+        reporters: ['progress','coverage','coveralls'],
 
+        coverageReporter: {
+            type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
+            dir: 'coverage/'
+        },
 
         // web server port
         port: 9876,

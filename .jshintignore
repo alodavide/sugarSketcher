@@ -9,3 +9,6 @@ karma.conf.js
 
 #Remove views TODO: fix it!
 src/js/views
+
+#Remove coverage
+coverage
