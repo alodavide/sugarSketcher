@@ -1,3 +1,13 @@
+// Node created each time the menu is used
+var nodeToCreate = {
+    type: null,
+    shape: null,
+    color:null,
+    anomericity: null,
+    isomer: null,
+    rnc: null
+};
+
 // Event listener for td
 var choiceCells = document.getElementsByClassName("infoChoiceCell");
 for (var cell of choiceCells) {
@@ -27,6 +37,7 @@ for (var cell of choiceCells) {
         } else {
             clickedCell.style("background", "white").style("color", "black").classed("selectedChoice", true);
         }
+        checkSelectedThreeValues();
     });
 }
 
@@ -87,17 +98,6 @@ var colorDivisions = [{
     }
 ];
 
-var tableInformations = [{
-    information: "Anomericity",
-    possibilities: ['Alpha', 'Beta', '?']
-}, {
-    information: "Isomer",
-    possibilities: ['d', 'l', '?']
-}, {
-    information: "RNCType",
-    possibilities: ['p', 'l', '?']
-}];
-
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
     division: "addNode",
@@ -116,15 +116,7 @@ var menuAction = [{
     display_division: "Add Structure",
     subDivisions : [{
         division: "subStruct",
-        display_division: "Sub Struct",
-        subDivisions: [{
-            division: "subStruct1",
-            display_division: "SubStruct 1"
-        },{
-            division: "subStruct2",
-            display_division:"SubStruct 2"
-        }
-        ]
+        display_division: "Sub Struct"
     }]
 }, {
     division: "changeMono",
@@ -201,7 +193,12 @@ function updateMenu(chosenDivision) {
             return d.display_division
         })
         .on("click", function(d) {
-            updateMenu(d.division);
+            if (d.division == "changeMono") {
+                d3.select("#svgMenu").transition().style("display", "none");
+                d3.select("#tableInformations").transition().style("display", "block");
+            } else {
+                updateMenu(d.division);
+            }
         });
 
     /*
@@ -226,6 +223,8 @@ function updateMenu(chosenDivision) {
     // remove old elements
     // bars.exit().remove();
     //textNodes.exit().remove();
+    console.log("L'objet:");
+    console.log(nodeToCreate);
 }
 /**
  * Get SubDivisions of a searched division, using recursive calls
@@ -251,7 +250,6 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
 
 d3.select("#svgMenu").style("display", "none");
 
-
 /**
  * Just to allow if you clicked on a node by mistake to shut down the appeared menus
  * @param e
@@ -262,7 +260,29 @@ document.onkeydown = function (e) {
         d3.select('#svgMenu').style("display", "none");
         console.log(d3.selectAll('#nodeMenu'));
         d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
+        unselectChoices();
         d3.select("#tableInformations").style("display", "none");
     }
 };
+
+function checkSelectedThreeValues() {
+    var selectedCells = d3.selectAll(".selectedChoice");
+    // The user selected the three values
+    if(selectedCells[0].length === 3) {
+        var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
+        var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
+        var type = selectedCells.filter(".choiceType")[0][0].innerText;
+        console.log("Anomericity chosen: " + anomericity);
+        console.log("Isomer chosen: " + isomer);
+        console.log("Type chosen: " + type);
+    }
+}
+
+function unselectChoices() {
+    var selectedChoices = d3.selectAll(".selectedChoice")[0];
+    console.log("selected");
+    for (var selected of selectedChoices) {
+        d3.select("#" + selected.id).style("background","black").style("color", "white").classed("selectedChoice", false);
+    }
+}
 
