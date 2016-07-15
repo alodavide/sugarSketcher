@@ -197,28 +197,32 @@ function updateMenu(chosenDivision) {
         })
         .attr("class", function() {
             return "bar choice"
+        }).style("fill", function(d) {
+            return d.display_division
         })
         .on("click", function(d) {
             updateMenu(d.division);
         });
 
     /*
-     *  Label drawing block
+     *  Label drawing block, if we are displaying colors, labels not needed because of color fill
      */
+    if (newMenuAction != colorDivisions) {
 
-    var textNodes = labels.selectAll("text").data(newMenuAction);
+        var textNodes = labels.selectAll("text").data(newMenuAction);
 
-    textNodes.enter().append("text")
-        .attr("class", "label")
-        .attr("x", function (d, i) {
-            return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
-        })
-        .attr("y", function () {
-            return cDim.height - barHeight(10) + 8;
-        })
-        .text(function (d)  {
-            return d.display_division;
-        });
+        textNodes.enter().append("text")
+            .attr("class", "label")
+            .attr("x", function (d, i) {
+                return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
+            })
+            .attr("y", function () {
+                return cDim.height - barHeight(10) + 8;
+            })
+            .text(function (d) {
+                return d.display_division;
+            });
+    }
     // remove old elements
     // bars.exit().remove();
     //textNodes.exit().remove();
