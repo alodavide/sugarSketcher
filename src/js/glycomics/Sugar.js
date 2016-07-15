@@ -151,6 +151,14 @@ export default class Sugar{
         }
     }
 
+    /**
+     * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
+     * @param {Monosaccharide} parentNode The parentNode in the graph.
+     * @param {Monosaccharide} childNode The Monosaccharide to add
+     * @param {AnomerCarbon} anomerCarbon The anomerCarbon in the Glycosidic Linkage
+     * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
+     *
+     */
 
     addSubstituentWithLinkage(parentNode, childNode, linkedCarbon){
         if(childNode instanceof Monosaccharide ){
