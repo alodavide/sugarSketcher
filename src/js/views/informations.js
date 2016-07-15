@@ -1,12 +1,4 @@
-// Node created each time the menu is used
-var nodeToCreate = {
-    type: null,
-    shape: null,
-    color:null,
-    anomericity: null,
-    isomer: null,
-    rnc: null
-};
+var clicksTable = []; // Table with all clicks of the user on the menu
 
 // Event listener for td
 var choiceCells = document.getElementsByClassName("infoChoiceCell");
@@ -152,8 +144,11 @@ function updateMenu(chosenDivision) {
 
     // This case happens when update is called with no parameter (first update)
     if (typeof chosenDivision === 'undefined') { // First menu
+        clicksTable = [];
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
+
+        // If chose a color, then we hide the svg and show the table for anomericity, isomer and type
         if (chosenDivision.indexOf("Color") > -1) {
             d3.select("#tableInformations").transition().duration(200).style("display", "block");
             d3.select("#svgMenu").transition().duration(200).style("display", "none");
@@ -197,6 +192,9 @@ function updateMenu(chosenDivision) {
                 d3.select("#svgMenu").transition().style("display", "none");
                 d3.select("#tableInformations").transition().style("display", "block");
             } else {
+                clicksTable.push(d);
+                console.log("pushed");
+                console.log(clicksTable);
                 updateMenu(d.division);
             }
         });
@@ -275,6 +273,8 @@ function checkSelectedThreeValues() {
         console.log("Anomericity chosen: " + anomericity);
         console.log("Isomer chosen: " + isomer);
         console.log("Type chosen: " + type);
+        d3.select("#tableInformations").transition().style("display","none");
+        unselectChoices();
     }
 }
 

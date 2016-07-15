@@ -72,7 +72,6 @@ var circleDragger = d3.behavior.drag()
     })
     .on("dragend", function(d){
         var tempLinks = vis.selectAll(".templink");
-        console.log("coucou");
         console.log(tempLinks[0]);
         draggingNode = null;
         // now restore the mouseover event or we won't be able to drag a 2nd time
@@ -99,7 +98,7 @@ var updateTempConnector = function() {
 };
 
 // ------------- normal tree drawing code --------
-var width  = 960,
+var width  = 1000,
     height = 500;
 
 var vis = d3.select('#viz')
