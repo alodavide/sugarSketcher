@@ -94,7 +94,7 @@ export default class Sugar{
      * @returns {*} return a node object (Monosaccharide or Substituent in our case).
      */
 
-    getNodebyID(id){
+    getNodeById(id){
         try{
             return  this.graph.nodes(id);
         } catch (err){
@@ -107,12 +107,29 @@ export default class Sugar{
      * @param {string} id The Edge id
      * @returns {*} return a linkage(edge) object (GlycosidicLinkage or SubstituentLinkage in our case).
      */
-    getEdgebyID(id){
+    getEdgeById(id){
         try{
-            return  this.graph.edges(id);
+            return this.graph.edges(id);
         } catch (err){
             throw 'Error: '+ err;
         }
+    }
+
+    /**
+     * Return the Edge within sourceNode and targetNode
+     * Throw an error if the edge does not exist.
+     * TODO: The for loop can ber removed by creating a new method in the graph.js to get specific edges.
+     * @param {string} id The Edge id
+     * @returns {*} return a linkage(edge) object (GlycosidicLinkage or SubstituentLinkage in our case).
+     */
+    getEdge(sourceNode,targetNode){
+        for( var i = 0; i < this.graph.edges().length; i++){
+            if(this.graph.edges()[i].getEdgeSource() === sourceNode && this.graph.edges()[i].getEdgeTarget() === targetNode){
+                return this.graph.edges()[i];
+            }
+        }
+        throw 'No edge found between the sourceNode and targetNode';
+
     }
 
     /**
@@ -121,7 +138,7 @@ export default class Sugar{
      * @returns {Monosaccharide} return a Monosaccahride object
      */
     getMonosaccharideById(id){
-        var monosaccharide = this.getNodebyID(id);
+        var monosaccharide = this.getNodeById(id);
         if( monosaccharide instanceof Monosaccharide){
             return monosaccharide;
         } else {
@@ -135,13 +152,73 @@ export default class Sugar{
      * @returns {Substituent} return a Substituent object
      */
     getSubstituentById(id){
-        var substituent = this.getNodebyID(id);
+        var substituent = this.getNodeById(id);
         if(substituent instanceof Substituent){
             return substituent;
         } else {
             throw 'This method can only return substituent object';
         }
     }
+
+
+    /**
+     * Return the GlycosidicLinkage with the id specified by the user otherwise throw an error.
+     * @param {string} id The Edge id
+     * @returns {GlycosidicLinkage} return a GlycosidicLinkage object
+     */
+    getGlycosidicLinkagebyID(id){
+        var glyLinkage = this.getEdgeById(id);
+        if(glyLinkage instanceof GlycosidicLinkage){
+            return glyLinkage;
+        } else {
+            throw 'This method can only return GlycosidicLinkage object';
+        }
+    }
+
+
+    /**
+     * Return the SubstituentLinkage with the id specified by the user otherwise throw an error.
+     * @param {string} id The Edge id
+     * @returns {SubstituentLinkage} return a SubstituentLinkage object
+     */
+    getSubstituentLinkagebyId(id){
+        var subLinkage = this.getEdgeById(id);
+        if(subLinkage instanceof SubstituentLinkage){
+            return subLinkage;
+        } else {
+            throw 'This method can only return SubstituentLinkage object';
+        }
+    }
+
+    /**
+     * Return the GlycosidicLinkage within sourceNode and targhetNode
+     * @param {string} id The Edge id
+     * @returns {GlycosidicLinkage} return a GlycosidicLinkage object
+     */
+    getGlycosidicLinkage(sourceNode,targetNode){
+        var glyLinkage = this.getEdge(sourceNode,targetNode);
+        if(glyLinkage instanceof GlycosidicLinkage){
+            return glyLinkage;
+        } else {
+            throw 'This method can only return GlycosidicLinkage object';
+        }
+    }
+
+    /**
+     * Return the SubstituentLinkage within sourceNode and targhetNode
+     * @param {string} id The Edge id
+     * @returns {SubstituentLinkage} return a SubstituentLinkage object
+     */
+    getSubstituentLinkage(sourceNode,targetNode){
+        var subLinkage = this.getEdgeById(sourceNode,targetNode);
+        if(subLinkage instanceof SubstituentLinkage){
+            return subLinkage;
+        } else {
+            throw 'This method can only return SubstituentLinkage object';
+        }
+    }
+
+
 
     /**
      * Add a new Monosaccharide to the Sugar with a pre-built Glycosidic Linkage.
@@ -164,7 +241,7 @@ export default class Sugar{
     /**
      * Add a new Substituent to the Sugar with a pre-built Substituent Linkage
      * @param {Substituent} childNode The substituent to add
-     * @param {SubstituentLinakge}substituentLinkage The edge to add
+     * @param {SubstituentLinkage}substituentLinkage The edge to add
      * @returns {Substituent} The substituent added to the Substituent.
      */
 
@@ -236,7 +313,8 @@ export default class Sugar{
     }
 
     /**
-     * Remove a Monosaccharide for the Sugar.
+     * Remove a Monosaccharide for the Sugar. It removes all the edges connected to the Monosaccharide.
+     * Be carefull: The children will be detached from the tree.
      * @param {Monosaccharide} childNode The monosaccharide to be removed
      * @returns {Graph} Updated graph
      */
@@ -254,7 +332,8 @@ export default class Sugar{
     }
 
     /**
-     * Remove a Substituent for the Sugar.
+     * Remove a Substituent for the Sugar. It removes all the edges connected to the Substituent.
+     * Be carefull: The children will be detached from the tree.
      * @param {Substituent} childNode The substituent to be removed
      * @returns {Graph} Updated graph
      */

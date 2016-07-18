@@ -2,15 +2,23 @@
 * Author:  Davide Alocci
 * Version: 0.0.1
 */
-
-import Monosaccharide from '../../js/glycomics/nodes/Monosaccharide';
+//Dictionary
 import Anomericity from '../../js/glycomics/dictionary/Anomericity';
 import Isomer from '../../js/glycomics/dictionary/Isomer';
 import RingType from '../../js/glycomics/dictionary/RingType';
 import MonosaccharideType from '../../js/glycomics/dictionary/MonosaccharideType';
-import Sugar from '../../js/glycomics/Sugar';
+import SubstituentType from '../../js/glycomics/dictionary/SubstituentType';
 import AnomerCarbon from '../../js/glycomics/dictionary/AnomerCarbon';
 import LinkedCarbon from '../../js/glycomics/dictionary/LinkedCarbon';
+//Nodes
+import Monosaccharide from '../../js/glycomics/nodes/Monosaccharide';
+import Substituent from '../../js/glycomics/nodes/Substituent';
+//Linkages
+import GlycosidicLinkage from '../../js/glycomics/linkages/GlycosidicLinkage';
+import SubstituentLinkage from '../../js/glycomics/linkages/SubstituentLinkage';
+//Sugar
+import Sugar from '../../js/glycomics/Sugar';
+
 
 QUnit.module("Test Sugar object", {
 });
@@ -113,7 +121,7 @@ QUnit.test( "Test Add and get id" , function( assert ) {
 
 });
 
-QUnit.test( "Test Add and get id" , function( assert ) {
+QUnit.test( "Test root + monosaccharide" , function( assert ) {
 
     var root = new Monosaccharide('root',MonosaccharideType.Glc,Anomericity.BETA,Isomer.D,RingType.P);
     var m1 = new Monosaccharide('m1',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
@@ -135,5 +143,151 @@ QUnit.test( "Test Add and get id" , function( assert ) {
 
     assert.notOk(sugar.getMonosaccharideById('root') === m1, 'Test Node wrong');
     assert.notOk(sugar.getMonosaccharideById('m1') === root, 'Test Node wrong');
+
+});
+
+
+QUnit.test( "Test Add and get monosaccharide with linkages" , function( assert ) {
+
+    var root = new Monosaccharide('root',MonosaccharideType.Glc,Anomericity.BETA,Isomer.D,RingType.P);
+    var m1 = new Monosaccharide('m1',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
+    var m2 = new Monosaccharide('m2',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
+    var edge1 = new GlycosidicLinkage('e1',m1,m2,AnomerCarbon.ONE,LinkedCarbon.THREE);
+    var sugar = new Sugar('test',root);
+    sugar.addMonosaccharideWithLinkage(root,m1,AnomerCarbon.ONE,LinkedCarbon.SIX);
+    sugar.addMonosaccharide(m2,edge1);
+
+    assert.notOk(sugar.size() === 24, 'Test size');
+    assert.ok(sugar.size() === 3, 'Test get id correct');
+
+    assert.ok(sugar.getMonosaccharideById('m1') instanceof Monosaccharide, 'Test get Node correct');
+    assert.ok(sugar.getMonosaccharideById('m1') === m1, 'Test get Node correct');
+
+    assert.ok(sugar.getNodeById('m1') instanceof Monosaccharide, 'Test get Node correct');
+    assert.ok(sugar.getNodeById('m1') === m1, 'Test get Node correct');
+
+    //Throw exception. Cannot get monosaccharides with substituent method.
+    assert.raises(function(){
+        sugar.getSubstituentById('m1');
+    });
+
+    assert.notOk(sugar.getMonosaccharideById('root') === m1, 'Test Node wrong');
+    assert.notOk(sugar.getMonosaccharideById('m1') === root, 'Test Node wrong');
+    assert.notOk(sugar.getMonosaccharideById('m2') === root, 'Test Node wrong');
+});
+
+
+QUnit.test( "Test Add and get monosaccharide with linkages" , function( assert ) {
+
+    var root = new Monosaccharide('root',MonosaccharideType.Glc,Anomericity.BETA,Isomer.D,RingType.P);
+    var m1 = new Monosaccharide('m1',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
+    var m2 = new Monosaccharide('m2',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
+    var s1 = new Substituent('s1',SubstituentType.Br);
+    var s2 = new Substituent('s2',SubstituentType.NAcetyl);
+    var edge1 = new GlycosidicLinkage('e1',m1,m2,AnomerCarbon.ONE,LinkedCarbon.THREE);
+    var sugar = new Sugar('test',root);
+    sugar.addMonosaccharideWithLinkage(root,m1,AnomerCarbon.ONE,LinkedCarbon.SIX);
+    sugar.addMonosaccharide(m2,edge1);
+
+    //Throw exception. The edge must be SubstituentLinkage
+    assert.raises(function(){
+        sugar.addSubstituent(s1,edge1);
+    });
+
+    sugar.addSubstituent(s1,new SubstituentLinkage('edge-s1',m1,s1,LinkedCarbon.TWO));
+    var edge2 = new SubstituentLinkage('edge-s2',m2,s2,LinkedCarbon.TWO);
+    sugar.addSubstituent(s2,edge2);
+    assert.notOk(sugar.size() === 24, 'Test size');
+    assert.ok(sugar.size() === 5, 'Test get id correct');
+
+    assert.ok(sugar.getMonosaccharideById('m1') instanceof Monosaccharide, 'Test get Node correct');
+    assert.ok(sugar.getMonosaccharideById('m1') === m1, 'Test get Node correct');
+
+    assert.ok(sugar.getNodeById('m1') instanceof Monosaccharide, 'Test get Node correct');
+    assert.ok(sugar.getNodeById('m1') === m1, 'Test get Node correct');
+
+    //Throw exception. Cannot get monosaccharides with substituent method.
+    assert.raises(function(){
+        sugar.getSubstituentById('m1');
+    });
+
+    assert.notOk(sugar.getMonosaccharideById('root') === m1, 'Test Node wrong');
+    assert.notOk(sugar.getMonosaccharideById('m1') === root, 'Test Node wrong');
+    assert.notOk(sugar.getMonosaccharideById('m2') === root, 'Test Node wrong');
+});
+
+
+
+QUnit.test( "Test Add and get monosaccharide with linkages" , function( assert ) {
+
+    /**
+     *          m1 - s1
+     *        /
+     * root -
+     *        \
+     *         m2 - s2
+     * */
+
+    var root = new Monosaccharide('root',MonosaccharideType.Glc,Anomericity.BETA,Isomer.D,RingType.P);
+    var m1 = new Monosaccharide('m1',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
+    var m2 = new Monosaccharide('m2',MonosaccharideType.Gal,Anomericity.ALPHA,Isomer.L,RingType.P);
+    var s1 = new Substituent('s1',SubstituentType.Br);
+    var s2 = new Substituent('s2',SubstituentType.NAcetyl);
+
+    var edge1 = new GlycosidicLinkage('e1',root,m2,AnomerCarbon.ONE,LinkedCarbon.THREE);
+    var sugar = new Sugar('test',root);
+
+    sugar.addMonosaccharideWithLinkage(root,m1,AnomerCarbon.ONE,LinkedCarbon.SIX);
+    sugar.addMonosaccharide(m2,edge1);
+
+    //Throw exception. The edge must be SubstituentLinkage
+    assert.raises(function(){
+        sugar.addSubstituent(s1,edge1);
+    });
+
+    sugar.addSubstituent(s1,new SubstituentLinkage('edge-s1',m1,s1,LinkedCarbon.TWO));
+    var edge2 = new SubstituentLinkage('edge-s2',m2,s2,LinkedCarbon.TWO);
+    sugar.addSubstituent(s2,edge2);
+    assert.notOk(sugar.size() === 24, 'Test size');
+    assert.ok(sugar.size() === 5, 'Test get size correct');
+
+    assert.ok(sugar.getMonosaccharideById('m1') instanceof Monosaccharide, 'Test get Node correct');
+    assert.ok(sugar.getMonosaccharideById('m1') === m1, 'Test get Node correct');
+
+    assert.ok(sugar.getNodeById('m1') instanceof Monosaccharide, 'Test get Node correct');
+    assert.ok(sugar.getNodeById('m1') === m1, 'Test get Node correct');
+
+    //Throw exception. Cannot get monosaccharides with substituent method.
+    assert.raises(function(){
+        sugar.getSubstituentById('m1');
+    });
+
+    assert.notOk(sugar.getMonosaccharideById('root') === m1, 'Test Node wrong');
+    assert.notOk(sugar.getMonosaccharideById('m1') === root, 'Test Node wrong');
+    assert.notOk(sugar.getMonosaccharideById('m2') === root, 'Test Node wrong');
+
+    assert.ok(sugar.getSubstituentById('s1') === s1, 'Test Substituent Correct');
+    assert.ok(sugar.getSubstituentById('s2') === s2, 'Test Substituent Correct');
+    assert.notOk(sugar.getSubstituentById('s2') === s1, 'Test Substituent wrong');
+    assert.notOk(sugar.getSubstituentById('s1') === s2, 'Test Substituent wrong');
+
+    assert.ok(sugar.getEdgeById('e1') === edge1, 'Test Edge Correct');
+
+    assert.ok(sugar.getEdge(root,m2) === edge1, 'Test Edge Correct');
+    assert.notOk(sugar.getEdgeById('edge-s2') === edge1, 'Test Substituent wrong');
+    //assert.notOk(sugar.getEdge(root,m2) === edge1, 'Test Substituent wrong')
+
+    sugar.removeMonosaccharide(m2);
+    assert.ok(sugar.size() === 4, 'Test get size correct');
+    //Throw exception. Cannot get monosaccharides with substituent method.
+    assert.raises(function(){
+        sugar.getSubstituentById('m2');
+    });
+    //Throw exception. Monosaccharide already removed
+    assert.raises(function(){
+        sugar.getMonosaccharideById('m2');
+    });
+
+
 
 });
