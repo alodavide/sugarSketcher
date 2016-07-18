@@ -1,4 +1,4 @@
-var clicksTable = []; // Table with all clicks of the user on the menu
+var clicksTable = []; // Table with all clicks of the user on the
 
 // Event listener for td
 var choiceCells = document.getElementsByClassName("infoChoiceCell");
@@ -33,28 +33,17 @@ for (var cell of choiceCells) {
     });
 }
 
-
-// Shape Divisions with all possible monosaccharide shapes
-var shapeDivisions = [{
-        division: "circleShape",
-        display_division: "Circle"
-    }, {
-        division: "squareShape",
-        display_division: "Square"
-    }, {
-        division: "triangleShape",
-        display_division: "Triangle"
-    }, {
-        division: "starShape",
-        display_division: "Star"
-    }, {
-        division: "rectangleShape",
-        display_division: "Rectangle"
-    }, {
-        division: "diamondShape",
-        display_division: "Diamond"
-    }
-];
+var shapeChoices= document.getElementsByClassName("shapeChoice");
+for (var shape of shapeChoices) {
+    shape.addEventListener('click', function(e) {
+        clicksTable.push(e.target.parentNode.id.split("Shape")[0]);
+        console.log("just added click on shape");
+        console.log(clicksTable);
+        d3.select("#svgShape").transition().style("display", "none");
+        updateMenu("Shape");
+        d3.select("#svgMenu").transition().style("display", "block");
+    });
+}
 
 // Color Divisions with all possible colors
 var colorDivisions = [{
@@ -97,11 +86,11 @@ var menuAction = [{
     subDivisions : [{
         division: "substituentNode",
         display_division: "Substituent",
-        subDivisions: shapeDivisions
+        subDivisions: "shape"
     }, {
         division: "monosaccharideNode",
         display_division: "Monosaccharide",
-        subDivisions: shapeDivisions
+        subDivisions: "shape"
     }]
 }, {
     division: "addStructure",
@@ -113,7 +102,7 @@ var menuAction = [{
 }, {
     division: "changeMono",
     display_division: "Change Mono",
-    subDivisions: shapeDivisions
+    subDivisions: "shape"
 }];
 
 /**
@@ -162,9 +151,16 @@ function updateMenu(chosenDivision) {
             newMenuAction = getSubDivisions(menuAction, chosenDivision)
         }
     }
+
     // If there are no subdivisions to show, then hide the menu
     if (typeof newMenuAction === 'undefined') {
         d3.select("#svgMenu").style("display", "none");
+        return;
+    }
+    // If shape menu has to be shown
+    if (newMenuAction == "shape") {
+        d3.select("#svgShape").transition().style("display", "block");
+        d3.select("#svgMenu").transition().style("display", "none");
         return;
     }
     // Figure out how much space is actually available for the divisions
@@ -292,7 +288,7 @@ function getMenuSelections(selectedCells) {
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
         var typeNodeToAdd = clicksTable[1].display_division; // Selected type, mono or sub
-        var shape = clicksTable[2].display_division; // Selected shape
+        var shape = clicksTable[2]; // Selected shape
         var color = clicksTable[3].display_division; // Selected color
         console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + type + " " + shape + " " + color);
         // Manage add node
@@ -302,7 +298,7 @@ function getMenuSelections(selectedCells) {
     } else {
         console.log("Need to modify the mono");
         console.log(clickedNode);
-        var newShape = clicksTable[1].display_division; // Selected shape
+        var newShape = clicksTable[1]; // Selected shape
         var newColor = clicksTable[2].display_division; // Selected color
         console.log("New informations on the mono: " + anomericity + " " + isomer + " " + type + " " + newShape + " " + newColor);
         //Manage modification of the monosaccharide

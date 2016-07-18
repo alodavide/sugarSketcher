@@ -15,7 +15,7 @@
     stroke:white;
 }
 
-.bar:hover {
+.bar:hover, .shapeChoice {
     cursor: pointer;
 }
 
@@ -30,7 +30,7 @@ svg {
 #svgShape {
     height: 40px;
     width:1000px;
-    display:block;
+    display:none;
     background: black;
 }
 
