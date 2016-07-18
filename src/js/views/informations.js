@@ -1,4 +1,4 @@
-var clicksTable = []; // Table with all clicks of the user on the menu
+var clicksTable = []; // Table with all clicks of the user on the
 
 // Event listener for td
 var choiceCells = document.getElementsByClassName("infoChoiceCell");
@@ -33,60 +33,49 @@ for (var cell of choiceCells) {
     });
 }
 
-
-// Shape Divisions with all possible monosaccharide shapes
-var shapeDivisions = [{
-        division: "circleShape",
-        display_division: "Circle"
-    }, {
-        division: "squareShape",
-        display_division: "Square"
-    }, {
-        division: "triangleShape",
-        display_division: "Triangle"
-    }, {
-        division: "starShape",
-        display_division: "Star"
-    }, {
-        division: "rectangleShape",
-        display_division: "Rectangle"
-    }, {
-        division: "diamondShape",
-        display_division: "Diamond"
-    }
-];
+var shapeChoices= document.getElementsByClassName("shapeChoice");
+for (var shape of shapeChoices) {
+    shape.addEventListener('click', function(e) {
+        clicksTable.push(e.target.parentNode.id.split("Shape")[0]);
+        console.log("just added click on shape");
+        console.log(clicksTable);
+        d3.select("#svgShape").transition().style("display", "none");
+        updateMenu("Shape");
+        d3.select("#svgMenu").transition().style("display", "block");
+    });
+}
 
 // Color Divisions with all possible colors
 var colorDivisions = [{
         division: "whiteColor",
-        display_division: "White"
+        display_division: '#FFFFFF'
     }, {
         division: "blueColor",
-        display_division: "Blue"
+        display_division: '#0080FF'
     }, {
         division: "greenColor",
-        display_division: "Green"
+        display_division: '#00FF00'
     }, {
         division: "yellowColor",
-        display_division: "Yellow"
+        display_division: '#FFD900'
     }, {
         division: "orangeColor",
-        display_division: "Orange"
+        display_division: '#FF8000'
     }, {
         division: "pinkColor",
-        display_division: "Pink"
+        display_division: '#FF87C2'
     }, {
         division: "purpleColor",
-        display_division: "Purple"
+        display_division: '#9E1FFF'
     }, {
         division:"lightBlueColor",
-        display_division: "Aquamarine"
+        display_division: '#96F2F7'
     }, {
         division:"brownColor",
-        display_division: "Brown"
+        display_division: '#977335'
     }, {
         division:"redColor",
-        display_division: "Red"
+        display_division: '#FF0000'
     }
 ];
 
@@ -97,11 +86,11 @@ var menuAction = [{
     subDivisions : [{
         division: "substituentNode",
         display_division: "Substituent",
-        subDivisions: shapeDivisions
+        subDivisions: "shape"
     }, {
         division: "monosaccharideNode",
         display_division: "Monosaccharide",
-        subDivisions: shapeDivisions
+        subDivisions: "shape"
     }]
 }, {
     division: "addStructure",
@@ -112,7 +101,8 @@ var menuAction = [{
     }]
 }, {
     division: "changeMono",
-    display_division: "Change Mono"
+    display_division: "Change Mono",
+    subDivisions: "shape"
 }];
 
 /**
@@ -161,9 +151,16 @@ function updateMenu(chosenDivision) {
             newMenuAction = getSubDivisions(menuAction, chosenDivision)
         }
     }
+
     // If there are no subdivisions to show, then hide the menu
     if (typeof newMenuAction === 'undefined') {
         d3.select("#svgMenu").style("display", "none");
+        return;
+    }
+    // If shape menu has to be shown
+    if (newMenuAction == "shape") {
+        d3.select("#svgShape").transition().style("display", "block");
+        d3.select("#svgMenu").transition().style("display", "none");
         return;
     }
     // Figure out how much space is actually available for the divisions
@@ -193,12 +190,7 @@ function updateMenu(chosenDivision) {
         })
         .on("click", function(d) {
             clicksTable.push(d);
-            if (d.division == "changeMono") {
-                d3.select("#svgMenu").transition().style("display", "none");
-                d3.select("#tableInformations").transition().style("display", "block");
-            } else {
-                updateMenu(d.division);
-            }
+            updateMenu(d.division);
         });
 
     /*
@@ -256,7 +248,6 @@ document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
-        console.log(d3.selectAll('#nodeMenu'));
         d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
         unselectChoices();
         d3.select("#tableInformations").style("display", "none");
@@ -270,13 +261,7 @@ function checkSelectedThreeValues() {
     var selectedCells = d3.selectAll(".selectedChoice");
     // The user selected the three values
     if(selectedCells[0].length === 3) {
-        var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
-        var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
-        var type = selectedCells.filter(".choiceType")[0][0].innerText;
-        console.log("Anomericity chosen: " + anomericity);
-        console.log("Isomer chosen: " + isomer);
-        console.log("Type chosen: " + type);
-        getMenuSelections();
+        getMenuSelections(selectedCells);
         d3.select("#tableInformations").transition().style("display","none");
         unselectChoices();
     }
@@ -295,12 +280,17 @@ function unselectChoices() {
 /**
  * Get the menus the user selected. Called when ended menus.
  */
-function getMenuSelections() {
-    console.log("Starting getting the selection");
-    console.log(clicksTable);
-    var methodToCall = clicksTable[0].division;
+function getMenuSelections(selectedCells) {
+    var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
+    var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
+    var type = selectedCells.filter(".choiceRing")[0][0].innerText;
+    var methodToCall = clicksTable[0].division; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
+        var typeNodeToAdd = clicksTable[1].display_division; // Selected type, mono or sub
+        var shape = clicksTable[2]; // Selected shape
+        var color = clicksTable[3].display_division; // Selected color
+        console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + type + " " + shape + " " + color);
         // Manage add node
     } else if (methodToCall == "addStruct") {
         console.log("Need to add a structure");
@@ -308,7 +298,9 @@ function getMenuSelections() {
     } else {
         console.log("Need to modify the mono");
         console.log(clickedNode);
+        var newShape = clicksTable[1]; // Selected shape
+        var newColor = clicksTable[2].display_division; // Selected color
+        console.log("New informations on the mono: " + anomericity + " " + isomer + " " + type + " " + newShape + " " + newColor);
         //Manage modification of the monosaccharide
     }
-
 }

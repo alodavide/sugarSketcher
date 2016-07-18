@@ -15,7 +15,7 @@
     stroke:white;
 }
 
-.bar:hover {
+.bar:hover, .shapeChoice {
     cursor: pointer;
 }
 
@@ -27,7 +27,14 @@ svg {
     width:1000px;
 }
 
-#tableInformations, #svgMenu{
+#svgShape {
+    height: 40px;
+    width:1000px;
+    display:none;
+    background: black;
+}
+
+#tableChoice, #svgMenu, #svgShape{
     margin: 0 auto 10px;
 }
 
