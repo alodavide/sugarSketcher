@@ -80,7 +80,7 @@ var colorDivisions = [{
         display_division: "Purple"
     }, {
         division:"lightBlueColor",
-        display_division: "Light Blue"
+        display_division: "Aquamarine"
     }, {
         division:"brownColor",
         display_division: "Brown"
@@ -307,6 +307,7 @@ function getMenuSelections() {
         // Manage add structure
     } else {
         console.log("Need to modify the mono");
+        console.log(clickedNode);
         //Manage modification of the monosaccharide
     }
 

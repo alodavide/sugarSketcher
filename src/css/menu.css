@@ -23,11 +23,15 @@ svg {
     border: 1px #000 solid;
 }
 
-#svgMenu {
-    margin-bottom: 10px;
+#viz {
+    width:1000px;
+}
+
+#tableInformations, #svgMenu{
+    margin: 0 auto 10px;
 }
 
 #viz {
-    width:1000px;
+    margin: 0 auto;
 }
 
