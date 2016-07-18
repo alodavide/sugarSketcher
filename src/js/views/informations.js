@@ -287,7 +287,7 @@ function unselectChoices() {
 function getMenuSelections(selectedCells) {
     var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
     var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
-    var type = selectedCells.filter(".choiceType")[0][0].innerText;
+    var type = selectedCells.filter(".choiceRing")[0][0].innerText;
     var methodToCall = clicksTable[0].division; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");

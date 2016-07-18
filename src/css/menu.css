@@ -27,7 +27,14 @@ svg {
     width:1000px;
 }
 
-#tableChoice, #svgMenu{
+#svgShape {
+    height: 40px;
+    width:1000px;
+    display:block;
+    background: black;
+}
+
+#tableChoice, #svgMenu, #svgShape{
     margin: 0 auto 10px;
 }
 
