@@ -33,7 +33,6 @@ var addNewNode = function() {
         , p = {x: point[0], y: point[1]};
 
     var newNodes = [{x: p.x -50 , y: p.y -20, name: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)}];
-    console.log('addnode');
     vis.selectAll("lonely")
         .data(newNodes).enter().append("circle")
         .attr("class", "lonely")
@@ -48,23 +47,13 @@ var addNewNode = function() {
         })
         .on('click', function(d){
             d3.event.stopPropagation();
+            clickCircle(d);
             updateMenu();
             d3.select("#tableInformations").style("display","none");
             d3.select("#svgMenu").style("display", "block");
             if (d3.event.defaultPrevented) return; // click suppressed
 
             if (d3.event.defaultPrevented) return; // click suppressed
-
-            if(d3.select('#nodeMenu').style("opacity") == 0) {
-                path.attr('transform',"translate(" + d3.mouse(this)[0] + "," + d3.mouse(this)[1] + ")")
-                    .transition()
-                    .duration(200)
-                    .style("opacity", .9);
-            }else{
-                path.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            }
         })
         .call(circleDragger);
 };
@@ -125,9 +114,6 @@ var div = d3.select("body")
     .style("opacity", 0);
 */
 
-var dataset = {
-    choice: [1, 1, 1]
-};
 
 var width = 460,
     height = 300,
@@ -141,21 +127,6 @@ var pie = d3.layout.pie()
 var arc = d3.svg.arc()
     .innerRadius(radius - 100)
     .outerRadius(radius - 50);
-
-
-var path = vis.selectAll("path")
-    .data(pie(dataset.choice))
-    .enter().append("path")
-    .attr("fill", function(d, i) { return color(i); })
-    .attr("id", 'nodeMenu')
-    .attr("d", arc)
-    .on('click', function(){
-        d3.event.stopPropagation();
-        console.log('clicked');
-    })
-    .style('opacity','0');
-
-
 
 var tree = d3.layout.tree().size([150,150]);
 var nodes = tree.nodes(treeData);
@@ -179,16 +150,6 @@ var node = vis.selectAll("g.node")
         d3.select("#tableInformations").style("display","none");
         d3.select("#svgMenu").style("display", "block");
         if (d3.event.defaultPrevented) return; // click suppressed
-        if(d3.select('#nodeMenu').style("opacity") == 0) {
-            path.attr('transform',"translate(" + d.y + "," + d.x + ")")
-                .transition()
-                .duration(200)
-                .style("opacity", .9);
-        }else{
-            path.transition()
-                .duration(500)
-                .style("opacity", 0);
-        }
     });
 
 node.append("circle")
