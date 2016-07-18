@@ -115,6 +115,10 @@ var menuAction = [{
     display_division: "Change Mono"
 }];
 
+/**
+ * Update the menu. Can be called with or without one parameter.
+ * @param chosenDivision
+ */
 function updateMenu(chosenDivision) {
     // Size and margin properties
     var cDim = {
@@ -144,7 +148,7 @@ function updateMenu(chosenDivision) {
 
     // This case happens when update is called with no parameter (first update)
     if (typeof chosenDivision === 'undefined') { // First menu
-        clicksTable = [];
+        clicksTable = []; // Re-initialize the list of clicks
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
 
@@ -188,13 +192,11 @@ function updateMenu(chosenDivision) {
             return d.display_division
         })
         .on("click", function(d) {
+            clicksTable.push(d);
             if (d.division == "changeMono") {
                 d3.select("#svgMenu").transition().style("display", "none");
                 d3.select("#tableInformations").transition().style("display", "block");
             } else {
-                clicksTable.push(d);
-                console.log("pushed");
-                console.log(clicksTable);
                 updateMenu(d.division);
             }
         });
@@ -221,8 +223,6 @@ function updateMenu(chosenDivision) {
     // remove old elements
     // bars.exit().remove();
     //textNodes.exit().remove();
-    console.log("L'objet:");
-    console.log(nodeToCreate);
 }
 /**
  * Get SubDivisions of a searched division, using recursive calls
@@ -263,6 +263,9 @@ document.onkeydown = function (e) {
     }
 };
 
+/**
+ * Check if the user has selected three values in the informations table
+ */
 function checkSelectedThreeValues() {
     var selectedCells = d3.selectAll(".selectedChoice");
     // The user selected the three values
@@ -273,16 +276,38 @@ function checkSelectedThreeValues() {
         console.log("Anomericity chosen: " + anomericity);
         console.log("Isomer chosen: " + isomer);
         console.log("Type chosen: " + type);
+        getMenuSelections();
         d3.select("#tableInformations").transition().style("display","none");
         unselectChoices();
     }
 }
 
+/**
+ * Unselect the choices made in the informations table
+ */
 function unselectChoices() {
     var selectedChoices = d3.selectAll(".selectedChoice")[0];
-    console.log("selected");
     for (var selected of selectedChoices) {
         d3.select("#" + selected.id).style("background","black").style("color", "white").classed("selectedChoice", false);
     }
 }
 
+/**
+ * Get the menus the user selected. Called when ended menus.
+ */
+function getMenuSelections() {
+    console.log("Starting getting the selection");
+    console.log(clicksTable);
+    var methodToCall = clicksTable[0].division;
+    if (methodToCall == "addNode") {
+        console.log("Need to add a node");
+        // Manage add node
+    } else if (methodToCall == "addStruct") {
+        console.log("Need to add a structure");
+        // Manage add structure
+    } else {
+        console.log("Need to modify the mono");
+        //Manage modification of the monosaccharide
+    }
+
+}
