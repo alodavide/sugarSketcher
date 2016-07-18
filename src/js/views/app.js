@@ -1,5 +1,6 @@
 var treeData = {"name" : "A", "children" : [ {"name" : "A1" },  {"name" : "A2" }, {"name" : "A3" } ] };
 var selectedNode = null;
+var clickedNode = null;
 var draggingNode = null;
 var colors = d3.scale.category10();
 
@@ -9,8 +10,16 @@ var overCircle = function(d) {
     selectedNode = d;
     updateTempConnector();
 };
+
 var outCircle = function(d) {
     selectedNode = null;
+    updateTempConnector();
+};
+
+var clickCircle = function(d) {
+    clickedNode = d;
+    console.log("You just clicked a node");
+    console.log(clickedNode);
     updateTempConnector();
 };
 
@@ -72,7 +81,6 @@ var circleDragger = d3.behavior.drag()
     })
     .on("dragend", function(d){
         var tempLinks = vis.selectAll(".templink");
-        console.log("coucou");
         console.log(tempLinks[0]);
         draggingNode = null;
         // now restore the mouseover event or we won't be able to drag a 2nd time
@@ -99,11 +107,12 @@ var updateTempConnector = function() {
 };
 
 // ------------- normal tree drawing code --------
-var width  = 960,
+var width  = 1000,
     height = 500;
 
 var vis = d3.select('#viz')
     .append('svg')
+    .attr('id', 'svgTree')
     .attr('width', width)
     .attr('height', height)
     .on("click", addNewNode)
@@ -170,7 +179,6 @@ var node = vis.selectAll("g.node")
         d3.select("#tableInformations").style("display","none");
         d3.select("#svgMenu").style("display", "block");
         if (d3.event.defaultPrevented) return; // click suppressed
-        console.log(d);
         if(d3.select('#nodeMenu').style("opacity") == 0) {
             path.attr('transform',"translate(" + d.y + "," + d.x + ")")
                 .transition()
@@ -199,6 +207,7 @@ node.append("circle")
     .attr("opacity", 0.0) // change this to non-zero to see the target area
     .attr('pointer-events', 'mouseover')
     .on("mouseover", overCircle)
-    .on("mouseout", outCircle);
+    .on("mouseout", outCircle)
+    .on("click", clickCircle);
 
 // a new, unconnected node that can be dragged near others to connect it
