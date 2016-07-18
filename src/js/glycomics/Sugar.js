@@ -1,6 +1,11 @@
 /**
  * Author:  Davide Alocci
  * Version: 0.0.1
+ *
+ *
+ * TODO: We need to add something to freeze the sugar structure.
+ * At the moment all the attributes are mutable unless ids with targets and sources.
+ *
  */
 import Monosaccharide from './nodes/Monosaccharide';
 import Substituent from './nodes/Substituent';
@@ -23,10 +28,10 @@ export default class Sugar{
 
         if (rootNode instanceof Monosaccharide){
             this.rootNode = rootNode;
-            if(graph.hasMethod('addNode')){
+            try{
                 this.graph.addNode(rootNode);
-            } else{
-                throw 'AddNode method is not present in the graph object';
+            } catch(err){
+                throw 'Error adding node: '+err;
             }
 
             this.rootSet = true;
@@ -332,8 +337,8 @@ export default class Sugar{
      * Only the Id remains set (Id is immutable).
      */
     clear(){
-        this.rootIsSet = false;
-        this.rootNode = 'undefined';
+        this.rootSet = false;
+        this.rootNode = undefined;
         this.graph.clear();
     }
 }

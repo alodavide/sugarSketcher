@@ -5,30 +5,34 @@
 
 import SubstituentLinkage from "../../../js/glycomics/linkages/SubstituentLinkage";
 import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
+import Node from "../../../js/dataStructure/Node";
 
 QUnit.module("Test SubstituentLinkage object", {
 });
 
 QUnit.test( "Create new Substituents linkage" , function( assert ) {
 
-    var edge = new SubstituentLinkage('test','source1','target1',LinkedCarbon.ONE);
+    var source = new Node('source');
+    var target = new Node('target');
+    
+    var edge = new SubstituentLinkage('test',source,target,LinkedCarbon.ONE);
 
     assert.ok(edge.linkedCarbon === LinkedCarbon.ONE,"Correct LinkedCarbon");
     assert.ok(edge.linkedCarbon.value === 1,"Correct LinkedCarbon Value");
     assert.notOk(edge.linkedCarbon.value === LinkedCarbon.SIX,"Uncorrect LinkedCarbon");
     assert.notOk(edge.linkedCarbon.value === 3,"Uncorrect LinkedCarbon value");
 
-    var edge2 = new SubstituentLinkage('test','source1','target1',LinkedCarbon.UNDEFINED);
+    var edge2 = new SubstituentLinkage('test',source,target,LinkedCarbon.UNDEFINED);
     assert.ok(edge2.linkedCarbon === LinkedCarbon.UNDEFINED,"Correct LinkedCarbon undefined");
     assert.ok(edge2.linkedCarbon.value === 'undefined',"Correct LinkedCarbon undefined Value");
     assert.notOk(edge2.linkedCarbon.value === 3,"Uncorrect value undefined");
 
-    var edge3 = new SubstituentLinkage('test','source1','target1');
+    var edge3 = new SubstituentLinkage('test',source,target);
     assert.ok(edge3.linkedCarbon === LinkedCarbon.UNDEFINED,"Correct LinkedCarbon undefined");
     assert.ok(edge3.linkedCarbon.value === 'undefined',"Correct LinkedCarbon undefined Value");
     assert.notOk(edge3.linkedCarbon.value === 3,"Uncorrect value undefined 2");
 
-    var edge4 = new SubstituentLinkage('test','source1','target1',LinkedCarbon.ONE);
+    var edge4 = new SubstituentLinkage('test',source,target,LinkedCarbon.ONE);
     assert.ok(edge4.linkedCarbon === LinkedCarbon.ONE,"Correct LinkedCarbon 4");
     assert.ok(edge4.linkedCarbon.value === 1,"Correct LinkedCarbon value 4");
     assert.notOk(edge4.linkedCarbon.value === LinkedCarbon.SIX,"Uncorrect LinkedCarbon 4");
@@ -43,24 +47,27 @@ QUnit.test( "Create new Substituents linkage" , function( assert ) {
 });
 
 QUnit.test( "Create new Substituent linkage Error Linkage" , function(assert) {
+    var source = new Node('source');
+    var target = new Node('target');
+
     assert.raises(function(){
-        new SubstituentLinkage('test','source1','target1',8,1);
+        new SubstituentLinkage('test',source,target,8,1);
     });
 
     assert.raises(function(){
-        new SubstituentLinkage('test','source1','target1',1,7);
+        new SubstituentLinkage('test',source,target,1,7);
     });
 
     assert.raises(function(){
-        new SubstituentLinkage('test','source1','target1','error',1);
+        new SubstituentLinkage('test',source,target,'error',1);
     });
 
     assert.raises(function(){
-        new SubstituentLinkage('test','source1','target1',1,'error');
+        new SubstituentLinkage('test',source,target,1,'error');
     });
 
     assert.raises(function(){
-        var s =new SubstituentLinkage('test','source1','target1');
+        var s =new SubstituentLinkage('test',source,target);
         s.linkedCarbon = 'ciao';
     });
 });

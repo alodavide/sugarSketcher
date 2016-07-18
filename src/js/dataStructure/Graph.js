@@ -30,7 +30,7 @@
         _methodBeforeBindings = Object.create(null),
         _defaultSettings = {
             immutable: true,
-            clone: true
+            clone: false
         },
         _defaultSettingsFunction = function(key) {
             return _defaultSettings[key];
