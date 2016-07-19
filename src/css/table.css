@@ -21,12 +21,12 @@
     height:40px;
 }
 
-#tableInformations {
+#tableInformations, #tableCarbonValues {
     display:none;
     margin-bottom: 10px;
 }
 
-#tableChoice {
+#tableChoice, #carbonValues {
     width:1000px;
     background:black;
     color:white;

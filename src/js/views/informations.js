@@ -1,3 +1,8 @@
+/**
+ * Author:  Nicolas Hory
+ * Version: 0.0.1
+ */
+
 var clicksTable = []; // Table with all clicks of the user on the
 
 // Event listener for td
@@ -249,7 +254,7 @@ document.onkeydown = function (e) {
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
         d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
-        unselectChoices();
+        unselectInfoChoices();
         d3.select("#tableInformations").style("display", "none");
     }
 };
@@ -263,14 +268,15 @@ function checkSelectedThreeValues() {
     if(selectedCells[0].length === 3) {
         getMenuSelections(selectedCells);
         d3.select("#tableInformations").transition().style("display","none");
-        unselectChoices();
+        unselectInfoChoices();
+        d3.select("#tableCarbonValues").transition().style("display", "block");
     }
 }
 
 /**
  * Unselect the choices made in the informations table
  */
-function unselectChoices() {
+function unselectInfoChoices() {
     var selectedChoices = d3.selectAll(".selectedChoice")[0];
     for (var selected of selectedChoices) {
         d3.select("#" + selected.id).style("background","black").style("color", "white").classed("selectedChoice", false);
@@ -304,3 +310,5 @@ function getMenuSelections(selectedCells) {
         //Manage modification of the monosaccharide
     }
 }
+
+//var sugarTest = new Sugar("firstSugar");
