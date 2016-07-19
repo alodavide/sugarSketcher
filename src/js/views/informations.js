@@ -5,9 +5,9 @@
 
 var clicksTable = []; // Table with all clicks of the user on the
 
-// Event listener for td
-var choiceCells = document.getElementsByClassName("infoChoiceCell");
-for (var cell of choiceCells) {
+// Event listener for infosChoice
+var infoChoiceCells = document.getElementsByClassName("infoChoiceCell");
+for (var cell of infoChoiceCells) {
     cell.addEventListener('click', function(e) {
         // Select or unselect a cell
         var clickedCell = d3.select("#"+e.target.id);
@@ -34,7 +34,13 @@ for (var cell of choiceCells) {
         } else {
             clickedCell.style("background", "white").style("color", "black").classed("selectedChoice", true);
         }
-        checkSelectedThreeValues();
+
+        //If its a carbon choice, check if the two have been selected
+        if (classNames[1].indexOf("Carbon") > -1) {
+            checkSelectedCarbonValues();
+        } else { // Else it is an info choice, so we check that three has been selected
+            checkSelectedThreeInfoValues();
+        }
     });
 }
 
@@ -254,7 +260,7 @@ document.onkeydown = function (e) {
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
         d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
-        unselectInfoChoices();
+        unselectChoices();
         d3.select("#tableInformations").style("display", "none");
     }
 };
@@ -262,13 +268,13 @@ document.onkeydown = function (e) {
 /**
  * Check if the user has selected three values in the informations table
  */
-function checkSelectedThreeValues() {
+function checkSelectedThreeInfoValues() {
     var selectedCells = d3.selectAll(".selectedChoice");
     // The user selected the three values
     if(selectedCells[0].length === 3) {
-        getMenuSelections(selectedCells);
+        getInfoSelections(selectedCells);
         d3.select("#tableInformations").transition().style("display","none");
-        unselectInfoChoices();
+        unselectChoices();
         d3.select("#tableCarbonValues").transition().style("display", "block");
     }
 }
@@ -276,7 +282,7 @@ function checkSelectedThreeValues() {
 /**
  * Unselect the choices made in the informations table
  */
-function unselectInfoChoices() {
+function unselectChoices() {
     var selectedChoices = d3.selectAll(".selectedChoice")[0];
     for (var selected of selectedChoices) {
         d3.select("#" + selected.id).style("background","black").style("color", "white").classed("selectedChoice", false);
@@ -286,17 +292,38 @@ function unselectInfoChoices() {
 /**
  * Get the menus the user selected. Called when ended menus.
  */
-function getMenuSelections(selectedCells) {
+function getInfoSelections(selectedCells) {
     var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
     var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
-    var type = selectedCells.filter(".choiceRing")[0][0].innerText;
+    var ringType = selectedCells.filter(".choiceRing")[0][0].innerText;
+    clicksTable.push(anomericity);
+    clicksTable.push(isomer);
+    clicksTable.push(ringType);
+}
+
+function checkSelectedCarbonValues() {
+    var selectedCells = d3.selectAll(".selectedChoice");
+    // The user selected the three values
+    if(selectedCells[0].length === 2) {
+        getCarbonSelections(selectedCells);
+        d3.select("#tableCarbonValues").transition().style("display","none");
+        unselectChoices();
+    }
+}
+
+function getCarbonSelections(selectedCells) {
+    var linkCarbon = selectedCells.filter(".choiceLinkCarbon")[0][0].innerText;
+    var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
     var methodToCall = clicksTable[0].division; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
         var typeNodeToAdd = clicksTable[1].display_division; // Selected type, mono or sub
         var shape = clicksTable[2]; // Selected shape
         var color = clicksTable[3].display_division; // Selected color
-        console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + type + " " + shape + " " + color);
+        var anomericity = clicksTable[4]; // Anomericity
+        var isomer = clicksTable[5]; // Isomer
+        var ringType = clicksTable[6]; // Ring type
+        console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + ringType + " " + shape + " " + color + " " + linkCarbon + " " + anomerCarbon);
         // Manage add node
     } else if (methodToCall == "addStruct") {
         console.log("Need to add a structure");
@@ -306,7 +333,10 @@ function getMenuSelections(selectedCells) {
         console.log(clickedNode);
         var newShape = clicksTable[1]; // Selected shape
         var newColor = clicksTable[2].display_division; // Selected color
-        console.log("New informations on the mono: " + anomericity + " " + isomer + " " + type + " " + newShape + " " + newColor);
+        var anomericity = clicksTable[3]; // Anomericity
+        var isomer = clicksTable[4]; // Isomer
+        var ringType = clicksTable[5]; // Ring type
+        console.log("New informations on the mono: " + anomericity + " " + isomer + " " + ringType + " " + newShape + " " + newColor + " " + linkCarbon + " " + anomerCarbon);
         //Manage modification of the monosaccharide
     }
 }

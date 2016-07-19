@@ -4,14 +4,14 @@
     border-right: 1px solid white;
 }
 
-.infoChoiceCell {
+.infoChoiceCell, .carbonChoiceCell {
     text-align: center;
     border-right:1px solid white;
     border-top: 1px solid white;
     cursor:pointer;
 }
 
-.infoChoiceCell:hover {
+.infoChoiceCell:hover, .carbonChoiceCell:hover {
     background:white;
     color:black;
 }
