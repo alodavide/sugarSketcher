@@ -3,7 +3,8 @@ node_modules
 
 #Remove sigma.js class to be scanned by jshint
 src/js/dataStructure/Graph.js
-src/test/sigmaTest
+src/test/dataStructure/GraphTest.js
+src/test/utils/ConfigurableTest.js
 
 #Remove karma config
 karma.conf.js
