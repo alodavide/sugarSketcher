@@ -26,6 +26,15 @@ LinkedCarbon.initEnum({
     SIX: {
         value: 6
     },
+    SEVEN: {
+        value: 7
+    },
+    EIGHT: {
+        value: 8
+    },
+    NINE: {
+        value: 9
+    },
     UNDEFINED: {
         value: 'undefined'
     }

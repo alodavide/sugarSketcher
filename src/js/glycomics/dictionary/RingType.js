@@ -7,4 +7,4 @@ import {Enum} from 'enumify';
 
 export default class RingType extends Enum {}
 
-RingType.initEnum(['P', 'F', 'UNDEFINED']);
+RingType.initEnum(['P', 'F','OPEN', 'UNDEFINED']);
