@@ -297,6 +297,9 @@ QUnit.test( "Test Add and get monosaccharide with linkages" , function( assert )
 
 
     //Throw exception. Removed linkage
+    assert.raises(function(){
+        sugar.getNodeById(edge2.id);
+    });
 
 
 
