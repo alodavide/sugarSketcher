@@ -96,10 +96,13 @@ export default class Sugar{
 
     getNodeById(id){
         try{
-            return  this.graph.nodes(id);
+            var node = this.graph.nodes(id);
+            if(node)
+                return node;
         } catch (err){
             throw 'Error: '+ err;
         }
+        throw 'Error: The node does not exist';
     }
 
     /**
@@ -109,10 +112,13 @@ export default class Sugar{
      */
     getEdgeById(id){
         try{
-            return this.graph.edges(id);
+            var edge = this.graph.edges(id);
+            if(edge)
+                return edge;
         } catch (err){
             throw 'Error: '+ err;
         }
+        throw 'Error: The node does not exist';
     }
 
     /**

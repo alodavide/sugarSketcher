@@ -274,19 +274,31 @@ QUnit.test( "Test Add and get monosaccharide with linkages" , function( assert )
     assert.ok(sugar.getEdgeById('e1') === edge1, 'Test Edge Correct');
 
     assert.ok(sugar.getEdge(root,m2) === edge1, 'Test Edge Correct');
+    assert.notOk(sugar.getEdge(root,m1) === edge1, 'Test Edge Correct');
     assert.notOk(sugar.getEdgeById('edge-s2') === edge1, 'Test Substituent wrong');
-    //assert.notOk(sugar.getEdge(root,m2) === edge1, 'Test Substituent wrong')
+
+    //Throw exception. No edge between m1 and m2
+    assert.raises(function(){
+        sugar.getEdge(m1,m2);
+    });
 
     sugar.removeMonosaccharide(m2);
     assert.ok(sugar.size() === 4, 'Test get size correct');
+
     //Throw exception. Cannot get monosaccharides with substituent method.
     assert.raises(function(){
         sugar.getSubstituentById('m2');
     });
+
     //Throw exception. Monosaccharide already removed
     assert.raises(function(){
         sugar.getMonosaccharideById('m2');
     });
+
+
+    //Throw exception. Removed linkage
+
+
 
 
 
