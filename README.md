@@ -1,4 +1,4 @@
-# SugarBuilder
+# SugarBuilder [![Coverage Status](https://coveralls.io/repos/github/alodavide/sugarBuilder/badge.svg?branch=master)](https://coveralls.io/github/alodavide/sugarBuilder?branch=master)
 A tiny library to build sugars in javascript
 
 To install it please run npm init.
