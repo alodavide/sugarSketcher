@@ -34,7 +34,7 @@ svg {
     background: black;
 }
 
-#tableChoice, #svgMenu, #svgShape{
+#tableChoice, #svgMenu, #svgShape, #carbonValues{
     margin: 0 auto 10px;
 }
 
