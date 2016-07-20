@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-var clicksTable = []; // Table with all clicks of the user on the
+var infosTable = []; // Table with all infos selected by the user
 
 // Event listener for infosChoice
 var infoChoiceCells = document.getElementsByClassName("infoChoiceCell");
@@ -44,12 +44,11 @@ for (var cell of infoChoiceCells) {
     });
 }
 
+// Event listeners for the shape choice
 var shapeChoices= document.getElementsByClassName("shapeChoice");
 for (var shape of shapeChoices) {
     shape.addEventListener('click', function(e) {
-        clicksTable.push(e.target.parentNode.id.split("Shape")[0]);
-        console.log("just added click on shape");
-        console.log(clicksTable);
+        infosTable.push(e.target.parentNode.id.split("Shape")[0]);
         d3.select("#svgShape").transition().style("display", "none");
         updateMenu("Shape");
         d3.select("#svgMenu").transition().style("display", "block");
@@ -149,7 +148,7 @@ function updateMenu(chosenDivision) {
 
     // This case happens when update is called with no parameter (first update)
     if (typeof chosenDivision === 'undefined') { // First menu
-        clicksTable = []; // Re-initialize the list of clicks
+        infosTable = []; // Re-initialize the list of clicks
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
 
@@ -200,8 +199,19 @@ function updateMenu(chosenDivision) {
             return d.display_division
         })
         .on("click", function(d) {
-            clicksTable.push(d);
+            infosTable.push(d);
             updateMenu(d.division);
+        }).on("mouseover", function(d) {
+            if(d.division == "addNode") {
+                var x = d3.select("#svgMenu").select("#addNode").attr("x");
+                d3.select("#svgMenu").select("#addNode").remove();
+                bars.enter().append("rect").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", x).style("fill", "red");
+                bars.enter().append("rect").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x + 1000/6).style("fill", "blue");
+            }
+        }).on("mouseout", function(d) {
+            if(d.division == "addNode") {
+                console.log(d);
+            }
         });
 
     /*
@@ -259,9 +269,9 @@ document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
-        d3.selectAll('#nodeMenu').transition().duration(200).style("opacity", 0);
         unselectChoices();
         d3.select("#tableInformations").style("display", "none");
+        d3.select("#tableCarbonValues").style("display", "none");
     }
 };
 
@@ -296,9 +306,9 @@ function getInfoSelections(selectedCells) {
     var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
     var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
     var ringType = selectedCells.filter(".choiceRing")[0][0].innerText;
-    clicksTable.push(anomericity);
-    clicksTable.push(isomer);
-    clicksTable.push(ringType);
+    infosTable.push(anomericity);
+    infosTable.push(isomer);
+    infosTable.push(ringType);
 }
 
 function checkSelectedCarbonValues() {
@@ -314,15 +324,15 @@ function checkSelectedCarbonValues() {
 function getCarbonSelections(selectedCells) {
     var linkCarbon = selectedCells.filter(".choiceLinkCarbon")[0][0].innerText;
     var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
-    var methodToCall = clicksTable[0].division; // Gets the method which has to be called
+    var methodToCall = infosTable[0].division; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
-        var typeNodeToAdd = clicksTable[1].display_division; // Selected type, mono or sub
-        var shape = clicksTable[2]; // Selected shape
-        var color = clicksTable[3].display_division; // Selected color
-        var anomericity = clicksTable[4]; // Anomericity
-        var isomer = clicksTable[5]; // Isomer
-        var ringType = clicksTable[6]; // Ring type
+        var typeNodeToAdd = infosTable[1].display_division; // Selected type, mono or sub
+        var shape = infosTable[2]; // Selected shape
+        var color = infosTable[3].display_division; // Selected color
+        var anomericity = infosTable[4]; // Anomericity
+        var isomer = infosTable[5]; // Isomer
+        var ringType = infosTable[6]; // Ring type
         console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + ringType + " " + shape + " " + color + " " + linkCarbon + " " + anomerCarbon);
         // Manage add node
     } else if (methodToCall == "addStruct") {
@@ -331,14 +341,16 @@ function getCarbonSelections(selectedCells) {
     } else {
         console.log("Need to modify the mono");
         console.log(clickedNode);
-        var newShape = clicksTable[1]; // Selected shape
-        var newColor = clicksTable[2].display_division; // Selected color
-        var anomericity = clicksTable[3]; // Anomericity
-        var isomer = clicksTable[4]; // Isomer
-        var ringType = clicksTable[5]; // Ring type
+        var newShape = infosTable[1]; // Selected shape
+        var newColor = infosTable[2].display_division; // Selected color
+        var anomericity = infosTable[3]; // Anomericity
+        var isomer = infosTable[4]; // Isomer
+        var ringType = infosTable[5]; // Ring type
         console.log("New informations on the mono: " + anomericity + " " + isomer + " " + ringType + " " + newShape + " " + newColor + " " + linkCarbon + " " + anomerCarbon);
         //Manage modification of the monosaccharide
     }
 }
+
+
 
 //var sugarTest = new Sugar("firstSugar");

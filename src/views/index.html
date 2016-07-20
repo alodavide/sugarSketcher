@@ -13,35 +13,41 @@
 <div class="canvas">
     <svg id="svgMenu">
         <g id="chart">
-            <g id="actions" />
-            <g id="labels" />
+            <g id="actions">
+                <rect width="333.3333333333333" height="40" y="0" x="0" id="addNode" class="bar choice"></rect>
+                <rect width="333.3333333333333" height="40" y="0" x="333.3333333333333" id="addStructure" class="bar choice"></rect>
+                <rect width="333.3333333333333" height="40" y="0" x="666.6666666666666" id="changeMono" class="bar choice"></rect></g>
+            <g id="labels">
+                <text class="label" x="166.66666666666666" y="8">Add Node</text>
+                <text class="label" x="500" y="8">Add Structure</text>
+                <text class="label" x="833.3333333333333" y="8">Change Mono</text></g>
         </g>
     </svg>
     <svg id="svgShape">
         <g id="chart">
             <g id="circleShape" class="shapeChoice">
-                <rect width="166.6666666" height="40" fill="black" class="bar choice"/>
-                <circle cx="83.3333333" cy="20" r="15" fill="white"/>
+                <rect width="166.6666666" height="40" fill="black" class="bar choice"></rect>
+                <circle cx="83.3333333" cy="20" r="15" fill="white"></circle>
             </g>
             <g id="squareShape" class="shapeChoice">
-                <rect width="166.6666666" x="166.6666666" height="40" fill="black" class="bar choice"/>
-                <rect x="235" y="5" width="30" height="30" fill="white"/>
+                <rect width="166.6666666" x="166.6666666" height="40" fill="black" class="bar choice"></rect>
+                <rect x="235" y="5" width="30" height="30" fill="white"></rect>
             </g>
             <g id="triangleShape" class="shapeChoice">
-                <rect width="166.6666666" x="333.333333333" height="40" fill="black" class="bar choice"/>
-                <polygon points="416.6666666,5 436.6666666,35 396.6666666,35" fill="white" />
+                <rect width="166.6666666" x="333.333333333" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="416.6666666,5 436.6666666,35 396.6666666,35" fill="white"></polygon>
             </g>
             <g id="starShape" class="shapeChoice">
-                <rect width="166.6666666" x="500" height="40" fill="black" class="bar choice"/>
-                <polygon points="583.3333333,5 568.3333333,35 603.3333333,15 563.3333333,15 598.3333333,35" fill="white"/>
+                <rect width="166.6666666" x="500" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="583.3333333,5 570.3333333,35 603.3333333,15 563.3333333,15 596.3333333,35" fill="white"></polygon>
             </g>
             <g id="rectangleShape" class="shapeChoice">
-                <rect width="166.6666666" x="666.6666666" height="40" fill="black" class="bar choice"/>
-                <rect x="730" y="10" width="40" height="20" fill="white"/>
+                <rect width="166.6666666" x="666.6666666" height="40" fill="black" class="bar choice"></rect>
+                <rect x="730" y="10" width="40" height="20" fill="white"></rect>
             </g>
             <g id="diamondShape" class="shapeChoice">
-                <rect width="166.6666666" x="833.33333333" height="40" fill="black" class="bar choice"/>
-                <polygon points="901.6666666,20 916.6666666,5 931.6666666,20 916.6666666,35" fill="white"/>
+                <rect width="166.6666666" x="833.33333333" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="901.6666666,20 916.6666666,5 931.6666666,20 916.6666666,35" fill="white"></polygon>
             </g>
         </g>
     </svg>
@@ -89,9 +95,9 @@
     </div>
 </div>
 <div id="viz"></div>
-</body>
-
+<script type="text/javascript" src="../js/Sugar.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="../js/views/app.js"></script>
 <script src="../js/views/informations.js"></script>
+</body>
 </html>
