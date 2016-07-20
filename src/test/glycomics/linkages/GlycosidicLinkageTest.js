@@ -6,7 +6,7 @@
 import GlycosidicLinkage from "../../../js/glycomics/linkages/GlycosidicLinkage";
 import AnomerCarbon from "../../../js/glycomics/dictionary/AnomerCarbon";
 import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
-import Node from "../../../js/dataStructure/Node";
+import Node from "../../../js/dataStructure/GraphNode";
 
 QUnit.module("Test GlycosidicLinkage object", {
 });

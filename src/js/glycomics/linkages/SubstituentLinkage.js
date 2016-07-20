@@ -2,7 +2,7 @@
  * Author:  Davide Alocci
  * Version: 0.0.1
  */
-import Edge from '../../dataStructure/Edge';
+import Edge from '../../dataStructure/GraphEdge';
 import LinkedCarbon from '../dictionary/LinkedCarbon';
 
 

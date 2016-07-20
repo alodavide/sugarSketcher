@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import Node from '../../dataStructure/Node';
+import Node from '../../dataStructure/GraphNode';
 import SubstituentType from '../../glycomics/dictionary/SubstituentType';
 
 export default class Substituent extends Node{

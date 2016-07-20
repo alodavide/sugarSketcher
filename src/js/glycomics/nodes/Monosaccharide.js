@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import Node from '../../dataStructure/Node';
+import Node from '../../dataStructure/GraphNode';
 import Anomericity from '../../glycomics/dictionary/Anomericity';
 import Isomer from '../../glycomics/dictionary/Isomer';
 import RingType from '../../glycomics/dictionary/RingType';

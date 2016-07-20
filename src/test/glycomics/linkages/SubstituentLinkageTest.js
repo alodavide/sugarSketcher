@@ -5,7 +5,7 @@
 
 import SubstituentLinkage from "../../../js/glycomics/linkages/SubstituentLinkage";
 import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
-import Node from "../../../js/dataStructure/Node";
+import Node from "../../../js/dataStructure/GraphNode";
 
 QUnit.module("Test SubstituentLinkage object", {
 });

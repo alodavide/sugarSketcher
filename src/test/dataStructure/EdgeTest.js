@@ -3,8 +3,8 @@
  * Version: 0.0.1
  */
 
-import Edge from "../../js/dataStructure/Edge";
-import Node from "../../js/dataStructure/Node";
+import Edge from "../../js/dataStructure/GraphEdge";
+import Node from "../../js/dataStructure/GraphNode";
 
 QUnit.module("Test Edge object", {});
 
