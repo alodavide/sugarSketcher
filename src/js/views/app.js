@@ -50,6 +50,7 @@ var addNewNode = function() {
             clickCircle(d);
             updateMenu();
             d3.select("#tableInformations").style("display","none");
+            d3.select("#svgShape").style("display", "none");
             d3.select("#svgMenu").style("display", "block");
             if (d3.event.defaultPrevented) return; // click suppressed
 
@@ -148,6 +149,7 @@ var node = vis.selectAll("g.node")
         d3.event.stopPropagation();
         updateMenu();
         d3.select("#tableInformations").style("display","none");
+        d3.select("#svgShape").style("display", "none");
         d3.select("#svgMenu").style("display", "block");
         if (d3.event.defaultPrevented) return; // click suppressed
     });

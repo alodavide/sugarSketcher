@@ -121,7 +121,7 @@ var menuAction = [{
  */
 function updateMenu(chosenDivision) {
     // Size and margin properties
-    var cDim = {
+    var menuDimensions = {
         height: 40,
         width: 1000,
         barMargin: 0
@@ -138,11 +138,11 @@ function updateMenu(chosenDivision) {
     // Scale function with heights.
     var barHeight = d3.scale.linear()
         .domain([0, maxHeight])
-        .range([0, cDim.height]);
+        .range([0, menuDimensions.height]);
     // Set the height and width of our SVG element
     var svgMenu = d3.select("#svgMenu").attr({
-        height: cDim.height,
-        width: cDim.width
+        height: menuDimensions.height,
+        width: menuDimensions.width
     });
     var newMenuAction = [];
 
@@ -174,21 +174,21 @@ function updateMenu(chosenDivision) {
         return;
     }
     // Figure out how much space is actually available for the divisions
-    var marginlessWidth = cDim.width - (cDim.barMargin * (newMenuAction.length - 1));
-    cDim.barWidth = marginlessWidth / newMenuAction.length;
+    var marginlessWidth = menuDimensions.width - (menuDimensions.barMargin * (newMenuAction.length - 1));
+    menuDimensions.barWidth = marginlessWidth / newMenuAction.length;
     var bars = actions.selectAll("rect").data(newMenuAction);
     bars.enter().append("rect")
         .attr("width", function () {
-            return cDim.barWidth
+            return menuDimensions.barWidth
         })
         .attr("height", function () {
             return barHeight(10)
         })
         .attr("y", function () {
-            return cDim.height - barHeight(10);
+            return menuDimensions.height - barHeight(10);
         })
         .attr("x", function (d, i) {
-            return (cDim.barWidth + cDim.barMargin) * i;
+            return (menuDimensions.barWidth + menuDimensions.barMargin) * i;
         })
         .attr("id", function (d) {
             return d.division;
@@ -205,12 +205,15 @@ function updateMenu(chosenDivision) {
             if(d.division == "addNode") {
                 var x = d3.select("#svgMenu").select("#addNode").attr("x");
                 d3.select("#svgMenu").select("#addNode").remove();
-                bars.enter().append("rect").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", x).style("fill", "red");
-                bars.enter().append("rect").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x + 1000/6).style("fill", "blue");
-            }
-        }).on("mouseout", function(d) {
-            if(d.division == "addNode") {
-                console.log(d);
+                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).style("fill", "red").on("mouseout", function() {
+                    updateMenu();
+                });
+                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).style("fill", "red").on("mouseout", function() {
+                    updateMenu();
+                });
+                labels.selectAll("text")[0][0].remove();
+                labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000/12).attr("y", 8);
+                labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
             }
         });
 
@@ -224,10 +227,10 @@ function updateMenu(chosenDivision) {
         textNodes.enter().append("text")
             .attr("class", "label")
             .attr("x", function (d, i) {
-                return ((cDim.barWidth + cDim.barMargin) * i) + (cDim.barWidth / 2);
+                return ((menuDimensions.barWidth + menuDimensions.barMargin) * i) + (menuDimensions.barWidth / 2);
             })
             .attr("y", function () {
-                return cDim.height - barHeight(10) + 8;
+                return menuDimensions.height - barHeight(10) + 8;
             })
             .text(function (d) {
                 return d.display_division;
