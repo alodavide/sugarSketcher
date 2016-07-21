@@ -205,11 +205,21 @@ function updateMenu(chosenDivision) {
             if(d.division == "addNode") {
                 var x = d3.select("#svgMenu").select("#addNode").attr("x");
                 d3.select("#svgMenu").select("#addNode").remove();
-                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).style("fill", "red").on("mouseout", function() {
+                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).on("mouseout", function() {
                     updateMenu();
+                }).on("click", function () {
+                    infosTable.push(d);
+                    infosTable.push(d.subDivisions[1]);
+                    updateMenu(d.subDivisions[1].division);
+                    return;
                 });
-                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).style("fill", "red").on("mouseout", function() {
+                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).on("mouseout", function() {
                     updateMenu();
+                }).on("click", function () {
+                    infosTable.push(d);
+                    infosTable.push(d.subDivisions[0]);
+                    updateMenu(d.subDivisions[0].division);
+                    return;
                 });
                 labels.selectAll("text")[0][0].remove();
                 labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000/12).attr("y", 8);
@@ -327,6 +337,7 @@ function checkSelectedCarbonValues() {
 function getCarbonSelections(selectedCells) {
     var linkCarbon = selectedCells.filter(".choiceLinkCarbon")[0][0].innerText;
     var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
+    console.log(infosTable);
     var methodToCall = infosTable[0].division; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
