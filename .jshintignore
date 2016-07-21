@@ -14,3 +14,6 @@ src/js/views
 
 #Remove coverage
 coverage
+
+#Remove bundle directory
+dest

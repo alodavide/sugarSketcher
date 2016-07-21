@@ -10,6 +10,8 @@
     "enumify": "^1.0.4"
   },
   "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.7.4",
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.2.0",
@@ -29,7 +31,9 @@
     "precommit-hook": "^3.0.0",
     "promise-polyfill": "^2.0.2",
     "qunit": "^0.7.6",
-    "qunitjs": "^1.18.0"
+    "qunitjs": "^1.18.0",
+    "webpack": "^1.13.1",
+    "webpack-stream": "^3.2.0"
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
