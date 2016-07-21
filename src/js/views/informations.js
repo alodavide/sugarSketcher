@@ -238,6 +238,7 @@ function updateMenu(chosenDivision) {
             });
     }
 
+    // If not the first menu, we add a cancel button to come back to last step
     if (typeof chosenDivision != 'undefined') {
         // We add the rect and the label to cancel last click
         actions.append("rect")
