@@ -34,6 +34,10 @@ svg {
     background: black;
 }
 
+#svgMenu {
+    display:none;
+}
+
 #tableChoice, #svgMenu, #svgShape, #carbonValues{
     margin: 0 auto 10px;
 }

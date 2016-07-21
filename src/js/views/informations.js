@@ -3,13 +3,13 @@
  * Version: 0.0.1
  */
 
-var infosTable = []; // Table with all infos selected by the user
+var infosTable = []; // Table with all informations selected by the user
 
 // Event listener for infosChoice
 var infoChoiceCells = document.getElementsByClassName("infoChoiceCell");
 for (var cell of infoChoiceCells) {
     cell.addEventListener('click', function(e) {
-        // Select or unselect a cell
+        // Get the clicked cell
         var clickedCell = d3.select("#"+e.target.id);
         // Gets classes of the clicked cell
         var classNames =  $(e.target).attr("class").split(' ');
@@ -123,8 +123,7 @@ function updateMenu(chosenDivision) {
     // Size and margin properties
     var menuDimensions = {
         height: 40,
-        width: 1000,
-        barMargin: 0
+        width: 1000
     };
 
     d3.select("#actions").selectAll("*").remove(); // Reinitialize the svg actions menu
@@ -132,13 +131,6 @@ function updateMenu(chosenDivision) {
     var actions = d3.select("#actions"); // Actions
     var labels = d3.select("#labels"); // Labels
 
-    // Height of our menu
-    var maxHeight = 10;
-
-    // Scale function with heights.
-    var barHeight = d3.scale.linear()
-        .domain([0, maxHeight])
-        .range([0, menuDimensions.height]);
     // Set the height and width of our SVG element
     var svgMenu = d3.select("#svgMenu").attr({
         height: menuDimensions.height,
@@ -173,22 +165,21 @@ function updateMenu(chosenDivision) {
         d3.select("#svgMenu").transition().style("display", "none");
         return;
     }
-    // Figure out how much space is actually available for the divisions
-    var marginlessWidth = menuDimensions.width - (menuDimensions.barMargin * (newMenuAction.length - 1));
-    menuDimensions.barWidth = marginlessWidth / newMenuAction.length;
+
+    menuDimensions.barWidth = menuDimensions.width / newMenuAction.length;
     var bars = actions.selectAll("rect").data(newMenuAction);
     bars.enter().append("rect")
         .attr("width", function () {
-            return menuDimensions.barWidth
+            return menuDimensions.barWidth;
         })
         .attr("height", function () {
-            return barHeight(10)
+            return menuDimensions.height;
         })
         .attr("y", function () {
-            return menuDimensions.height - barHeight(10);
+            return 0;
         })
         .attr("x", function (d, i) {
-            return (menuDimensions.barWidth + menuDimensions.barMargin) * i;
+            return menuDimensions.barWidth * i;
         })
         .attr("id", function (d) {
             return d.division;
@@ -199,7 +190,7 @@ function updateMenu(chosenDivision) {
             return d.display_division
         })
         .on("click", function(d) {
-            infosTable.push(d);
+            infosTable.push(d.division);
             updateMenu(d.division);
         }).on("mouseover", function(d) {
             if(d.division == "addNode") {
@@ -208,16 +199,16 @@ function updateMenu(chosenDivision) {
                 actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).on("mouseout", function() {
                     updateMenu();
                 }).on("click", function () {
-                    infosTable.push(d);
-                    infosTable.push(d.subDivisions[1]);
+                    infosTable.push(d.division);
+                    infosTable.push(d.subDivisions[1].display_division);
                     updateMenu(d.subDivisions[1].division);
                     return;
                 });
                 actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).on("mouseout", function() {
                     updateMenu();
                 }).on("click", function () {
-                    infosTable.push(d);
-                    infosTable.push(d.subDivisions[0]);
+                    infosTable.push(d.division);
+                    infosTable.push(d.subDivisions[0].display_division);
                     updateMenu(d.subDivisions[0].division);
                     return;
                 });
@@ -231,25 +222,21 @@ function updateMenu(chosenDivision) {
      *  Label drawing block, if we are displaying colors, labels not needed because of color fill
      */
     if (newMenuAction != colorDivisions) {
-
         var textNodes = labels.selectAll("text").data(newMenuAction);
-
         textNodes.enter().append("text")
             .attr("class", "label")
             .attr("x", function (d, i) {
-                return ((menuDimensions.barWidth + menuDimensions.barMargin) * i) + (menuDimensions.barWidth / 2);
+                return (menuDimensions.barWidth * i) + (menuDimensions.barWidth / 2);
             })
             .attr("y", function () {
-                return menuDimensions.height - barHeight(10) + 8;
+                return menuDimensions.height/5; // Choose an y to center label
             })
             .text(function (d) {
                 return d.display_division;
             });
     }
-    // remove old elements
-    // bars.exit().remove();
-    //textNodes.exit().remove();
 }
+
 /**
  * Get SubDivisions of a searched division, using recursive calls
  * @param divisionToCheck
@@ -271,8 +258,6 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
         }
     }
 }
-
-d3.select("#svgMenu").style("display", "none");
 
 /**
  * Just to allow if you clicked on a node by mistake to shut down the appeared menus
@@ -324,6 +309,9 @@ function getInfoSelections(selectedCells) {
     infosTable.push(ringType);
 }
 
+/**
+ * Checks if the user selected the two carbon values
+ */
 function checkSelectedCarbonValues() {
     var selectedCells = d3.selectAll(".selectedChoice");
     // The user selected the three values
@@ -334,16 +322,20 @@ function checkSelectedCarbonValues() {
     }
 }
 
+/**
+ * Get the carbon selections and launch treatment of informations
+ * @param selectedCells
+ */
 function getCarbonSelections(selectedCells) {
     var linkCarbon = selectedCells.filter(".choiceLinkCarbon")[0][0].innerText;
     var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
     console.log(infosTable);
-    var methodToCall = infosTable[0].division; // Gets the method which has to be called
+    var methodToCall = infosTable[0]; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
-        var typeNodeToAdd = infosTable[1].display_division; // Selected type, mono or sub
+        var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
         var shape = infosTable[2]; // Selected shape
-        var color = infosTable[3].display_division; // Selected color
+        var color = getColorCodeFromString(infosTable[3]); // Selected color
         var anomericity = infosTable[4]; // Anomericity
         var isomer = infosTable[5]; // Isomer
         var ringType = infosTable[6]; // Ring type
@@ -356,12 +348,26 @@ function getCarbonSelections(selectedCells) {
         console.log("Need to modify the mono");
         console.log(clickedNode);
         var newShape = infosTable[1]; // Selected shape
-        var newColor = infosTable[2].display_division; // Selected color
+        var newColor = getColorCodeFromString(infosTable[2]); // Selected color
         var anomericity = infosTable[3]; // Anomericity
         var isomer = infosTable[4]; // Isomer
         var ringType = infosTable[5]; // Ring type
         console.log("New informations on the mono: " + anomericity + " " + isomer + " " + ringType + " " + newShape + " " + newColor + " " + linkCarbon + " " + anomerCarbon);
         //Manage modification of the monosaccharide
+    }
+}
+
+
+/**
+ * Get color code from a string, using colorDivisions
+ * @param colorName
+ * @returns {string|string|string|string|string|string|*}
+ */
+function getColorCodeFromString(colorName) {
+    for (var i = 0; i < colorDivisions.length; i++) {
+        if (colorDivisions[i].division == colorName) {
+            return colorDivisions[i].display_division;
+        }
     }
 }
 
