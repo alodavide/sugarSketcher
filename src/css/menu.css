@@ -36,6 +36,7 @@ svg {
 
 #svgMenu {
     display:none;
+    overflow: visible;
 }
 
 #tableChoice, #svgMenu, #svgShape, #carbonValues{
@@ -45,4 +46,3 @@ svg {
 #viz {
     margin: 0 auto;
 }
-

@@ -3,6 +3,7 @@
  * Version: 0.0.1
  */
 
+var menuChosenPath;
 var infosTable = []; // Table with all informations selected by the user
 
 // Event listener for infosChoice
@@ -50,7 +51,7 @@ for (var shape of shapeChoices) {
     shape.addEventListener('click', function(e) {
         infosTable.push(e.target.parentNode.id.split("Shape")[0]);
         d3.select("#svgShape").transition().style("display", "none");
-        updateMenu("Shape");
+        updateMenu("shape");
         d3.select("#svgMenu").transition().style("display", "block");
     });
 }
@@ -140,10 +141,11 @@ function updateMenu(chosenDivision) {
 
     // This case happens when update is called with no parameter (first update)
     if (typeof chosenDivision === 'undefined') { // First menu
+        menuChosenPath = []; // Re-initialize the path
         infosTable = []; // Re-initialize the list of clicks
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
-
+        menuChosenPath.push(chosenDivision);
         // If chose a color, then we hide the svg and show the table for anomericity, isomer and type
         if (chosenDivision.indexOf("Color") > -1) {
             d3.select("#tableInformations").transition().duration(200).style("display", "block");
@@ -235,6 +237,30 @@ function updateMenu(chosenDivision) {
                 return d.display_division;
             });
     }
+
+    if (typeof chosenDivision != 'undefined') {
+        // We add the rect and the label to cancel last click
+        actions.append("rect")
+            .attr("width", 80)
+            .attr("class", "bar")
+            .attr("height", 40)
+            .attr("id", "cancelChoice")
+            .attr("x", 1000).attr("y", 0)
+            .style("fill", "red")
+            .attr("transform", "translate(10)")
+            .on("click", function () {
+                console.log(menuChosenPath);
+                menuChosenPath.pop();
+                updateMenu(menuChosenPath.pop());
+                //infosTable.pop();
+                //updateMenu(chosenDivision);
+            });
+        labels.append("text")
+            .attr("class", "label")
+            .attr("x", 1050)
+            .attr("y", 8)
+            .text("Cancel");
+    }
 }
 
 /**
@@ -244,7 +270,7 @@ function updateMenu(chosenDivision) {
  * @returns {*}
  */
 function getSubDivisions (divisionToCheck, searchedDivision) {
-    if (searchedDivision.indexOf("Shape") > -1) {
+    if (searchedDivision.indexOf("shape") > -1) {
         return colorDivisions;
     }
     if (divisionToCheck) {
@@ -364,13 +390,12 @@ function getCarbonSelections(selectedCells) {
  * @returns {string|string|string|string|string|string|*}
  */
 function getColorCodeFromString(colorName) {
-    for (var i = 0; i < colorDivisions.length; i++) {
-        if (colorDivisions[i].division == colorName) {
-            return colorDivisions[i].display_division;
+    for (var color of colorDivisions) {
+        if (color.division == colorName) {
+            return color.display_division;
         }
     }
 }
 
-
-
-//var sugarTest = new Sugar("firstSugar");
+// Test just to initialize a sugar
+var sugarTest = new sb.Sugar("firstSugar");
