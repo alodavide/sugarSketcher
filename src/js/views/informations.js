@@ -14,28 +14,13 @@ for (var cell of infoChoiceCells) {
         var clickedCell = d3.select("#"+e.target.id);
         // Gets classes of the clicked cell
         var classNames =  $(e.target).attr("class").split(' ');
-        //Remove the selected classes of the list, because unneeded
-        var indexSelected = classNames.indexOf("selectedChoice");
-        if(indexSelected > -1) {
-            classNames.splice(indexSelected, 1);
-        }
-        // Get the other cells with same classes (i.e for the same choice)
-        var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
-        for (var other of otherCells[0]) {
-            // If one is selected, it's unselected
-            if (other.id != e.target.id) {
-                if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
-                    d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
-                }
-            }
-        }
+        updateSelectionCells(classNames); // Update the selection
         // Invert color and background
         if (clickedCell.classed("selectedChoice")) {
             clickedCell.style("background", "black").style("color", "white").classed("selectedChoice", false);
         } else {
             clickedCell.style("background", "white").style("color", "black").classed("selectedChoice", true);
         }
-
         //If its a carbon choice, check if the two have been selected
         if (classNames[1].indexOf("Carbon") > -1) {
             checkSelectedCarbonValues();
@@ -43,6 +28,28 @@ for (var cell of infoChoiceCells) {
             checkSelectedThreeInfoValues();
         }
     });
+}
+
+/**
+ * Function changing the selected cells classes and styles
+ * @param classNames
+ */
+function updateSelectionCells(classNames) {
+    //Remove the selected classes of the list, because unneeded
+    var indexSelected = classNames.indexOf("selectedChoice");
+    if(indexSelected > -1) {
+        classNames.splice(indexSelected, 1);
+    }
+    // Get the other cells with same classes (i.e for the same choice)
+    var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
+    for (var other of otherCells[0]) {
+        // If one is selected, it's unselected
+        if (other.id != e.target.id) {
+            if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
+                d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
+            }
+        }
+    }
 }
 
 // Event listeners for the shape choice
@@ -56,11 +63,13 @@ for (var shape of shapeChoices) {
     });
 }
 
+// Cancel button in shape menu, coming back to main menu
 var shapeCancelButton = d3.select("#cancelChoiceShape");
 shapeCancelButton.on("click", function() {
     updateMenu();
 });
 
+// Cancel button in informations table, coming back to shape svg, managing displays
 var infosCancelButton = d3.select("#cancelChoiceInfos");
 infosCancelButton.on("click", function() {
     infosTable.pop();
@@ -69,6 +78,7 @@ infosCancelButton.on("click", function() {
     d3.select("#svgMenu").transition().style("display", "block");
 });
 
+// Cancel button in carbon table, coming back to informations table, managing displays
 var carbonCancelButton = d3.select("#cancelChoiceCarbon");
 carbonCancelButton.on("click", function() {
     infosTable.pop();
@@ -222,24 +232,7 @@ function updateMenu(chosenDivision) {
             updateMenu(d.division);
         }).on("mouseover", function(d) {
             if(d.division == "addNode") {
-                var x = d3.select("#svgMenu").select("#addNode").attr("x");
-                d3.select("#svgMenu").select("#addNode").remove();
-                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).on("mouseout", function() {
-                    updateMenu();
-                }).on("click", function () {
-                    infosTable.push(d.division);
-                    infosTable.push(d.subDivisions[1].display_division);
-                    updateMenu(d.subDivisions[1].division);
-                    return;
-                });
-                actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", d.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).on("mouseout", function() {
-                    updateMenu();
-                }).on("click", function () {
-                    infosTable.push(d.division);
-                    infosTable.push(d.subDivisions[0].display_division);
-                    updateMenu(d.subDivisions[0].division);
-                    return;
-                });
+                manageHoverAddNode(d,actions);
                 labels.selectAll("text")[0][0].remove();
                 labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000/12).attr("y", 8);
                 labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
@@ -266,28 +259,61 @@ function updateMenu(chosenDivision) {
 
     // If not the first menu, we add a cancel button to come back to last step
     if (typeof chosenDivision != 'undefined') {
-        // We add the rect and the label to cancel last click
-        actions.append("rect")
-            .attr("width", 80)
-            .attr("class", "bar")
-            .attr("height", 40)
-            .attr("id", "cancelChoice")
-            .attr("x", 1000).attr("y", 0)
-            .style("fill", "red")
-            .attr("transform", "translate(10)")
-            .on("click", function () {
-                menuChosenPath.pop();
-                updateMenu(menuChosenPath.pop());
-                infosTable.pop();
-            });
-        labels.append("text")
-            .attr("class", "label")
-            .attr("x", 1050)
-            .attr("y", 8)
-            .text("Cancel");
+        addCancelOperation(actions, labels);
     }
 }
 
+/**
+ * Function called on hover on add node menu. Split the rectangle in the two sub options (Sub or Mono)
+ * @param actions
+ */
+function manageHoverAddNode(menuItem,actions) {
+    var x = d3.select("#svgMenu").select("#addNode").attr("x");
+    d3.select("#svgMenu").select("#addNode").remove();
+    actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", menuItem.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).on("mouseout", function() {
+        updateMenu();
+    }).on("click", function () {
+        infosTable.push(menuItem.division);
+        infosTable.push(menuItem.subDivisions[1].display_division);
+        updateMenu(menuItem.subDivisions[1].division);
+        return;
+    });
+    actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", menuItem.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).on("mouseout", function() {
+        updateMenu();
+    }).on("click", function () {
+        infosTable.push(menuItem.division);
+        infosTable.push(menuItem.subDivisions[0].display_division);
+        updateMenu(menuItem.subDivisions[0].division);
+        return;
+    });
+}
+
+/**
+ * Add a cancel button (rectangle), enabling to come back to last step
+ * @param actions
+ * @param labels
+ */
+function addCancelOperation (actions, labels) {
+    // We add the rect and the label to cancel last click
+    actions.append("rect")
+        .attr("width", 80)
+        .attr("class", "bar")
+        .attr("height", 40)
+        .attr("id", "cancelChoice")
+        .attr("x", 1000).attr("y", 0)
+        .style("fill", "red")
+        .attr("transform", "translate(10)")
+        .on("click", function () {
+            menuChosenPath.pop();
+            updateMenu(menuChosenPath.pop());
+            infosTable.pop();
+        });
+    labels.append("text")
+        .attr("class", "label")
+        .attr("x", 1050)
+        .attr("y", 8)
+        .text("Cancel");
+}
 /**
  * Get SubDivisions of a searched division, using recursive calls
  * @param divisionToCheck
