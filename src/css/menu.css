@@ -48,10 +48,6 @@ svg {
     margin: 0 auto;
 }
 
-.titleCancelChoice {
-    background: white;
-}
-
 .cancelChoiceCell {
     background:red;
     cursor:pointer;

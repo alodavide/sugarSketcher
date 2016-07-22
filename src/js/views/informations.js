@@ -56,6 +56,28 @@ for (var shape of shapeChoices) {
     });
 }
 
+var shapeCancelButton = d3.select("#cancelChoiceShape");
+shapeCancelButton.on("click", function() {
+    updateMenu();
+});
+
+var infosCancelButton = d3.select("#cancelChoiceInfos");
+infosCancelButton.on("click", function() {
+    infosTable.pop();
+    d3.select("#tableInformations").transition().style("display", "none");
+    updateMenu("shape");
+    d3.select("#svgMenu").transition().style("display", "block");
+});
+
+var carbonCancelButton = d3.select("#cancelChoiceCarbon");
+carbonCancelButton.on("click", function() {
+    infosTable.pop();
+    infosTable.pop();
+    infosTable.pop();
+    d3.select("#tableCarbonValues").transition().style("display", "none");
+    d3.select("#tableInformations").transition().style("display", "block");
+});
+
 // Color Divisions with all possible colors
 var colorDivisions = [{
         division: "whiteColor",
@@ -143,6 +165,10 @@ function updateMenu(chosenDivision) {
     if (typeof chosenDivision === 'undefined') { // First menu
         menuChosenPath = []; // Re-initialize the path
         infosTable = []; // Re-initialize the list of clicks
+        d3.select("#svgShape").transition().style("display", "none");
+        d3.select("#tableInformations").transition().style("display", "none");
+        d3.select("#tableCarbonValues").transition().style("display", "none");
+        d3.select("#svgMenu").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
         menuChosenPath.push(chosenDivision);
@@ -250,11 +276,9 @@ function updateMenu(chosenDivision) {
             .style("fill", "red")
             .attr("transform", "translate(10)")
             .on("click", function () {
-                console.log(menuChosenPath);
                 menuChosenPath.pop();
                 updateMenu(menuChosenPath.pop());
-                //infosTable.pop();
-                //updateMenu(chosenDivision);
+                infosTable.pop();
             });
         labels.append("text")
             .attr("class", "label")
