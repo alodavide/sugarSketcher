@@ -14,7 +14,7 @@ for (var cell of infoChoiceCells) {
         var clickedCell = d3.select("#"+e.target.id);
         // Gets classes of the clicked cell
         var classNames =  $(e.target).attr("class").split(' ');
-        updateSelectionCells(classNames); // Update the selection
+        updateSelectionCells(e,classNames); // Update the selection
         // Invert color and background
         if (clickedCell.classed("selectedChoice")) {
             clickedCell.style("background", "black").style("color", "white").classed("selectedChoice", false);
@@ -34,7 +34,7 @@ for (var cell of infoChoiceCells) {
  * Function changing the selected cells classes and styles
  * @param classNames
  */
-function updateSelectionCells(classNames) {
+function updateSelectionCells(event, classNames) {
     //Remove the selected classes of the list, because unneeded
     var indexSelected = classNames.indexOf("selectedChoice");
     if(indexSelected > -1) {
@@ -44,7 +44,7 @@ function updateSelectionCells(classNames) {
     var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
     for (var other of otherCells[0]) {
         // If one is selected, it's unselected
-        if (other.id != e.target.id) {
+        if (other.id != event.target.id) {
             if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
                 d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
             }
@@ -207,24 +207,17 @@ function updateMenu(chosenDivision) {
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length;
     var bars = actions.selectAll("rect").data(newMenuAction);
     bars.enter().append("rect")
-        .attr("width", function () {
-            return menuDimensions.barWidth;
-        })
-        .attr("height", function () {
-            return menuDimensions.height;
-        })
-        .attr("y", function () {
-            return 0;
-        })
+        .attr("width", menuDimensions.barWidth)
+        .attr("height",menuDimensions.heightz)
+        .attr("y", 0)
         .attr("x", function (d, i) {
             return menuDimensions.barWidth * i;
         })
         .attr("id", function (d) {
             return d.division;
         })
-        .attr("class", function() {
-            return "bar choice"
-        }).style("fill", function(d) {
+        .attr("class", "bar choice")
+        .style("fill", function(d) {
             return d.display_division
         })
         .on("click", function(d) {
@@ -270,7 +263,11 @@ function updateMenu(chosenDivision) {
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x");
     d3.select("#svgMenu").select("#addNode").remove();
-    actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", menuItem.subDivisions[1].division).attr("width", 1000/6).attr("height", 40).attr("x", x).on("mouseout", function() {
+    actions.insert("rect", ":first-child")
+        .attr("class", "bar choice")
+        .attr("id", menuItem.subDivisions[1].division)
+        .attr("width", 1000/6).attr("height", 40)
+        .attr("x", x).on("mouseout", function() {
         updateMenu();
     }).on("click", function () {
         infosTable.push(menuItem.division);
@@ -278,7 +275,11 @@ function manageHoverAddNode(menuItem,actions) {
         updateMenu(menuItem.subDivisions[1].division);
         return;
     });
-    actions.insert("rect", ":first-child").attr("class", "bar choice").attr("id", menuItem.subDivisions[0].division).attr("width", 1000/6).attr("height", 40).attr("x", 1000/6).on("mouseout", function() {
+    actions.insert("rect", ":first-child")
+        .attr("class", "bar choice")
+        .attr("id", menuItem.subDivisions[0].division)
+        .attr("width", 1000/6).attr("height", 40)
+        .attr("x", 1000/6).on("mouseout", function() {
         updateMenu();
     }).on("click", function () {
         infosTable.push(menuItem.division);
