@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-var menuChosenPath;
+var menuChosenPath; // Path taken by user in the menu
 var infosTable = []; // Table with all informations selected by the user
 
 // Event listener for infosChoice
@@ -410,18 +410,14 @@ function checkSelectedCarbonValues() {
 function getCarbonSelections(selectedCells) {
     var linkCarbon = selectedCells.filter(".choiceLinkCarbon")[0][0].innerText;
     var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
+    infosTable.push(linkCarbon);
+    infosTable.push(anomerCarbon);
     console.log(infosTable);
     var methodToCall = infosTable[0]; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         console.log("Need to add a node");
-        var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
-        var shape = infosTable[2]; // Selected shape
-        var color = getColorCodeFromString(infosTable[3]); // Selected color
-        var anomericity = infosTable[4]; // Anomericity
-        var isomer = infosTable[5]; // Isomer
-        var ringType = infosTable[6]; // Ring type
-        console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + ringType + " " + shape + " " + color + " " + linkCarbon + " " + anomerCarbon);
         // Manage add node
+        createNewNode();
     } else if (methodToCall == "addStruct") {
         console.log("Need to add a structure");
         // Manage add structure
@@ -438,6 +434,86 @@ function getCarbonSelections(selectedCells) {
     }
 }
 
+/**
+ * Create a new node using the informations selected by the user
+ */
+function createNewNode() {
+    var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
+    var shape = infosTable[2]; // Selected shape
+    var color = getColorCodeFromString(infosTable[3]); // Selected color
+    var anomericity = infosTable[4]; // Anomericity
+    var isomer = infosTable[5]; // Isomer
+    var ring = infosTable[6]; // Ring type
+    var linkCarbon = infosTable[7];
+    var anomerCarbon = infosTable[8];
+    console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + ring + " " + shape + " " + color + " " + linkCarbon + " " + anomerCarbon);
+    if (typeNodeToAdd == "Monosaccharide") {
+        var monoType = getMonoTypeWithColorAndShape(color, shape);
+        var anomericityType = getAnomericityWithSelection(anomericity);
+        var isomerType= getIsomerWithSelection(isomer);
+        var ringType = getRingTypeWithSelection(ring);
+        console.log("Je dois créer un mono de type " + monoType + " avec une anomericity " + anomericityType + " avec un isomer " + isomerType + " et un ring " + ringType);
+    }
+}
+
+/**
+ * Find in the MonosaccharideType enum the corresponding type for a given color and shape
+ * @param color
+ * @param shape
+ */
+function getMonoTypeWithColorAndShape(color, shape) {
+    for (var type of sb.MonosaccharideType) {
+        if(type.color == color && type.shape == shape) {
+            return type;
+        }
+    }
+    return sb.MonosaccharideType.UNDEFINED;
+}
+
+/**
+ * Find in the Anomericity enum the corresponding value for a given selected value
+ * @param anomericity
+ * @returns {*}
+ */
+function getAnomericityWithSelection(anomericity) {
+    var anomericityName;
+    if (anomericity == "α") {
+        anomericityName = "ALPHA";
+    } else if (anomericity == "β") {
+        anomericityName = "BETA"
+    }
+    for (var anom of sb.Anomericity) {
+        if (anom.name == anomericityName)
+            return anom;
+    }
+    return sb.Anomericity.UNDEFINED;
+}
+
+/**
+ * Find in the Isomer enum the corresponding value for a given selected value
+ * @param isomer
+ * @returns {*}
+ */
+function getIsomerWithSelection(isomer) {
+    for (var anom of sb.Isomer) {
+        if (anom.name == isomer)
+            return anom;
+    }
+    return sb.Isomer.UNDEFINED;
+}
+
+/**
+ * Find in the RingType enum the corresponding value for a given selected value
+ * @param ringType
+ * @returns {*}
+ */
+function getRingTypeWithSelection(ringType) {
+    for (var ring of sb.RingType) {
+        if (ring.name == ringType)
+            return ring;
+    }
+    return sb.RingType.UNDEFINED;
+}
 
 /**
  * Get color code from a string, using colorDivisions
