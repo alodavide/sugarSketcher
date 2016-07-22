@@ -73,6 +73,8 @@ shapeCancelButton.on("click", function() {
 var infosCancelButton = d3.select("#cancelChoiceInfos");
 infosCancelButton.on("click", function() {
     infosTable.pop();
+    menuChosenPath.pop();
+    menuChosenPath.pop();
     d3.select("#tableInformations").transition().style("display", "none");
     updateMenu("shape");
     d3.select("#svgMenu").transition().style("display", "block");
@@ -208,7 +210,7 @@ function updateMenu(chosenDivision) {
     var bars = actions.selectAll("rect").data(newMenuAction);
     bars.enter().append("rect")
         .attr("width", menuDimensions.barWidth)
-        .attr("height",menuDimensions.heightz)
+        .attr("height",menuDimensions.height)
         .attr("y", 0)
         .attr("x", function (d, i) {
             return menuDimensions.barWidth * i;
@@ -305,6 +307,7 @@ function addCancelOperation (actions, labels) {
         .style("fill", "red")
         .attr("transform", "translate(10)")
         .on("click", function () {
+            console.log(menuChosenPath);
             menuChosenPath.pop();
             updateMenu(menuChosenPath.pop());
             infosTable.pop();
