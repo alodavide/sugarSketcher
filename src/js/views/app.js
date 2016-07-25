@@ -165,14 +165,12 @@ function displayTree() {
     node.append("path")
         //.attr('pointer-events', 'none')
         .attr('class', 'node')
-        .attr("d", d3.svg.symbol()
+        .attr("d", d3.superformula()
             .size(300)
             .type(function(d) {
                 return d.node.monosaccharideType.shape;
             }))
-        .style('fill', function(d) { return (d === selectedNode) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
-        .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); });
-
+        .style('fill', function(d) { return d.node.monosaccharideType.color;});
 
     // ------------- trickery to avoid collision detection
 
