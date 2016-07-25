@@ -423,7 +423,6 @@ function getCarbonSelections(selectedCells) {
     console.log(infosTable);
     var methodToCall = infosTable[0]; // Gets the method which has to be called
     if (methodToCall == "addNode") {
-        console.log("Need to add a node");
         // Manage add node
         createNewNode();
     } else if (methodToCall == "addStruct") {
@@ -462,7 +461,6 @@ function createNewNode() {
         //TODO change id here when knowing how to generate
         var generatedNodeId = randomString(4);
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericityType, isomerType, ringType);
-        console.log(monosaccharide);
         graph.addNode(monosaccharide);
         if (graph.nodes().length != 1) {
             var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
@@ -470,9 +468,11 @@ function createNewNode() {
             var generatedEdgeId = randomString(4);
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             graph.addEdge(glycosidicLink);
+            updateTreeVisualization(glycosidicLink);
+        } else {
+            updateTreeVisualization();
         }
     }
-    updateTreeVisualization();
 }
 
 /**
