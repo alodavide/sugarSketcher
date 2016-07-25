@@ -3,6 +3,14 @@
  * Version: 0.0.1
  */
 
+// The graph we use as data structure, to be visualized using d3 tree
+var graph = new sb.Graph();
+
+// Update the menu when page is loaded
+$(document).ready(function() {
+    updateMenu();
+});
+
 var menuChosenPath; // Path taken by user in the menu
 var infosTable = []; // Table with all informations selected by the user
 
@@ -452,8 +460,21 @@ function createNewNode() {
         var anomericityType = getAnomericityWithSelection(anomericity);
         var isomerType= getIsomerWithSelection(isomer);
         var ringType = getRingTypeWithSelection(ring);
-        console.log("Je dois créer un mono de type " + monoType + " avec une anomericity " + anomericityType + " avec un isomer " + isomerType + " et un ring " + ringType);
+        //console.log("Je dois créer un mono de type " + monoType + " avec une anomericity " + anomericityType + " avec un isomer " + isomerType + " et un ring " + ringType);
+        var monosaccharide = new sb.Monosaccharide(0,monoType,anomericityType, isomerType, ringType);
+        console.log(monosaccharide);
+        if (graph.nodes().length == 0) {
+            console.log("graph empty");
+            graph.addNode({
+                "id": monosaccharide.getId(),
+                "node": monosaccharide
+            });
+            console.log("Added root");
+        } else {
+            console.log("graph not empty")
+        }
     }
+    updateTreeVisualization();
 }
 
 /**
@@ -528,5 +549,4 @@ function getColorCodeFromString(colorName) {
     }
 }
 
-// Test just to initialize a sugar
-var sugarTest = new sb.Sugar("firstSugar");
+

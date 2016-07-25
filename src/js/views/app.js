@@ -1,4 +1,4 @@
-var treeData = {"name" : "A", "children" : [ {"name" : "A1" },  {"name" : "A2" }, {"name" : "A3" } ] };
+var treeData = {};
 var selectedNode = null;
 var clickedNode = null;
 var draggingNode = null;
@@ -52,8 +52,6 @@ var addNewNode = function() {
             d3.select("#tableInformations").style("display","none");
             d3.select("#svgShape").style("display", "none");
             d3.select("#svgMenu").style("display", "block");
-            if (d3.event.defaultPrevented) return; // click suppressed
-
             if (d3.event.defaultPrevented) return; // click suppressed
         })
         .call(circleDragger);
@@ -122,55 +120,66 @@ var width = 460,
 
 var color = d3.scale.category20();
 
-var pie = d3.layout.pie()
-    .sort(null);
-
 var arc = d3.svg.arc()
     .innerRadius(radius - 100)
     .outerRadius(radius - 50);
 
 var tree = d3.layout.tree().size([150,150]);
-var nodes = tree.nodes(treeData);
-var links = tree.links(nodes);
 
-var diagonalHorizontal = d3.svg.diagonal().projection( function(d) { return [d.y, d.x]; } );
-var link = vis.selectAll(".nodelink")
-    .data(links)
-    .enter().append("path")
-    .attr("class", "nodelink")
-    .attr("d", diagonalHorizontal)
-    .attr('pointer-events', 'none');
+/**
+ * Display the tree with new data
+ */
+function displayTree() {
+    var nodes = tree.nodes(treeData);
+    var links = tree.links(nodes);
 
-var node = vis.selectAll("g.node")
-    .data(nodes)
-    .enter().append("g")
-    .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-    .on('click', function(d){
-        d3.event.stopPropagation();
-        updateMenu();
-        d3.select("#tableInformations").style("display","none");
-        d3.select("#svgShape").style("display", "none");
-        d3.select("#svgMenu").style("display", "block");
-        if (d3.event.defaultPrevented) return; // click suppressed
+    var diagonalHorizontal = d3.svg.diagonal().projection(function (d) {
+        return [d.y, d.x];
     });
+    var link = vis.selectAll(".nodelink")
+        .data(links)
+        .enter().append("path")
+        .attr("class", "nodelink")
+        .attr("d", diagonalHorizontal)
+        .attr('pointer-events', 'none');
 
-node.append("circle")
-    //.attr('pointer-events', 'none')
-    .attr('class', 'node')
-    .attr('r', 12)
-    .style('fill', function(d) { return (d === selectedNode) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
-    .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); });
+    var node = vis.selectAll("g.node")
+        .data(nodes)
+        .enter().append("g")
+        .attr("transform", function (d) {
+            return "translate(" + d.y + "," + d.x + ")";
+        })
+        .on('click', function (d) {
+            d3.event.stopPropagation();
+            updateMenu();
+            d3.select("#tableInformations").style("display", "none");
+            d3.select("#svgShape").style("display", "none");
+            d3.select("#svgMenu").style("display", "block");
+            if (d3.event.defaultPrevented) return; // click suppressed
+        });
+
+    node.append("circle")
+        //.attr('pointer-events', 'none')
+        .attr('class', 'node')
+        .attr('r', 12)
+        .style('fill', function(d) { return (d === selectedNode) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
+        .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); });
 
 
-// ------------- trickery to avoid collision detection
+    // ------------- trickery to avoid collision detection
 
-// phantom node to give us mouseover in a radius around it
-node.append("circle")
-    .attr("r", 60)
-    .attr("opacity", 0.0) // change this to non-zero to see the target area
-    .attr('pointer-events', 'mouseover')
-    .on("mouseover", overCircle)
-    .on("mouseout", outCircle)
-    .on("click", clickCircle);
+    // phantom node to give us mouseover in a radius around it
+        node.append("circle")
+            .attr("r", 60)
+            .attr("opacity", 0.0) // change this to non-zero to see the target area
+            .attr('pointer-events', 'mouseover')
+            .on("mouseover", overCircle)
+            .on("mouseout", outCircle)
+            .on("click", clickCircle);
 
-// a new, unconnected node that can be dragged near others to connect it
+    // a new, unconnected node that can be dragged near others to connect it
+}
+
+
+
+
