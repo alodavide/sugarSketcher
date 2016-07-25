@@ -133,6 +133,10 @@ function displayTree() {
     var nodes = tree.nodes(treeData);
     var links = tree.links(nodes);
 
+    var treeSvg = d3.select("#svgTree");
+    treeSvg.selectAll('.node').remove();
+    treeSvg.selectAll('.nodelink').remove();
+
     var diagonalHorizontal = d3.svg.diagonal().projection(function (d) {
         return [d.y, d.x];
     });

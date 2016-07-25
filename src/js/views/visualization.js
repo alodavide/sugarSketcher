@@ -27,8 +27,6 @@ function updateTreeVisualization(newLink) {
  */
 function searchAndAddNodeInTree(root, link){
     if(root.node == link.sourceNode){
-        console.log("found");
-        console.log(root);
         if (typeof root.children === 'undefined') root["children"] = [];
         root.children.push({"node":link.targetNode, "children": []});
     }else if (root.children != null){

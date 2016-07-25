@@ -12,7 +12,7 @@ svg:not(.active):not(.ctrl) {
     cursor: crosshair;
 }
 
-path.link {
+path.link, .nodelink {
     fill: none;
     stroke: #000;
     stroke-width: 4px;
