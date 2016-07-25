@@ -453,25 +453,23 @@ function createNewNode() {
     var isomer = infosTable[5]; // Isomer
     var ring = infosTable[6]; // Ring type
     var linkCarbon = infosTable[7];
-    var anomerCarbon = infosTable[8];
-    console.log("Node to add: " + anomericity + " " + isomer + " " + typeNodeToAdd + " " + ring + " " + shape + " " + color + " " + linkCarbon + " " + anomerCarbon);
+    var anomCarbon = infosTable[8];
     if (typeNodeToAdd == "Monosaccharide") {
         var monoType = getMonoTypeWithColorAndShape(color, shape);
         var anomericityType = getAnomericityWithSelection(anomericity);
         var isomerType= getIsomerWithSelection(isomer);
         var ringType = getRingTypeWithSelection(ring);
-        //console.log("Je dois créer un mono de type " + monoType + " avec une anomericity " + anomericityType + " avec un isomer " + isomerType + " et un ring " + ringType);
-        var monosaccharide = new sb.Monosaccharide(0,monoType,anomericityType, isomerType, ringType);
+        //TODO change id here when knowing how to generate
+        var generatedNodeId = randomString(4);
+        var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericityType, isomerType, ringType);
         console.log(monosaccharide);
-        if (graph.nodes().length == 0) {
-            console.log("graph empty");
-            graph.addNode({
-                "id": monosaccharide.getId(),
-                "node": monosaccharide
-            });
-            console.log("Added root");
-        } else {
-            console.log("graph not empty")
+        graph.addNode(monosaccharide);
+        if (graph.nodes().length != 1) {
+            var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
+            var anomerCarbon = getAnomerCarbonWithSelection(anomCarbon);
+            var generatedEdgeId = randomString(4);
+            var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
+            graph.addEdge(glycosidicLink);
         }
     }
     updateTreeVisualization();
@@ -537,6 +535,32 @@ function getRingTypeWithSelection(ringType) {
 }
 
 /**
+ * Find in the AnomerCarbon enum the corresponding value for a given selected value
+ * @param anomerCarbon
+ * @returns {*}
+ */
+function getAnomerCarbonWithSelection(anomerCarbon) {
+    for (var carbon of sb.AnomerCarbon) {
+        if (carbon.value == anomerCarbon)
+            return carbon;
+    }
+    return sb.AnomerCarbon.UNDEFINED;
+}
+
+/**
+ * Find in the LinkedCarbon enum the corresponding value for a given selected value
+ * @param linkedCarbon
+ * @returns {*}
+ */
+function getLinkedCarbonWithSelection(linkedCarbon) {
+    for (var carbon of sb.LinkedCarbon) {
+        if (carbon.value == linkedCarbon)
+            return carbon;
+    }
+    return sb.LinkedCarbon.UNDEFINED;
+}
+
+/**
  * Get color code from a string, using colorDivisions
  * @param colorName
  * @returns {string|string|string|string|string|string|*}
@@ -547,6 +571,25 @@ function getColorCodeFromString(colorName) {
             return color.display_division;
         }
     }
+}
+
+/**
+ * Generate a random string (used for identifiers) with a given length
+ * @param length
+ * @returns {string}
+ */
+function randomString(length) {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
+
+    if (! length) {
+        length = Math.floor(Math.random() * chars.length);
+    }
+
+    var str = '';
+    for (var i = 0; i < length; i++) {
+        str += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return str;
 }
 
 

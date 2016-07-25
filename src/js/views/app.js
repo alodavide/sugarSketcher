@@ -17,7 +17,7 @@ var outCircle = function(d) {
 };
 
 var clickCircle = function(d) {
-    clickedNode = d;
+    clickedNode = d.node;
     console.log("You just clicked a node");
     console.log(clickedNode);
     updateTempConnector();
