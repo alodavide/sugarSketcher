@@ -170,6 +170,14 @@ function displayTree() {
             .type(function(d) {
                 return d.node.monosaccharideType.shape;
             }))
+        .attr("transform", function(d) {
+            var shape = d.node.monosaccharideType.shape;
+            if (shape == "star") {
+                return "rotate(-20)";
+            } else if (shape == "triangle") {
+                return "rotate(30)";
+            }
+        })
         .style('fill', function(d) { return d.node.monosaccharideType.color;});
 
     // ------------- trickery to avoid collision detection
