@@ -435,7 +435,6 @@ function getCarbonSelections(selectedCells) {
     var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
     infosTable.push(linkCarbon);
     infosTable.push(anomerCarbon);
-    console.log(infosTable);
     var methodToCall = infosTable[0]; // Gets the method which has to be called
     if (methodToCall == "addNode") {
         // Manage add node
@@ -444,8 +443,7 @@ function getCarbonSelections(selectedCells) {
         console.log("Need to add a structure");
         // Manage add structure
     } else {
-        console.log("Need to modify the mono");
-        console.log(clickedNode);
+        // Manage update of node
         updateExistingNode();
     }
 }

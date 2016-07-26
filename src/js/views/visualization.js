@@ -17,11 +17,7 @@ function updateTreeVisualization(newLink) {
     if (typeof newLink === 'undefined') {
         treeData = {"node":sugar.getRootNode(), "children":[]};
     } else {
-        console.log("Before search");
-        console.log(treeData);
         searchAndAddNodeInTree(treeData, newLink);
-        console.log("After search");
-        console.log(treeData);
     }
     displayTree();
 }
@@ -62,6 +58,7 @@ function updateExistingNode() {
     monoToUpdate.isomer = isomer;
     var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape);
     monoToUpdate.monosaccharideType = newMonoType;
+    // TODO maybe update edge too with carbon values
     updateNodeInTree(treeData,monoToUpdate);
 }
 
