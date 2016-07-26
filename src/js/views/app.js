@@ -166,7 +166,7 @@ function displayTree() {
         //.attr('pointer-events', 'none')
         .attr('class', 'node')
         .attr("d", d3.superformula()
-            .size(300)
+            .size(400)
             .type(function(d) {
                 return d.node.monosaccharideType.shape;
             }))

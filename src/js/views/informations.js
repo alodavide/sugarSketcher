@@ -3,6 +3,7 @@
  * Version: 0.0.1
  */
 
+
 // The graph we use as data structure, to be visualized using d3 tree
 var graph = new sb.Graph();
 
@@ -231,8 +232,18 @@ function updateMenu(chosenDivision) {
             return d.display_division
         })
         .on("click", function(d) {
+            if (d.division.indexOf("Color") > -1) {
+                var chosenShape = infosTable[infosTable.length-1];
+                var color = getColorCodeFromString(d.division);
+                var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape);
+                if (existingMonoType == sb.MonosaccharideType.UNDEFINED) {
+                    $('.error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+                    return;
+                }
+            }
             infosTable.push(d.division);
             updateMenu(d.division);
+
         }).on("mouseover", function(d) {
             if(d.division == "addNode") {
                 manageHoverAddNode(d,actions);

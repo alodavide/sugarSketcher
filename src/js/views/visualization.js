@@ -2,6 +2,13 @@
  * Created by Nicolas Hory on 25/07/16.
  */
 
+var mouseX, mouseY;
+
+$(document).mousemove( function(e) {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+});
+
 /**
  * Update the treeData, and then call the displayTree function to display it with the new data
  */
