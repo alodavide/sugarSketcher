@@ -53,7 +53,7 @@ svg {
     cursor:pointer;
 }
 
-.error {
+#error {
     display:none;
     width:200px;
     height:auto;

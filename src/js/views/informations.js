@@ -232,12 +232,15 @@ function updateMenu(chosenDivision) {
             return d.display_division
         })
         .on("click", function(d) {
+            // If we are choosing a color
             if (d.division.indexOf("Color") > -1) {
-                var chosenShape = infosTable[infosTable.length-1];
-                var color = getColorCodeFromString(d.division);
+                var chosenShape = infosTable[infosTable.length-1]; // Get the selected shape
+                var color = getColorCodeFromString(d.division); // Get the clicked color
                 var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape);
+                // If there is no type for this combination, display an error
                 if (existingMonoType == sb.MonosaccharideType.UNDEFINED) {
-                    $('.error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+                    document.getElementById("error").innerHTML = "Impossible combination: " + d.division.split("Color")[0] + " " + chosenShape;
+                    $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                     return;
                 }
             }
