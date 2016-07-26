@@ -44,3 +44,41 @@ function searchAndAddNodeInTree(root, link){
         }
     }
 }
+
+/**
+ * Update an existing node
+ */
+function updateExistingNode() {
+    var newShape = infosTable[1]; // Selected shape
+    var newColor = getColorCodeFromString(infosTable[2]); // Selected color
+    var anomericity = getAnomericityWithSelection(infosTable[3]); // Anomericity
+    var isomer = getIsomerWithSelection(infosTable[4]); // Isomer
+    var ringType = getRingTypeWithSelection(infosTable[5]); // Ring type
+    var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
+    var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
+    var monoToUpdate = sugar.getNodeById(clickedNode.id);
+    monoToUpdate.anomericity = anomericity;
+    monoToUpdate.ringType = ringType;
+    monoToUpdate.isomer = isomer;
+    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape);
+    monoToUpdate.monosaccharideType = newMonoType;
+    updateNodeInTree(treeData,monoToUpdate);
+}
+
+/**
+ * Update a node in the tree, and then display the tree again
+ * @param root
+ * @param newMonosaccharide
+ */
+function updateNodeInTree(root, newMonosaccharide) {
+    if(root.node.id == newMonosaccharide.id){
+        root.node = newMonosaccharide;
+    }else if (root.children != null){
+        var i;
+        var result = null;
+        for(i=0; result == null && i < root.children.length; i++){
+            updateNodeInTree(root.children[i], newMonosaccharide);
+        }
+    }
+    displayTree();
+}

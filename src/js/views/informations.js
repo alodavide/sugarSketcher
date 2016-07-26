@@ -446,13 +446,7 @@ function getCarbonSelections(selectedCells) {
     } else {
         console.log("Need to modify the mono");
         console.log(clickedNode);
-        var newShape = infosTable[1]; // Selected shape
-        var newColor = getColorCodeFromString(infosTable[2]); // Selected color
-        var anomericity = infosTable[3]; // Anomericity
-        var isomer = infosTable[4]; // Isomer
-        var ringType = infosTable[5]; // Ring type
-        console.log("New informations on the mono: " + anomericity + " " + isomer + " " + ringType + " " + newShape + " " + newColor + " " + linkCarbon + " " + anomerCarbon);
-        //Manage modification of the monosaccharide
+        updateExistingNode();
     }
 }
 
@@ -463,25 +457,20 @@ function createNewNode() {
     var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
     var shape = infosTable[2]; // Selected shape
     var color = getColorCodeFromString(infosTable[3]); // Selected color
-    var anomericity = infosTable[4]; // Anomericity
-    var isomer = infosTable[5]; // Isomer
-    var ring = infosTable[6]; // Ring type
-    var linkCarbon = infosTable[7];
-    var anomCarbon = infosTable[8];
+    var anomericity = getAnomericityWithSelection(infosTable[4]); // Anomericity
+    var isomer = getIsomerWithSelection(infosTable[5]); // Isomer
+    var ring = getRingTypeWithSelection(infosTable[6]); // Ring type
+    var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
+    var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
     if (typeNodeToAdd == "Monosaccharide") {
         var monoType = getMonoTypeWithColorAndShape(color, shape);
-        var anomericityType = getAnomericityWithSelection(anomericity);
-        var isomerType= getIsomerWithSelection(isomer);
-        var ringType = getRingTypeWithSelection(ring);
         //TODO change id here when knowing how to generate
         var generatedNodeId = randomString(4);
-        var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericityType, isomerType, ringType);
+        var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring);
         if (Object.keys(treeData).length === 0) {
             sugar = new sb.Sugar("Sugar", monosaccharide);
             updateTreeVisualization();
         } else {
-            var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
-            var anomerCarbon = getAnomerCarbonWithSelection(anomCarbon);
             var generatedEdgeId = randomString(4);
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
