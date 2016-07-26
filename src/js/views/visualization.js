@@ -15,7 +15,7 @@ $(document).mousemove( function(e) {
 function updateTreeVisualization(newLink) {
     // If the tree is empty, we just initialize it with the node as a root
     if (typeof newLink === 'undefined') {
-        treeData = {"node":graph.nodes()[0], "children":[]};
+        treeData = {"node":sugar.getRootNode(), "children":[]};
     } else {
         console.log("Before search");
         console.log(treeData);

@@ -4,8 +4,8 @@
  */
 
 
-// The graph we use as data structure, to be visualized using d3 tree
-var graph = new sb.Graph();
+// The sugar we use as data structure, to be visualized using d3 tree
+var sugar;
 
 // Update the menu when page is loaded
 $(document).ready(function() {
@@ -248,6 +248,7 @@ function updateMenu(chosenDivision) {
             updateMenu(d.division);
 
         }).on("mouseover", function(d) {
+            // On hover of addNode, we display its two subdivisions
             if(d.division == "addNode") {
                 manageHoverAddNode(d,actions);
                 labels.selectAll("text")[0][0].remove();
@@ -475,16 +476,16 @@ function createNewNode() {
         //TODO change id here when knowing how to generate
         var generatedNodeId = randomString(4);
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericityType, isomerType, ringType);
-        graph.addNode(monosaccharide);
-        if (graph.nodes().length != 1) {
+        if (Object.keys(treeData).length === 0) {
+            sugar = new sb.Sugar("Sugar", monosaccharide);
+            updateTreeVisualization();
+        } else {
             var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
             var anomerCarbon = getAnomerCarbonWithSelection(anomCarbon);
             var generatedEdgeId = randomString(4);
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
-            graph.addEdge(glycosidicLink);
+            sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
-        } else {
-            updateTreeVisualization();
         }
     }
 }
