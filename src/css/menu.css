@@ -40,7 +40,7 @@ svg {
     overflow: visible;
 }
 
-#tableChoice, #svgMenu, #svgShape, #carbonValues{
+#tableChoice, #svgMenu, #svgShape, #carbonValues, #substituents{
     margin: 0 auto 10px;
 }
 

@@ -133,25 +133,6 @@ var colorDivisions = [{
     }
 ];
 
-
-// Most used substituents
-var mostUsedSubstituents = [{
-    division: "S",
-    display_division: "S"
-}, {
-    division: "P",
-    display_division: "P"
-}, {
-    division: "NAc",
-    display_division: "NAc"
-}, {
-    division: "Acetyl",
-    display_division: "Acetyl"
-}, {
-    division: "Methyl",
-    display_division: "Methyl"
-}];
-
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
     division: "addNode",
@@ -159,7 +140,6 @@ var menuAction = [{
     subDivisions : [{
         division: "substituentNode",
         display_division: "Substituent",
-        subDivisions: mostUsedSubstituents
     }, {
         division: "monosaccharideNode",
         display_division: "Monosaccharide",
@@ -177,6 +157,28 @@ var menuAction = [{
     display_division: "Change Mono",
     subDivisions: "shape"
 }];
+
+
+//Managing displaying more rows for subs
+var currentIndexOfSubs = 0;
+var substituentRowButton = d3.select("#showSecondSubRow");
+substituentRowButton.on("click", function() {
+    var tableSub = d3.select("#substituents").select("tbody");
+    var subTypes = [];
+    for (var type of sb.SubstituentType) {
+        if (type.ordinal >= currentIndexOfSubs && type.ordinal < currentIndexOfSubs+6 && type.label != 'undefined') {
+            subTypes.push(type.label);
+        }
+    }
+    if (subTypes.length != 0) {
+        var newRow = tableSub.append("tr").attr("id", "newRowSub");
+        newRow.selectAll("td").data(subTypes).enter().append("td").attr("class", "subChoice")
+            .text(function (d) {
+                return d;
+            });
+        currentIndexOfSubs += 6;
+    }
+});
 
 /**
  * Update the menu. Can be called with or without one parameter.
@@ -307,6 +309,7 @@ function updateMenu(chosenDivision) {
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x");
     d3.select("#svgMenu").select("#addNode").remove();
+    // Add Monosaccharide rect and label
     actions.insert("rect", ":first-child")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[1].division)
@@ -319,16 +322,27 @@ function manageHoverAddNode(menuItem,actions) {
         updateMenu(menuItem.subDivisions[1].division);
         return;
     });
+    // Add Substituent rect and label
     actions.insert("rect", ":first-child")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[0].division)
         .attr("width", 1000/6).attr("height", 40)
         .attr("x", 1000/6).on("mouseout", function() {
-        updateMenu();
+            if(d3.select("#svgMenu").style("display") != "none") {
+                updateMenu();
+            }
     }).on("click", function () {
         infosTable.push(menuItem.division);
         infosTable.push(menuItem.subDivisions[0].display_division);
-        updateMenu(menuItem.subDivisions[0].division);
+        // If root has not been set yet, then display an error popup
+        if (Object.keys(treeData).length === 0) {
+            document.getElementById("error").innerHTML = "Can not have a substituent as a root";
+            $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+            return;
+        }
+        d3.select("#svgMenu").style("display", "none");
+        d3.select("#tableSubstituents").transition().style("display", "block");
+        //updateMenu(menuItem.subDivisions[0].division);
         return;
     });
 }
@@ -472,14 +486,14 @@ function getCarbonSelections(selectedCells) {
  */
 function createNewNode() {
     var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
-    var shape = infosTable[2]; // Selected shape
-    var color = getColorCodeFromString(infosTable[3]); // Selected color
-    var anomericity = getAnomericityWithSelection(infosTable[4]); // Anomericity
-    var isomer = getIsomerWithSelection(infosTable[5]); // Isomer
-    var ring = getRingTypeWithSelection(infosTable[6]); // Ring type
-    var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
-    var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
     if (typeNodeToAdd == "Monosaccharide") {
+        var shape = infosTable[2]; // Selected shape
+        var color = getColorCodeFromString(infosTable[3]); // Selected color
+        var anomericity = getAnomericityWithSelection(infosTable[4]); // Anomericity
+        var isomer = getIsomerWithSelection(infosTable[5]); // Isomer
+        var ring = getRingTypeWithSelection(infosTable[6]); // Ring type
+        var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
+        var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
         var monoType = getMonoTypeWithColorAndShape(color, shape);
         //TODO change id here when knowing how to generate
         var generatedNodeId = randomString(4);
@@ -493,6 +507,8 @@ function createNewNode() {
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
         }
+    } else { // Add a new substituent
+
     }
 }
 

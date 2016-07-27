@@ -4,14 +4,14 @@
     border-right: 1px solid white;
 }
 
-.infoChoiceCell, .carbonChoiceCell {
+.infoChoiceCell, .carbonChoiceCell, .subChoice {
     text-align: center;
     border-right:1px solid white;
     border-top: 1px solid white;
     cursor:pointer;
 }
 
-.infoChoiceCell:hover, .carbonChoiceCell:hover {
+.infoChoiceCell:hover, .carbonChoiceCell:hover, .subChoice:hover {
     background:white;
     color:black;
 }
@@ -21,12 +21,12 @@
     height:40px;
 }
 
-#tableInformations, #tableCarbonValues {
+#tableInformations, #tableCarbonValues, #tableSubstituents {
     display:none;
     margin-bottom: 10px;
 }
 
-#tableChoice, #carbonValues {
+#tableChoice, #carbonValues, #substituents {
     width:1000px;
     background:black;
     color:white;
