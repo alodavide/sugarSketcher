@@ -133,6 +133,25 @@ var colorDivisions = [{
     }
 ];
 
+
+// Most used substituents
+var mostUsedSubstituents = [{
+    division: "S",
+    display_division: "S"
+}, {
+    division: "P",
+    display_division: "P"
+}, {
+    division: "NAc",
+    display_division: "NAc"
+}, {
+    division: "Acetyl",
+    display_division: "Acetyl"
+}, {
+    division: "Methyl",
+    display_division: "Methyl"
+}];
+
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
     division: "addNode",
@@ -140,7 +159,7 @@ var menuAction = [{
     subDivisions : [{
         division: "substituentNode",
         display_division: "Substituent",
-        subDivisions: "shape"
+        subDivisions: mostUsedSubstituents
     }, {
         division: "monosaccharideNode",
         display_division: "Monosaccharide",
