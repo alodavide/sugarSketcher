@@ -66,5 +66,10 @@ div.tooltip {
     border: 0px;
     border-radius: 8px;
     /*  pointer-events: none;	This line needs to be removed */
+}
 
+#pieLinkCarbon {
+    position:absolute;
+    border: none; !important;
+    opacity:0.9;
 }

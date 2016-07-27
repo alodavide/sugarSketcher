@@ -10,6 +10,11 @@ var sugar;
 // Update the menu when page is loaded
 $(document).ready(function() {
     updateMenu();
+    var subChoices = d3.selectAll(".subChoice");
+    subChoices.on('click', function() {
+        infosTable.push(d3.event.target.innerHTML);
+        displayPie();
+    });
 });
 
 var menuChosenPath; // Path taken by user in the menu
@@ -163,6 +168,7 @@ var menuAction = [{
 var currentIndexOfSubs = 0;
 var substituentRowButton = d3.select("#showSecondSubRow");
 substituentRowButton.on("click", function() {
+    $('#pieLinkCarbon').css("display", "none");
     var tableSub = d3.select("#substituents").select("tbody");
     var subTypes = [];
     for (var type of sb.SubstituentType) {
@@ -175,17 +181,21 @@ substituentRowButton.on("click", function() {
         newRow.selectAll("td").data(subTypes).enter().append("td").attr("class", "subChoice")
             .text(function (d) {
                 return d;
+            })
+        .on("click", function (d) {
+                infosTable.push(d);
+                displayPie();
             });
         currentIndexOfSubs += 6;
     }
 });
-
 
 //Cancel Button Subs
 var cancelSubButton = d3.select("#cancelSubButton");
 cancelSubButton.on("click", function() {
     currentIndexOfSubs = 0;
     //Reinitialize table
+    $('#pieLinkCarbon').css("display", "none");
     d3.select("#tableSubstituents").transition().style("display", "none");
     d3.selectAll(".newRowSub").remove();
     updateMenu();
@@ -519,15 +529,38 @@ function createNewNode() {
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
         }
-    } else { // Add a new substituent
+    }
+}
 
+/**
+ * Function called to create a new substituent in the sugar
+ * @param subLabel The label we have to create the new Substituent
+ */
+function createNewSubstituent (subLabel) {
+    var subType = getSubstituentTypeFromLabel(subLabel);
+    var generatedSubId = randomString(4);
+    var newSub = new sb.Substituent(generatedSubId, subType);
+    //TODO create linkage
+    console.log(subType);
+}
+
+/**
+ * Find in the SubstituentType enum the corresponding type for a given label
+ * @param label The label of the SubstituentType
+ * @returns {*}
+ */
+function getSubstituentTypeFromLabel (label) {
+    for (var type of sb.SubstituentType) {
+        if(type.label == label) {
+            return type;
+        }
     }
 }
 
 /**
  * Find in the MonosaccharideType enum the corresponding type for a given color and shape
- * @param color
- * @param shape
+ * @param color The color of the MonosaccharideType
+ * @param shape The shape of the MonosaccharideType
  */
 function getMonoTypeWithColorAndShape(color, shape) {
     for (var type of sb.MonosaccharideType) {
@@ -540,7 +573,7 @@ function getMonoTypeWithColorAndShape(color, shape) {
 
 /**
  * Find in the Anomericity enum the corresponding value for a given selected value
- * @param anomericity
+ * @param anomericity The anomericity we are seeking
  * @returns {*}
  */
 function getAnomericityWithSelection(anomericity) {
@@ -559,7 +592,7 @@ function getAnomericityWithSelection(anomericity) {
 
 /**
  * Find in the Isomer enum the corresponding value for a given selected value
- * @param isomer
+ * @param isomer The isomer we are seeking
  * @returns {*}
  */
 function getIsomerWithSelection(isomer) {
@@ -572,7 +605,7 @@ function getIsomerWithSelection(isomer) {
 
 /**
  * Find in the RingType enum the corresponding value for a given selected value
- * @param ringType
+ * @param ringType The ring type we are seeking
  * @returns {*}
  */
 function getRingTypeWithSelection(ringType) {
@@ -585,7 +618,7 @@ function getRingTypeWithSelection(ringType) {
 
 /**
  * Find in the AnomerCarbon enum the corresponding value for a given selected value
- * @param anomerCarbon
+ * @param anomerCarbon The anomer carbon we are seeking
  * @returns {*}
  */
 function getAnomerCarbonWithSelection(anomerCarbon) {
@@ -598,7 +631,7 @@ function getAnomerCarbonWithSelection(anomerCarbon) {
 
 /**
  * Find in the LinkedCarbon enum the corresponding value for a given selected value
- * @param linkedCarbon
+ * @param linkedCarbon The linked carbon we are seeking
  * @returns {*}
  */
 function getLinkedCarbonWithSelection(linkedCarbon) {
@@ -611,7 +644,7 @@ function getLinkedCarbonWithSelection(linkedCarbon) {
 
 /**
  * Get color code from a string, using colorDivisions
- * @param colorName
+ * @param colorName The color string we are seeking the translated code
  * @returns {string|string|string|string|string|string|*}
  */
 function getColorCodeFromString(colorName) {
@@ -624,7 +657,7 @@ function getColorCodeFromString(colorName) {
 
 /**
  * Generate a random string (used for identifiers) with a given length
- * @param length
+ * @param length The length of the string we want to generate
  * @returns {string}
  */
 function randomString(length) {

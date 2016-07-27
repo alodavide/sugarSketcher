@@ -4,14 +4,14 @@
     border-right: 1px solid white;
 }
 
-.infoChoiceCell, .carbonChoiceCell, .subChoice {
+.infoChoiceCell, .carbonChoiceCell, .subChoice, #showSecondSubRow {
     text-align: center;
     border-right:1px solid white;
     border-top: 1px solid white;
     cursor:pointer;
 }
 
-.infoChoiceCell:hover, .carbonChoiceCell:hover, .subChoice:hover {
+.infoChoiceCell:hover, .carbonChoiceCell:hover, .subChoice:hover, #showSecondSubRow:hover {
     background:white;
     color:black;
 }
@@ -35,3 +35,4 @@
     text-align:center;
     border-bottom:1px solid white;
 }
+
