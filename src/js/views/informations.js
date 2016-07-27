@@ -544,9 +544,10 @@ function createNewSubstituent (linkCarbon) {
     var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
     var generatedEdgeSubId = randomString(4); // Random id for edge
     // Create the linkage
-    var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, newSubstituent, clickedNode, linkedCarbon);
+    var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
     sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkage
     // TODO visualization with subs
+    updateTreeVisualization(subLinkage);
 }
 
 /**

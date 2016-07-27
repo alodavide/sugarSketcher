@@ -168,9 +168,16 @@ function displayTree() {
         .attr("d", d3.superformula()
             .size(400)
             .type(function(d) {
-                return d.node.monosaccharideType.shape;
+                if (d.node instanceof sb.Substituent) {
+                    return "circle";
+                } else {
+                    return d.node.monosaccharideType.shape;
+                }
             }))
         .attr("transform", function(d) {
+            if (d.node instanceof sb.Substituent) {
+                return;
+            }
             var shape = d.node.monosaccharideType.shape;
             if (shape == "star") {
                 return "rotate(-20)";
@@ -178,7 +185,13 @@ function displayTree() {
                 return "rotate(30)";
             }
         })
-        .style('fill', function(d) { return d.node.monosaccharideType.color;});
+        .style('fill', function(d) {
+            if (d.node instanceof sb.Substituent) {
+                return "blue";
+            } else {
+                return d.node.monosaccharideType.color;
+            }
+        });
 
     // ------------- trickery to avoid collision detection
 
