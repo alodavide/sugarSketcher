@@ -139,7 +139,7 @@ var menuAction = [{
     display_division: "Add Node",
     subDivisions : [{
         division: "substituentNode",
-        display_division: "Substituent",
+        display_division: "Substituent"
     }, {
         division: "monosaccharideNode",
         display_division: "Monosaccharide",
@@ -171,13 +171,25 @@ substituentRowButton.on("click", function() {
         }
     }
     if (subTypes.length != 0) {
-        var newRow = tableSub.append("tr").attr("id", "newRowSub");
+        var newRow = tableSub.append("tr").attr("class", "newRowSub");
         newRow.selectAll("td").data(subTypes).enter().append("td").attr("class", "subChoice")
             .text(function (d) {
                 return d;
             });
         currentIndexOfSubs += 6;
     }
+});
+
+
+//Cancel Button Subs
+var cancelSubButton = d3.select("#cancelSubButton");
+cancelSubButton.on("click", function() {
+    currentIndexOfSubs = 0;
+    //Reinitialize table
+    d3.select("#tableSubstituents").transition().style("display", "none");
+    d3.selectAll(".newRowSub").remove();
+    updateMenu();
+    d3.select("#svgMenu").transition().style("display", "block");
 });
 
 /**
