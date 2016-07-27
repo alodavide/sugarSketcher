@@ -536,12 +536,13 @@ function createNewNode() {
  * Function called to create a new substituent in the sugar
  * @param subLabel The label we have to create the new Substituent
  */
-function createNewSubstituent (subLabel) {
+function createNewSubstituent (linkedCarbon) {
+    var subLabel = infosTable[2];
     var subType = getSubstituentTypeFromLabel(subLabel);
     var generatedSubId = randomString(4);
     var newSub = new sb.Substituent(generatedSubId, subType);
     //TODO create linkage
-    console.log(subType);
+    console.log(newSub);
 }
 
 /**

@@ -56,7 +56,9 @@ function displayPie() {
                 class: 'choiceLinkCarbon'
             })
             .on("click", function (d) {
-                console.log("you chose" + d.data.name);
+                $('#pieLinkCarbon').css("display", "none");
+                d3.select("#tableSubstituents").style("display", "none");
+                createNewSubstituent(d.data.name)
             });
 
         var text = svg.selectAll('text')
