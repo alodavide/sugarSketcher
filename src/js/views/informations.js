@@ -536,13 +536,17 @@ function createNewNode() {
  * Function called to create a new substituent in the sugar
  * @param subLabel The label we have to create the new Substituent
  */
-function createNewSubstituent (linkedCarbon) {
+function createNewSubstituent (linkCarbon) {
     var subLabel = infosTable[2];
     var subType = getSubstituentTypeFromLabel(subLabel);
-    var generatedSubId = randomString(4);
-    var newSub = new sb.Substituent(generatedSubId, subType);
-    //TODO create linkage
-    console.log(newSub);
+    var generatedSubId = randomString(4); // Random if for Substituent
+    var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
+    var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
+    var generatedEdgeSubId = randomString(4); // Random id for edge
+    // Create the linkage
+    var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, newSubstituent, clickedNode, linkedCarbon);
+    sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkage
+    // TODO visualization with subs
 }
 
 /**
