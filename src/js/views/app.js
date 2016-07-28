@@ -171,7 +171,7 @@ function displayTree() {
                 if (d.node instanceof sb.Substituent) {
                     return "circle";
                 } else {
-                    return d.node.monosaccharideType.shape;
+                    return d.node.monosaccharideType.shape.toLowerCase();
                 }
             }))
         .attr("transform", function(d) {
