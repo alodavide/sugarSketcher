@@ -281,11 +281,19 @@ function updateMenu(chosenDivision) {
             // If we are choosing a color
             if (d.division.indexOf("Color") > -1) {
                 var chosenShape = infosTable[infosTable.length-1]; // Get the selected shape
+                var isBisected = false;
+                if (chosenShape.indexOf("bisected") > -1) {
+                    chosenShape = chosenShape.split("bisected")[1];
+                    isBisected = true;
+                }
                 var color = getColorCodeFromString(d.division); // Get the clicked color
-                var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape);
+                var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape, isBisected);
                 // If there is no type for this combination, display an error
                 if (existingMonoType == sb.MonosaccharideType.UNDEFINED) {
                     document.getElementById("error").innerHTML = "Impossible combination: " + d.division.split("Color")[0] + " " + chosenShape;
+                    if (isBisected) {
+                        document.getElementById("error").innerHTML += " bisected";
+                    }
                     $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                     return;
                 }
@@ -513,13 +521,17 @@ function createNewNode() {
     var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
     if (typeNodeToAdd == "Monosaccharide") {
         var shape = infosTable[2]; // Selected shape
+        var isBisected = (shape.indexOf("bisected") != -1); // Check if the shape is bisected
+        if (isBisected) {
+            shape = shape.split("bisected")[1]; // We update the value of the shape by removing keywork "bisected"
+        }
         var color = getColorCodeFromString(infosTable[3]); // Selected color
         var anomericity = getAnomericityWithSelection(infosTable[4]); // Anomericity
         var isomer = getIsomerWithSelection(infosTable[5]); // Isomer
         var ring = getRingTypeWithSelection(infosTable[6]); // Ring type
         var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
         var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
-        var monoType = getMonoTypeWithColorAndShape(color, shape);
+        var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
         //TODO change id here when knowing how to generate
         var generatedNodeId = randomString(4);
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring);
@@ -570,10 +582,11 @@ function getSubstituentTypeFromLabel (label) {
  * Find in the MonosaccharideType enum the corresponding type for a given color and shape
  * @param color The color of the MonosaccharideType
  * @param shape The shape of the MonosaccharideType
+ * @param isBisected Boolean telling if the shape is bisected
  */
-function getMonoTypeWithColorAndShape(color, shape) {
+function getMonoTypeWithColorAndShape(color, shape, isBisected) {
     for (var type of sb.MonosaccharideType) {
-        if(type.color == color && type.shape == shape) {
+        if(type.color == color && type.shape == shape && type.bisected == isBisected) {
             return type;
         }
     }
