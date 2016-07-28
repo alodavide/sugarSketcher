@@ -26,30 +26,53 @@
     <svg id="svgShape">
         <g id="chart">
             <g id="circleShape" class="shapeChoice">
-                <rect width="166.6666666" height="40" fill="black" class="bar choice"></rect>
-                <circle cx="83.3333333" cy="20" r="15" fill="white"></circle>
+                <rect width="90.9090909091" height="40" fill="black" class="bar choice"></rect>
+                <circle cx="45.4545454545" cy="20" r="15" fill="white"></circle>
             </g>
             <g id="squareShape" class="shapeChoice">
-                <rect width="166.6666666" x="166.6666666" height="40" fill="black" class="bar choice"></rect>
-                <rect x="235" y="5" width="30" height="30" fill="white"></rect>
+                <rect width="90.9090909091" x="90.9090909091" height="40" fill="black" class="bar choice"></rect>
+                <rect x="121.363636364" y="5" width="30" height="30" fill="white"></rect>
+            </g>
+            <g id="bisectedsquareShape" class="shapeChoice">
+                <rect width="90.9090909091" x="181.818181818" height="40" fill="black" class="bar choice"></rect>
+                <rect x="212.272727273" y="5" width="30" height="30" fill="white"></rect>
+                <line x1="212.272727273" y1="5" x2="242.272727273" y2="35" stroke="black" stroke-width="2"></line>
+            </g>
+            <g id="bisecteddiamondShape" class="shapeChoice">
+                <rect width="90.9090909091" x="272.727272727" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="303.181818182,20 318.181818182,5 333.181818182,20 318.181818182,35" fill="white"></polygon>
+                <line x1="303.181818182" y1="20" x2="333.181818182" y2="20" stroke="black" stroke-width="2"></line>
             </g>
             <g id="triangleShape" class="shapeChoice">
-                <rect width="166.6666666" x="333.333333333" height="40" fill="black" class="bar choice"></rect>
-                <polygon points="416.6666666,5 436.6666666,35 396.6666666,35" fill="white"></polygon>
+                <rect width="90.9090909091" x="363.636363636" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="389.090909091,35 409.090909091,5 429.090909091,35" fill="white"></polygon>
             </g>
-            <g id="starShape" class="shapeChoice">
-                <rect width="166.6666666" x="500" height="40" fill="black" class="bar choice"></rect>
-                <polygon points="583.3333333,5 570.3333333,35 603.3333333,15 563.3333333,15 596.3333333,35" fill="white"></polygon>
+            <g id="bisectedtriangleShape" class="shapeChoice">
+                <rect width="90.9090909091" x="454.545454545" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="480,35 500,5 520,35" fill="white"></polygon>
+                <line x1="500" y1="5" x2="500" y2="35" stroke="black" stroke-width="2"></line>
             </g>
             <g id="rectangleShape" class="shapeChoice">
-                <rect width="166.6666666" x="666.6666666" height="40" fill="black" class="bar choice"></rect>
-                <rect x="730" y="10" width="40" height="20" fill="white"></rect>
+                <rect width="90.9090909091" x="545.454545455" height="40" fill="black" class="bar choice"></rect>
+                <rect x="570.909090909" y="10" width="40" height="20" fill="white"></rect>
+            </g>
+            <g id="starShape" class="shapeChoice">
+                <rect width="90.9090909091" x="636.363636364" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="681.818181818,5 668.818181818,35 701.818181818,15 661.818181818,15 694.818181818,35" fill="white"></polygon>
             </g>
             <g id="diamondShape" class="shapeChoice">
-                <rect width="166.6666666" x="833.33333333" height="40" fill="black" class="bar choice"></rect>
-                <polygon points="901.6666666,20 916.6666666,5 931.6666666,20 916.6666666,35" fill="white"></polygon>
+                <rect width="90.9090909091" x="727.272727273" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="757.727272727,20 772.727272727,5 787.727272727,20 772.727272727,35" fill="white"></polygon>
             </g>
-            <rect id="cancelChoiceShape" width="80" x="1000" height="40" class="bar" fill="red" transform="translate(10)"/>
+            <g id="pentagonShape" class="shapeChoice">
+                <rect width="90.9090909091" x="818.181818182" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="842.636363636,20 850.636363636,10 876.636363636,10 884.636363636,20 876.636363636,30 850.636363636,30" fill="white"></polygon>
+            </g>
+            <g id="hexagonShape" class="shapeChoice">
+                <rect width="90.9090909091" x="909.090909091" height="40" fill="black" class="bar choice"></rect>
+                <polygon points="939.545454545,15 954.545454545,5 969.545454545,15 963.545454545,32 945.545454545,32" fill="white"></polygon>
+            </g>
+            <rect id="cancelChoiceShape" width="80" x="1000" height="40" class="bar" fill="red" transform="translate(10)"></rect>
             <text class="label" x="1050" y="8">Cancel</text>
         </g>
     </svg>
