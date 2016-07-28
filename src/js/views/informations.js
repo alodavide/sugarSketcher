@@ -165,28 +165,31 @@ var menuAction = [{
 
 
 //Managing displaying more rows for subs
-var currentIndexOfSubs = 0;
 var substituentRowButton = d3.select("#showSecondSubRow");
 substituentRowButton.on("click", function() {
     $('#pieLinkCarbon').css("display", "none");
     var tableSub = d3.select("#substituents").select("tbody");
     var subTypes = [];
+    var mostUsedTypes = ["S", "P", "NAc", "Acetyl", "Methyl"];
     for (var type of sb.SubstituentType) {
-        if (type.ordinal >= currentIndexOfSubs && type.ordinal < currentIndexOfSubs+6 && type.label != 'undefined') {
+        if (type.label != 'undefined' && mostUsedTypes.indexOf(type.label) == -1) {
             subTypes.push(type.label);
         }
     }
-    if (subTypes.length != 0) {
-        var newRow = tableSub.append("tr").attr("class", "newRowSub");
-        newRow.selectAll("td").data(subTypes).enter().append("td").attr("class", "subChoice")
-            .text(function (d) {
-                return d;
-            })
-        .on("click", function (d) {
-                infosTable.push(d);
-                displayPie();
-            });
-        currentIndexOfSubs += 6;
+    if(d3.selectAll(".newRowSub")[0].length != 5) {
+        var currentIndex = 0;
+        while (currentIndex < subTypes.length) {
+            var newRow = tableSub.append("tr").attr("class", "newRowSub");
+            newRow.selectAll("td").data(subTypes.slice(currentIndex, currentIndex + 5)).enter().append("td").attr("class", "subChoice")
+                .text(function (d) {
+                    return d;
+                })
+                .on("click", function (d) {
+                    infosTable.push(d);
+                    displayPie();
+                });
+            currentIndex += 5;
+        }
     }
 });
 
