@@ -145,6 +145,9 @@ function displayTree() {
         .enter().append("path")
         .attr("class", "nodelink")
         .attr("d", diagonalHorizontal)
+        .attr("transform", function(d) {
+            return "translate(20, 0)rotate(20)";
+        })
         .attr('pointer-events', 'none');
 
     var node = vis.selectAll("g.node")
@@ -191,7 +194,8 @@ function displayTree() {
             } else {
                 return d.node.monosaccharideType.color;
             }
-        });
+        })
+    .style('stroke', 'black');
 
     // ------------- trickery to avoid collision detection
 
