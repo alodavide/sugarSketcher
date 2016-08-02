@@ -178,6 +178,12 @@ function displayTree() {
                 }
             }))
         .attr("transform", function(d) {
+            if (d.node != sugar.getRootNode()) {
+                var edgeTargeted = findLinkForMono(d.node);
+                console.log("found edge ");
+                console.log(edgeTargeted);
+                console.log(edgeTargeted.anomerCarbon);
+            }
             if (d.node instanceof sb.Substituent) {
                 return;
             }
@@ -209,6 +215,20 @@ function displayTree() {
             .on("click", clickCircle);
 
     // a new, unconnected node that can be dragged near others to connect it
+}
+
+/**
+ * Finds the link in the tree which has the monosaccharide as target
+ * @param monosaccharide
+ * @returns {*}
+ */
+function findLinkForMono(monosaccharide) {
+    var links = tree.links(tree.nodes(treeData));
+    for (var link of links) {
+        if (link.target.node == monosaccharide) {
+            return sugar.getEdge(link.source.node, link.target.node);
+        }
+    }
 }
 
 
