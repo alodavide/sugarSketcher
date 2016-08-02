@@ -146,6 +146,9 @@ function displayTree() {
         .attr("class", "nodelink")
         .attr("d", diagonalHorizontal)
         .attr("transform", function(d) {
+            var linkAnomericity = sugar.getEdge(d.source.node, d.target.node).anomerCarbon.value; // Anomericity of the link
+            console.log("link anomericity");
+            console.log(linkAnomericity);
             return "translate(20, 0)rotate(20)";
         })
         .attr('pointer-events', 'none');
@@ -178,21 +181,22 @@ function displayTree() {
                 }
             }))
         .attr("transform", function(d) {
-            if (d.node != sugar.getRootNode()) {
-                var edgeTargeted = findLinkForMono(d.node);
-                console.log("found edge ");
-                console.log(edgeTargeted);
-                console.log(edgeTargeted.anomerCarbon);
-            }
             if (d.node instanceof sb.Substituent) {
                 return;
             }
+            var finalTransform = "";
+            if (d.node != sugar.getRootNode()) {
+                var edgeTargeted = findLinkForMono(d.node);
+                var anomericity = edgeTargeted.anomerCarbon.value;
+                finalTransform += "translate(" + anomericity + ",0)";
+            }
             var shape = d.node.monosaccharideType.shape;
             if (shape == "star") {
-                return "rotate(-20)";
+                finalTransform += "rotate(-20)";
             } else if (shape == "triangle") {
-                return "rotate(30)";
+                finalTransform += "rotate(30)";
             }
+            return finalTransform;
         })
         .style('fill', function(d) {
             if (d.node instanceof sb.Substituent) {
@@ -217,8 +221,9 @@ function displayTree() {
     // a new, unconnected node that can be dragged near others to connect it
 }
 
+
 /**
- * Finds the link in the tree which has the monosaccharide as target
+ * Finds the edge in the sugar which has the monosaccharide as target
  * @param monosaccharide
  * @returns {*}
  */
