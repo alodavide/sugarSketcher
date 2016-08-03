@@ -137,26 +137,26 @@ function displayTree() {
     treeSvg.selectAll('.node').remove();
     treeSvg.selectAll('.nodelink').remove();
 
-    var currentTab = [];
     var diagonalHorizontal = d3.svg.diagonal().projection(function (d) {
         return [d.y, d.x];
     });
     var link = vis.selectAll(".nodelink")
         .data(links)
-        .enter().append("path")
+        .enter().append("line")
         .attr("class", "nodelink")
-        .attr("d", diagonalHorizontal)
+        .attr("x1", function(d) { return d.source.y; })
+        .attr("y1", function(d) { return d.source.x; })
+        .attr("x2", function(d) { return d.target.y; })
+        .attr("y2", function(d) { return d.target.x; })
         .attr("transform", function(d) {
-            var linkSourceDraw = d3.select(this).attr("d");
-            var coordinates = linkSourceDraw.split("C")[0].substring(1).split(",");
-            var sourceX = coordinates[0];
-            var sourceY = coordinates[1];
-            var rotationDegree = "0";
+            var sourceX = d3.select(this).attr("x1");
+            var sourceY = d3.select(this).attr("y1");
+            var rotationDegree = 0;
             var linkAnomericity = sugar.getEdge(d.source.node, d.target.node).anomerCarbon.value; // Anomericity of the link
             if (linkAnomericity > 4) {
-                rotationDegree = "-" + 60;
+                rotationDegree = "-60";
             } else if (linkAnomericity == 4){
-                // Manage translation if return the edge
+                //TODO Manage translation if return the edge
             } else {
                 rotationDegree = 60 * (linkAnomericity - 1);
             }
@@ -168,7 +168,30 @@ function displayTree() {
         .data(nodes)
         .enter().append("g")
         .attr("transform", function (d) {
-            return "translate(" + d.y + "," + d.x + ")";
+            var finalTransform = "";
+            if (d.node != sugar.getRootNode()) {
+                var sourceXRotation = 0;
+                var sourceYRotation = 0;
+                var edgeTargeted = findLinkForMono(d.node);
+                for (var link of links) {
+                    if (link.target.node == d.node) {
+                        sourceXRotation = link.source.x;
+                        sourceYRotation = link.source.y;
+                    }
+                }
+                var anomericity = edgeTargeted.anomerCarbon.value;
+                var rotationDegree = 0;
+                if (anomericity > 4) {
+                    rotationDegree = "-60";
+                } else if (anomericity == 4){
+                    //TODO Manage translation if return the edge
+                } else {
+                    rotationDegree = 60 * (anomericity - 1);
+                }
+                finalTransform += "rotate(" + rotationDegree + "," + sourceYRotation + "," + sourceXRotation + ")";
+                console.log(finalTransform);
+            }
+            return finalTransform + "translate(" + d.y + "," + d.x + ")";
         })
         .on('click', function (d) {
             d3.event.stopPropagation();
@@ -195,19 +218,16 @@ function displayTree() {
             if (d.node instanceof sb.Substituent) {
                 return;
             }
-            var finalTransform = "";
-            if (d.node != sugar.getRootNode()) {
-                var edgeTargeted = findLinkForMono(d.node);
-                var anomericity = edgeTargeted.anomerCarbon.value;
-                finalTransform += "translate(" + anomericity + ",0)";
-            }
+
+            /*
             var shape = d.node.monosaccharideType.shape;
             if (shape == "star") {
                 finalTransform += "rotate(-20)";
             } else if (shape == "triangle") {
                 finalTransform += "rotate(30)";
             }
-            return finalTransform;
+            */
+            return;
         })
         .style('fill', function(d) {
             if (d.node instanceof sb.Substituent) {
@@ -222,7 +242,7 @@ function displayTree() {
 
     // phantom node to give us mouseover in a radius around it
         node.append("circle")
-            .attr("r", 60)
+            .attr("r", 40)
             .attr("opacity", 0.0) // change this to non-zero to see the target area
             .attr('pointer-events', 'mouseover')
             .on("mouseover", overCircle)
