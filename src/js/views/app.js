@@ -137,6 +137,7 @@ function displayTree() {
     treeSvg.selectAll('.node').remove();
     treeSvg.selectAll('.nodelink').remove();
 
+    var currentTab = [];
     var diagonalHorizontal = d3.svg.diagonal().projection(function (d) {
         return [d.y, d.x];
     });
@@ -146,10 +147,20 @@ function displayTree() {
         .attr("class", "nodelink")
         .attr("d", diagonalHorizontal)
         .attr("transform", function(d) {
+            var linkSourceDraw = d3.select(this).attr("d");
+            var coordinates = linkSourceDraw.split("C")[0].substring(1).split(",");
+            var sourceX = coordinates[0];
+            var sourceY = coordinates[1];
+            var rotationDegree = "0";
             var linkAnomericity = sugar.getEdge(d.source.node, d.target.node).anomerCarbon.value; // Anomericity of the link
-            console.log("link anomericity");
-            console.log(linkAnomericity);
-            return "translate(20, 0)rotate(20)";
+            if (linkAnomericity > 4) {
+                rotationDegree = "-" + 60;
+            } else if (linkAnomericity == 4){
+                // Manage translation if return the edge
+            } else {
+                rotationDegree = 60 * (linkAnomericity - 1);
+            }
+            return "rotate(" + rotationDegree + "," + sourceX + "," + sourceY + ")"; //We rotate the link according to source coordinates
         })
         .attr('pointer-events', 'none');
 
