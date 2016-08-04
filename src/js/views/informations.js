@@ -152,11 +152,7 @@ var menuAction = [{
     }]
 }, {
     division: "addStructure",
-    display_division: "Add Structure",
-    subDivisions : [{
-        division: "subStruct",
-        display_division: "Sub Struct"
-    }]
+    display_division: "Add Structure"
 }, {
     division: "changeMono",
     display_division: "Change Mono",
@@ -273,6 +269,8 @@ function updateMenu(chosenDivision) {
         .attr("id", function (d) {
             return d.division;
         })
+        .attr("rx", 15)
+        .attr("ry", 15)
         .attr("class", "bar choice")
         .style("fill", function(d) {
             return d.display_division
@@ -347,7 +345,9 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[1].division)
         .attr("width", 1000/6).attr("height", 40)
-        .attr("x", x).on("mouseout", function() {
+        .attr("x", x)
+        .attr("rx", 15)
+        .on("mouseout", function() {
         updateMenu();
     }).on("click", function () {
         infosTable.push(menuItem.division);
@@ -360,11 +360,14 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[0].division)
         .attr("width", 1000/6).attr("height", 40)
-        .attr("x", 1000/6).on("mouseout", function() {
+        .attr("x", 1000/6)
+        .attr("rx", 15)
+        .on("mouseout", function() {
             if(d3.select("#svgMenu").style("display") != "none") {
                 updateMenu();
             }
-    }).on("click", function () {
+        })
+        .on("click", function () {
         infosTable.push(menuItem.division);
         infosTable.push(menuItem.subDivisions[0].display_division);
         // If root has not been set yet, then display an error popup

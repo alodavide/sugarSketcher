@@ -137,9 +137,6 @@ function displayTree() {
     treeSvg.selectAll('.node').remove();
     treeSvg.selectAll('.nodelink').remove();
 
-    var diagonalHorizontal = d3.svg.diagonal().projection(function (d) {
-        return [d.y, d.x];
-    });
     var link = vis.selectAll(".nodelink")
         .data(links)
         .enter().append("line")
@@ -149,6 +146,7 @@ function displayTree() {
         .attr("x2", function(d) { return d.target.y; })
         .attr("y2", function(d) { return d.target.x; })
         .attr("transform", function(d) {
+            // TODO Substituent linkage management
             var sourceX = d3.select(this).attr("x1");
             var sourceY = d3.select(this).attr("y1");
             var rotationDegree = 0;
@@ -176,8 +174,7 @@ function displayTree() {
                 for (var link of links) {
                     if (link.target.node == d.node) {
                         sourceXRotation = link.source.x;
-                        sourceYRotation = link.source.y;
-                    }
+                        sourceYRotation = link.source.y;}
                 }
                 var anomericity = edgeTargeted.anomerCarbon.value;
                 var rotationDegree = 0;
@@ -189,9 +186,8 @@ function displayTree() {
                     rotationDegree = 60 * (anomericity - 1);
                 }
                 finalTransform += "rotate(" + rotationDegree + "," + sourceYRotation + "," + sourceXRotation + ")";
-                console.log(finalTransform);
             }
-            return finalTransform + "translate(" + d.y + "," + d.x + ")";
+            return finalTransform + "translate(" + d.y +"," + d.x + ")";
         })
         .on('click', function (d) {
             d3.event.stopPropagation();
@@ -261,6 +257,7 @@ function displayTree() {
 function findLinkForMono(monosaccharide) {
     var links = tree.links(tree.nodes(treeData));
     for (var link of links) {
+        console.log(link);
         if (link.target.node == monosaccharide) {
             return sugar.getEdge(link.source.node, link.target.node);
         }
