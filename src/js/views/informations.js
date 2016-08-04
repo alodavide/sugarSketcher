@@ -10,6 +10,7 @@ var sugar;
 // Update the menu when page is loaded
 $(document).ready(function() {
     updateMenu();
+    addHoverManagersInfos();
     var subChoices = d3.selectAll(".subChoice");
     subChoices.on('click', function() {
         infosTable.push(d3.event.target.innerHTML);
@@ -192,7 +193,6 @@ substituentRowButton.on("click", function() {
 //Cancel Button Subs
 var cancelSubButton = d3.select("#cancelSubButton");
 cancelSubButton.on("click", function() {
-    currentIndexOfSubs = 0;
     //Reinitialize table
     $('#pieLinkCarbon').css("display", "none");
     d3.select("#tableSubstituents").transition().style("display", "none");
@@ -358,56 +358,6 @@ function updateMenu(chosenDivision) {
 }
 
 /**
- * Function called on hover on add node menu. Split the rectangle in the two sub options (Sub or Mono)
- * @param actions
- */
-function manageHoverAddNode(menuItem,actions) {
-    var x = d3.select("#svgMenu").select("#addNode").attr("x");
-    d3.select("#svgMenu").select("#addNode").remove();
-    // Add Monosaccharide rect and label
-    actions.insert("rect", ":first-child")
-        .attr("class", "bar choice")
-        .attr("id", menuItem.subDivisions[1].division)
-        .attr("width", 1000/6).attr("height", 40)
-        .attr("x", x)
-        .attr("rx", 15)
-        .on("mouseout", function() {
-            updateMenu();
-        }).on("click", function () {
-            infosTable.push(menuItem.division);
-            infosTable.push(menuItem.subDivisions[1].display_division);
-            updateMenu(menuItem.subDivisions[1].division);
-            return;
-        });
-    // Add Substituent rect and label
-    actions.insert("rect", ":first-child")
-        .attr("class", "bar choice")
-        .attr("id", menuItem.subDivisions[0].division)
-        .attr("width", 1000/6).attr("height", 40)
-        .attr("x", 1000/6)
-        .attr("rx", 15)
-        .on("mouseout", function() {
-            if(d3.select("#svgMenu").style("display") != "none") {
-                updateMenu();
-            }
-        })
-        .on("click", function () {
-            infosTable.push(menuItem.division);
-            infosTable.push(menuItem.subDivisions[0].display_division);
-            // If root has not been set yet, then display an error popup
-            if (Object.keys(treeData).length === 0) {
-                document.getElementById("error").innerHTML = "Can not have a substituent as a root";
-                $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
-                return;
-            }
-            d3.select("#svgMenu").style("display", "none");
-            d3.select("#tableSubstituents").transition().style("display", "block");
-            //updateMenu(menuItem.subDivisions[0].division);
-            return;
-        });
-}
-
-/**
  * Add a cancel button (rectangle), enabling to come back to last step
  * @param actions
  * @param labels
@@ -423,7 +373,6 @@ function addCancelOperation (actions, labels) {
         .style("fill", "black")
         .attr("transform", "translate(10)")
         .on("click", function () {
-            console.log(menuChosenPath);
             menuChosenPath.pop();
             updateMenu(menuChosenPath.pop());
             infosTable.pop();

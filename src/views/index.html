@@ -76,6 +76,7 @@
             <text class="label cancelLabel" x="1050" y="8"><<</text>
         </g>
     </svg>
+    <!--
     <div id="tableInformations">
         <table id="tableChoice">
             <tr id="rowTitleInfos">
@@ -98,6 +99,19 @@
             </tr>
         </table>
     </div>
+    -->
+    <svg id="svgInfos">
+        <g id="chart">
+            <g id="actionsInfos">
+                <rect width="333.3333333333333" height="40" y="0" x="0" rx="15" ry="15" id="anomericityTitleChoice" class="bar choice"></rect>
+                <rect width="333.3333333333333" height="40" y="0" x="333.3333333333333" rx="15" ry="15" id="isomerTitleChoice" class="bar choice"></rect>
+                <rect width="333.3333333333333" height="40" y="0" x="666.6666666666666" rx="15" ry="15" id="ringTitleChoice" class="bar choice"></rect></g>
+            <g id="labelsInfos">
+                <text id ="labelAnomericityTitle" class="label" x="166.66666666666666" y="8">Anomericity</text>
+                <text id="labelIsomerTitle" class="label" x="500" y="8">Isomer</text>
+                <text id="labelRingTypeTitle" class="label" x="833.3333333333333" y="8">Ring Type</text></g>
+        </g>
+    </svg>
     <div id="tableCarbonValues">
         <table id="carbonValues">
             <tr id="rowTitleCarbon">
@@ -144,6 +158,7 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="../js/views/d3.superformula.min.js"></script>
 <script src="../js/views/app.js"></script>
+<script src="../js/views/eventManager.js"></script>
 <script src="../js/views/informations.js"></script>
 <script src="../js/views/visualization.js"></script>
 <script src="../js/views/chart.js"></script>

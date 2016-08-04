@@ -34,8 +34,13 @@
     height: 40px;
     width:1000px;
     display:none;
-    background: black;
     overflow: visible;
+}
+
+#svgInfos {
+    width:1000px;
+    display:block;
+    height:40px;
 }
 
 #svgMenu {
@@ -43,7 +48,7 @@
     overflow: visible;
 }
 
-#tableChoice, #svgMenu, #svgShape, #carbonValues, #substituents{
+#tableChoice, #svgMenu, #svgShape, #carbonValues, #substituents, #svgInfos{
     margin: 0 auto 10px;
 }
 
