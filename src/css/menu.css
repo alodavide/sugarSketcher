@@ -85,3 +85,12 @@
     stroke:#bd75b3;
     stroke-width:2;
 }
+
+.cancelLabel {
+    stroke:white; !important;
+    fill:white; !important;
+}
+
+.choiceWhiteStroke {
+    stroke:black; !important;
+}

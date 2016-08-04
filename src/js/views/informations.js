@@ -106,36 +106,36 @@ carbonCancelButton.on("click", function() {
 
 // Color Divisions with all possible colors
 var colorDivisions = [{
-        division: "whiteColor",
-        display_division: '#FFFFFF'
-    }, {
-        division: "blueColor",
-        display_division: '#0080FF'
-    }, {
-        division: "greenColor",
-        display_division: '#00FF00'
-    }, {
-        division: "yellowColor",
-        display_division: '#FFD900'
-    }, {
-        division: "orangeColor",
-        display_division: '#FF8000'
-    }, {
-        division: "pinkColor",
-        display_division: '#FF87C2'
-    }, {
-        division: "purpleColor",
-        display_division: '#9E1FFF'
-    }, {
-        division:"lightBlueColor",
-        display_division: '#96F2F7'
-    }, {
-        division:"brownColor",
-        display_division: '#977335'
-    }, {
-        division:"redColor",
-        display_division: '#FF0000'
-    }
+    division: "whiteColor",
+    display_division: '#FFFFFF'
+}, {
+    division: "blueColor",
+    display_division: '#0080FF'
+}, {
+    division: "greenColor",
+    display_division: '#00FF00'
+}, {
+    division: "yellowColor",
+    display_division: '#FFD900'
+}, {
+    division: "orangeColor",
+    display_division: '#FF8000'
+}, {
+    division: "pinkColor",
+    display_division: '#FF87C2'
+}, {
+    division: "purpleColor",
+    display_division: '#9E1FFF'
+}, {
+    division:"lightBlueColor",
+    display_division: '#96F2F7'
+}, {
+    division:"brownColor",
+    display_division: '#977335'
+}, {
+    division:"redColor",
+    display_division: '#FF0000'
+}
 ];
 
 // Menu, stocking the divisions of our menu, and subdivisions
@@ -259,26 +259,57 @@ function updateMenu(chosenDivision) {
 
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length;
     var bars = actions.selectAll("rect").data(newMenuAction);
-    bars.enter().append("rect")
-        .attr("width", menuDimensions.barWidth)
-        .attr("height",menuDimensions.height)
-        .attr("y", 0)
-        .attr("x", function (d, i) {
-            return menuDimensions.barWidth * i;
-        })
-        .attr("id", function (d) {
-            return d.division;
-        })
-        .attr("rx", 15)
-        .attr("ry", 15)
-        .attr("class", "bar choice")
-        .style("fill", function(d) {
-            return d.display_division
-        })
-        .on("click", function(d) {
-            // If we are choosing a color
-            if (d.division.indexOf("Color") > -1) {
-                var chosenShape = infosTable[infosTable.length-1]; // Get the selected shape
+    if (newMenuAction != colorDivisions) {
+        bars.enter().append("rect")
+            .attr("width", menuDimensions.barWidth)
+            .attr("height", menuDimensions.height)
+            .attr("y", 0)
+            .attr("x", function (d, i) {
+                return menuDimensions.barWidth * i;
+            })
+            .attr("id", function (d) {
+                return d.division;
+            })
+            .attr("rx", 15)
+            .attr("ry", 15)
+            .attr("class", function (d) {
+                if (d.division != 'whiteColor') {
+                    return "bar choice";
+                } else return "bar choice choiceWhiteStroke"
+            })
+            .style("fill", function (d) {
+                return d.display_division
+            })
+            .on("click", function (d) {
+                infosTable.push(d.division);
+                updateMenu(d.division);
+            }).on("mouseover", function (d) {
+                // On hover of addNode, we display its two subdivisions
+                if (d.division == "addNode") {
+                    manageHoverAddNode(d, actions);
+                    labels.selectAll("text")[0][0].remove();
+                    labels.insert("text", ":first-child").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
+                    labels.insert("text", ":first-child").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
+                }
+            });
+    } else {
+        bars.enter().append("circle")
+            .attr("cy", 20)
+            .attr("cx", function (d, i) {
+                return menuDimensions.barWidth * i + menuDimensions.barWidth/2;
+            })
+            .attr("id", function (d) {
+                return d.division;
+            })
+            .attr("r", 20)
+            .attr("class", function (d) {
+                return "bar choice choiceWhiteStroke"
+            })
+            .style("fill", function (d) {
+                return d.display_division
+            })
+            .on("click", function (d) {
+                var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
                 var isBisected = false;
                 if (chosenShape.indexOf("bisected") > -1) {
                     chosenShape = chosenShape.split("bisected")[1];
@@ -295,19 +326,12 @@ function updateMenu(chosenDivision) {
                     $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                     return;
                 }
-            }
-            infosTable.push(d.division);
-            updateMenu(d.division);
 
-        }).on("mouseover", function(d) {
-            // On hover of addNode, we display its two subdivisions
-            if(d.division == "addNode") {
-                manageHoverAddNode(d,actions);
-                labels.selectAll("text")[0][0].remove();
-                labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000/12).attr("y", 8);
-                labels.insert("text",":first-child").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
-            }
-        });
+                infosTable.push(d.division);
+                updateMenu(d.division);
+
+            });
+    }
 
     /*
      *  Label drawing block, if we are displaying colors, labels not needed because of color fill
@@ -348,13 +372,13 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("x", x)
         .attr("rx", 15)
         .on("mouseout", function() {
-        updateMenu();
-    }).on("click", function () {
-        infosTable.push(menuItem.division);
-        infosTable.push(menuItem.subDivisions[1].display_division);
-        updateMenu(menuItem.subDivisions[1].division);
-        return;
-    });
+            updateMenu();
+        }).on("click", function () {
+            infosTable.push(menuItem.division);
+            infosTable.push(menuItem.subDivisions[1].display_division);
+            updateMenu(menuItem.subDivisions[1].division);
+            return;
+        });
     // Add Substituent rect and label
     actions.insert("rect", ":first-child")
         .attr("class", "bar choice")
@@ -368,19 +392,19 @@ function manageHoverAddNode(menuItem,actions) {
             }
         })
         .on("click", function () {
-        infosTable.push(menuItem.division);
-        infosTable.push(menuItem.subDivisions[0].display_division);
-        // If root has not been set yet, then display an error popup
-        if (Object.keys(treeData).length === 0) {
-            document.getElementById("error").innerHTML = "Can not have a substituent as a root";
-            $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+            infosTable.push(menuItem.division);
+            infosTable.push(menuItem.subDivisions[0].display_division);
+            // If root has not been set yet, then display an error popup
+            if (Object.keys(treeData).length === 0) {
+                document.getElementById("error").innerHTML = "Can not have a substituent as a root";
+                $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+                return;
+            }
+            d3.select("#svgMenu").style("display", "none");
+            d3.select("#tableSubstituents").transition().style("display", "block");
+            //updateMenu(menuItem.subDivisions[0].division);
             return;
-        }
-        d3.select("#svgMenu").style("display", "none");
-        d3.select("#tableSubstituents").transition().style("display", "block");
-        //updateMenu(menuItem.subDivisions[0].division);
-        return;
-    });
+        });
 }
 
 /**
@@ -396,7 +420,7 @@ function addCancelOperation (actions, labels) {
         .attr("height", 40)
         .attr("id", "cancelChoice")
         .attr("x", 1000).attr("y", 0)
-        .style("fill", "red")
+        .style("fill", "black")
         .attr("transform", "translate(10)")
         .on("click", function () {
             console.log(menuChosenPath);
@@ -405,10 +429,10 @@ function addCancelOperation (actions, labels) {
             infosTable.pop();
         });
     labels.append("text")
-        .attr("class", "label")
+        .attr("class", "label cancelLabel")
         .attr("x", 1050)
         .attr("y", 8)
-        .text("Cancel");
+        .text("<<")
 }
 /**
  * Get SubDivisions of a searched division, using recursive calls
