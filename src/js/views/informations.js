@@ -11,6 +11,7 @@ var sugar;
 $(document).ready(function() {
     updateMenu();
     addHoverManagersInfos();
+    addHoverManagersCarbons();
     var subChoices = d3.selectAll(".subChoice");
     subChoices.on('click', function() {
         infosTable.push(d3.event.target.innerHTML);
@@ -20,50 +21,6 @@ $(document).ready(function() {
 
 var menuChosenPath; // Path taken by user in the menu
 var infosTable = []; // Table with all informations selected by the user
-
-// Event listener for infosChoice
-var infoChoiceCells = document.getElementsByClassName("infoChoiceCell");
-for (var cell of infoChoiceCells) {
-    cell.addEventListener('click', function(e) {
-        // Get the clicked cell
-        var clickedCell = d3.select("#"+e.target.id);
-        // Gets classes of the clicked cell
-        var classNames =  $(e.target).attr("class").split(' ');
-        updateSelectionCells(e,classNames); // Update the selection
-        // Invert color and background
-        if (clickedCell.classed("selectedChoice")) {
-            clickedCell.style("background", "black").style("color", "white").classed("selectedChoice", false);
-        } else {
-            clickedCell.style("background", "white").style("color", "black").classed("selectedChoice", true);
-        }
-        //If its a carbon choice, check if the two have been selected
-        if (classNames[1].indexOf("Carbon") > -1) {
-            checkSelectedCarbonValues();
-        }
-    });
-}
-
-/**
- * Function changing the selected cells classes and styles
- * @param classNames
- */
-function updateSelectionCells(event, classNames) {
-    //Remove the selected classes of the list, because unneeded
-    var indexSelected = classNames.indexOf("selectedChoice");
-    if(indexSelected > -1) {
-        classNames.splice(indexSelected, 1);
-    }
-    // Get the other cells with same classes (i.e for the same choice)
-    var otherCells = d3.selectAll("." + classNames[0]).filter("." + classNames[1]);
-    for (var other of otherCells[0]) {
-        // If one is selected, it's unselected
-        if (other.id != event.target.id) {
-            if (d3.select("#" + other.id).attr("class").split(' ').indexOf("selectedChoice") > -1) {
-                d3.select("#" + other.id).style("background", "black").style("color", "white").classed("selectedChoice", false);
-            }
-        }
-    }
-}
 
 // Event listeners for the shape choice
 var shapeChoices= document.getElementsByClassName("shapeChoice");

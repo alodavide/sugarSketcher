@@ -12,6 +12,14 @@ function addHoverManagersInfos() {
 }
 
 /**
+ * Add hover manager for the carbon selections: linked and anomer
+ */
+function addHoverManagersCarbons() {
+    addHoverManagerLinkedCarbon();
+    addHoverManagerAnomerCarbon();
+}
+
+/**
  * Manage the hover on the anomericity choice
  */
 function addHoverManagerAnomericity() {
@@ -288,8 +296,8 @@ function selectRingType(target) {
         clicked.classed("selectedRingType", false);
         clicked.style("fill", "#bd75b3");
     } else {
-        var isomerChoices = d3.selectAll(".choiceRingType")[0];
-        for (var choice of isomerChoices) {
+        var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
+        for (var choice of ringTypeChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedRingType")) {
                 current.classed("selectedRingType", false);
@@ -324,7 +332,7 @@ function checkSelectedAllInfos() {
  */
 function reinitializeDisplayInfos() {
     d3.select("#svgInfos").transition().style("display","none");
-    d3.select("#tableCarbonValues").transition().style("display", "block");
+    d3.select("#svgCarbons").transition().style("display", "block");
     d3.select("#anomericityTitleChoice").style("display", "block");
     d3.select("#labelAnomericityTitle").style("display", "block");
     d3.select("#isomerTitleChoice").style("display", "block");
@@ -337,4 +345,212 @@ function reinitializeDisplayInfos() {
     d3.selectAll(".labelChoiceIsomer").remove();
     d3.selectAll(".choiceRingType").remove();
     d3.selectAll(".labelChoiceRingType").remove();
+}
+
+/**
+ * Manage the hover on the linked carbon choice
+ */
+function addHoverManagerLinkedCarbon() {
+    var linkedCarbonTitle = d3.select("#linkedCarbonTitleChoice");
+    linkedCarbonTitle.on("mouseover", function (d) {
+        var x = parseInt(d3.select("#linkedCarbonTitleChoice").attr("x"));
+        var width = d3.select("#linkedCarbonTitleChoice").attr("width");
+        var idActions = ["linkedCarbon1Choice", "linkedCarbon2Choice", "linkedCarbon3Choice", "linkedCarbon4Choice", "linkedCarbon5Choice", "linkedCarbon6Choice", "linkedCarbonUnknownChoice"];
+        var associatedValues = ["1", "2", "3", "4", "5", "6", "?"];
+        d3.select("#linkedCarbonTitleChoice").style("display", "none");
+        var linkedCarbonLabels = d3.select("#labelsCarbons");
+        var linkedCarbonActions = d3.select("#actionsCarbons");
+        for (var i = 0; i < 7; i++) {
+            const k = i;
+            linkedCarbonActions.append("rect")
+                .attr("class", "bar choice choiceLinkedCarbon")
+                .attr("id", idActions[k])
+                .attr("width", width / 7)
+                .attr("height", 40)
+                .attr("x", x + i*width/7)
+                .attr("rx", 15)
+                .attr("value", associatedValues[k])
+                .on("mouseout", function() {
+                    manageMouseOutLinkedCarbon();
+                })
+                .on("click", function () {
+                    selectLinkedCarbon(this.id);
+                });
+        }
+        d3.select("#labelLinkedCarbonTitle").style("display", "none");
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("1").attr("x", x + 500 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("2").attr("x", x + 1500 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("3").attr("x", x + 2500 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("4").attr("x", x + 3500 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("5").attr("x", x + 4500 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("6").attr("x", x + 5500 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("?").attr("x", x + 6500/14).attr("y", 8);
+    });
+}
+
+/**
+ * Manage mouse out for linked carbon choices
+ */
+function manageMouseOutLinkedCarbon() {
+    var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
+    var selected = false;
+    for (var choice of linkedCarbonChoices) {
+        if ((d3.select("#" +choice.id)).classed("selectedLinkedCarbon")) {
+            selected = true;
+        }
+    }
+    if(!selected) {
+        d3.selectAll(".choiceLinkedCarbon").remove();
+        d3.selectAll(".labelChoiceLinkedCarbon").remove();
+        d3.select("#linkedCarbonTitleChoice").style("display", "block");
+        d3.select("#labelLinkedCarbonTitle").style("display", "block");
+    }
+}
+
+/**
+ * Select a linked carbon
+ * @param target
+ */
+function selectLinkedCarbon(target) {
+    var clicked = d3.select("#"+target);
+    if (clicked.classed("selectedLinkedCarbon")) {
+        clicked.classed("selectedLinkedCarbon", false);
+        clicked.style("fill", "#bd75b3");
+    } else {
+        var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
+        for (var choice of linkedCarbonChoices) {
+            var current = d3.select("#" + choice.id);
+            if (current.classed("selectedLinkedCarbon")) {
+                current.classed("selectedLinkedCarbon", false);
+                current.style("fill", "#bd75b3");
+            }
+        }
+        d3.select("#" + target).style("fill", "#783a70").classed("selectedLinkedCarbon", true);
+        checkSelectedAllCarbons();
+    }
+}
+
+
+/**
+ * Manage the hover on the anomer carbon choice
+ * */
+function addHoverManagerAnomerCarbon() {
+    var anomerCarbonTitle = d3.select("#anomerCarbonTitleChoice");
+    anomerCarbonTitle.on("mouseover", function (d) {
+        var x = parseInt(d3.select("#anomerCarbonTitleChoice").attr("x"));
+        var width = d3.select("#anomerCarbonTitleChoice").attr("width");
+        var idActions = ["anomerCarbon1Choice", "anomerCarbon2Choice", "anomerCarbon3Choice", "anomerCarbon4Choice", "anomerCarbon5Choice", "anomerCarbon6Choice", "anomerCarbonUnknownChoice"];
+        var associatedValues = ["1", "2", "3", "4", "5", "6", "?"];
+        d3.select("#anomerCarbonTitleChoice").style("display", "none");
+        var anomerCarbonLabels = d3.select("#labelsCarbons");
+        var anomerCarbonActions = d3.select("#actionsCarbons");
+        for (var i = 0; i < 7; i++) {
+            const k = i;
+            anomerCarbonActions.append("rect")
+                .attr("class", "bar choice choiceAnomerCarbon")
+                .attr("id", idActions[k])
+                .attr("width", width / 7)
+                .attr("height", 40)
+                .attr("x", x + i*width/7)
+                .attr("rx", 15)
+                .attr("value", associatedValues[k])
+                .on("mouseout", function() {
+                    manageMouseOutAnomerCarbon();
+                })
+                .on("click", function () {
+                    selectAnomerCarbon(this.id);
+                });
+        }
+        d3.select("#labelAnomerCarbonTitle").style("display", "none");
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("1").attr("x", x + 500 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("2").attr("x", x + 1500 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("3").attr("x", x + 2500 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("4").attr("x", x + 3500 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("5").attr("x", x + 4500 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("6").attr("x", x + 5500 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("?").attr("x", x + 6500/14).attr("y", 8);
+    });
+}
+
+/**
+ * Manage mouse out for anomer carbon choices
+ */
+function manageMouseOutAnomerCarbon() {
+    var anomerCarbonChoices = d3.selectAll(".choiceAnomerCarbon")[0];
+    var selected = false;
+    for (var choice of anomerCarbonChoices) {
+        if ((d3.select("#" +choice.id)).classed("selectedAnomerCarbon")) {
+            selected = true;
+        }
+    }
+    if(!selected) {
+        d3.selectAll(".choiceAnomerCarbon").remove();
+        d3.selectAll(".labelChoiceAnomerCarbon").remove();
+        d3.select("#anomerCarbonTitleChoice").style("display", "block");
+        d3.select("#labelAnomerCarbonTitle").style("display", "block");
+    }
+}
+
+/**
+ * Select an anomer carbon
+ * @param target
+ */
+function selectAnomerCarbon(target) {
+    var clicked = d3.select("#"+target);
+    if (clicked.classed("selectedAnomerCarbon")) {
+        clicked.classed("selectedAnomerCarbon", false);
+        clicked.style("fill", "#bd75b3");
+    } else {
+        var isomerChoices = d3.selectAll(".choiceAnomerCarbon")[0];
+        for (var choice of isomerChoices) {
+            var current = d3.select("#" + choice.id);
+            if (current.classed("selectedAnomerCarbon")) {
+                current.classed("selectedAnomerCarbon", false);
+                current.style("fill", "#bd75b3");
+            }
+        }
+        d3.select("#" + target).style("fill", "#783a70").classed("selectedAnomerCarbon", true);
+        checkSelectedAllCarbons();
+    }
+}
+
+/**
+ * Checks that the user selected the two carbon values informations, and changes menu if he did
+ */
+function checkSelectedAllCarbons() {
+    var selectedLinkedCarbon = (d3.selectAll(".selectedLinkedCarbon")[0].length != 0); //boolean checking if linked carbon selected
+    var selectedAnomerCarbon = (d3.selectAll(".selectedAnomerCarbon")[0].length != 0); //boolean checking if anomer carbon selected
+    if (selectedLinkedCarbon && selectedAnomerCarbon) {
+        var linkedCarbon = d3.select(".selectedLinkedCarbon").attr("value");
+        var anomerCarbon = d3.select(".selectedAnomerCarbon").attr("value");
+        infosTable.push(linkedCarbon);
+        infosTable.push(anomerCarbon);
+        reinitializeDisplayCarbons();
+        var methodToCall = infosTable[0]; // Gets the method which has to be called
+        if (methodToCall == "addNode") {
+            // Manage add node
+            createNewNode();
+        } else if (methodToCall == "addStruct") {
+            console.log("Need to add a structure");
+            // Manage add structure
+        } else {
+            // Manage update of node
+            updateExistingNode();
+        }
+    }
+}
+
+/**
+ * Reinitialize the display of carbons title and remove all the choices
+ */
+function reinitializeDisplayCarbons() {
+    d3.select("#svgCarbons").transition().style("display","none");
+    d3.select("#linkedCarbonTitleChoice").style("display", "block");
+    d3.select("#labelLinkedCarbonTitle").style("display", "block");
+    d3.select("#anomerCarbonTitleChoice").style("display", "block");
+    d3.select("#labelAnomerCarbonTitle").style("display", "block");
+    d3.selectAll(".choiceLinkedCarbon").remove();
+    d3.selectAll(".labelChoiceLinkedCarbon").remove();
+    d3.selectAll(".choiceAnomerCarbon").remove();
+    d3.selectAll(".labelChoiceAnomerCarbon").remove();
 }
