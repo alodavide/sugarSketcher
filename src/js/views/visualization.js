@@ -56,7 +56,11 @@ function updateExistingNode() {
     monoToUpdate.anomericity = anomericity;
     monoToUpdate.ringType = ringType;
     monoToUpdate.isomer = isomer;
-    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, false);
+    var isBisected = (newShape.indexOf("bisected") != -1); // Check if the shape is bisected
+    if (isBisected) {
+        newShape = newShape.split("bisected")[1]; // We update the value of the shape by removing keywork "bisected"
+    }
+    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected);
     monoToUpdate.monosaccharideType = newMonoType;
     // TODO maybe update edge too with carbon values
     updateNodeInTree(treeData,monoToUpdate);
