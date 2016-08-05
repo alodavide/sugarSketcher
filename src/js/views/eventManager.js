@@ -324,6 +324,7 @@ function checkSelectedAllInfos() {
         infosTable.push(isomer);
         infosTable.push(ringType);
         reinitializeDisplayInfos();
+        d3.select("#svgCarbons").transition().style("display", "block");
     }
 }
 
@@ -332,7 +333,6 @@ function checkSelectedAllInfos() {
  */
 function reinitializeDisplayInfos() {
     d3.select("#svgInfos").transition().style("display","none");
-    d3.select("#svgCarbons").transition().style("display", "block");
     d3.select("#anomericityTitleChoice").style("display", "block");
     d3.select("#labelAnomericityTitle").style("display", "block");
     d3.select("#isomerTitleChoice").style("display", "block");

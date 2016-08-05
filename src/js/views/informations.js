@@ -45,7 +45,8 @@ infosCancelButton.on("click", function() {
     infosTable.pop();
     menuChosenPath.pop();
     menuChosenPath.pop();
-    d3.select("#tableInformations").transition().style("display", "none");
+    d3.select("#svgInfos").transition().style("display", "none");
+    reinitializeDisplayInfos();
     updateMenu("shape");
     d3.select("#svgMenu").transition().style("display", "block");
 });
@@ -56,8 +57,10 @@ carbonCancelButton.on("click", function() {
     infosTable.pop();
     infosTable.pop();
     infosTable.pop();
-    d3.select("#tableCarbonValues").transition().style("display", "none");
-    d3.select("#tableInformations").transition().style("display", "block");
+    d3.select("#svgCarbons").transition().style("display", "none");
+    reinitializeDisplayInfos();
+    reinitializeDisplayCarbons();
+    d3.select("#svgInfos").transition().style("display", "block");
 });
 
 // Color Divisions with all possible colors
@@ -331,9 +334,8 @@ function addCancelOperation (actions, labels) {
         .attr("class", "bar")
         .attr("height", 40)
         .attr("id", "cancelChoice")
-        .attr("x", 1000).attr("y", 0)
+        .attr("x", 1010).attr("y", 0)
         .style("fill", "black")
-        .attr("transform", "translate(10)")
         .on("click", function () {
             menuChosenPath.pop();
             updateMenu(menuChosenPath.pop());
@@ -413,28 +415,6 @@ function checkSelectedCarbonValues() {
         getCarbonSelections(selectedCells);
         d3.select("#tableCarbonValues").transition().style("display","none");
         unselectChoices();
-    }
-}
-
-/**
- * Get the carbon selections and launch treatment of informations
- * @param selectedCells
- */
-function getCarbonSelections(selectedCells) {
-    var linkCarbon = selectedCells.filter(".choiceLinkCarbon")[0][0].innerText;
-    var anomerCarbon = selectedCells.filter(".choiceAnomerCarbon")[0][0].innerText;
-    infosTable.push(linkCarbon);
-    infosTable.push(anomerCarbon);
-    var methodToCall = infosTable[0]; // Gets the method which has to be called
-    if (methodToCall == "addNode") {
-        // Manage add node
-        createNewNode();
-    } else if (methodToCall == "addStruct") {
-        console.log("Need to add a structure");
-        // Manage add structure
-    } else {
-        // Manage update of node
-        updateExistingNode();
     }
 }
 
