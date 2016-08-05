@@ -39,8 +39,6 @@ for (var cell of infoChoiceCells) {
         //If its a carbon choice, check if the two have been selected
         if (classNames[1].indexOf("Carbon") > -1) {
             checkSelectedCarbonValues();
-        } else { // Else it is an info choice, so we check that three has been selected
-            checkSelectedThreeInfoValues();
         }
     });
 }
@@ -237,7 +235,7 @@ function updateMenu(chosenDivision) {
         menuChosenPath.push(chosenDivision);
         // If chose a color, then we hide the svg and show the table for anomericity, isomer and type
         if (chosenDivision.indexOf("Color") > -1) {
-            d3.select("#tableInformations").transition().duration(200).style("display", "block");
+            d3.select("#svgInfos").transition().duration(200).style("display", "block");
             d3.select("#svgMenu").transition().duration(200).style("display", "none");
             return;
         } else {
@@ -418,20 +416,6 @@ document.onkeydown = function (e) {
         d3.select("#tableCarbonValues").style("display", "none");
     }
 };
-
-/**
- * Check if the user has selected three values in the informations table
- */
-function checkSelectedThreeInfoValues() {
-    var selectedCells = d3.selectAll(".selectedChoice");
-    // The user selected the three values
-    if(selectedCells[0].length === 3) {
-        getInfoSelections(selectedCells);
-        d3.select("#tableInformations").transition().style("display","none");
-        unselectChoices();
-        d3.select("#tableCarbonValues").transition().style("display", "block");
-    }
-}
 
 /**
  * Unselect the choices made in the informations table

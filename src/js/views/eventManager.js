@@ -68,7 +68,7 @@ function selectAnomericity(target) {
             }
         }
         d3.select("#" + target).style("fill", "#783a70").classed("selectedAnomericity", true);
-        // TODO check all three selected infos
+        checkSelectedAllInfos();
     }
 }
 
@@ -145,8 +145,8 @@ function manageHoverAddNode(menuItem,actions) {
  * Manage the hover on the isomer choice
  */
 function addHoverManagerIsomer() {
-    var anomericityTitle = d3.select("#isomerTitleChoice");
-    anomericityTitle.on("mouseover", function (d) {
+    var isomerTitle = d3.select("#isomerTitleChoice");
+    isomerTitle.on("mouseover", function (d) {
         var x = parseInt(d3.select("#isomerTitleChoice").attr("x"));
         var width = d3.select("#isomerTitleChoice").attr("width");
         var idActions = ["isomerDChoice", "isomerLChoice", "isomerUnknownChoice"];
@@ -217,10 +217,124 @@ function selectIsomer(target) {
             }
         }
         d3.select("#" + target).style("fill", "#783a70").classed("selectedIsomer", true);
-        // TODO check all three selected infos
+        checkSelectedAllInfos();
     }
 }
 
+/**
+ * Manage the hover on the isomer choice
+ */
 function addHoverManagerRingType() {
+    var ringTypeTitle = d3.select("#ringTypeTitleChoice");
+    ringTypeTitle.on("mouseover", function (d) {
+        var x = parseInt(d3.select("#ringTypeTitleChoice").attr("x"));
+        var width = d3.select("#ringTypeTitleChoice").attr("width");
+        var idActions = ["ringTypePChoice", "ringTypeFChoice", "ringTypeUnknownChoice"];
+        var associatedValues = ["P", "F", "?"];
+        d3.select("#ringTypeTitleChoice").style("display", "none");
+        var ringTypeLabels = d3.select("#labelsInfos");
+        var ringTypeActions = d3.select("#actionsInfos");
+        for (var i = 0; i < 3; i++) {
+            const k = i;
+            ringTypeActions.append("rect")
+                .attr("class", "bar choice choiceRingType")
+                .attr("id", idActions[k])
+                .attr("width", width / 3)
+                .attr("height", 40)
+                .attr("x", x + i*width/3)
+                .attr("rx", 15)
+                .attr("value", associatedValues[k])
+                .on("mouseout", function() {
+                    manageMouseOutRingType();
+                })
+                .on("click", function () {
+                    // Manage click
+                    selectRingType(this.id);
+                });
+        }
+        d3.select("#labelRingTypeTitle").style("display", "none");
+        ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("P").attr("x", x + 1000 / 18).attr("y", 8);
+        ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("F").attr("x", x + 1000 / 6).attr("y", 8);
+        ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("?").attr("x", x + 5000/18).attr("y", 8);
+    });
+}
 
+/**
+ * Manage mouse out for ring type choices
+ */
+function manageMouseOutRingType() {
+    var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
+    var selected = false;
+    for (var choice of ringTypeChoices) {
+        if ((d3.select("#" +choice.id)).classed("selectedRingType")) {
+            selected = true;
+        }
+    }
+    if(!selected) {
+        d3.selectAll(".choiceRingType").remove();
+        d3.selectAll(".labelChoiceRingType").remove();
+        d3.select("#ringTypeTitleChoice").style("display", "block");
+        d3.select("#labelRingTypeTitle").style("display", "block");
+    }
+}
+
+/**
+ * Select a ring type
+ * @param target
+ */
+function selectRingType(target) {
+    var clicked = d3.select("#"+target);
+    if (clicked.classed("selectedRingType")) {
+        clicked.classed("selectedRingType", false);
+        clicked.style("fill", "#bd75b3");
+    } else {
+        var isomerChoices = d3.selectAll(".choiceRingType")[0];
+        for (var choice of isomerChoices) {
+            var current = d3.select("#" + choice.id);
+            if (current.classed("selectedRingType")) {
+                current.classed("selectedRingType", false);
+                current.style("fill", "#bd75b3");
+            }
+        }
+        d3.select("#" + target).style("fill", "#783a70").classed("selectedRingType", true);
+        checkSelectedAllInfos();
+    }
+}
+
+/**
+ * Checks that the user selected the three informations, and changes menu if he did
+ */
+function checkSelectedAllInfos() {
+    var selectedAnomericity = (d3.selectAll(".selectedAnomericity")[0].length != 0); //boolean checking if anomericity selected
+    var selectedIsomer = (d3.selectAll(".selectedIsomer")[0].length != 0); //boolean checking if isomer selected
+    var selectedRingType = (d3.selectAll(".selectedRingType")[0].length != 0); //boolean checking if ring type selected
+    if (selectedAnomericity && selectedIsomer && selectedRingType) {
+        var anomericity = d3.select(".selectedAnomericity").attr("value");
+        var isomer = d3.select(".selectedIsomer").attr("value");
+        var ringType = d3.select(".selectedRingType").attr("value");
+        infosTable.push(anomericity);
+        infosTable.push(isomer);
+        infosTable.push(ringType);
+        reinitializeDisplayInfos();
+    }
+}
+
+/**
+ * Reinitialize the display of infos title and remove all the choices
+ */
+function reinitializeDisplayInfos() {
+    d3.select("#svgInfos").transition().style("display","none");
+    d3.select("#tableCarbonValues").transition().style("display", "block");
+    d3.select("#anomericityTitleChoice").style("display", "block");
+    d3.select("#labelAnomericityTitle").style("display", "block");
+    d3.select("#isomerTitleChoice").style("display", "block");
+    d3.select("#labelIsomerTitle").style("display", "block");
+    d3.select("#ringTypeTitleChoice").style("display", "block");
+    d3.select("#labelRingTypeTitle").style("display", "block");
+    d3.selectAll(".choiceAnomericity").remove();
+    d3.selectAll(".labelChoiceAnomericity").remove();
+    d3.selectAll(".choiceIsomer").remove();
+    d3.selectAll(".labelChoiceIsomer").remove();
+    d3.selectAll(".choiceRingType").remove();
+    d3.selectAll(".labelChoiceRingType").remove();
 }
