@@ -279,6 +279,13 @@ function updateMenu(chosenDivision) {
                 return d.display_division
             })
             .on("click", function (d) {
+                if (d.division == "changeMono") {
+                    if (clickedNode == null) {
+                        document.getElementById("error").innerHTML = "No node selected to change !";
+                        $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+                        return;
+                    }
+                }
                 infosTable.push(d.division);
                 updateMenu(d.division);
             }).on("mouseover", function (d) {

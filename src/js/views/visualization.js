@@ -56,7 +56,7 @@ function updateExistingNode() {
     monoToUpdate.anomericity = anomericity;
     monoToUpdate.ringType = ringType;
     monoToUpdate.isomer = isomer;
-    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape);
+    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, false);
     monoToUpdate.monosaccharideType = newMonoType;
     // TODO maybe update edge too with carbon values
     updateNodeInTree(treeData,monoToUpdate);
