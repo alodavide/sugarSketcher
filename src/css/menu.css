@@ -11,6 +11,11 @@
     stroke: white;
 }
 
+.displaySubsChoice {
+    fill:#6600ff;
+    stroke: white;
+}
+
 .label {
     stroke:black;
     fill:black;
@@ -51,12 +56,29 @@
     overflow: visible;
 }
 
+
+#svgSubstituents {
+    width:1000px;
+    height:auto;
+    min-height: 100%;
+    max-height:500px;
+    display: block;!important;
+    overflow: auto;
+}
+
+#chartSubs {
+    height:100%;
+    max-height:500px;
+    display:block;
+    overflow:auto;
+}
+
 #svgMenu {
     display:none;
     overflow: visible;
 }
 
-#tableChoice, #svgMenu, #svgShape, #carbonValues, #substituents, #svgInfos, #svgCarbons{
+#tableChoice, #svgMenu, #svgShape, #carbonValues, #svgInfos, #svgCarbons, #svgSubstituents{
     margin: 0 auto 10px;
 }
 

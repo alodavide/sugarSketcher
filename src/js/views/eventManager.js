@@ -145,7 +145,7 @@ function manageHoverAddNode(menuItem,actions) {
                 return;
             }
             d3.select("#svgMenu").style("display", "none");
-            d3.select("#tableSubstituents").transition().style("display", "block");
+            d3.select("#svgSubstituents").transition().style("display", "block");
         });
 }
 

@@ -5,7 +5,6 @@
     <title>Directed Graph Editor</title>
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" href="../css/menu.css">
-    <link rel="stylesheet" href="../css/table.css">
     <script type="text/javascript" src="../js/views/jquery.min.js"></script>
 </head>
 
@@ -105,47 +104,28 @@
             </g>
         </g>
     </svg>
-    <!--
-    <div id="tableCarbonValues">
-        <table id="carbonValues">
-            <tr id="rowTitleCarbon">
-                <th colspan="7" class="infoChoiceTitle">Link carbon</th>
-                <th colspan="7" class="infoChoiceTitle">Anomer carbon</th>
-                <td width="8%" class="titleCancelChoice"></td>
-            </tr>
-            <tr id="rowChoiceCarbon">
-                <td id="linkCarbon1" class="infoChoiceCell choiceLinkCarbon">1</td>
-                <td id="linkCarbon2" class="infoChoiceCell choiceLinkCarbon">2</td>
-                <td id="linkCarbon3" class="infoChoiceCell choiceLinkCarbon">3</td>
-                <td id="linkCarbon4" class="infoChoiceCell choiceLinkCarbon">4</td>
-                <td id="linkCarbon5" class="infoChoiceCell choiceLinkCarbon">5</td>
-                <td id="linkCarbon6" class="infoChoiceCell choiceLinkCarbon">6</td>
-                <td id="linkCarbonUnknown" class="infoChoiceCell choiceLinkCarbon">?</td>
-                <td id="anomerCarbon1" class="infoChoiceCell choiceAnomerCarbon">1</td>
-                <td id="anomerCarbon2" class="infoChoiceCell choiceAnomerCarbon">2</td>
-                <td id="anomerCarbon3" class="infoChoiceCell choiceAnomerCarbon">3</td>
-                <td id="anomerCarbon4" class="infoChoiceCell choiceAnomerCarbon">4</td>
-                <td id="anomerCarbon5" class="infoChoiceCell choiceAnomerCarbon">5</td>
-                <td id="anomerCarbon6" class="infoChoiceCell choiceAnomerCarbon">6</td>
-                <td id="anomerCarbonUnknown" class="infoChoiceCell choiceAnomerCarbon">?</td>
-                <td id="cancelChoiceCarbon" class="cancelChoiceCell">Cancel</td>
-            </tr>
-        </table>
-    </div>
-    -->
-    <div id="tableSubstituents">
-        <table id="substituents">
-            <tr id="mostUsedSubs">
-                <td width="10%" class="subChoice">S</td>
-                <td width="10%" class="subChoice">P</td>
-                <td width="10%" class="subChoice">NAc</td>
-                <td width="10%" class="subChoice">Acetyl</td>
-                <td width="10%" class="subChoice">Methyl</td>
-                <td width="10%" id="showSecondSubRow">+</td>
-                <td width="10%" id="cancelSubButton" class="cancelChoiceCell">Cancel</td>
-            </tr>
-        </table>
-    </div>
+    <svg id="svgSubstituents">
+        <g id="chartSubs">
+            <g id="actionsSubs">
+                <rect width="180" height="40" y="0" x="0" rx="15" ry="15" class="bar choice subChoice" value="S"></rect>
+                <rect width="180" height="40" y="0" x="180" rx="15" ry="15" class="bar choice subChoice" value="P"></rect>
+                <rect width="180" height="40" x="360" y="0" rx="15" ry="15" class="bar choice subChoice" value="NAc"></rect>
+                <rect width="180" height="40" x="540" y="0" rx="15" ry="15" class="bar choice subChoice" value="Acetyl"></rect>
+                <rect width="180" height="40" x="720" y="0" rx="15" ry="15" class="bar choice subChoice" value="Methyl"></rect>
+                <rect id="displayMoreSubs" width="100" height="40" x="900" y="0" rx="15" ry="15" class="bar displaySubsChoice" fill="blue"></rect>
+                <rect width="80" height="40" class="bar" id="cancelChoiceSubs" x="1010" y="0" fill="black"></rect>
+            </g>
+            <g id="labelsSubs">
+                <text class="label" x="90" y="8">S</text>
+                <text class="label" x="270" y="8">P</text>
+                <text class="label" x="450" y="8">NAc</text>
+                <text class="label" x="630" y="8">Acetyl</text>
+                <text class="label" x="810" y="8">Methyl</text>
+                <text class="label" x="950" y="8">See All</text>
+                <text class="label cancelLabel" x="1050" y="8"><<</text>
+            </g>
+        </g>
+    </svg>
     <div id='error'></div>
 </div>
 <div id="viz"></div>

@@ -120,10 +120,11 @@ var menuAction = [{
 
 
 //Managing displaying more rows for subs
-var substituentRowButton = d3.select("#showSecondSubRow");
-substituentRowButton.on("click", function() {
+var substituentDisplayMore = d3.select("#displayMoreSubs");
+substituentDisplayMore.on("click", function() {
     $('#pieLinkCarbon').css("display", "none");
-    var tableSub = d3.select("#substituents").select("tbody");
+    var subsRects = d3.select("#actionsSubs");
+    var subsLabels = d3.select("#labelsSubs");
     var subTypes = [];
     var mostUsedTypes = ["S", "P", "NAc", "Acetyl", "Methyl"];
     for (var type of sb.SubstituentType) {
@@ -131,29 +132,56 @@ substituentRowButton.on("click", function() {
             subTypes.push(type.label);
         }
     }
-    if(d3.selectAll(".newRowSub")[0].length != 5) {
+    if(d3.selectAll(".subChoice")[0].length == 5) {
         var currentIndex = 0;
+        var currentY = 40;
         while (currentIndex < subTypes.length) {
-            var newRow = tableSub.append("tr").attr("class", "newRowSub");
-            newRow.selectAll("td").data(subTypes.slice(currentIndex, currentIndex + 5)).enter().append("td").attr("class", "subChoice")
-                .text(function (d) {
+            var currentXLabels = 90;
+            var currentXRects = 0;
+            subsRects.selectAll("rect").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("rect")
+                .attr("width", 180)
+                .attr("height", 40)
+                .attr("x",function() {
+                    var tmp = currentXRects;
+                    currentXRects += 180;
+                    return tmp;
+                })
+                .attr("y", currentY)
+                .attr("rx", 15)
+                .attr("ry", 15)
+                .attr("value", function(d) {
                     return d;
                 })
+                .attr("class", "bar choice subChoice")
                 .on("click", function (d) {
                     infosTable.push(d);
                     displayPie();
                 });
+            subsLabels.selectAll("text").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("text")
+                .text(function(d) {
+                    return d;
+                })
+                .attr("x", function() {
+                    var tmp = currentXLabels;
+                    currentXLabels += 180;
+                    return tmp;
+                })
+                .attr("y", currentY + 8 )
+                .attr("class", "label");
             currentIndex += 5;
+            currentXLabels = 90;
+            currentY += 40;
+            currentXRects = 0;
         }
     }
 });
 
 //Cancel Button Subs
-var cancelSubButton = d3.select("#cancelSubButton");
+var cancelSubButton = d3.select("#cancelChoiceSubs");
 cancelSubButton.on("click", function() {
     //Reinitialize table
     $('#pieLinkCarbon').css("display", "none");
-    d3.select("#tableSubstituents").transition().style("display", "none");
+    d3.select("#svgSubstituents").transition().style("display", "none");
     d3.selectAll(".newRowSub").remove();
     updateMenu();
     d3.select("#svgMenu").transition().style("display", "block");
