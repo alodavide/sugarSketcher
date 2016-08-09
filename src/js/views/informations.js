@@ -14,7 +14,10 @@ $(document).ready(function() {
     addHoverManagersCarbons();
     var subChoices = d3.selectAll(".subChoice");
     subChoices.on('click', function() {
-        infosTable.push(d3.event.target.innerHTML);
+        if (infosTable.length == 2) {
+            infosTable.pop();
+        }
+        infosTable.push(d3.select(d3.event.target).attr("value"));
         displayPie();
     });
 });
@@ -152,7 +155,7 @@ substituentDisplayMore.on("click", function() {
                 .attr("value", function(d) {
                     return d;
                 })
-                .attr("class", "bar choice subChoice")
+                .attr("class", "bar choice subChoice createdSubChoice")
                 .on("click", function (d) {
                     infosTable.push(d);
                     displayPie();
@@ -167,12 +170,13 @@ substituentDisplayMore.on("click", function() {
                     return tmp;
                 })
                 .attr("y", currentY + 8 )
-                .attr("class", "label");
+                .attr("class", "label createdSubLabel");
             currentIndex += 5;
             currentXLabels = 90;
             currentY += 40;
             currentXRects = 0;
         }
+        d3.select("#svgSubstituents").style("height", "240px");
     }
 });
 
@@ -181,8 +185,10 @@ var cancelSubButton = d3.select("#cancelChoiceSubs");
 cancelSubButton.on("click", function() {
     //Reinitialize table
     $('#pieLinkCarbon').css("display", "none");
+    d3.select("#svgSubstituents").style("height", "40px");
     d3.select("#svgSubstituents").transition().style("display", "none");
-    d3.selectAll(".newRowSub").remove();
+    d3.selectAll(".createdSubChoice").remove();
+    d3.selectAll(".createdSubLabel").remove();
     updateMenu();
     d3.select("#svgMenu").transition().style("display", "block");
 });
@@ -295,7 +301,7 @@ function updateMenu(chosenDivision) {
                 return d.division;
             })
             .attr("r", 20)
-            .attr("class", function (d) {
+            .attr("class", function () {
                 return "bar choice choiceWhiteStroke"
             })
             .style("fill", function (d) {
@@ -481,7 +487,7 @@ function createNewNode() {
 
 /**
  * Function called to create a new substituent in the sugar
- * @param subLabel The label we have to create the new Substituent
+ * @param linkCarbon The link carbon value
  */
 function createNewSubstituent (linkCarbon) {
     var subLabel = infosTable[2];

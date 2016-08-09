@@ -57,7 +57,10 @@ function displayPie() {
             })
             .on("click", function (d) {
                 $('#pieLinkCarbon').css("display", "none");
-                d3.select("#tableSubstituents").style("display", "none");
+                d3.select("#svgSubstituents").style("display", "none");
+                d3.select("#svgSubstituents").style("height", "40px");
+                d3.selectAll(".createdSubChoice").remove();
+                d3.selectAll(".createdSubLabel").remove();
                 createNewSubstituent(d.data.name)
             });
 

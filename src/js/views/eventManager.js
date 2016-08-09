@@ -103,6 +103,7 @@ function manageMouseOutAnomericity() {
 /**
  * Function called on hover on add node menu. Split the rectangle in the two sub options (Sub or Mono)
  * @param actions
+ * @param menuItem
  */
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x");
@@ -154,7 +155,7 @@ function manageHoverAddNode(menuItem,actions) {
  */
 function addHoverManagerIsomer() {
     var isomerTitle = d3.select("#isomerTitleChoice");
-    isomerTitle.on("mouseover", function (d) {
+    isomerTitle.on("mouseover", function () {
         var x = parseInt(d3.select("#isomerTitleChoice").attr("x"));
         var width = d3.select("#isomerTitleChoice").attr("width");
         var idActions = ["isomerDChoice", "isomerLChoice", "isomerUnknownChoice"];
@@ -352,7 +353,7 @@ function reinitializeDisplayInfos() {
  */
 function addHoverManagerLinkedCarbon() {
     var linkedCarbonTitle = d3.select("#linkedCarbonTitleChoice");
-    linkedCarbonTitle.on("mouseover", function (d) {
+    linkedCarbonTitle.on("mouseover", function () {
         var x = parseInt(d3.select("#linkedCarbonTitleChoice").attr("x"));
         var width = d3.select("#linkedCarbonTitleChoice").attr("width");
         var idActions = ["linkedCarbon1Choice", "linkedCarbon2Choice", "linkedCarbon3Choice", "linkedCarbon4Choice", "linkedCarbon5Choice", "linkedCarbon6Choice", "linkedCarbonUnknownChoice"];
@@ -436,7 +437,7 @@ function selectLinkedCarbon(target) {
  * */
 function addHoverManagerAnomerCarbon() {
     var anomerCarbonTitle = d3.select("#anomerCarbonTitleChoice");
-    anomerCarbonTitle.on("mouseover", function (d) {
+    anomerCarbonTitle.on("mouseover", function () {
         var x = parseInt(d3.select("#anomerCarbonTitleChoice").attr("x"));
         var width = d3.select("#anomerCarbonTitleChoice").attr("width");
         var idActions = ["anomerCarbon1Choice", "anomerCarbon2Choice", "anomerCarbon3Choice", "anomerCarbon4Choice", "anomerCarbon5Choice", "anomerCarbon6Choice", "anomerCarbonUnknownChoice"];
