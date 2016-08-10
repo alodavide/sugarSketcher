@@ -4,6 +4,8 @@ var clickedNode = null;
 var draggingNode = null;
 var colors = d3.scale.category10();
 
+var XYvalues = {1: [50, 0], 2: [0, -50], 3: [-50, -50], 4: [-50, 0], 6: [50, -50]};
+
 
 // ------------- moving -------------------------------
 var overCircle = function(d) {
@@ -146,6 +148,7 @@ function displayTree() {
         .attr("x2", function(d) { return d.target.y; })
         .attr("y2", function(d) { return d.target.x; })
         .attr("transform", function(d) {
+            /*
             // TODO Substituent linkage management
             var sourceX = d3.select(this).attr("x1");
             var sourceY = d3.select(this).attr("y1");
@@ -159,14 +162,20 @@ function displayTree() {
                 rotationDegree = 60 * (linkAnomericity - 1);
             }
             return "rotate(" + rotationDegree + "," + sourceX + "," + sourceY + ")"; //We rotate the link according to source coordinates
+            */
         })
         .attr('pointer-events', 'none');
 
     var node = vis.selectAll("g.node")
         .data(nodes)
+        .attr("x", 100)
+        .attr("y", 50)
         .enter().append("g")
         .attr("transform", function (d) {
+            calculateXandYNode(d);
+            /*
             var finalTransform = "";
+            calculateXandYNode(d);
             if (d.node != sugar.getRootNode()) {
                 var sourceXRotation = 0;
                 var sourceYRotation = 0;
@@ -188,11 +197,14 @@ function displayTree() {
                 finalTransform += "rotate(" + rotationDegree + "," + sourceYRotation + "," + sourceXRotation + ")";
             }
             return finalTransform + "translate(" + d.y +"," + d.x + ")";
+            */
+            return "translate(" + d.y + "," + d.x + ")";
         })
         .on('click', function (d) {
             d3.event.stopPropagation();
             updateMenu();
-            d3.select("#tableInformations").style("display", "none");
+            d3.select("#svgInfos").style("display", "none");
+            d3.select("#svgSubstituents").style("display", "none");
             d3.select("#svgShape").style("display", "none");
             d3.select("#svgMenu").style("display", "block");
             if (d3.event.defaultPrevented) return; // click suppressed
@@ -214,15 +226,6 @@ function displayTree() {
             if (d.node instanceof sb.Substituent) {
                 return;
             }
-
-            /*
-            var shape = d.node.monosaccharideType.shape;
-            if (shape == "star") {
-                finalTransform += "rotate(-20)";
-            } else if (shape == "triangle") {
-                finalTransform += "rotate(30)";
-            }
-            */
             return;
         })
         .style('fill', function(d) {
@@ -261,6 +264,29 @@ function findLinkForMono(monosaccharide) {
         if (link.target.node == monosaccharide) {
             return sugar.getEdge(link.source.node, link.target.node);
         }
+    }
+}
+
+/**
+ * Calculate X and Y for a node
+ * @param node
+ */
+function calculateXandYNode(node) {
+    var link = findLinkForMono(node.node);
+    if (typeof link != 'undefined') {
+        var anomerCarbon = link.anomerCarbon.value;
+        var sourceX;
+        var sourceY;
+        for (var n of tree.nodes(treeData)) {
+            if (n.node == link.sourceNode) {
+                sourceX = n.x;
+                sourceY = n.y;
+            }
+        }
+        console.log(XYvalues[anomerCarbon]);
+
+    } else {
+        return [node.x, node.y];
     }
 }
 
