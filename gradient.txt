@@ -1,0 +1,37 @@
+Shape Gradient for bisected shapes:
+
+    Use this linearGradient for all Crossed Square (example: GlcN)
+    Important!: Change xxx to the color of the shape
+
+        <linearGradient id="myFillGrad" x1="0%" y1="100%" x2="100%" y2="0%" spreadMethod="pad">
+  		    <stop offset="48%" stop-color="#fff" stop-opacity="1"></stop>
+  		    <stop offset="50%" stop-color="#000" stop-opacity="1"></stop>
+            <stop offset="52%" stop-color="xxx" stop-opacity="1"></stop>
+        </linearGradient>
+
+    Use this linearGradient for all Divided Triangle (example: QuiNAc)
+    Important!: Change xxx to the color of the shape
+
+        <linearGradient id="myFillGrad" x1="0%" y1="0%" x2="100%" y2="0%" spreadMethod="pad">
+      		<stop offset="48%" stop-color="#fff" stop-opacity="1"></stop>
+      		<stop offset="50%" stop-color="#000" stop-opacity="1"></stop>
+            <stop offset="52%" stop-color="xxx" stop-opacity="1"></stop>
+        </linearGradient>
+
+    Use this linearGradient for all Divided Diamond 1 (example: GlcA)
+    Important!: Change xxx to the color of the shape
+
+        <linearGradient id="myFillGrad" x1="0%" y1="100%" x2="0%" y2="0%" spreadMethod="pad">
+      		<stop offset="48%" stop-color="#fff" stop-opacity="1"></stop>
+      		<stop offset="50%" stop-color="#000" stop-opacity="1"></stop>
+            <stop offset="52%" stop-color="xxx" stop-opacity="1"></stop>
+        </linearGradient>
+
+    Use this linearGradient for all Divided Diamond 2 (example: AltA and IdoA only)
+    Important!: Change xxx to the color of the shape
+
+        <linearGradient id="myFillGrad" x1="0%" y1="0%" x2="0%" y2="100%" spreadMethod="pad">
+      		<stop offset="48%" stop-color="#fff" stop-opacity="1"></stop>
+      		<stop offset="50%" stop-color="#000" stop-opacity="1"></stop>
+            <stop offset="52%" stop-color="xxx" stop-opacity="1"></stop>
+        </linearGradient>

@@ -17,3 +17,4 @@ coverage
 
 #Remove bundle directory
 dest
+src/js/sb.js
