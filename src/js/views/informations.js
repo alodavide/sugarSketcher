@@ -472,13 +472,13 @@ function createNewNode() {
         var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
         var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
         var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
-        var generatedNodeId = randomString(4);
+        var generatedNodeId = randomString(7);
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring);
         if (Object.keys(treeData).length === 0) {
             sugar = new sb.Sugar("Sugar", monosaccharide);
             updateTreeVisualization();
         } else {
-            var generatedEdgeId = randomString(4);
+            var generatedEdgeId = randomString(7);
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
@@ -493,10 +493,10 @@ function createNewNode() {
 function createNewSubstituent (linkCarbon) {
     var subLabel = infosTable[2];
     var subType = getSubstituentTypeFromLabel(subLabel);
-    var generatedSubId = randomString(4); // Random if for Substituent
+    var generatedSubId = randomString(7); // Random if for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
     var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
-    var generatedEdgeSubId = randomString(4); // Random id for edge
+    var generatedEdgeSubId = randomString(7); // Random id for edge
     // Create the linkage
     var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
     sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkage

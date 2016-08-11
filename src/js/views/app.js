@@ -25,7 +25,7 @@ var clickCircle = function(d) {
     updateTempConnector();
 };
 
-
+/*
 var addNewNode = function() {
     // Ignore the click event if it was suppressed
     if (d3.event.defaultPrevented) return;
@@ -58,6 +58,7 @@ var addNewNode = function() {
         })
         .call(circleDragger);
 };
+*/
 
 var circleDragger = d3.behavior.drag()
     .on("drag", function(d) {
@@ -105,7 +106,7 @@ var vis = d3.select('#viz')
     .attr('id', 'svgTree')
     .attr('width', width)
     .attr('height', height)
-    .on("click", addNewNode)
+    //.on("click", addNewNode)
     .append("svg:g").attr("transform", "translate(50, 20)");
 /*
 var div = d3.select("body")
@@ -205,7 +206,7 @@ function displayTree() {
                         createSquareLinearGradient(d.node.monosaccharideType.color, gradientId);
                     } else if (shape == 'diamond') {
                         // Manage inversed Diamonds
-                        createDiamondLinearGradient(d.node.monosaccharideType.color, gradientId);
+                        createDiamondLinearGradient(d.node.monosaccharideType, gradientId);
                     } else {
                         createTriangleLinearGradient(d.node.monosaccharideType.color, gradientId);
                     }
@@ -303,18 +304,30 @@ function createSquareLinearGradient(color, gradientId) {
 
 /**
  * Create a linear gradient for a diamond
- * @param color The color that the diamond has to have
+ * @param type The type of the monosaccharide that the diamond has to have
  * @param gradientId The generated id of the linear gradient
  */
-function createDiamondLinearGradient(color, gradientId) {
+function createDiamondLinearGradient(type, gradientId) {
     var svg = d3.select("#svgTree");
-    var linearGradient = svg.append("linearGradient")
-        .attr("id", gradientId)
-        .attr("x1", "0%")
-        .attr("y1", "100%")
-        .attr("x2", "0%")
-        .attr("y2", "0%")
-        .attr("spreadMethod", "pad");
+    var linearGradient;
+    // AltA and IdoA are reverted diamonds so we don't append the same linearGradient
+    if (type == sb.MonosaccharideType.AltA || type == sb.MonosaccharideType.IdoA) {
+        linearGradient = svg.append("linearGradient")
+            .attr("id", gradientId)
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "0%")
+            .attr("y2", "100%")
+            .attr("spreadMethod", "pad");
+    } else {
+        linearGradient = svg.append("linearGradient")
+            .attr("id", gradientId)
+            .attr("x1", "0%")
+            .attr("y1", "100%")
+            .attr("x2", "0%")
+            .attr("y2", "0%")
+            .attr("spreadMethod", "pad");
+    }
     linearGradient.append("stop")
         .attr("offset", "48%")
         .attr("stop-color", "#fff")
@@ -325,7 +338,7 @@ function createDiamondLinearGradient(color, gradientId) {
         .attr("stop-opacity", 1);
     linearGradient.append("stop")
         .attr("offset", "52%")
-        .attr("stop-color", color)
+        .attr("stop-color", type.color)
         .attr("stop-opacity", 1);
 }
 
