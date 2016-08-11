@@ -339,9 +339,9 @@ function createTriangleLinearGradient(color, gradientId) {
     var linearGradient = svg.append("linearGradient")
         .attr("id", gradientId)
         .attr("x1", "0%")
-        .attr("y1", "0%")
-        .attr("x2", "100%")
-        .attr("y2", "0%")
+        .attr("y1", "54%")
+        .attr("x2", "50%")
+        .attr("y2", "22%")
         .attr("spreadMethod", "pad");
     linearGradient.append("stop")
         .attr("offset", "48%")
