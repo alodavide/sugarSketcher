@@ -154,7 +154,7 @@ function displayTree() {
         .data(nodes)
         .enter().append("g")
         .attr("x", function(d) {
-            return calculateXandYNode(d)[0]
+            return calculateXandYNode(d)[0];
         })
         .attr("y", function(d) {
             return calculateXandYNode(d)[1];
@@ -270,7 +270,7 @@ function calculateXandYNode(node) {
         return [newX, newY];
 
     } else {
-        return [node.x, node.y];
+        return [node.x + 150, node.y + 900];
     }
 }
 
@@ -357,7 +357,7 @@ function createTriangleLinearGradient(color, gradientId) {
         .attr("y2", "22%")
         .attr("spreadMethod", "pad");
     linearGradient.append("stop")
-        .attr("offset", "48%")
+        .attr("offset", "40%")
         .attr("stop-color", "#fff")
         .attr("stop-opacity", 1);
     linearGradient.append("stop")
@@ -365,7 +365,7 @@ function createTriangleLinearGradient(color, gradientId) {
         .attr("stop-color", "#000")
         .attr("stop-opacity", 1);
     linearGradient.append("stop")
-        .attr("offset", "52%")
+        .attr("offset", "60%")
         .attr("stop-color", color)
         .attr("stop-opacity", 1);
 }
