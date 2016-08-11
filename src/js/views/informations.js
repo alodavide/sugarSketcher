@@ -369,7 +369,7 @@ function addCancelOperation (actions, labels) {
         .attr("height", 40)
         .attr("id", "cancelChoice")
         .attr("x", 1010).attr("y", 0)
-        .style("fill", "black")
+        .style("fill", "#505656")
         .on("click", function () {
             menuChosenPath.pop();
             updateMenu(menuChosenPath.pop());

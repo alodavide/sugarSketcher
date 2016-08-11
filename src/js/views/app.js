@@ -4,7 +4,7 @@ var clickedNode = null;
 var draggingNode = null;
 var colors = d3.scale.category10();
 
-var XYvalues = {1: [50, 0], 2: [0, -50], 3: [-50, -50], 4: [-50, 0], 6: [50, -50]};
+var XYvalues = {1: [50, 0], 2: [0, 50], 3: [-50, 50], 4: [-50, 0], 6: [-50, -50]};
 
 
 // ------------- moving -------------------------------
@@ -143,10 +143,10 @@ function displayTree() {
         .data(links)
         .enter().append("line")
         .attr("class", "nodelink")
-        .attr("x1", function(d) { return d.source.y; })
-        .attr("y1", function(d) { return d.source.x; })
-        .attr("x2", function(d) { return d.target.y; })
-        .attr("y2", function(d) { return d.target.x; })
+        .attr("x1", function(d) { return calculateXandYNode(d.source)[1]; })
+        .attr("y1", function(d) { return calculateXandYNode(d.source)[0]; })
+        .attr("x2", function(d) { return calculateXandYNode(d.target)[1]; })
+        .attr("y2", function(d) { return calculateXandYNode(d.target)[0]; })
         .attr("transform", function(d) {
             /*
             // TODO Substituent linkage management
@@ -168,11 +168,14 @@ function displayTree() {
 
     var node = vis.selectAll("g.node")
         .data(nodes)
-        .attr("x", 100)
-        .attr("y", 50)
         .enter().append("g")
+        .attr("x", function(d) {
+            return calculateXandYNode(d)[0]
+        })
+        .attr("y", function(d) {
+            return calculateXandYNode(d)[1];
+        })
         .attr("transform", function (d) {
-            calculateXandYNode(d);
             /*
             var finalTransform = "";
             calculateXandYNode(d);
@@ -198,7 +201,7 @@ function displayTree() {
             }
             return finalTransform + "translate(" + d.y +"," + d.x + ")";
             */
-            return "translate(" + d.y + "," + d.x + ")";
+            return "translate(" + calculateXandYNode(d)[1] + "," + calculateXandYNode(d)[0] + ")";
         })
         .on('click', function (d) {
             d3.event.stopPropagation();
@@ -274,16 +277,20 @@ function findLinkForMono(monosaccharide) {
 function calculateXandYNode(node) {
     var link = findLinkForMono(node.node);
     if (typeof link != 'undefined') {
-        var anomerCarbon = link.anomerCarbon.value;
+        var anomerCarbon = link.linkedCarbon.value;
         var sourceX;
         var sourceY;
         for (var n of tree.nodes(treeData)) {
             if (n.node == link.sourceNode) {
-                sourceX = n.x;
-                sourceY = n.y;
+                var source = calculateXandYNode(n);
+                sourceX = source[0];
+                sourceY = source[1];
             }
         }
-        console.log(XYvalues[anomerCarbon]);
+        var modificationsXY = XYvalues[anomerCarbon];
+        var newX = sourceX  + modificationsXY[1];
+        var newY = sourceY + modificationsXY[0];
+        return [newX, newY];
 
     } else {
         return [node.x, node.y];

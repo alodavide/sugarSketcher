@@ -7,7 +7,7 @@
 }
 
 .choice {
-    fill:#bd75b3;
+    fill:#cc0000;
     stroke: white;
 }
 
@@ -17,8 +17,8 @@
 }
 
 .label {
-    stroke:black;
-    fill:black;
+    stroke:white;
+    fill:white;
     font-family: arial, helvetica, 'sans-serif';
     font-size: 20px;
 }
@@ -108,7 +108,7 @@
 }
 
 .shapeBisector {
-    stroke:#bd75b3;
+    stroke:#cc0000;
     stroke-width:2;
 }
 

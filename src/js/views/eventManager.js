@@ -65,17 +65,17 @@ function selectAnomericity(target) {
     var clicked = d3.select("#"+target);
     if (clicked.classed("selectedAnomericity")) {
         clicked.classed("selectedAnomericity", false);
-        clicked.style("fill", "#bd75b3");
+        clicked.style("fill", "#cc0000");
     } else {
         var anomericityChoices = d3.selectAll(".choiceAnomericity")[0];
         for (var choice of anomericityChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedAnomericity")) {
                 current.classed("selectedAnomericity", false);
-                current.style("fill", "#bd75b3");
+                current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#783a70").classed("selectedAnomericity", true);
+        d3.select("#" + target).style("fill", "#990000").classed("selectedAnomericity", true);
         checkSelectedAllInfos();
     }
 }
@@ -215,17 +215,17 @@ function selectIsomer(target) {
     var clicked = d3.select("#"+target);
     if (clicked.classed("selectedIsomer")) {
         clicked.classed("selectedIsomer", false);
-        clicked.style("fill", "#bd75b3");
+        clicked.style("fill", "#cc0000");
     } else {
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedIsomer")) {
                 current.classed("selectedIsomer", false);
-                current.style("fill", "#bd75b3");
+                current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#783a70").classed("selectedIsomer", true);
+        d3.select("#" + target).style("fill", "#990000").classed("selectedIsomer", true);
         checkSelectedAllInfos();
     }
 }
@@ -295,17 +295,17 @@ function selectRingType(target) {
     var clicked = d3.select("#"+target);
     if (clicked.classed("selectedRingType")) {
         clicked.classed("selectedRingType", false);
-        clicked.style("fill", "#bd75b3");
+        clicked.style("fill", "#cc0000");
     } else {
         var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
         for (var choice of ringTypeChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedRingType")) {
                 current.classed("selectedRingType", false);
-                current.style("fill", "#bd75b3");
+                current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#783a70").classed("selectedRingType", true);
+        d3.select("#" + target).style("fill", "#990000").classed("selectedRingType", true);
         checkSelectedAllInfos();
     }
 }
@@ -416,17 +416,17 @@ function selectLinkedCarbon(target) {
     var clicked = d3.select("#"+target);
     if (clicked.classed("selectedLinkedCarbon")) {
         clicked.classed("selectedLinkedCarbon", false);
-        clicked.style("fill", "#bd75b3");
+        clicked.style("fill", "#cc0000");
     } else {
         var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
         for (var choice of linkedCarbonChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedLinkedCarbon")) {
                 current.classed("selectedLinkedCarbon", false);
-                current.style("fill", "#bd75b3");
+                current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#783a70").classed("selectedLinkedCarbon", true);
+        d3.select("#" + target).style("fill", "#990000").classed("selectedLinkedCarbon", true);
         checkSelectedAllCarbons();
     }
 }
@@ -500,17 +500,17 @@ function selectAnomerCarbon(target) {
     var clicked = d3.select("#"+target);
     if (clicked.classed("selectedAnomerCarbon")) {
         clicked.classed("selectedAnomerCarbon", false);
-        clicked.style("fill", "#bd75b3");
+        clicked.style("fill", "#cc0000");
     } else {
         var isomerChoices = d3.selectAll(".choiceAnomerCarbon")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedAnomerCarbon")) {
                 current.classed("selectedAnomerCarbon", false);
-                current.style("fill", "#bd75b3");
+                current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#783a70").classed("selectedAnomerCarbon", true);
+        d3.select("#" + target).style("fill", "#990000").classed("selectedAnomerCarbon", true);
         checkSelectedAllCarbons();
     }
 }
