@@ -472,7 +472,6 @@ function createNewNode() {
         var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
         var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
         var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
-        //TODO change id here when knowing how to generate
         var generatedNodeId = randomString(4);
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring);
         if (Object.keys(treeData).length === 0) {

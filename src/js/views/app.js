@@ -4,7 +4,7 @@ var clickedNode = null;
 var draggingNode = null;
 var colors = d3.scale.category10();
 
-var XYvalues = {1: [50, 0], 2: [0, 50], 3: [-50, 50], 4: [-50, 0], 6: [-50, -50]};
+var XYvalues = {1: [50, 0], 2: [0, 50], 3: [-50, 50], 4: [-50, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
 
 
 // ------------- moving -------------------------------
@@ -187,13 +187,32 @@ function displayTree() {
             if (d.node instanceof sb.Substituent) {
                 return;
             }
-            return;
+             var shape = d.node.monosaccharideType.shape;
+             if (shape == "star") {
+             return "rotate(-20)";
+             } else if (shape == "triangle") {
+                return "rotate(30)";
+             }
         })
         .style('fill', function(d) {
             if (d.node instanceof sb.Substituent) {
                 return "blue";
             } else {
-                return d.node.monosaccharideType.color;
+                if(d.node.monosaccharideType.bisected) {
+                    var gradientId = "gradient" + randomString(6);
+                    var shape = d.node.monosaccharideType.shape;
+                    if (shape == 'square') {
+                        createSquareLinearGradient(d.node.monosaccharideType.color, gradientId);
+                    } else if (shape == 'diamond') {
+                        // Manage inversed Diamonds
+                        createDiamondLinearGradient(d.node.monosaccharideType.color, gradientId);
+                    } else {
+                        createTriangleLinearGradient(d.node.monosaccharideType.color, gradientId);
+                    }
+                    return "url(#" + gradientId +")";
+                } else {
+                    return d.node.monosaccharideType.color;
+                }
             }
         })
     .style('stroke', 'black');
@@ -221,7 +240,6 @@ function displayTree() {
 function findLinkForMono(monosaccharide) {
     var links = tree.links(tree.nodes(treeData));
     for (var link of links) {
-        console.log(link);
         if (link.target.node == monosaccharide) {
             return sugar.getEdge(link.source.node, link.target.node);
         }
@@ -254,6 +272,91 @@ function calculateXandYNode(node) {
         return [node.x, node.y];
     }
 }
+
+/**
+ * Create a linear gradient for a square
+ * @param color The color that the square has to have
+ * @param gradientId The generated id of the linear gradient
+ */
+function createSquareLinearGradient(color, gradientId) {
+    var svg = d3.select("#svgTree");
+    var linearGradient = svg.append("linearGradient")
+        .attr("id", gradientId)
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "100%")
+        .attr("y2", "0%")
+        .attr("spreadMethod", "pad");
+    linearGradient.append("stop")
+    .attr("offset", "48%")
+    .attr("stop-color", "#fff")
+    .attr("stop-opacity", 1);
+    linearGradient.append("stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#000")
+        .attr("stop-opacity", 1);
+    linearGradient.append("stop")
+        .attr("offset", "52%")
+        .attr("stop-color", color)
+        .attr("stop-opacity", 1);
+}
+
+/**
+ * Create a linear gradient for a diamond
+ * @param color The color that the diamond has to have
+ * @param gradientId The generated id of the linear gradient
+ */
+function createDiamondLinearGradient(color, gradientId) {
+    var svg = d3.select("#svgTree");
+    var linearGradient = svg.append("linearGradient")
+        .attr("id", gradientId)
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "0%")
+        .attr("y2", "0%")
+        .attr("spreadMethod", "pad");
+    linearGradient.append("stop")
+        .attr("offset", "48%")
+        .attr("stop-color", "#fff")
+        .attr("stop-opacity", 1);
+    linearGradient.append("stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#000")
+        .attr("stop-opacity", 1);
+    linearGradient.append("stop")
+        .attr("offset", "52%")
+        .attr("stop-color", color)
+        .attr("stop-opacity", 1);
+}
+
+/**
+ * Create a linear gradient for a triangle
+ * @param color The color that the triangle has to have
+ * @param gradientId The generated id of the linear gradient
+ */
+function createTriangleLinearGradient(color, gradientId) {
+    var svg = d3.select("#svgTree");
+    var linearGradient = svg.append("linearGradient")
+        .attr("id", gradientId)
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "0%")
+        .attr("spreadMethod", "pad");
+    linearGradient.append("stop")
+        .attr("offset", "48%")
+        .attr("stop-color", "#fff")
+        .attr("stop-opacity", 1);
+    linearGradient.append("stop")
+        .attr("offset", "50%")
+        .attr("stop-color", "#000")
+        .attr("stop-opacity", 1);
+    linearGradient.append("stop")
+        .attr("offset", "52%")
+        .attr("stop-color", color)
+        .attr("stop-opacity", 1);
+}
+
 
 
 
