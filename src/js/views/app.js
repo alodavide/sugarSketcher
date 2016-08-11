@@ -147,23 +147,6 @@ function displayTree() {
         .attr("y1", function(d) { return calculateXandYNode(d.source)[0]; })
         .attr("x2", function(d) { return calculateXandYNode(d.target)[1]; })
         .attr("y2", function(d) { return calculateXandYNode(d.target)[0]; })
-        .attr("transform", function(d) {
-            /*
-            // TODO Substituent linkage management
-            var sourceX = d3.select(this).attr("x1");
-            var sourceY = d3.select(this).attr("y1");
-            var rotationDegree = 0;
-            var linkAnomericity = sugar.getEdge(d.source.node, d.target.node).anomerCarbon.value; // Anomericity of the link
-            if (linkAnomericity > 4) {
-                rotationDegree = "-60";
-            } else if (linkAnomericity == 4){
-                //TODO Manage translation if return the edge
-            } else {
-                rotationDegree = 60 * (linkAnomericity - 1);
-            }
-            return "rotate(" + rotationDegree + "," + sourceX + "," + sourceY + ")"; //We rotate the link according to source coordinates
-            */
-        })
         .attr('pointer-events', 'none');
 
     var node = vis.selectAll("g.node")
@@ -176,31 +159,6 @@ function displayTree() {
             return calculateXandYNode(d)[1];
         })
         .attr("transform", function (d) {
-            /*
-            var finalTransform = "";
-            calculateXandYNode(d);
-            if (d.node != sugar.getRootNode()) {
-                var sourceXRotation = 0;
-                var sourceYRotation = 0;
-                var edgeTargeted = findLinkForMono(d.node);
-                for (var link of links) {
-                    if (link.target.node == d.node) {
-                        sourceXRotation = link.source.x;
-                        sourceYRotation = link.source.y;}
-                }
-                var anomericity = edgeTargeted.anomerCarbon.value;
-                var rotationDegree = 0;
-                if (anomericity > 4) {
-                    rotationDegree = "-60";
-                } else if (anomericity == 4){
-                    //TODO Manage translation if return the edge
-                } else {
-                    rotationDegree = 60 * (anomericity - 1);
-                }
-                finalTransform += "rotate(" + rotationDegree + "," + sourceYRotation + "," + sourceXRotation + ")";
-            }
-            return finalTransform + "translate(" + d.y +"," + d.x + ")";
-            */
             return "translate(" + calculateXandYNode(d)[1] + "," + calculateXandYNode(d)[0] + ")";
         })
         .on('click', function (d) {
