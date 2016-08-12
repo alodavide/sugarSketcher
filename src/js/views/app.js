@@ -7,7 +7,7 @@ var colors = d3.scale.category10();
 //Values for links X and Y
 var XYvalues = {1: [70, 0], 2: [0, 50], 3: [-50, 50], 4: [-70, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
 // Values for links labels X and Y
-var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-5,14], 'undefined': [0,0]};
+var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 'undefined': [0,0]};
 
 var clickCircle = function(d) {
     clickedNode = d.node;
