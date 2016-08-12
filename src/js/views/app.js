@@ -47,6 +47,7 @@ function displayTree() {
     var treeSvg = d3.select("#svgTree");
     treeSvg.selectAll('.node').remove();
     treeSvg.selectAll('.nodelink').remove();
+    treeSvg.selectAll('.linkLabel').remove();
 
     var link = vis.selectAll(".nodelink")
         .data(links)
@@ -64,7 +65,7 @@ function displayTree() {
         .attr("y2", function(d) { return calculateXandYNode(d.target)[0]; })
         .attr('pointer-events', 'none');
 
-    var labelLink = vis.selectAll(".labelLink")
+    var linkLabel = vis.selectAll(".linkLabel")
         .data(links)
         .enter().append("text")
         .attr("class", "linkLabel")
@@ -73,11 +74,7 @@ function displayTree() {
             var source = calculateXandYNode(d.source);
             var target = calculateXandYNode(d.target);
             var usualX = (source[1] + target[1])/2;
-            console.log("finalX avant");
-            console.log(usualX);
             finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1];
-            console.log("finalX après");
-            console.log(finalX);
             return finalX;
         })
         .attr("y", function(d) {
@@ -85,11 +82,7 @@ function displayTree() {
             var source = calculateXandYNode(d.source);
             var target = calculateXandYNode(d.target);
             var usualY = (source[0] + target[0])/2;
-            console.log("finalY avant");
-            console.log(usualY);
             finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0];
-            console.log("finalY après");
-            console.log(finalY);
             return finalY;
         })
         .text(function(d) {
@@ -154,6 +147,7 @@ function displayTree() {
             if (d.node instanceof sb.Substituent) {
                 return "blue";
             } else {
+                // If shape is bisected, we create a gradient and link it to the new node
                 if(d.node.monosaccharideType.bisected) {
                     var gradientId = "gradient" + randomString(6);
                     var shape = d.node.monosaccharideType.shape;

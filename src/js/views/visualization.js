@@ -62,7 +62,9 @@ function updateExistingNode() {
     }
     var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected);
     monoToUpdate.monosaccharideType = newMonoType;
-    // TODO maybe update edge too with carbon values
+    var linkToUpdate = findLinkForMono(monoToUpdate);
+    linkToUpdate.linkedCarbon = linkedCarbon;
+    linkToUpdate.anomerCarbon = anomerCarbon;
     updateNodeInTree(treeData,monoToUpdate);
 }
 
