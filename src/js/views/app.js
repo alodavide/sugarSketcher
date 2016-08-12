@@ -143,7 +143,13 @@ function displayTree() {
     var link = vis.selectAll(".nodelink")
         .data(links)
         .enter().append("line")
-        .attr("class", "nodelink")
+        .attr("class", function(d) {
+            if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
+                return "dashedNodeLink";
+            } else {
+                return "nodelink";
+            }
+        })
         .attr("x1", function(d) { return calculateXandYNode(d.source)[1]; })
         .attr("y1", function(d) { return calculateXandYNode(d.source)[0]; })
         .attr("x2", function(d) { return calculateXandYNode(d.target)[1]; })
