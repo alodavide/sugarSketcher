@@ -9,6 +9,16 @@
     fill:white;
 }
 
+.labelMonoChoice {
+    stroke:black;
+    fill:black;
+    font-family: arial,helvetica,'sans-serif';
+    font-size: 12px;
+    text-anchor: middle;
+    alignment-baseline: text-before-edge;
+    dominant-baseline: text-before-edge;
+}
+
 .linkLabel {
     stroke:black;
     fill:black;
@@ -42,7 +52,7 @@
 }
 
 #svgShape {
-    height: 40px;
+    height: 60px;
     width:1000px;
     display:none;
     overflow: visible;
