@@ -4,8 +4,8 @@ var clickedNode = null;
 var draggingNode = null;
 var colors = d3.scale.category10();
 
-var XYvalues = {1: [50, 0], 2: [0, 50], 3: [-50, 50], 4: [-50, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
-
+var XYvalues = {1: [70, 0], 2: [0, 50], 3: [-50, 50], 4: [-70, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
+var XYlinkLabels = {1: [4, 0], 2: [0,10], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-5,14], 'undefined': [0,0]};
 
 // ------------- moving -------------------------------
 var overCircle = function(d) {
@@ -145,7 +145,7 @@ function displayTree() {
         .enter().append("line")
         .attr("class", function(d) {
             if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
-                return "dashedNodeLink";
+                return "nodelink dashedNodeLink";
             } else {
                 return "nodelink";
             }
@@ -155,6 +155,47 @@ function displayTree() {
         .attr("x2", function(d) { return calculateXandYNode(d.target)[1]; })
         .attr("y2", function(d) { return calculateXandYNode(d.target)[0]; })
         .attr('pointer-events', 'none');
+
+    var labelLink = vis.selectAll(".labelLink")
+        .data(links)
+        .enter().append("text")
+        .attr("class", "linkLabel")
+        .attr("x", function(d) {
+            var finalX;
+            var source = calculateXandYNode(d.source);
+            var target = calculateXandYNode(d.target);
+            var usualX = (source[1] + target[1])/2;
+            console.log("finalX avant");
+            console.log(usualX);
+            finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1];
+            console.log("finalX après");
+            console.log(finalX);
+            return finalX;
+        })
+        .attr("y", function(d) {
+            var finalY;
+            var source = calculateXandYNode(d.source);
+            var target = calculateXandYNode(d.target);
+            var usualY = (source[0] + target[0])/2;
+            console.log("finalY avant");
+            console.log(usualY);
+            finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0];
+            console.log("finalY après");
+            console.log(finalY);
+            return finalY;
+        })
+        .text(function(d) {
+            var link = findLinkForMono(d.target.node);
+            var anomericity;
+            if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
+                anomericity = "α"
+            } else if (d.target.node.anomericity == sb.Anomericity.BETA) {
+                anomericity = "β";
+            } else {
+                anomericity = "?"
+            }
+            return anomericity + " / " + link.linkedCarbon.value;
+        });
 
     var node = vis.selectAll("g.node")
         .data(nodes)

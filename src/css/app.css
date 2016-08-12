@@ -12,19 +12,15 @@ svg:not(.active):not(.ctrl) {
     cursor: pointer;
 }
 
-path.link, .nodelink {
+path.link, .nodelink{
     fill: none;
     stroke: #000;
-    stroke-width: 4px;
+    stroke-width: 3px;
     cursor: default;
 }
 
 .dashedNodeLink {
-    fill: none;
-    stroke: #000;
-    stroke-width: 4px;
     stroke-dasharray: 5.5;
-    cursor: default;
 }
 
 

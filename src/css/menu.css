@@ -5,6 +5,18 @@
     text-anchor: middle;
     alignment-baseline: text-before-edge;
     dominant-baseline: text-before-edge;
+    stroke:white;
+    fill:white;
+}
+
+.linkLabel {
+    stroke:black;
+    fill:black;
+    font-family: arial,helvetica,'sans-serif';
+    font-size: 10px;
+    text-anchor: middle;
+    alignment-baseline: text-before-edge;
+    dominant-baseline: text-before-edge;
 }
 
 .choice {
@@ -15,13 +27,6 @@
 .displaySubsChoice {
     fill:#6600ff;
     stroke: white;
-}
-
-.label {
-    stroke:white;
-    fill:white;
-    font-family: arial, helvetica, 'sans-serif';
-    font-size: 20px;
 }
 
 .bar:hover, .shapeChoice, .choiceLinkCarbon {
