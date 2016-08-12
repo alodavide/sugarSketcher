@@ -221,8 +221,8 @@ function updateMenu(chosenDivision) {
         menuChosenPath = []; // Re-initialize the path
         infosTable = []; // Re-initialize the list of clicks
         d3.select("#svgShape").transition().style("display", "none");
-        d3.select("#tableInformations").transition().style("display", "none");
-        d3.select("#tableCarbonValues").transition().style("display", "none");
+        d3.select("#svgInfos").transition().style("display", "none");
+        d3.select("#svgCarbons").transition().style("display", "none");
         d3.select("#svgMenu").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
@@ -252,6 +252,7 @@ function updateMenu(chosenDivision) {
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length;
     var bars = actions.selectAll("rect").data(newMenuAction);
     if (newMenuAction != colorDivisions) {
+        d3.select("#svgMenu").style("height", "40px");
         bars.enter().append("rect")
             .attr("width", menuDimensions.barWidth)
             .attr("height", menuDimensions.height)
@@ -298,6 +299,7 @@ function updateMenu(chosenDivision) {
                 }
             });
     } else {
+        d3.select("#svgMenu").style("height", "60px");
         bars.enter().append("circle")
             .attr("cy", 20)
             .attr("cx", function (d, i) {
