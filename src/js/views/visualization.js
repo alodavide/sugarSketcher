@@ -63,8 +63,10 @@ function updateExistingNode() {
     var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected);
     monoToUpdate.monosaccharideType = newMonoType;
     var linkToUpdate = findLinkForMono(monoToUpdate);
-    linkToUpdate.linkedCarbon = linkedCarbon;
-    linkToUpdate.anomerCarbon = anomerCarbon;
+    if (linkToUpdate != null) {
+        linkToUpdate.linkedCarbon = linkedCarbon;
+        linkToUpdate.anomerCarbon = anomerCarbon;
+    }
     updateNodeInTree(treeData,monoToUpdate);
 }
 

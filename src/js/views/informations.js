@@ -279,6 +279,11 @@ function updateMenu(chosenDivision) {
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                         return;
                     }
+                    if (clickedNode instanceof sb.Substituent) {
+                        document.getElementById("error").innerHTML = "No update possible for Substituent !";
+                        $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+                        return;
+                    }
                 }
                 infosTable.push(d.division);
                 updateMenu(d.division);
