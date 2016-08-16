@@ -2,26 +2,27 @@ var treeData = {};
 var selectedNode = null;
 var clickedNode = null;
 var draggingNode = null;
-var colors = d3.scale.category10();
 
 //Values for links X and Y
 var XYvalues = {1: [70, 0], 2: [0, 50], 3: [-50, 50], 4: [-70, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
 // Values for links labels X and Y
 var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 'undefined': [0,0]};
 
+/**
+ * Update clickedNode on click on a node
+ * @param d The event of the click
+ */
 var clickCircle = function(d) {
-    clickedNode = d.node;
+    clickedNode = d.node; // Update clickedNode
 };
 
-// ------------- normal tree drawing code --------
-var width  = 1000,
-    height = 500;
 
+// Create the svgTree svg with fixed width and height
 var vis = d3.select('#viz')
     .append('svg')
     .attr('id', 'svgTree')
-    .attr('width', width)
-    .attr('height', height)
+    .attr('width', 1000)
+    .attr('height', 500)
     .append("svg:g").attr("transform", "translate(50, 20)");
 
 
@@ -35,59 +36,61 @@ var arc = d3.svg.arc()
     .innerRadius(radius - 100)
     .outerRadius(radius - 50);
 
-var tree = d3.layout.tree().size([150,150]);
+var tree = d3.layout.tree().size([150,150]); // Create the tree layout
 
 /**
  * Display the tree with new data
  */
 function displayTree() {
-    var nodes = tree.nodes(treeData);
-    var links = tree.links(nodes);
+    var nodes = tree.nodes(treeData); // Tree nodes
+    var links = tree.links(nodes); // Tree links
 
-    var treeSvg = d3.select("#svgTree");
-    treeSvg.selectAll('.node').remove();
-    treeSvg.selectAll('.nodelink').remove();
-    treeSvg.selectAll('.linkLabel').remove();
+    var treeSvg = d3.select("#svgTree"); // Get the svgTree
+    treeSvg.selectAll('.node').remove(); // Remove all the nodes
+    treeSvg.selectAll('.nodelink').remove(); // Remove all the links
+    treeSvg.selectAll('.linkLabel').remove(); // Remove all link labels
 
-    var link = vis.selectAll(".nodelink")
+    vis.selectAll(".nodelink")
         .data(links)
-        .enter().append("line")
+        .enter().append("line") // Append a new line for each link
         .attr("class", function(d) {
+            // If anomericity is alpha, then add dashed class to the link
             if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
                 return "nodelink dashedNodeLink";
             } else {
                 return "nodelink";
             }
         })
+        // Calculate X and Y of source and targets, and draw the line
         .attr("x1", function(d) { return calculateXandYNode(d.source)[1]; })
         .attr("y1", function(d) { return calculateXandYNode(d.source)[0]; })
         .attr("x2", function(d) { return calculateXandYNode(d.target)[1]; })
         .attr("y2", function(d) { return calculateXandYNode(d.target)[0]; })
         .attr('pointer-events', 'none');
 
-    var linkLabel = vis.selectAll(".linkLabel")
+    var linkLabel = vis.selectAll(".linkLabel") // Link labels
         .data(links)
         .enter().append("text")
         .attr("class", "linkLabel")
         .attr("x", function(d) {
-            var finalX;
-            var source = calculateXandYNode(d.source);
-            var target = calculateXandYNode(d.target);
-            var usualX = (source[1] + target[1])/2;
-            finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1];
-            return finalX;
+            var finalX; // Final x of the label
+            var source = calculateXandYNode(d.source); // Calculate source coordinates
+            var target = calculateXandYNode(d.target); // Calculate target coordinates
+            var usualX = (source[1] + target[1])/2; // Get x of the middle of the link
+            finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+            return finalX; // Return the obtained value
         })
         .attr("y", function(d) {
-            var finalY;
-            var source = calculateXandYNode(d.source);
-            var target = calculateXandYNode(d.target);
-            var usualY = (source[0] + target[0])/2;
-            finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0];
-            return finalY;
+            var finalY; // Final y of the label
+            var source = calculateXandYNode(d.source); // Calculate source coordinates
+            var target = calculateXandYNode(d.target); // Calculate target coordinates
+            var usualY = (source[0] + target[0])/2; // Get y of the middle of the link
+            finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon .value][0]; // Add value to have a visible display
+            return finalY; // Return the obtained value
         })
         .text(function(d) {
-            var link = findLinkForMono(d.target.node);
-            var anomericity;
+            var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
+            var anomericity; // Anomericity of the target node
             if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
                 anomericity = "α"
             } else if (d.target.node.anomericity == sb.Anomericity.BETA) {
@@ -95,41 +98,45 @@ function displayTree() {
             } else {
                 anomericity = "?"
             }
-            return anomericity + " / " + link.linkedCarbon.value;
+            return anomericity + " / " + link.linkedCarbon.value; // Text of the label
         });
 
+    // Create nodes
     var node = vis.selectAll("g.node")
         .data(nodes)
         .enter().append("g")
         .attr("x", function(d) {
-            return calculateXandYNode(d)[0];
+            return calculateXandYNode(d)[0]; // Calculate x
         })
         .attr("y", function(d) {
-            return calculateXandYNode(d)[1];
+            return calculateXandYNode(d)[1]; // Calculate y
         })
         .attr("transform", function (d) {
+            // Translation for display
             return "translate(" + calculateXandYNode(d)[1] + "," + calculateXandYNode(d)[0] + ")";
         })
-        .on('click', function (d) {
+        .on('click', function () {
+            // On click, simply display menu and hide all other svg's
             d3.event.stopPropagation();
             updateMenu();
             d3.select("#svgInfos").style("display", "none");
             d3.select("#svgSubstituents").style("display", "none");
             d3.select("#svgShape").style("display", "none");
+            d3.select("#svgCarbons").style("display", "none");
             d3.select("#svgMenu").style("display", "block");
-            if (d3.event.defaultPrevented) return; // click suppressed
         });
 
+    // For each node, append a path
     node.append("path")
-        //.attr('pointer-events', 'none')
         .attr('class', 'node')
+        // Use superformula shapes
         .attr("d", d3.superformula()
             .size(400)
             .type(function(d) {
                 if (d.node instanceof sb.Substituent) {
                     return "circle";
                 } else {
-                    return d.node.monosaccharideType.shape.toLowerCase();
+                    return d.node.monosaccharideType.shape.toLowerCase(); // Get the shape of the monosaccharide type
                 }
             }))
         .attr("transform", function(d) {
@@ -137,6 +144,7 @@ function displayTree() {
                 return;
             }
              var shape = d.node.monosaccharideType.shape;
+            // Rotations to have star and triangle well oriented
              if (shape == "star") {
              return "rotate(-20)";
              } else if (shape == "triangle") {
@@ -149,35 +157,35 @@ function displayTree() {
             } else {
                 // If shape is bisected, we create a gradient and link it to the new node
                 if(d.node.monosaccharideType.bisected) {
-                    var gradientId = "gradient" + randomString(6);
+                    var gradientId = "gradient" + randomString(6); // Generate a random id for the gradient
                     var shape = d.node.monosaccharideType.shape;
                     if (shape == 'square') {
                         createSquareLinearGradient(d.node.monosaccharideType.color, gradientId);
                     } else if (shape == 'diamond') {
-                        // Manage inversed Diamonds
                         createDiamondLinearGradient(d.node.monosaccharideType, gradientId);
                     } else {
                         createTriangleLinearGradient(d.node.monosaccharideType.color, gradientId);
                     }
                     return "url(#" + gradientId +")";
-                } else {
+                } else { // If not bisected, simply get the monosaccharide type color
                     return d.node.monosaccharideType.color;
                 }
             }
         })
-    .style('stroke', 'black')
-    .on('click', clickCircle);
+    .style('stroke', 'black') // Stroke to see white shapes
+    .on('click', clickCircle); // Select the node on click
 }
 
 
 /**
  * Finds the edge in the sugar which has the monosaccharide as target
- * @param monosaccharide
+ * @param monosaccharide The monosaccharide which is the target fo the searched link
  * @returns {*}
  */
 function findLinkForMono(monosaccharide) {
-    var links = tree.links(tree.nodes(treeData));
+    var links = tree.links(tree.nodes(treeData)); // Tree links
     for (var link of links) {
+        // If the link has the node as target, return the edge from the graph s
         if (link.target.node == monosaccharide) {
             return sugar.getEdge(link.source.node, link.target.node);
         }
@@ -185,15 +193,16 @@ function findLinkForMono(monosaccharide) {
 }
 
 /**
- * Calculate X and Y for a node
- * @param node
+ * Calculate X and Y for a node (using our fixed modification values), recursivity from node to root
+ * @param node The node for which we want to calculate new coordinates
  */
 function calculateXandYNode(node) {
-    var link = findLinkForMono(node.node);
-    if (typeof link != 'undefined') {
-        var anomerCarbon = link.linkedCarbon.value;
+    var link = findLinkForMono(node.node); // Find the link which has the node as target
+    if (typeof link != 'undefined') { // If the link exists
+        var anomerCarbon = link.linkedCarbon.value; // Get anomer carbon value
         var sourceX;
         var sourceY;
+        // Calculate new coordinates for the wanted node
         for (var n of tree.nodes(treeData)) {
             if (n.node == link.sourceNode) {
                 var source = calculateXandYNode(n);
@@ -201,12 +210,13 @@ function calculateXandYNode(node) {
                 sourceY = source[1];
             }
         }
+        // Modifications we have to do on the obtained value
         var modificationsXY = XYvalues[anomerCarbon];
-        var newX = sourceX  + modificationsXY[1];
-        var newY = sourceY + modificationsXY[0];
-        return [newX, newY];
+        var newX = sourceX  + modificationsXY[1]; // Apply the modification on x
+        var newY = sourceY + modificationsXY[0]; // Apply the modification on y
+        return [newX, newY]; // Return the obtained coordinates
 
-    } else {
+    } else { // If the node is the root, just add 150 to the x and 900 to y to display it on the right of the svg
         return [node.x + 150, node.y + 900];
     }
 }
@@ -217,7 +227,8 @@ function calculateXandYNode(node) {
  * @param gradientId The generated id of the linear gradient
  */
 function createSquareLinearGradient(color, gradientId) {
-    var svg = d3.select("#svgTree");
+    var svg = d3.select("#svgTree"); // Get the svgTree
+    // Create a linearGradient using the gradientId
     var linearGradient = svg.append("linearGradient")
         .attr("id", gradientId)
         .attr("x1", "0%")
@@ -225,14 +236,20 @@ function createSquareLinearGradient(color, gradientId) {
         .attr("x2", "100%")
         .attr("y2", "0%")
         .attr("spreadMethod", "pad");
+
+    // First half of the square, in white
     linearGradient.append("stop")
     .attr("offset", "48%")
     .attr("stop-color", "#fff")
     .attr("stop-opacity", 1);
+
+    // Separation in the middle, in black
     linearGradient.append("stop")
         .attr("offset", "50%")
         .attr("stop-color", "#000")
         .attr("stop-opacity", 1);
+
+    // Second half of the square, in the wanted color
     linearGradient.append("stop")
         .attr("offset", "52%")
         .attr("stop-color", color)
@@ -245,7 +262,7 @@ function createSquareLinearGradient(color, gradientId) {
  * @param gradientId The generated id of the linear gradient
  */
 function createDiamondLinearGradient(type, gradientId) {
-    var svg = d3.select("#svgTree");
+    var svg = d3.select("#svgTree"); // Get the svgTree
     var linearGradient;
     // AltA and IdoA are reverted diamonds so we don't append the same linearGradient
     if (type == sb.MonosaccharideType.AltA || type == sb.MonosaccharideType.IdoA) {
@@ -265,14 +282,20 @@ function createDiamondLinearGradient(type, gradientId) {
             .attr("y2", "0%")
             .attr("spreadMethod", "pad");
     }
+
+    // First half of the diamond, in white
     linearGradient.append("stop")
         .attr("offset", "48%")
         .attr("stop-color", "#fff")
         .attr("stop-opacity", 1);
+
+    // Separation of the diamond, in black
     linearGradient.append("stop")
         .attr("offset", "50%")
         .attr("stop-color", "#000")
         .attr("stop-opacity", 1);
+
+    // Second half of the diamond, in the wanted color
     linearGradient.append("stop")
         .attr("offset", "52%")
         .attr("stop-color", type.color)
@@ -293,14 +316,20 @@ function createTriangleLinearGradient(color, gradientId) {
         .attr("x2", "50%")
         .attr("y2", "22%")
         .attr("spreadMethod", "pad");
+
+    // First half of the triangle, in white
     linearGradient.append("stop")
         .attr("offset", "40%")
         .attr("stop-color", "#fff")
         .attr("stop-opacity", 1);
+
+    // Separation of the triangle, in black
     linearGradient.append("stop")
         .attr("offset", "50%")
         .attr("stop-color", "#000")
         .attr("stop-opacity", 1);
+
+    // Second half of the triangle, in the wanted color
     linearGradient.append("stop")
         .attr("offset", "60%")
         .attr("stop-color", color)
