@@ -315,6 +315,22 @@ function updateMenu(chosenDivision) {
             .style("fill", function (d) {
                 return d.display_division;
             })
+            .style("opacity", function(d) {
+                var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
+                var isBisected = false;
+                if (chosenShape.indexOf("bisected") > -1) {
+                    chosenShape = chosenShape.split("bisected")[1];
+                    isBisected = true;
+                }
+                var color = getColorCodeFromString(d.division); // Get the clicked color
+                var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape, isBisected);
+                // If there is no type for this combination, no action
+                if (existingMonoType == sb.MonosaccharideType.UNDEFINED) {
+                    return 0.1
+                } else {
+                    return 1;
+                }
+            })
             .on("click", function (d) {
                 var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
                 var isBisected = false;
@@ -324,18 +340,11 @@ function updateMenu(chosenDivision) {
                 }
                 var color = getColorCodeFromString(d.division); // Get the clicked color
                 var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape, isBisected);
-                // If there is no type for this combination, display an error
-                if (existingMonoType == sb.MonosaccharideType.UNDEFINED) {
-                    document.getElementById("error").innerHTML = "Impossible combination: " + d.division.split("Color")[0] + " " + chosenShape;
-                    if (isBisected) {
-                        document.getElementById("error").innerHTML += " bisected";
-                    }
-                    $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
-                    return;
+                // If there is no type for this combination, no action
+                if (existingMonoType != sb.MonosaccharideType.UNDEFINED) {
+                    infosTable.push(d.division);
+                    updateMenu(d.division);
                 }
-
-                infosTable.push(d.division);
-                updateMenu(d.division);
             });
     }
 
@@ -376,7 +385,7 @@ function updateMenu(chosenDivision) {
                 var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
                 var labelMono = monoType.toString().split(".")[1];
                 if (labelMono == "UNDEFINED") {
-                    labelMono = "X";
+                    labelMono = "";
                 }
                 return labelMono;
             })
