@@ -379,9 +379,6 @@ function updateMenu(chosenDivision) {
                     isBisected = true;
                 }
                 var color = d.display_division;
-                console.log(shape);
-                console.log(color);
-                console.log(isBisected);
                 var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
                 var labelMono = monoType.toString().split(".")[1];
                 if (labelMono == "UNDEFINED") {
@@ -459,41 +456,6 @@ document.onkeydown = function (e) {
         d3.select("#pieLinkCarbon").style("display", "none");
     }
 };
-
-/**
- * Unselect the choices made in the informations table
- */
-function unselectChoices() {
-    var selectedChoices = d3.selectAll(".selectedChoice")[0];
-    for (var selected of selectedChoices) {
-        d3.select("#" + selected.id).style("background","black").style("color", "white").classed("selectedChoice", false);
-    }
-}
-
-/**
- * Get the menus the user selected. Called when ended menus.
- */
-function getInfoSelections(selectedCells) {
-    var anomericity = selectedCells.filter(".choiceAnomericity")[0][0].innerText;
-    var isomer = selectedCells.filter(".choiceIsomer")[0][0].innerText;
-    var ringType = selectedCells.filter(".choiceRing")[0][0].innerText;
-    infosTable.push(anomericity);
-    infosTable.push(isomer);
-    infosTable.push(ringType);
-}
-
-/**
- * Checks if the user selected the two carbon values
- */
-function checkSelectedCarbonValues() {
-    var selectedCells = d3.selectAll(".selectedChoice");
-    // The user selected the three values
-    if(selectedCells[0].length === 2) {
-        getCarbonSelections(selectedCells);
-        d3.select("#tableCarbonValues").transition().style("display","none");
-        unselectChoices();
-    }
-}
 
 /**
  * Create a new node using the informations selected by the user
