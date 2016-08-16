@@ -118,8 +118,8 @@ function manageMouseOutAnomericity() {
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x"); // Get the x attribute of the add Node rect
     d3.select("#svgMenu").select("#addNode").remove(); // Remove the add Node rect
-    d3.select("#addStructure").style("opacity", "0.1"); // Lower opacity of add Structure
-    d3.select("#updateNode").style("opacity", "0.1"); // Lower opacity of update Node
+    d3.select("#addStructure").style("opacity", "0.2"); // Lower opacity of add Structure
+    d3.select("#updateNode").style("opacity", "0.2"); // Lower opacity of update Node
 
     // Add Monosaccharide rect and label
     actions.append("rect")
@@ -182,24 +182,25 @@ function manageHoverAddNode(menuItem,actions) {
  * Manage the hover on the isomer choice
  */
 function addHoverManagerIsomer() {
-    var isomerTitle = d3.select("#isomerTitleChoice");
-    isomerTitle.on("mouseover", function () {
-        var x = parseInt(d3.select("#isomerTitleChoice").attr("x"));
-        var width = d3.select("#isomerTitleChoice").attr("width");
-        var idActions = ["isomerDChoice", "isomerLChoice", "isomerUnknownChoice"];
-        var associatedValues = ["D", "L", "?"];
-        d3.select("#isomerTitleChoice").style("display", "none");
-        var isomerLabels = d3.select("#labelsInfos");
-        var isomerActions = d3.select("#actionsInfos");
+    var isomerTitle = d3.select("#isomerTitleChoice"); // Get the title rect
+    isomerTitle.on("mouseover", function () { // Mouseover event
+        var x = parseInt(d3.select("#isomerTitleChoice").attr("x")); // Get the x of the title rect
+        var width = d3.select("#isomerTitleChoice").attr("width"); // Get the width of the title rect
+        var idActions = ["isomerDChoice", "isomerLChoice", "isomerUnknownChoice"]; // Id's for choices
+        var associatedValues = ["D", "L", "?"]; // Values for each choice
+        d3.select("#isomerTitleChoice").style("display", "none"); // Hide the title rect
+        var isomerLabels = d3.select("#labelsInfos"); // Labels for isomer choice
+        var isomerActions = d3.select("#actionsInfos"); // Rects for isomer choice
+        // Loop on the three values
         for (var i = 0; i < 3; i++) {
             const k = i;
             isomerActions.append("rect")
                 .attr("class", "bar choice choiceIsomer")
                 .attr("id", idActions[k])
-                .attr("width", width / 3)
-                .attr("height", 40)
-                .attr("x", x + i*width/3)
-                .attr("rx", 15)
+                .attr("width", width / 3) // 1/3 of the title width
+                .attr("height", 40) // Fixed height
+                .attr("x", x + i*width/3) // Calculate the current x
+                .attr("rx", 15) // Corners of the rect
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
                     var newHovered = document.querySelectorAll(":hover");
@@ -225,13 +226,15 @@ function addHoverManagerIsomer() {
  * Manage mouse out for isomer choices
  */
 function manageMouseOutIsomer() {
-    var anomericityChoices = d3.selectAll(".choiceIsomer")[0];
+    var anomericityChoices = d3.selectAll(".choiceIsomer")[0]; // Get all the isomer choices
     var selected = false;
+    // Check if one is selected
     for (var choice of anomericityChoices) {
         if ((d3.select("#" +choice.id)).classed("selectedIsomer")) {
             selected = true;
         }
     }
+    // If not any is selected, remove al lthe choice labels and rects, and display title rect and label
     if(!selected) {
         d3.selectAll(".choiceIsomer").remove();
         d3.selectAll(".labelChoiceIsomer").remove();
@@ -245,11 +248,13 @@ function manageMouseOutIsomer() {
  * @param target
  */
 function selectIsomer(target) {
-    var clicked = d3.select("#"+target);
+    var clicked = d3.select("#"+target); // Get the selected isomer choice
+    // If it was already selected, unselect and change color
     if (clicked.classed("selectedIsomer")) {
         clicked.classed("selectedIsomer", false);
         clicked.style("fill", "#cc0000");
     } else {
+        // If was not selected, unselect all the other isomer choices, and adapt color
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
@@ -258,8 +263,8 @@ function selectIsomer(target) {
                 current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#990000").classed("selectedIsomer", true);
-        checkSelectedAllInfos();
+        d3.select("#" + target).style("fill", "#990000").classed("selectedIsomer", true); // Add class and change color
+        checkSelectedAllInfos(); // Check if the three infos have been selected
     }
 }
 
@@ -267,24 +272,25 @@ function selectIsomer(target) {
  * Manage the hover on the isomer choice
  */
 function addHoverManagerRingType() {
-    var ringTypeTitle = d3.select("#ringTypeTitleChoice");
-    ringTypeTitle.on("mouseover", function () {
-        var x = parseInt(d3.select("#ringTypeTitleChoice").attr("x"));
-        var width = d3.select("#ringTypeTitleChoice").attr("width");
-        var idActions = ["ringTypePChoice", "ringTypeFChoice", "ringTypeUnknownChoice"];
-        var associatedValues = ["P", "F", "?"];
-        d3.select("#ringTypeTitleChoice").style("display", "none");
-        var ringTypeLabels = d3.select("#labelsInfos");
-        var ringTypeActions = d3.select("#actionsInfos");
+    var ringTypeTitle = d3.select("#ringTypeTitleChoice"); // Get the ring type title
+    ringTypeTitle.on("mouseover", function () { // Mouseover event
+        var x = parseInt(d3.select("#ringTypeTitleChoice").attr("x")); // Get the x of the ring type title rect
+        var width = d3.select("#ringTypeTitleChoice").attr("width"); // Get the width of the ring type title rect
+        var idActions = ["ringTypePChoice", "ringTypeFChoice", "ringTypeUnknownChoice"]; // Id's for the choices
+        var associatedValues = ["P", "F", "?"]; // Values for each choice
+        d3.select("#ringTypeTitleChoice").style("display", "none"); // Hide the title rect
+        var ringTypeLabels = d3.select("#labelsInfos"); // Labels for ring types
+        var ringTypeActions = d3.select("#actionsInfos"); // Rects for ring types
+        // Loop on each ring type value
         for (var i = 0; i < 3; i++) {
             const k = i;
             ringTypeActions.append("rect")
                 .attr("class", "bar choice choiceRingType")
                 .attr("id", idActions[k])
-                .attr("width", width / 3)
-                .attr("height", 40)
-                .attr("x", x + i*width/3)
-                .attr("rx", 15)
+                .attr("width", width / 3) // 1/3 of the title width
+                .attr("height", 40) // Fixed height
+                .attr("x", x + i*width/3) // Calculate the x
+                .attr("rx", 15) // Corners of the rect
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
                     var newHovered = document.querySelectorAll(":hover");
@@ -299,7 +305,8 @@ function addHoverManagerRingType() {
                     selectRingType(this.id);
                 });
         }
-        d3.select("#labelRingTypeTitle").style("display", "none");
+        d3.select("#labelRingTypeTitle").style("display", "none"); // Hide the title label
+        // Add the three labels for ring type choices
         ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("P").attr("x", x + 1000 / 18).attr("y", 8);
         ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("F").attr("x", x + 1000 / 6).attr("y", 8);
         ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("?").attr("x", x + 5000/18).attr("y", 8);
@@ -310,13 +317,16 @@ function addHoverManagerRingType() {
  * Manage mouse out for ring type choices
  */
 function manageMouseOutRingType() {
-    var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
+    var ringTypeChoices = d3.selectAll(".choiceRingType")[0]; // Get all the ring type choices
     var selected = false;
+    // Check if one is selected
     for (var choice of ringTypeChoices) {
         if ((d3.select("#" +choice.id)).classed("selectedRingType")) {
             selected = true;
         }
     }
+
+    // If no ring type selected, remove all choice rects and labels, and display title rect and label
     if(!selected) {
         d3.selectAll(".choiceRingType").remove();
         d3.selectAll(".labelChoiceRingType").remove();
@@ -330,11 +340,13 @@ function manageMouseOutRingType() {
  * @param target
  */
 function selectRingType(target) {
-    var clicked = d3.select("#"+target);
+    var clicked = d3.select("#"+target); // Get the selected choice
+    // If already selected, unselect and change color
     if (clicked.classed("selectedRingType")) {
         clicked.classed("selectedRingType", false);
         clicked.style("fill", "#cc0000");
     } else {
+        // If not selected, unselect all the other ring type choices, and adapt colors
         var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
         for (var choice of ringTypeChoices) {
             var current = d3.select("#" + choice.id);
@@ -343,8 +355,8 @@ function selectRingType(target) {
                 current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#990000").classed("selectedRingType", true);
-        checkSelectedAllInfos();
+        d3.select("#" + target).style("fill", "#990000").classed("selectedRingType", true); // Add selected class and change color
+        checkSelectedAllInfos(); // Check if the three informations have been selected
     }
 }
 
