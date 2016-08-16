@@ -108,6 +108,9 @@ function manageMouseOutAnomericity() {
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x");
     d3.select("#svgMenu").select("#addNode").remove();
+    d3.select("#addStructure").style("opacity", "0.1");
+    d3.select("#updateNode").style("opacity", "0.1");
+
     // Add Monosaccharide rect and label
     actions.insert("rect", ":first-child")
         .attr("class", "bar choice")
@@ -118,6 +121,8 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("ry", 15)
         .on("mouseout", function() {
             updateMenu();
+            d3.select("#addStructure").style("opacity", "1");
+            d3.select("#updateNode").style("opacity", "1");
         }).on("click", function () {
             infosTable.push(menuItem.division);
             infosTable.push(menuItem.subDivisions[1].display_division);

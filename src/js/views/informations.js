@@ -116,8 +116,8 @@ var menuAction = [{
     division: "addStructure",
     display_division: "Add Structure"
 }, {
-    division: "changeMono",
-    display_division: "Change Mono",
+    division: "updateNode",
+    display_division: "Update Node",
     subDivisions: "shape"
 }];
 
@@ -274,9 +274,9 @@ function updateMenu(chosenDivision) {
                 return d.display_division
             })
             .on("click", function (d) {
-                if (d.division == "changeMono") {
+                if (d.division == "updateNode") {
                     if (clickedNode == null) {
-                        document.getElementById("error").innerHTML = "No node selected to change !";
+                        document.getElementById("error").innerHTML = "No node selected to update !";
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                         return;
                     }
@@ -336,12 +336,11 @@ function updateMenu(chosenDivision) {
 
                 infosTable.push(d.division);
                 updateMenu(d.division);
-
             });
     }
 
     /*
-     *  Label drawing block, if we are displaying colors, labels not needed because of color fill
+     *  Label drawing block
      */
     var textNodes = labels.selectAll("text").data(newMenuAction);
     if (newMenuAction != colorDivisions) {
@@ -356,7 +355,7 @@ function updateMenu(chosenDivision) {
             .text(function (d) {
                 return d.display_division;
             });
-    } else {
+    } else { // If colors, we get the monosaccharide type associated for each combination of color and shape
         textNodes.enter().append("text")
             .attr("class", "labelMonoChoice")
             .attr("x", function(d, i) {
