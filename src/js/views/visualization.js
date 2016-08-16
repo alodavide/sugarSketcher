@@ -2,11 +2,11 @@
  * Created by Nicolas Hory on 25/07/16.
  */
 
-var mouseX, mouseY;
+var mouseX, mouseY; // Vars to stock the mouse position
 
-$(document).mousemove( function(e) {
-    mouseX = e.pageX;
-    mouseY = e.pageY;
+$(document).mousemove( function(e) { // Event fired on mouse move
+    mouseX = e.pageX; // Update mouseX to current value
+    mouseY = e.pageY; // Update mouseY to current value
 });
 
 /**
@@ -16,23 +16,26 @@ function updateTreeVisualization(newLink) {
     // If the tree is empty, we just initialize it with the node as a root
     if (typeof newLink === 'undefined') {
         treeData = {"node":sugar.getRootNode(), "children":[]};
-    } else {
+    } else { // If tree already has a root, add the node in the tree
         searchAndAddNodeInTree(treeData, newLink);
     }
-    displayTree();
+    displayTree(); // Display the tree after the update
 }
 
 /**
  * Search a node in a tree
- * @param root
- * @param link
+ * @param root The root of the tree
+ * @param link The link used for new node
  * @returns {*}
  */
 function searchAndAddNodeInTree(root, link){
+    // If the current node is the source of the link
     if(root.node == link.sourceNode){
+        // If the node doesn't have children, add an empty array as children property
         if (typeof root.children === 'undefined') root["children"] = [];
-        root.children.push({"node":link.targetNode, "children": []});
+        root.children.push({"node":link.targetNode, "children": []}); // Push the target of the link
     }else if (root.children != null){
+        // If the node has children, recursivity on each child to find the source node
         var i;
         var result = null;
         for(i=0; result == null && i < root.children.length; i++){
@@ -52,38 +55,40 @@ function updateExistingNode() {
     var ringType = getRingTypeWithSelection(infosTable[5]); // Ring type
     var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
     var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
-    var monoToUpdate = sugar.getNodeById(clickedNode.id);
-    monoToUpdate.anomericity = anomericity;
-    monoToUpdate.ringType = ringType;
-    monoToUpdate.isomer = isomer;
+    var monoToUpdate = sugar.getNodeById(clickedNode.id); // Get the node we want to update in the graph
+    monoToUpdate.anomericity = anomericity; // Update anomericity
+    monoToUpdate.ringType = ringType; // Update ring type
+    monoToUpdate.isomer = isomer; // Update isomer
     var isBisected = (newShape.indexOf("bisected") != -1); // Check if the shape is bisected
     if (isBisected) {
         newShape = newShape.split("bisected")[1]; // We update the value of the shape by removing keywork "bisected"
     }
-    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected);
-    monoToUpdate.monosaccharideType = newMonoType;
-    var linkToUpdate = findLinkForMono(monoToUpdate);
+    var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected); // Find new monosaccharide type
+    monoToUpdate.monosaccharideType = newMonoType; // Update monosaccharide type
+    var linkToUpdate = findLinkForMono(monoToUpdate); // Get the link to update (if exists)
     if (linkToUpdate != null) {
-        linkToUpdate.linkedCarbon = linkedCarbon;
-        linkToUpdate.anomerCarbon = anomerCarbon;
+        linkToUpdate.linkedCarbon = linkedCarbon; // Update linked carbon
+        linkToUpdate.anomerCarbon = anomerCarbon; // Update anomer carbon
     }
-    updateNodeInTree(treeData,monoToUpdate);
+    updateNodeInTree(treeData,monoToUpdate); // Update the node in the tree
 }
 
 /**
  * Update a node in the tree, and then display the tree again
- * @param root
- * @param newMonosaccharide
+ * @param root The root of the tree
+ * @param newMonosaccharide The updated monosaccharide
  */
 function updateNodeInTree(root, newMonosaccharide) {
+    // Compare id's, and update if found the node to update
     if(root.node.id == newMonosaccharide.id){
         root.node = newMonosaccharide;
-    }else if (root.children != null){
+    } else if (root.children != null){
+        // If has children, recursivity on each child to find the node to uodate
         var i;
         var result = null;
         for(i=0; result == null && i < root.children.length; i++){
             updateNodeInTree(root.children[i], newMonosaccharide);
         }
     }
-    displayTree();
+    displayTree(); // Display the tree after the update
 }
