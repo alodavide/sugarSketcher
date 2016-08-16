@@ -7,18 +7,19 @@
 // The sugar we use as data structure, to be visualized using d3 tree
 var sugar;
 
-// Update the menu when page is loaded
+// Function called when document is ready
 $(document).ready(function() {
-    updateMenu();
-    addHoverManagersInfos();
-    addHoverManagersCarbons();
-    var subChoices = d3.selectAll(".subChoice");
+    updateMenu();  // Update menu
+    addHoverManagersInfos(); // Add hover managers for informations
+    addHoverManagersCarbons(); // Add hover managers for carbons
+    var subChoices = d3.selectAll(".subChoice"); // Substituent choices
     subChoices.on('click', function() {
-        if (infosTable.length == 2) {
+        if (infosTable.length == 2) { // If one substituent has already been clicked, remove it from infosTable
             infosTable.pop();
         }
+        // Push the new clicked substituent in infosTable
         infosTable.push(d3.select(d3.event.target).attr("value"));
-        displayPie();
+        displayPie(); // Dispaly the piechart to choose linked carbon
     });
 });
 
@@ -29,6 +30,7 @@ var infosTable = []; // Table with all informations selected by the user
 var shapeChoices= document.getElementsByClassName("shapeChoice");
 for (var shape of shapeChoices) {
     shape.addEventListener('click', function(e) {
+        // When a shape is clicked, we update the menu, and store the chosen shape in infosTable
         infosTable.push(e.target.parentNode.id.split("Shape")[0]);
         d3.select("#svgShape").transition().style("display", "none");
         updateMenu("shape");
@@ -42,28 +44,30 @@ shapeCancelButton.on("click", function() {
     updateMenu();
 });
 
-// Cancel button in informations table, coming back to shape svg, managing displays
+// Cancel button in informations svg, coming back to shape svg, managing displays
 var infosCancelButton = d3.select("#cancelChoiceInfos");
 infosCancelButton.on("click", function() {
-    infosTable.pop();
+    infosTable.pop(); // Remove last chosen information
+    // Remove last two paths taken in the menu
     menuChosenPath.pop();
     menuChosenPath.pop();
-    d3.select("#svgInfos").transition().style("display", "none");
-    reinitializeDisplayInfos();
-    updateMenu("shape");
-    d3.select("#svgMenu").transition().style("display", "block");
+    d3.select("#svgInfos").transition().style("display", "none"); // Hide the informations svg
+    reinitializeDisplayInfos(); // Reinitialize the display of informations
+    updateMenu("shape"); // Update the menu
+    d3.select("#svgMenu").transition().style("display", "block"); // Display the main menu
 });
 
 // Cancel button in carbon table, coming back to informations table, managing displays
 var carbonCancelButton = d3.select("#cancelChoiceCarbon");
 carbonCancelButton.on("click", function() {
+    // Remove anomericity, isomer and ring type
     infosTable.pop();
     infosTable.pop();
     infosTable.pop();
-    d3.select("#svgCarbons").transition().style("display", "none");
-    reinitializeDisplayInfos();
-    reinitializeDisplayCarbons();
-    d3.select("#svgInfos").transition().style("display", "block");
+    d3.select("#svgCarbons").transition().style("display", "none"); // Hide the svg of carbon choice
+    reinitializeDisplayInfos(); // Reinitialize display of informations svg
+    reinitializeDisplayCarbons(); // Reinitialize display of carbons svg
+    d3.select("#svgInfos").transition().style("display", "block"); // Display main menu
 });
 
 // Color Divisions with all possible colors
@@ -123,40 +127,45 @@ var menuAction = [{
 
 
 //Managing displaying more rows for subs
-var substituentDisplayMore = d3.select("#displayMoreSubs");
+var substituentDisplayMore = d3.select("#displayMoreSubs"); // Button to display all substituents
 substituentDisplayMore.on("click", function() {
-    $('#pieLinkCarbon').css("display", "none");
-    var subsRects = d3.select("#actionsSubs");
-    var subsLabels = d3.select("#labelsSubs");
+    $('#pieLinkCarbon').css("display", "none"); // Hide the piechart
+    var subsRects = d3.select("#actionsSubs"); // Rects for substituents
+    var subsLabels = d3.select("#labelsSubs"); // Labels for substituents
     var subTypes = [];
-    var mostUsedTypes = ["S", "P", "NAc", "Acetyl", "Methyl"];
+    var mostUsedTypes = ["S", "P", "NAc", "Acetyl", "Methyl"]; // Most used substituent types
+    // Add all substituent in an array, except the most used ones and the undefined one
     for (var type of sb.SubstituentType) {
         if (type.label != 'undefined' && mostUsedTypes.indexOf(type.label) == -1) {
             subTypes.push(type.label);
         }
     }
+
+    // If only the 5 most used are actually displayed
     if(d3.selectAll(".subChoice")[0].length == 5) {
         var currentIndex = 0;
         var currentY = 40;
+        // Loop to add new substituents to the menu
         while (currentIndex < subTypes.length) {
-            var currentXLabels = 90;
-            var currentXRects = 0;
+            var currentXLabels = 90; // x to place labels
+            var currentXRects = 0; // x to place rects
             subsRects.selectAll("rect").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("rect")
-                .attr("width", 180)
-                .attr("height", 40)
+                .attr("width", 180) // 1/5 of the menu
+                .attr("height", 40) // Fixed height
                 .attr("x",function() {
-                    var tmp = currentXRects;
-                    currentXRects += 180;
-                    return tmp;
+                    var tmp = currentXRects; // Temporary variable to stock current x of rects
+                    currentXRects += 180; // Increase current x of rects
+                    return tmp; // Return the temporary variable
                 })
                 .attr("y", currentY)
-                .attr("rx", 15)
-                .attr("ry", 15)
+                .attr("rx", 15) // Corner for rect
+                .attr("ry", 15) // Corner for rect
                 .attr("value", function(d) {
                     return d;
                 })
                 .attr("class", "bar choice subChoice createdSubChoice")
                 .on("click", function (d) {
+                    // On click, add the information to the table and then display piechart to choose linked carbon
                     infosTable.push(d);
                     displayPie();
                 });
@@ -165,32 +174,31 @@ substituentDisplayMore.on("click", function() {
                     return d;
                 })
                 .attr("x", function() {
-                    var tmp = currentXLabels;
-                    currentXLabels += 180;
-                    return tmp;
+                    var tmp = currentXLabels; // Temporary variable to stock current x of labels
+                    currentXLabels += 180; // Increase current x of labels
+                    return tmp; // Return the temporary variable
                 })
                 .attr("y", currentY + 8 )
                 .attr("class", "label createdSubLabel");
-            currentIndex += 5;
-            currentXLabels = 90;
-            currentY += 40;
-            currentXRects = 0;
+            currentIndex += 5; // Increase the current index by 5
+            currentXLabels = 90; // Reinitialize x of labels when ended a row
+            currentY += 40; // Increase current y
+            currentXRects = 0; // Reinitialize x of rects when ended a row
         }
-        d3.select("#svgSubstituents").style("height", "240px");
+        d3.select("#svgSubstituents").style("height", "240px"); // Increase height of substituents svg to see all the added ones
     }
 });
 
-//Cancel Button Subs
+//Cancel Button Substituent
 var cancelSubButton = d3.select("#cancelChoiceSubs");
 cancelSubButton.on("click", function() {
-    //Reinitialize table
-    $('#pieLinkCarbon').css("display", "none");
-    d3.select("#svgSubstituents").style("height", "40px");
-    d3.select("#svgSubstituents").transition().style("display", "none");
-    d3.selectAll(".createdSubChoice").remove();
-    d3.selectAll(".createdSubLabel").remove();
-    updateMenu();
-    d3.select("#svgMenu").transition().style("display", "block");
+    $('#pieLinkCarbon').css("display", "none"); // Hide the piechart
+    d3.select("#svgSubstituents").style("height", "40px"); // Reinitialize svg height
+    d3.select("#svgSubstituents").transition().style("display", "none"); // Hide the substituent svg
+    d3.selectAll(".createdSubChoice").remove(); // Remove all added rects
+    d3.selectAll(".createdSubLabel").remove(); // Remove all added labels
+    updateMenu(); // Update to main menu
+    d3.select("#svgMenu").transition().style("display", "block"); // Display main menu
 });
 
 /**
@@ -198,18 +206,18 @@ cancelSubButton.on("click", function() {
  * @param chosenDivision
  */
 function updateMenu(chosenDivision) {
-    // Size and margin properties
+    // Fixed size of the menu
     var menuDimensions = {
         height: 40,
         width: 1000
     };
 
-    d3.select("#actions").selectAll("*").remove(); // Reinitialize the svg actions menu
+    d3.select("#actions").selectAll("*").remove(); // Reinitialize the svg rectangles menu
     d3.select("#labels").selectAll("*").remove(); // Reinitialize the svg labels menu
-    var actions = d3.select("#actions"); // Actions
+    var actions = d3.select("#actions"); // Rectangles
     var labels = d3.select("#labels"); // Labels
 
-    // Set the height and width of our SVG element
+    // Set the height and width of our svg menu
     var svgMenu = d3.select("#svgMenu").attr({
         height: menuDimensions.height,
         width: menuDimensions.width
@@ -217,22 +225,25 @@ function updateMenu(chosenDivision) {
     var newMenuAction = [];
 
     // This case happens when update is called with no parameter (first update)
-    if (typeof chosenDivision === 'undefined') { // First menu
-        menuChosenPath = []; // Re-initialize the path
-        infosTable = []; // Re-initialize the list of clicks
+    if (typeof chosenDivision === 'undefined') {
+        menuChosenPath = []; // Reinitialize the path
+        infosTable = []; // Reinitialize the list of clicks
+        // Hide all other svgs
         d3.select("#svgShape").transition().style("display", "none");
+        d3.select("#svgSubstituents").transition().style("display", "none");
         d3.select("#svgInfos").transition().style("display", "none");
         d3.select("#svgCarbons").transition().style("display", "none");
         d3.select("#svgMenu").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
         menuChosenPath.push(chosenDivision);
-        // If chose a color, then we hide the svg and show the table for anomericity, isomer and type
+        // If chose a color, then we hide the svg and show the svg for anomericity, isomer and type
         if (chosenDivision.indexOf("Color") > -1) {
             d3.select("#svgInfos").transition().duration(200).style("display", "block");
             d3.select("#svgMenu").transition().duration(200).style("display", "none");
             return;
         } else {
+            // Get the subdivisions of chosen menu
             newMenuAction = getSubDivisions(menuAction, chosenDivision)
         }
     }
@@ -249,10 +260,14 @@ function updateMenu(chosenDivision) {
         return;
     }
 
-    menuDimensions.barWidth = menuDimensions.width / newMenuAction.length;
+    menuDimensions.barWidth = menuDimensions.width / newMenuAction.length; // Calculate width of each rect of the menu
     var bars = actions.selectAll("rect").data(newMenuAction);
+
+    // If we are not displaying colors
     if (newMenuAction != colorDivisions) {
-        d3.select("#svgMenu").style("height", "40px");
+        d3.select("#svgMenu").style("height", "40px"); // Set height of the menu bac kto 40 px
+
+        // Append a rect with calculated width, height; x and y
         bars.enter().append("rect")
             .attr("width", menuDimensions.barWidth)
             .attr("height", menuDimensions.height)
@@ -263,17 +278,16 @@ function updateMenu(chosenDivision) {
             .attr("id", function (d) {
                 return d.division;
             })
-            .attr("rx", 15)
-            .attr("ry", 15)
+            .attr("rx", 15) // Corner for the rect
+            .attr("ry", 15) // Cornet for the rect
             .attr("class", function (d) {
-                if (d.division != 'whiteColor') {
                     return "bar choice";
-                } else return "bar choice choiceWhiteStroke"
             })
             .style("fill", function (d) {
                 return d.display_division
             })
             .on("click", function (d) {
+                // If the update has been clicked but no node selected, error popup displayed
                 if (d.division == "updateNode") {
                     if (clickedNode == null) {
                         document.getElementById("error").innerHTML = "No node selected to update !";
@@ -287,19 +301,21 @@ function updateMenu(chosenDivision) {
                         return;
                     }
                 }
+                // Push the information in the table and update the menu
                 infosTable.push(d.division);
                 updateMenu(d.division);
             }).on("mouseover", function (d) {
                 // On hover of addNode, we display its two subdivisions
                 if (d.division == "addNode") {
                     manageHoverAddNode(d, actions);
+                    // Add the two labels for monosaccharide and substituents
                     labels.selectAll("text")[0][0].remove();
                     labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
                     labels.insert("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
                 }
             });
-    } else {
-        d3.select("#svgMenu").style("height", "60px");
+    } else { // If we are displaying colors
+        d3.select("#svgMenu").style("height", "60px"); // Update height to show circles and labels of monosaccharides
         bars.enter().append("circle")
             .attr("cy", 20)
             .attr("cx", function (d, i) {
@@ -316,7 +332,9 @@ function updateMenu(chosenDivision) {
                 return d.display_division;
             })
             .style("opacity", function(d) {
+                // Check if the color is possible with the chosen shape, and change opacity in consequence
                 var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
+                // Check if the shape is bisected
                 var isBisected = false;
                 if (chosenShape.indexOf("bisected") > -1) {
                     chosenShape = chosenShape.split("bisected")[1];
@@ -324,7 +342,7 @@ function updateMenu(chosenDivision) {
                 }
                 var color = getColorCodeFromString(d.division); // Get the clicked color
                 var existingMonoType = getMonoTypeWithColorAndShape(color, chosenShape, isBisected);
-                // If there is no type for this combination, no action
+                // If there is no type for this combination, lower the opacity
                 if (existingMonoType == sb.MonosaccharideType.UNDEFINED) {
                     return 0.1
                 } else {
@@ -332,7 +350,9 @@ function updateMenu(chosenDivision) {
                 }
             })
             .on("click", function (d) {
+                // Manage click, if combination impossible the click is not doing anything
                 var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
+                // Check if the shape is bisected
                 var isBisected = false;
                 if (chosenShape.indexOf("bisected") > -1) {
                     chosenShape = chosenShape.split("bisected")[1];
@@ -351,8 +371,8 @@ function updateMenu(chosenDivision) {
     /*
      *  Label drawing block
      */
-    var textNodes = labels.selectAll("text").data(newMenuAction);
-    if (newMenuAction != colorDivisions) {
+    var textNodes = labels.selectAll("text").data(newMenuAction); // Get all the labels of the menu
+    if (newMenuAction != colorDivisions) { // If we are not displaying colors, we add text
         textNodes.enter().append("text")
             .attr("class", "label")
             .attr("x", function (d, i) {
@@ -396,8 +416,8 @@ function updateMenu(chosenDivision) {
 
 /**
  * Add a cancel button (rectangle), enabling to come back to last step
- * @param actions
- * @param labels
+ * @param actions The rects of the svg
+ * @param labels The labels (texts) of the svg
  */
 function addCancelOperation (actions, labels) {
     // We add the rect and the label to cancel last click
@@ -409,10 +429,11 @@ function addCancelOperation (actions, labels) {
         .attr("x", 1010).attr("y", 0)
         .style("fill", "#505656")
         .on("click", function () {
-            menuChosenPath.pop();
-            updateMenu(menuChosenPath.pop());
-            infosTable.pop();
+            menuChosenPath.pop(); // Remove last information from menuChosenPath
+            updateMenu(menuChosenPath.pop()); // Update menu from last step
+            infosTable.pop(); // Remove the last added information in infosTable
         });
+
     labels.append("text")
         .attr("class", "label cancelLabel")
         .attr("x", 1050)
@@ -421,15 +442,17 @@ function addCancelOperation (actions, labels) {
 }
 /**
  * Get SubDivisions of a searched division, using recursive calls
- * @param divisionToCheck
- * @param searchedDivision
+ * @param divisionToCheck The currently checked division
+ * @param searchedDivision The division searched
  * @returns {*}
  */
 function getSubDivisions (divisionToCheck, searchedDivision) {
+    // If current division is shape, next step is color choice
     if (searchedDivision.indexOf("shape") > -1) {
         return colorDivisions;
     }
     if (divisionToCheck) {
+        // Loop on divisions, recursive calls on subDivisions if needed
         for (var div of divisionToCheck) {
             if (div.division == searchedDivision) {
                 return div.subDivisions;
@@ -448,6 +471,7 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
 document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
+        // If tree is empty, don't hide menus because there would be no way to display them back
         if (Object.keys(treeData).length !== 0) {
             d3.select('#svgMenu').style("display", "none");
             d3.select("#svgInfos").style("display", "none");
@@ -463,7 +487,7 @@ document.onkeydown = function (e) {
  * Create a new node using the informations selected by the user
  */
 function createNewNode() {
-    var typeNodeToAdd = infosTable[1]; // Selected type, mono or sub
+    var typeNodeToAdd = infosTable[1]; // Selected type, monosaccharide or substituent
     if (typeNodeToAdd == "Monosaccharide") {
         var shape = infosTable[2]; // Selected shape
         var isBisected = (shape.indexOf("bisected") != -1); // Check if the shape is bisected
@@ -474,16 +498,16 @@ function createNewNode() {
         var anomericity = getAnomericityWithSelection(infosTable[4]); // Anomericity
         var isomer = getIsomerWithSelection(infosTable[5]); // Isomer
         var ring = getRingTypeWithSelection(infosTable[6]); // Ring type
-        var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]);
-        var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]);
-        var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
-        var generatedNodeId = randomString(7);
-        var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring);
-        if (Object.keys(treeData).length === 0) {
+        var linkedCarbon = getLinkedCarbonWithSelection(infosTable[7]); // Get the linked carbon
+        var anomerCarbon = getAnomerCarbonWithSelection(infosTable[8]); // Get the anomer carbon
+        var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected); // Get the monosaccharide type
+        var generatedNodeId = randomString(7); // Generate an id
+        var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring); // Create new monosaccharide
+        if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
             sugar = new sb.Sugar("Sugar", monosaccharide);
-            updateTreeVisualization();
+            updateTreeVisualization(); // Update visualization in the svg
         } else {
-            var generatedEdgeId = randomString(7);
+            var generatedEdgeId = randomString(7); // If tree not empty, generate id, create linkage and update visualziation
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
@@ -496,11 +520,11 @@ function createNewNode() {
  * @param linkCarbon The link carbon value
  */
 function createNewSubstituent (linkCarbon) {
-    var subLabel = infosTable[2];
-    var subType = getSubstituentTypeFromLabel(subLabel);
-    var generatedSubId = randomString(7); // Random if for Substituent
+    var subLabel = infosTable[2]; // Get the label of the substituent
+    var subType = getSubstituentTypeFromLabel(subLabel); // Get the SubstituentType
+    var generatedSubId = randomString(7); // Random id for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
-    var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon);
+    var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon); // Get the linkedCarbon value
     var generatedEdgeSubId = randomString(7); // Random id for edge
     // Create the linkage
     var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
@@ -515,6 +539,7 @@ function createNewSubstituent (linkCarbon) {
  * @returns {*}
  */
 function getSubstituentTypeFromLabel (label) {
+    // Loop on substituent types, and return the one we want
     for (var type of sb.SubstituentType) {
         if(type.label == label) {
             return type;
@@ -529,12 +554,13 @@ function getSubstituentTypeFromLabel (label) {
  * @param isBisected Boolean telling if the shape is bisected
  */
 function getMonoTypeWithColorAndShape(color, shape, isBisected) {
+    // Loop on monosaccharide types, and return the one we want
     for (var type of sb.MonosaccharideType) {
         if(type.color == color && type.shape == shape && type.bisected == isBisected) {
             return type;
         }
     }
-    return sb.MonosaccharideType.UNDEFINED;
+    return sb.MonosaccharideType.UNDEFINED; // Return undefined if combination doesn't exist
 }
 
 /**
@@ -544,16 +570,19 @@ function getMonoTypeWithColorAndShape(color, shape, isBisected) {
  */
 function getAnomericityWithSelection(anomericity) {
     var anomericityName;
+    // Get the string associated to display label
     if (anomericity == "α") {
         anomericityName = "ALPHA";
     } else if (anomericity == "β") {
         anomericityName = "BETA"
     }
+
+    // Loop on anomericity values, and return the one we want
     for (var anom of sb.Anomericity) {
         if (anom.name == anomericityName)
             return anom;
     }
-    return sb.Anomericity.UNDEFINED;
+    return sb.Anomericity.UNDEFINED; // Return undefined if not found (not supposed to happen)
 }
 
 /**
@@ -562,11 +591,12 @@ function getAnomericityWithSelection(anomericity) {
  * @returns {*}
  */
 function getIsomerWithSelection(isomer) {
+    // Loop on isomers, and return the one we want
     for (var anom of sb.Isomer) {
         if (anom.name == isomer)
             return anom;
     }
-    return sb.Isomer.UNDEFINED;
+    return sb.Isomer.UNDEFINED; // Return undefined if not found (not supposed to happen)
 }
 
 /**
@@ -575,11 +605,12 @@ function getIsomerWithSelection(isomer) {
  * @returns {*}
  */
 function getRingTypeWithSelection(ringType) {
+    // Loop on ring types, and return the one we want
     for (var ring of sb.RingType) {
         if (ring.name == ringType)
             return ring;
     }
-    return sb.RingType.UNDEFINED;
+    return sb.RingType.UNDEFINED; // Return undefined if not found (not supposed to happen)
 }
 
 /**
@@ -588,11 +619,12 @@ function getRingTypeWithSelection(ringType) {
  * @returns {*}
  */
 function getAnomerCarbonWithSelection(anomerCarbon) {
+    // Loop on anomer carbons, and return the one we want
     for (var carbon of sb.AnomerCarbon) {
         if (carbon.value == anomerCarbon)
             return carbon;
     }
-    return sb.AnomerCarbon.UNDEFINED;
+    return sb.AnomerCarbon.UNDEFINED; // Return undefined if not found (not supposed to happen)
 }
 
 /**
@@ -601,11 +633,12 @@ function getAnomerCarbonWithSelection(anomerCarbon) {
  * @returns {*}
  */
 function getLinkedCarbonWithSelection(linkedCarbon) {
+    // Loop on linked carbons, and return the one we want
     for (var carbon of sb.LinkedCarbon) {
         if (carbon.value == linkedCarbon)
             return carbon;
     }
-    return sb.LinkedCarbon.UNDEFINED;
+    return sb.LinkedCarbon.UNDEFINED; // Return undefined if not found (not supposed to happen)
 }
 
 /**
@@ -614,6 +647,7 @@ function getLinkedCarbonWithSelection(linkedCarbon) {
  * @returns {string|string|string|string|string|string|*}
  */
 function getColorCodeFromString(colorName) {
+    // Loop on colors, and return the code when found
     for (var color of colorDivisions) {
         if (color.division == colorName) {
             return color.display_division;
@@ -627,14 +661,15 @@ function getColorCodeFromString(colorName) {
  * @returns {string}
  */
 function randomString(length) {
+    // Possible chars in the generated string
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
 
-    if (! length) {
+    if (! length) { // If no length specified, get a random length
         length = Math.floor(Math.random() * chars.length);
     }
 
     var str = '';
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < length; i++) { // Add random chars till length is the one specified
         str += chars[Math.floor(Math.random() * chars.length)];
     }
     return str;
