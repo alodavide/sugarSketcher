@@ -136,3 +136,15 @@
 .choiceWhiteStroke {
     stroke:black; !important;
 }
+
+#linkedCarbonTitleChoice, .choiceLinkedCarbon {
+    fill:#ff1a1a; !important;
+}
+
+#isomerTitleChoice, .choiceIsomer {
+    fill:#ff0000; !important;
+}
+
+#anomericityTitleChoice, .choiceAnomericity {
+    fill:#ff3333; !important;
+}

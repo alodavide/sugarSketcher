@@ -384,13 +384,13 @@ function addHoverManagerLinkedCarbon() {
                 });
         }
         d3.select("#labelLinkedCarbonTitle").style("display", "none");
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("1").attr("x", x + 500 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("2").attr("x", x + 1500 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("3").attr("x", x + 2500 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("4").attr("x", x + 3500 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("5").attr("x", x + 4500 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("6").attr("x", x + 5500 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("?").attr("x", x + 6500/14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("1").attr("x", x + 490 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("2").attr("x", x + 1470 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("3").attr("x", x + 2450 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("4").attr("x", x + 3430 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("5").attr("x", x + 4410 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("6").attr("x", x + 5390 / 14).attr("y", 8);
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("?").attr("x", x + 6370/14).attr("y", 8);
     });
 }
 
@@ -468,13 +468,13 @@ function addHoverManagerAnomerCarbon() {
                 });
         }
         d3.select("#labelAnomerCarbonTitle").style("display", "none");
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("1").attr("x", x + 500 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("2").attr("x", x + 1500 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("3").attr("x", x + 2500 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("4").attr("x", x + 3500 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("5").attr("x", x + 4500 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("6").attr("x", x + 5500 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("?").attr("x", x + 6500/14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("1").attr("x", x + 490 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("2").attr("x", x + 1470 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("3").attr("x", x + 2450 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("4").attr("x", x + 3430 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("5").attr("x", x + 4410 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("6").attr("x", x + 5390 / 14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("?").attr("x", x + 6370/14).attr("y", 8);
     });
 }
 
