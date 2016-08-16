@@ -294,8 +294,8 @@ function updateMenu(chosenDivision) {
                 if (d.division == "addNode") {
                     manageHoverAddNode(d, actions);
                     labels.selectAll("text")[0][0].remove();
-                    labels.insert("text", ":first-child").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
-                    labels.insert("text", ":first-child").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
+                    labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
+                    labels.insert("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
                 }
             });
     } else {
