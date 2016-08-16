@@ -449,8 +449,8 @@ document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
         d3.select('#svgMenu').style("display", "none");
-        unselectChoices();
         d3.select("#svgInfos").style("display", "none");
+        d3.select("#svgShape").style("display", "none");
         d3.select("#svgCarbons").style("display", "none");
         d3.select("#svgSubstituents").style("display", "none");
         d3.select("#pieLinkCarbon").style("display", "none");
