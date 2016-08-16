@@ -43,7 +43,11 @@ function addHoverManagerAnomericity() {
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
-                    manageMouseOutAnomericity();
+                    var newHovered = document.querySelectorAll(":hover");
+                    var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+                    if (!mouseTarget.classed("choiceAnomericity")) {
+                        manageMouseOutAnomericity();
+                    }
                 })
                 .on("click", function () {
                     // Manage click
@@ -120,9 +124,13 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("rx", 15)
         .attr("ry", 15)
         .on("mouseout", function() {
-            updateMenu();
-            d3.select("#addStructure").style("opacity", "1");
-            d3.select("#updateNode").style("opacity", "1");
+            var newHovered = document.querySelectorAll(":hover");
+            var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+            if (mouseTarget.attr("id") != "substituentNode") {
+                updateMenu();
+                d3.select("#addStructure").style("opacity", "1");
+                d3.select("#updateNode").style("opacity", "1");
+            }
         }).on("click", function () {
             infosTable.push(menuItem.division);
             infosTable.push(menuItem.subDivisions[1].display_division);
@@ -137,8 +145,12 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("rx", 15)
         .attr("ry", 15)
         .on("mouseout", function() {
-            if(d3.select("#svgMenu").style("display") != "none") {
+            var newHovered = document.querySelectorAll(":hover");
+            var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+            if (mouseTarget.attr("id") != "monosaccharideNode") {
                 updateMenu();
+                d3.select("#addStructure").style("opacity", "1");
+                d3.select("#updateNode").style("opacity", "1");
             }
         })
         .on("click", function () {
@@ -179,7 +191,11 @@ function addHoverManagerIsomer() {
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
-                    manageMouseOutIsomer();
+                    var newHovered = document.querySelectorAll(":hover");
+                    var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+                    if (!mouseTarget.classed("choiceIsomer")) {
+                        manageMouseOutIsomer();
+                    }
                 })
                 .on("click", function () {
                     // Manage click
@@ -259,7 +275,11 @@ function addHoverManagerRingType() {
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
-                    manageMouseOutRingType();
+                    var newHovered = document.querySelectorAll(":hover");
+                    var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+                    if (!mouseTarget.classed("choiceRingType")) {
+                        manageMouseOutRingType();
+                    }
                 })
                 .on("click", function () {
                     // Manage click
@@ -385,7 +405,11 @@ function addHoverManagerLinkedCarbon() {
                     }
                 })
                 .on("mouseout", function() {
-                    manageMouseOutLinkedCarbon();
+                    var newHovered = document.querySelectorAll(":hover");
+                    var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+                    if (!mouseTarget.classed("choiceLinkedCarbon")) {
+                        manageMouseOutLinkedCarbon();
+                    }
                 })
                 .on("click", function () {
                     var usedCarbons = checkUsedLinkedCarbons();
@@ -472,7 +496,11 @@ function addHoverManagerAnomerCarbon() {
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
-                    manageMouseOutAnomerCarbon();
+                    var newHovered = document.querySelectorAll(":hover");
+                    var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+                    if (!mouseTarget.classed("choiceAnomerCarbon")) {
+                        manageMouseOutAnomerCarbon();
+                    }
                 })
                 .on("click", function () {
                     selectAnomerCarbon(this.id);
