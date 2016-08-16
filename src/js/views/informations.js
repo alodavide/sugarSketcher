@@ -313,7 +313,7 @@ function updateMenu(chosenDivision) {
                 return "bar choice choiceWhiteStroke"
             })
             .style("fill", function (d) {
-                return d.display_division
+                return d.display_division;
             })
             .on("click", function (d) {
                 var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
@@ -343,8 +343,8 @@ function updateMenu(chosenDivision) {
     /*
      *  Label drawing block, if we are displaying colors, labels not needed because of color fill
      */
+    var textNodes = labels.selectAll("text").data(newMenuAction);
     if (newMenuAction != colorDivisions) {
-        var textNodes = labels.selectAll("text").data(newMenuAction);
         textNodes.enter().append("text")
             .attr("class", "label")
             .attr("x", function (d, i) {
@@ -356,6 +356,31 @@ function updateMenu(chosenDivision) {
             .text(function (d) {
                 return d.display_division;
             });
+    } else {
+        textNodes.enter().append("text")
+            .attr("class", "labelMonoChoice")
+            .attr("x", function(d, i) {
+                return 50 + i * 100;
+            })
+            .attr("y", 45)
+            .text(function(d) {
+                var shape = infosTable[infosTable.length-1];
+                var isBisected = false;
+                if (shape.indexOf("bisected") != -1) {
+                    shape = shape.split("bisected")[1];
+                    isBisected = true;
+                }
+                var color = d.display_division;
+                console.log(shape);
+                console.log(color);
+                console.log(isBisected);
+                var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
+                var labelMono = monoType.toString().split(".")[1];
+                if (labelMono == "UNDEFINED") {
+                    labelMono = "X";
+                }
+                return labelMono;
+            })
     }
 
     // If not the first menu, we add a cancel button to come back to last step
