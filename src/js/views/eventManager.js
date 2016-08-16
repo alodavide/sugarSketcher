@@ -145,12 +145,14 @@ function manageHoverAddNode(menuItem,actions) {
         .attr("rx", 15)
         .attr("ry", 15)
         .on("mouseout", function() {
-            var newHovered = document.querySelectorAll(":hover");
-            var mouseTarget = d3.select(newHovered[newHovered.length -1]);
-            if (mouseTarget.attr("id") != "monosaccharideNode") {
-                updateMenu();
-                d3.select("#addStructure").style("opacity", "1");
-                d3.select("#updateNode").style("opacity", "1");
+            if(d3.select("#svgMenu").style("display") != "none") {
+                var newHovered = document.querySelectorAll(":hover");
+                var mouseTarget = d3.select(newHovered[newHovered.length - 1]);
+                if (mouseTarget.attr("id") != "monosaccharideNode") {
+                    updateMenu();
+                    d3.select("#addStructure").style("opacity", "1");
+                    d3.select("#updateNode").style("opacity", "1");
+                }
             }
         })
         .on("click", function () {
