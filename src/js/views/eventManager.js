@@ -376,11 +376,22 @@ function addHoverManagerLinkedCarbon() {
                 .attr("x", x + i*width/7)
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
+                .attr("opacity", function() {
+                    var usedCarbons = checkUsedLinkedCarbons();
+                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) != -1) {
+                        return 0.2;
+                    } else {
+                        return 1;
+                    }
+                })
                 .on("mouseout", function() {
                     manageMouseOutLinkedCarbon();
                 })
                 .on("click", function () {
-                    selectLinkedCarbon(this.id);
+                    var usedCarbons = checkUsedLinkedCarbons();
+                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) == -1) {
+                        selectLinkedCarbon(this.id);
+                    }
                 });
         }
         d3.select("#labelLinkedCarbonTitle").style("display", "none");
@@ -559,4 +570,23 @@ function reinitializeDisplayCarbons() {
     d3.selectAll(".labelChoiceLinkedCarbon").remove();
     d3.selectAll(".choiceAnomerCarbon").remove();
     d3.selectAll(".labelChoiceAnomerCarbon").remove();
+}
+
+/**
+ * Checks the used linked carbon values of a node
+ */
+function checkUsedLinkedCarbons() {
+    // If sugar not created yet, return empty array
+    if (Object.keys(treeData).length === 0) {
+        return [];
+    } else {
+        var usedCarbons = [];
+        var edges = sugar.graph.edges();
+        for (var edge of edges) {
+            if (edge.sourceNode == clickedNode) {
+                usedCarbons.push(edge.linkedCarbon.value);
+            }
+        }
+        return usedCarbons;
+    }
 }
