@@ -68,6 +68,8 @@ carbonCancelButton.on("click", function() {
     reinitializeDisplayInfos(); // Reinitialize display of informations svg
     reinitializeDisplayCarbons(); // Reinitialize display of carbons svg
     d3.select("#svgInfos").transition().style("display", "block"); // Display main menu
+    document.getElementById("error").innerHTML = "Hover on anomericity, isomer and ring types buttons to choose values";
+    $('#error').css({'top': 300, 'left': 500}).fadeIn(400).delay(1000).fadeOut(400);
 });
 
 // Color Divisions with all possible colors

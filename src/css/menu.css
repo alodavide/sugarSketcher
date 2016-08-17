@@ -113,7 +113,7 @@
     font-size: 20px;
     padding:10px;
     text-align:center;
-    border-radius: 2px;
+    border-radius: 25px;
     -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
@@ -146,5 +146,5 @@
 }
 
 #anomericityTitleChoice, .choiceAnomericity {
-    fill:#ff3333; !important;
+    fill:#ff4d4d; !important;
 }

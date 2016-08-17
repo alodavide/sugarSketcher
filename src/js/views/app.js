@@ -16,7 +16,6 @@ var clickCircle = function(d) {
     clickedNode = d.node; // Update clickedNode
 };
 
-
 var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
 var panSpeed = 200;
 var panBoundary = 20; // Within 20px from edges will pan when dragging.
@@ -36,8 +35,6 @@ var vis = d3.select('#viz')
 function zoom() {
     vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 }
-
-
 
 var width = 460,
     height = 300,

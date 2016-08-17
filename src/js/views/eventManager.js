@@ -72,7 +72,7 @@ function selectAnomericity(target) {
     var clicked = d3.select("#"+target); // Select the target of the click
     if (clicked.classed("selectedAnomericity")) { // If it was already selected
         clicked.classed("selectedAnomericity", false); // Unselect and change color
-        clicked.style("fill", "#cc0000");
+        clicked.style("fill", "#ff4d4d");
     } else { // If it's a new selection
         var anomericityChoices = d3.selectAll(".choiceAnomericity")[0];
         // Unselect all anomericity choices
@@ -80,7 +80,7 @@ function selectAnomericity(target) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedAnomericity")) {
                 current.classed("selectedAnomericity", false);
-                current.style("fill", "#cc0000");
+                current.style("fill", "#ff4d4d");
             }
         }
         // Select the clicked one
@@ -252,7 +252,7 @@ function selectIsomer(target) {
     // If it was already selected, unselect and change color
     if (clicked.classed("selectedIsomer")) {
         clicked.classed("selectedIsomer", false);
-        clicked.style("fill", "#cc0000");
+        clicked.style("fill", "#ff0000");
     } else {
         // If was not selected, unselect all the other isomer choices, and adapt color
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
@@ -260,7 +260,7 @@ function selectIsomer(target) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedIsomer")) {
                 current.classed("selectedIsomer", false);
-                current.style("fill", "#cc0000");
+                current.style("fill", "#ff0000");
             }
         }
         d3.select("#" + target).style("fill", "#990000").classed("selectedIsomer", true); // Add class and change color
