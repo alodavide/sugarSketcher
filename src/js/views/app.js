@@ -17,13 +17,27 @@ var clickCircle = function(d) {
 };
 
 
+var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
+var panSpeed = 200;
+var panBoundary = 20; // Within 20px from edges will pan when dragging.
+
 // Create the svgTree svg with fixed width and height
 var vis = d3.select('#viz')
     .append('svg')
     .attr('id', 'svgTree')
     .attr('width', 1000)
     .attr('height', 500)
+    .attr("class", "overlay")
+    .call(zoomListener) // Zoom listener for the svg
     .append("svg:g").attr("transform", "translate(50, 20)");
+
+/**
+ * Function called when zooming or panning, just applying a transformation
+ */
+function zoom() {
+    vis.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+
 
 
 var width = 460,
