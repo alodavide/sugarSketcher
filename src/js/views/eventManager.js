@@ -2,6 +2,30 @@
  * Created by Nicolas Hory on 04/08/16.
  */
 
+/*
+    Manage help button in informations svg
+*/
+var infosHelpButton = d3.select("#infosHelp");
+infosHelpButton.on("click", function() {
+    var svgInfos = d3.select("#svgInfos");
+    svgInfos.style("height", "65px");
+    $('#infosLabelHelp').fadeIn(400).delay(10000).fadeOut(400, function() {
+        svgInfos.style("height", "40px");
+    });
+});
+
+/*
+    Manage help button in carbons svg
+*/
+var carbonsHelpButton = d3.select("#carbonsHelp");
+carbonsHelpButton.on("click", function() {
+    var svgCarbons = d3.select("#svgCarbons");
+    svgCarbons.style("height", "65px");
+    $('#carbonsLabelHelp').fadeIn(400).delay(10000).fadeOut(400, function() {
+        svgCarbons.style("height", "40px");
+    });
+});
+
 /**
  * Add hover manager for all three informations asked: anomericity, isomer and ring type
  */

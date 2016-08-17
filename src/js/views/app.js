@@ -25,7 +25,7 @@ var vis = d3.select('#viz')
     .append('svg')
     .attr('id', 'svgTree')
     .attr('width', 1000)
-    .attr('height', 500)
+    .attr('height', 550)
     .call(zoomListener) // Listener for the svg
     .append("svg:g").attr("transform", "translate(50, 20)");
 
