@@ -264,6 +264,7 @@ function updateMenu(chosenDivision) {
 
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length; // Calculate width of each rect of the menu
     var bars = actions.selectAll("rect").data(newMenuAction);
+    var textNodes = labels.selectAll("text").data(newMenuAction); // Get all the labels of the menu
 
     // If we are not displaying colors
     if (newMenuAction != colorDivisions) {
@@ -315,6 +316,17 @@ function updateMenu(chosenDivision) {
                     labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
                     labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
                 }
+            });
+        textNodes.enter().append("text")
+            .attr("class", "label")
+            .attr("x", function (d, i) {
+                return (menuDimensions.barWidth * i) + (menuDimensions.barWidth / 2);
+            })
+            .attr("y", function () {
+                return menuDimensions.height/5; // Choose an y to center label
+            })
+            .text(function (d) {
+                return d.display_division;
             });
     } else { // If we are displaying colors
         d3.select("#svgMenu").style("height", "60px"); // Update height to show circles and labels of monosaccharides
@@ -368,25 +380,6 @@ function updateMenu(chosenDivision) {
                     updateMenu(d.division);
                 }
             });
-    }
-
-    /*
-     *  Label drawing block
-     */
-    var textNodes = labels.selectAll("text").data(newMenuAction); // Get all the labels of the menu
-    if (newMenuAction != colorDivisions) { // If we are not displaying colors, we add text
-        textNodes.enter().append("text")
-            .attr("class", "label")
-            .attr("x", function (d, i) {
-                return (menuDimensions.barWidth * i) + (menuDimensions.barWidth / 2);
-            })
-            .attr("y", function () {
-                return menuDimensions.height/5; // Choose an y to center label
-            })
-            .text(function (d) {
-                return d.display_division;
-            });
-    } else { // If colors, we get the monosaccharide type associated for each combination of color and shape
         textNodes.enter().append("text")
             .attr("class", "labelMonoChoice")
             .attr("x", function(d, i) {
@@ -407,7 +400,7 @@ function updateMenu(chosenDivision) {
                     labelMono = "";
                 }
                 return labelMono;
-            })
+            });
     }
 
     // If not the first menu, we add a cancel button to come back to last step

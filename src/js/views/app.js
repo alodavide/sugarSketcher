@@ -2,6 +2,7 @@ var treeData = {};
 var selectedNode = null;
 var clickedNode = null;
 var draggingNode = null;
+var copiedNode = null;
 
 //Values for links X and Y
 var XYvalues = {1: [70, 0], 2: [0, 50], 3: [-50, 50], 4: [-70, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
@@ -128,12 +129,78 @@ function displayTree() {
         .on('click', function () {
             // On click, simply display menu and hide all other svg's
             d3.event.stopPropagation();
+            d3.select("#copyNode").style("display", "none");
+            d3.select("#pasteNode").style("display", "none");
             updateMenu();
             d3.select("#svgInfos").style("display", "none");
             d3.select("#svgSubstituents").style("display", "none");
             d3.select("#svgShape").style("display", "none");
             d3.select("#svgCarbons").style("display", "none");
             d3.select("#svgMenu").style("display", "block");
+        })
+        .on("contextmenu", function (d) {
+            d3.event.preventDefault();
+            d3.select("#copyNode").style("display", "none");
+            var yModification = 0;
+            const node = d.node;
+            var currentMenu = d3.selectAll("svg")
+                .filter(function() {
+                    if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
+                        yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
+                    }
+                });
+            d3.select("#copyNode").on('click', function() {
+                copiedNode = node;
+                $('#copyNode').fadeOut(400);
+                $('#pasteNode').fadeOut(400);
+            });
+            $('#copyNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400);
+            if (copiedNode != null) {
+                $('#pasteNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400);
+                d3.select("#pasteNode").on('click', function() {
+                    var foundNodeInTree = searchNodeInTree(treeData, copiedNode);
+                    var linksRelatedToNode = findLinksForCopy(foundNodeInTree);
+                    var copyOfLinks = _.cloneDeep(linksRelatedToNode);
+                    var copyOfNode = _.cloneDeep(foundNodeInTree);
+                    copyOfNode.node.id+=randomString(7);
+                    var linkage = findLinkForMono(node);
+                    var copyOfLinkage;
+                    var nodeToAppend = searchNodeInTree(treeData, node);
+                    if (linkage != null) {
+                        copyOfLinkage = _.cloneDeep(linkage);
+                        copyOfLinkage.id += randomString(7);
+                        copyOfLinkage.source = nodeToAppend.node.id;
+                        copyOfLinkage.sourceNode = nodeToAppend.node;
+                    } else {
+                        copyOfLinkage = new sb.GlycosidicLinkage(randomString(15), sugar.getNodeById(nodeToAppend.node.id), sugar.getNodeById(foundNodeInTree.node.id), sb.AnomerCarbon.UNDEFINED, sb.LinkedCarbon.UNDEFINED);
+                    }
+                    changeChildrenIds(copyOfNode);
+                    if (typeof nodeToAppend.children == 'undefined') {
+                        nodeToAppend['children'] = [];
+                    }
+                    nodeToAppend.children.push(copyOfNode);
+                    addNodeCopyInGraph(copyOfNode);
+                    for (var i = 0; i < copyOfNode.length; i++) {
+                        var idBeforeChange = copyOfNode[i].node.id.substring(0, copyOfNode[i].node.id.length - 7);
+                        if (idBeforeChange == copyOfLinkage.source) {
+                            copyOfLinkage.source = copyOfNode[i].node.id;
+                            copyOfLinkage.sourceNode = copyOfNode[i].node;
+                        }
+                    }
+                    searchFirstPasteNodeAndUpdateLink(treeData,copyOfLinkage);
+                    updateLinksRelated(copyOfNode, copyOfLinks);
+                    if (typeof nodeToAppend.children === 'undefined') {
+                        nodeToAppend["children"] = [];
+                    }
+                    sugar.graph.addEdge(copyOfLinkage);
+                    for (var link of copyOfLinks) {
+                        sugar.graph.addEdge(link);
+                    }
+                    $('#copyNode').fadeOut(400);
+                    $('#pasteNode').fadeOut(400);
+                    displayTree();
+                });
+            }
         });
 
     // For each node, append a path
@@ -153,13 +220,13 @@ function displayTree() {
             if (d.node instanceof sb.Substituent) {
                 return;
             }
-             var shape = d.node.monosaccharideType.shape;
+            var shape = d.node.monosaccharideType.shape;
             // Rotations to have star and triangle well oriented
-             if (shape == "star") {
-             return "rotate(-20)";
-             } else if (shape == "triangle") {
+            if (shape == "star") {
+                return "rotate(-20)";
+            } else if (shape == "triangle") {
                 return "rotate(30)";
-             }
+            }
         })
         .style('fill', function(d) {
             if (d.node instanceof sb.Substituent) {
@@ -182,10 +249,122 @@ function displayTree() {
                 }
             }
         })
-    .style('stroke', 'black') // Stroke to see white shapes
-    .on('click', clickCircle); // Select the node on click
+        .style('stroke', 'black') // Stroke to see white shapes
+        .on('click', clickCircle); // Select the node on click
 }
 
+
+/**
+ * Search the first node we paste, and change the first link target to this node
+ * @param root The node from which we start the search
+ * @param linkageToUpdate The linkage to update
+ */
+function searchFirstPasteNodeAndUpdateLink(root, linkageToUpdate) {
+    var idBeforeChange = root.node.id;
+    if (idBeforeChange == linkageToUpdate.source) {
+        if (root.children != null) {
+            linkageToUpdate.target = root.children[root.children.length -1].node.id;
+            linkageToUpdate.targetNode = root.children[root.children.length -1].node;
+        }
+    } else {
+        if (root.children != null) {
+            for (var i = 0; i < root.children.length; i++) {
+                searchFirstPasteNodeAndUpdateLink(root.children[i], linkageToUpdate);
+            }
+        }
+    }
+}
+
+
+/**
+ * Update links source and target ids to paste a node
+ * @param nodes
+ * @param links
+ */
+function updateLinksRelated(node, links) {
+    var idBeforeChange = node.node.id.substring(0, node.node.id.length - 7);
+    for (var i = 0; i < links.length; i++) {
+        if (links[i].source == idBeforeChange) {
+            links[i].source = node.node.id;
+            links[i].sourceNode = node.node;
+        }
+        if (links[i].target == idBeforeChange) {
+            links[i].target = node.node.id;
+            links[i].targetNode = node.node;
+        }
+    }
+    if (node.children != null) {
+        for (var j = 0; j < node.children.length; j++) {
+            updateLinksRelated(node.children[j], links);
+        }
+    }
+    for (var i = 0; i < links.length; i++) {
+        links[i].id += randomString(7);
+    }
+}
+
+
+/**
+ * Find all links in relation with a node and its children
+ * @param foundNodeInTree
+ */
+function findLinksForCopy(node) {
+    var allLinks = [];
+    if (node.children != null) {
+        for (var i = 0; i < node.children.length; i++) {
+            allLinks.push(sugar.getEdge(node.node, node.children[i].node));
+            allLinks = allLinks.concat(findLinksForCopy(node.children[i]));
+        }
+    }
+    return allLinks;
+}
+
+
+/**
+ * Add a node from d3js tree and its children in the sigma graph, copying links
+ * @param node The node to add
+ */
+function addNodeCopyInGraph(node) {
+    sugar.graph.addNode(node.node);
+    if (node.children != null) {
+        for (var i = 0; i < node.children.length; i++) {
+            addNodeCopyInGraph(node.children[i]);
+        }
+    }
+}
+
+
+/**
+ * Search a node in the tree structure
+ * @param node The node we are looking for
+ */
+function searchNodeInTree(root, node) {
+    if(root.node.id == node.id){
+        return root;
+    }else if (root.children != null){
+        // If the node has children, recursivity on each child to find the source node
+        var i;
+        var result = null;
+        for(i=0; result == null && i < root.children.length; i++){
+            result = searchNodeInTree(root.children[i], node);
+        }
+        return result;
+    }
+}
+
+/**
+ * Change children ids of a node
+ * @param node
+ */
+function changeChildrenIds(node) {
+    if (node.children != null) {
+        for (var i = 0; i < node.children.length; i++) {
+            var newId = randomString(7);
+            node.children[i].node.id += newId;
+            changeChildrenIds(node.children[i]);
+        }
+    }
+}
 
 /**
  * Finds the edge in the sugar which has the monosaccharide as target
@@ -249,9 +428,9 @@ function createSquareLinearGradient(color, gradientId) {
 
     // First half of the square, in white
     linearGradient.append("stop")
-    .attr("offset", "48%")
-    .attr("stop-color", "#fff")
-    .attr("stop-opacity", 1);
+        .attr("offset", "48%")
+        .attr("stop-color", "#fff")
+        .attr("stop-opacity", 1);
 
     // Separation in the middle, in black
     linearGradient.append("stop")

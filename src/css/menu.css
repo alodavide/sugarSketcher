@@ -134,3 +134,18 @@
 #anomericityTitleChoice, .choiceAnomericity {
     fill:#ff4d4d; !important;
 }
+
+#copyNode, #pasteNode {
+    position:absolute;
+    cursor:pointer;
+    display:none;
+    width:50px;
+    height:20px;
+    margin-left:-100px;
+    background-color: red;
+    color: white;
+    font-family: Calibri;
+    font-size: 14px;
+    text-align:center;
+    border-radius: 10px;
+}
