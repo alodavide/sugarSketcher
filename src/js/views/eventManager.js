@@ -193,8 +193,27 @@ function manageHoverAddNode(menuItem,actions) {
             infosTable.push(menuItem.subDivisions[0].display_division);
             // If root has not been set yet, then display an error popup
             if (Object.keys(treeData).length === 0) {
-                document.getElementById("error").innerHTML = "Can not have a substituent as a root";
-                $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
+                var svgMenu = d3.select("#svgMenu");
+                svgMenu.style("height", "65px");
+                svgMenu.select("#actions").append("rect")
+                    .attr("width", 1000)
+                    .attr("class", "bar")
+                    .attr("height", 30)
+                    .attr("id", "menuSubErrorRect")
+                    .attr("x", 0)
+                    .attr("y", 40)
+                    .style("fill", "#ffffff");
+                svgMenu.select("#labels").append("text")
+                    .attr("class", "errorLabel")
+                    .attr("id", "menuSubError")
+                    .attr("x", 500)
+                    .attr("y", 50)
+                    .text("Can not have a substituent as a root. Add a Monosaccharide first.");
+                    $('#menuSubError').fadeIn(400).delay(10000).fadeOut(400, function() {
+                        svgMenu.style("height", "40px");
+                        svgMenu.select("#menuSubError").remove();
+                        svgMenu.select("#menuSubErrorRect").remove();
+                });
                 return;
             }
             d3.select("#svgMenu").style("display", "none"); // Hide the menu

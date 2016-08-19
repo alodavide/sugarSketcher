@@ -24,6 +24,16 @@
     display: none;
 }
 
+.errorLabel {
+    font-size: 18px; !important;
+    display:block;
+    stroke: black;!important;
+    fill:black;!important;
+    text-anchor: middle;
+    alignment-baseline: text-before-edge;
+    dominant-baseline: text-before-edge;
+}
+
 .linkLabel {
     stroke:black;
     fill:black;

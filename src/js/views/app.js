@@ -66,7 +66,7 @@ function displayTree() {
         .enter().append("line") // Append a new line for each link
         .attr("class", function(d) {
             // If anomericity is alpha, then add dashed class to the link
-            if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
+            if (d.target.node.anomericity.name == "ALPHA") {
                 return "nodelink dashedNodeLink";
             } else {
                 return "nodelink";
@@ -102,9 +102,9 @@ function displayTree() {
         .text(function(d) {
             var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
             var anomericity; // Anomericity of the target node
-            if (d.target.node.anomericity == sb.Anomericity.ALPHA) {
+            if (d.target.node.anomericity.name == "ALPHA") {
                 anomericity = "α"
-            } else if (d.target.node.anomericity == sb.Anomericity.BETA) {
+            } else if (d.target.node.anomericity.name == "BETA") {
                 anomericity = "β";
             } else {
                 anomericity = "?"
@@ -160,6 +160,8 @@ function displayTree() {
                 d3.select("#pasteNode").on('click', function() {
                     var foundNodeInTree = searchNodeInTree(treeData, copiedNode);
                     var linksRelatedToNode = findLinksForCopy(foundNodeInTree);
+                    console.log("les links");
+                    console.log(linksRelatedToNode);
                     var copyOfLinks = _.cloneDeep(linksRelatedToNode);
                     var copyOfNode = _.cloneDeep(foundNodeInTree);
                     copyOfNode.node.id+=randomString(7);
@@ -189,6 +191,8 @@ function displayTree() {
                     }
                     searchFirstPasteNodeAndUpdateLink(treeData,copyOfLinkage);
                     updateLinksRelated(copyOfNode, copyOfLinks);
+                    console.log("links after");
+                    console.log(copyOfLinks);
                     if (typeof nodeToAppend.children === 'undefined') {
                         nodeToAppend["children"] = [];
                     }
