@@ -109,7 +109,13 @@ function displayTree() {
             } else {
                 anomericity = "?"
             }
-            return anomericity + " / " + link.linkedCarbon.value; // Text of the label
+            var linkedCarbonLabel;
+            if (link.linkedCarbon.value == 'undefined') {
+                linkedCarbonLabel = "?";
+            } else {
+                linkedCarbonLabel = link.linkedCarbon.value;
+            }
+            return anomericity + " / " + linkedCarbonLabel; // Text of the label
         });
 
     // Create nodes
@@ -160,12 +166,10 @@ function displayTree() {
                 d3.select("#pasteNode").on('click', function() {
                     var foundNodeInTree = searchNodeInTree(treeData, copiedNode);
                     var linksRelatedToNode = findLinksForCopy(foundNodeInTree);
-                    console.log("les links");
-                    console.log(linksRelatedToNode);
                     var copyOfLinks = _.cloneDeep(linksRelatedToNode);
                     var copyOfNode = _.cloneDeep(foundNodeInTree);
                     copyOfNode.node.id+=randomString(7);
-                    var linkage = findLinkForMono(node);
+                    var linkage = findLinkForMono(copiedNode);
                     var copyOfLinkage;
                     var nodeToAppend = searchNodeInTree(treeData, node);
                     if (linkage != null) {
@@ -191,8 +195,6 @@ function displayTree() {
                     }
                     searchFirstPasteNodeAndUpdateLink(treeData,copyOfLinkage);
                     updateLinksRelated(copyOfNode, copyOfLinks);
-                    console.log("links after");
-                    console.log(copyOfLinks);
                     if (typeof nodeToAppend.children === 'undefined') {
                         nodeToAppend["children"] = [];
                     }
@@ -379,7 +381,7 @@ function findLinkForMono(monosaccharide) {
     var links = tree.links(tree.nodes(treeData)); // Tree links
     for (var link of links) {
         // If the link has the node as target, return the edge from the graph s
-        if (link.target.node == monosaccharide) {
+        if (link.target.node.id == monosaccharide.id) {
             return sugar.getEdge(link.source.node, link.target.node);
         }
     }
