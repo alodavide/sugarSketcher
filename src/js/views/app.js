@@ -149,62 +149,22 @@ function displayTree() {
             d3.select("#copyNode").style("display", "none");
             var yModification = 0;
             const node = d.node;
-            var currentMenu = d3.selectAll("svg")
+            d3.selectAll("svg")
                 .filter(function() {
                     if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
                         yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
                     }
                 });
-            d3.select("#copyNode").on('click', function() {
-                copiedNode = node;
-                $('#copyNode').fadeOut(400);
-                $('#pasteNode').fadeOut(400);
+            d3.select("#copyNode").on('click', function() { // Click on copy option
+                copiedNode = node; // Copy the node clicked
+                $('#copyNode').fadeOut(400); // Hide the copy option
+                $('#pasteNode').fadeOut(400); // Hide the paste option
             });
-            $('#copyNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400);
-            if (copiedNode != null) {
-                $('#pasteNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400);
-                d3.select("#pasteNode").on('click', function() {
-                    var foundNodeInTree = searchNodeInTree(treeData, copiedNode);
-                    var linksRelatedToNode = findLinksForCopy(foundNodeInTree);
-                    var copyOfLinks = _.cloneDeep(linksRelatedToNode);
-                    var copyOfNode = _.cloneDeep(foundNodeInTree);
-                    copyOfNode.node.id+=randomString(7);
-                    var linkage = findLinkForMono(copiedNode);
-                    var copyOfLinkage;
-                    var nodeToAppend = searchNodeInTree(treeData, node);
-                    if (linkage != null) {
-                        copyOfLinkage = _.cloneDeep(linkage);
-                        copyOfLinkage.id += randomString(7);
-                        copyOfLinkage.source = nodeToAppend.node.id;
-                        copyOfLinkage.sourceNode = nodeToAppend.node;
-                    } else {
-                        copyOfLinkage = new sb.GlycosidicLinkage(randomString(15), sugar.getNodeById(nodeToAppend.node.id), sugar.getNodeById(foundNodeInTree.node.id), sb.AnomerCarbon.UNDEFINED, sb.LinkedCarbon.UNDEFINED);
-                    }
-                    changeChildrenIds(copyOfNode);
-                    if (typeof nodeToAppend.children == 'undefined') {
-                        nodeToAppend['children'] = [];
-                    }
-                    nodeToAppend.children.push(copyOfNode);
-                    addNodeCopyInGraph(copyOfNode);
-                    for (var i = 0; i < copyOfNode.length; i++) {
-                        var idBeforeChange = copyOfNode[i].node.id.substring(0, copyOfNode[i].node.id.length - 7);
-                        if (idBeforeChange == copyOfLinkage.source) {
-                            copyOfLinkage.source = copyOfNode[i].node.id;
-                            copyOfLinkage.sourceNode = copyOfNode[i].node;
-                        }
-                    }
-                    searchFirstPasteNodeAndUpdateLink(treeData,copyOfLinkage);
-                    updateLinksRelated(copyOfNode, copyOfLinks);
-                    if (typeof nodeToAppend.children === 'undefined') {
-                        nodeToAppend["children"] = [];
-                    }
-                    sugar.graph.addEdge(copyOfLinkage);
-                    for (var link of copyOfLinks) {
-                        sugar.graph.addEdge(link);
-                    }
-                    $('#copyNode').fadeOut(400);
-                    $('#pasteNode').fadeOut(400);
-                    displayTree();
+            $('#copyNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+            if (copiedNode != null) { // If there is a copied node
+                $('#pasteNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
+                d3.select("#pasteNode").on('click', function() { // On click on paste option
+                   pasteNewNode(node);
                 });
             }
         });
@@ -261,19 +221,71 @@ function displayTree() {
 
 
 /**
+ * Paste a copied node to a node
+ * @param node The node to which we want to paste a node
+ */
+function pasteNewNode(node) {
+    var foundNodeInTree = searchNodeInTree(treeData, copiedNode); // Search the copied node in the tree data
+    var linksRelatedToNode = findLinksForCopy(foundNodeInTree); // Find all links related to this node and its children
+    var copyOfLinks = _.cloneDeep(linksRelatedToNode); // Copy of the links
+    var copyOfNode = _.cloneDeep(foundNodeInTree); // Copy of the tree node
+    copyOfNode.node.id+=randomString(7); // Change node id (to avoid error with twice same id in tree)
+    var linkage = findLinkForMono(copiedNode); // Search the link which has the copied node as target
+    var copyOfLinkage; // Copy of the link
+    var nodeToAppend = searchNodeInTree(treeData, node); // Search the node  to which we want to paste
+    if (linkage != null) { // If the linkage exists (so if the copied node is not the root)
+        copyOfLinkage = _.cloneDeep(linkage); // Copy the link
+        copyOfLinkage.id += randomString(7); // Change its id
+        copyOfLinkage.source = nodeToAppend.node.id; // Change the source with the id of the node to append
+        copyOfLinkage.sourceNode = nodeToAppend.node; // Change the sourceNode with the node to append
+    } else { // If we copied the root, then create a new linkage with undefined anomer and linked carbons
+        copyOfLinkage = new sb.GlycosidicLinkage(randomString(15), sugar.getNodeById(nodeToAppend.node.id), sugar.getNodeById(foundNodeInTree.node.id), sb.AnomerCarbon.UNDEFINED, sb.LinkedCarbon.UNDEFINED);
+    }
+    changeChildrenIds(copyOfNode); // Change all the children nodes ids (to avoid error of twice same id in tree)
+    if (typeof nodeToAppend.children == 'undefined') { // Add children property if the node doesn't have children yet
+        nodeToAppend['children'] = [];
+    }
+    nodeToAppend.children.push(copyOfNode); // Push the copy to the children of the node to append
+    addNodeCopyInGraph(copyOfNode); // Add the new copy in the graph structure
+    // Update the source of the first linkage (search the copied node which corresponds to the first of the copy)
+    for (var i = 0; i < copyOfNode.length; i++) {
+        var idBeforeChange = copyOfNode[i].node.id.substring(0, copyOfNode[i].node.id.length - 7);
+        if (idBeforeChange == copyOfLinkage.source) {
+            copyOfLinkage.source = copyOfNode[i].node.id;
+            copyOfLinkage.sourceNode = copyOfNode[i].node;
+        }
+    }
+    searchFirstPasteNodeAndUpdateLink(treeData,copyOfLinkage); // Update the target of the first linkage
+    updateLinksRelated(copyOfNode, copyOfLinks); // Update all links (ids to avoid twice same ids
+    for (var j = 0; j < copyOfLinks.length; j++) { // Update ids of all links
+        copyOfLinks[j].id += randomString(7);
+    }
+    if (typeof nodeToAppend.children === 'undefined') {
+        nodeToAppend["children"] = [];
+    }
+    sugar.graph.addEdge(copyOfLinkage); // Add the first edge to the graph
+    for (var link of copyOfLinks) { // Add all links to the graph
+        sugar.graph.addEdge(link);
+    }
+    $('#copyNode').fadeOut(400); // Hide the copy option
+    $('#pasteNode').fadeOut(400); // Hide the paste option
+    displayTree(); // Display the tree with new structure
+}
+
+/**
  * Search the first node we paste, and change the first link target to this node
  * @param root The node from which we start the search
  * @param linkageToUpdate The linkage to update
  */
 function searchFirstPasteNodeAndUpdateLink(root, linkageToUpdate) {
-    var idBeforeChange = root.node.id;
-    if (idBeforeChange == linkageToUpdate.source) {
-        if (root.children != null) {
-            linkageToUpdate.target = root.children[root.children.length -1].node.id;
-            linkageToUpdate.targetNode = root.children[root.children.length -1].node;
+    var idBeforeChange = root.node.id; // Get the id of the current node
+    if (idBeforeChange == linkageToUpdate.source) { // If it corresponds to the source of the linkage
+        if (root.children != null) { // If the node has children
+            linkageToUpdate.target = root.children[root.children.length -1].node.id; // Update target with last child of node id
+            linkageToUpdate.targetNode = root.children[root.children.length -1].node; // Update targetNode with last child of node
         }
-    } else {
-        if (root.children != null) {
+    } else { // If its not the good node
+        if (root.children != null) { // Recursivity on children
             for (var i = 0; i < root.children.length; i++) {
                 searchFirstPasteNodeAndUpdateLink(root.children[i], linkageToUpdate);
             }
@@ -284,35 +296,32 @@ function searchFirstPasteNodeAndUpdateLink(root, linkageToUpdate) {
 
 /**
  * Update links source and target ids to paste a node
- * @param nodes
- * @param links
+ * @param node The node we are currently checking
+ * @param links The links we want to update
  */
 function updateLinksRelated(node, links) {
-    var idBeforeChange = node.node.id.substring(0, node.node.id.length - 7);
-    for (var i = 0; i < links.length; i++) {
-        if (links[i].source == idBeforeChange) {
+    var idBeforeChange = node.node.id.substring(0, node.node.id.length - 7); // Get teh id before the update (we add 7 chars each time)
+    for (var i = 0; i < links.length; i++) { // Loop on links
+        if (links[i].source == idBeforeChange) { // If source correspondance, update it
             links[i].source = node.node.id;
             links[i].sourceNode = node.node;
         }
-        if (links[i].target == idBeforeChange) {
+        if (links[i].target == idBeforeChange) { // If target correspondance, update it
             links[i].target = node.node.id;
             links[i].targetNode = node.node;
         }
     }
-    if (node.children != null) {
+    if (node.children != null) { // Recursivity if children existing
         for (var j = 0; j < node.children.length; j++) {
             updateLinksRelated(node.children[j], links);
         }
-    }
-    for (var i = 0; i < links.length; i++) {
-        links[i].id += randomString(7);
     }
 }
 
 
 /**
  * Find all links in relation with a node and its children
- * @param foundNodeInTree
+ * @param node The root node of the copy
  */
 function findLinksForCopy(node) {
     var allLinks = [];
@@ -343,6 +352,7 @@ function addNodeCopyInGraph(node) {
 /**
  * Search a node in the tree structure
  * @param node The node we are looking for
+ * @param root The root from which we want to search
  */
 function searchNodeInTree(root, node) {
     if(root.node.id == node.id){
@@ -365,8 +375,7 @@ function searchNodeInTree(root, node) {
 function changeChildrenIds(node) {
     if (node.children != null) {
         for (var i = 0; i < node.children.length; i++) {
-            var newId = randomString(7);
-            node.children[i].node.id += newId;
+            node.children[i].node.id += randomString(7);
             changeChildrenIds(node.children[i]);
         }
     }
