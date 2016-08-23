@@ -283,9 +283,7 @@ function updateMenu(chosenDivision) {
             })
             .attr("rx", 15) // Corner for the rect
             .attr("ry", 15) // Cornet for the rect
-            .attr("class", function (d) {
-                    return "bar choice";
-            })
+            .attr("class",  "bar choice")
             .style("fill", function (d) {
                 return d.display_division
             })
@@ -297,7 +295,6 @@ function updateMenu(chosenDivision) {
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                         return;
                     }
-                    //TODO update substituent menu
                     if (clickedNode instanceof sb.Substituent) {
                         document.getElementById("error").innerHTML = "No update possible for Substituent !";
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
@@ -339,9 +336,7 @@ function updateMenu(chosenDivision) {
                 return d.division;
             })
             .attr("r", 20)
-            .attr("class", function () {
-                return "bar choice choiceWhiteStroke"
-            })
+            .attr("class", "bar choice choiceWhiteStroke")
             .style("fill", function (d) {
                 return d.display_division;
             })
@@ -488,6 +483,7 @@ document.onkeydown = function (e) {
 
 /**
  * Delete the clicked node from the graph and the tree
+ * @param node The node to delete
  */
 function deleteNode(node) {
     sugar.removeNodeById(node.id);
