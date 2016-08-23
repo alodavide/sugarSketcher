@@ -486,6 +486,7 @@ document.onkeydown = function (e) {
  * @param node The node to delete
  */
 function deleteNode(node) {
+    deleteAllChildrenInGraph(node);
     sugar.removeNodeById(node.id);
     searchAndRemoveNodeInTree(treeData, node);
     displayTree(); // Display back the tree
@@ -497,6 +498,19 @@ function deleteNode(node) {
     d3.select("#svgCarbons").style("display", "none");
     d3.select("#svgSubstituents").style("display", "none");
     d3.select("#pieLinkCarbon").style("display", "none");
+}
+
+/**
+ * Delete all children nodes in the graph structure
+ * @param node The node from which we want to delete children
+ */
+function deleteAllChildrenInGraph(node) {
+    for (var edge of sugar.graph.edges()) {
+        if (edge.sourceNode == node) {
+            sugar.removeNodeById(edge.targetNode.id);
+            deleteAllChildrenInGraph(edge.targetNode);
+        }
+    }
 }
 
 /**
