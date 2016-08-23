@@ -92,3 +92,20 @@ function updateNodeInTree(root, newMonosaccharide) {
     }
     displayTree(); // Display the tree after the update
 }
+
+/**
+ * Search and remove a node from the tree
+ * @param root The node from which we search in the tree
+ * @param node The node we are searching
+ */
+function searchAndRemoveNodeInTree(root, node) {
+    if(root.children != null) { // If the root has children
+        for (var i = 0; i < root.children.length; i++) { // Loop on children
+            if (root.children[i].node == node) { // If one child corresponds, remove it
+                root.children.splice(i, 1);
+            } else {
+                searchAndRemoveNodeInTree(root.children[i], node); // Recursivity call on children
+            }
+        }
+    }
+}

@@ -475,6 +475,23 @@ document.onkeydown = function (e) {
             d3.select("#svgSubstituents").style("display", "none");
             d3.select("#pieLinkCarbon").style("display", "none");
         }
+    } else if (e.keyCode == 46) {
+        if (clickedNode != null) {
+            if(clickedNode == sugar.getRootNode()) {
+                console.log("cant delete root");
+            } else {
+                sugar.removeNodeById(clickedNode.id);
+                searchAndRemoveNodeInTree(treeData, clickedNode)
+                displayTree();
+                clickedNode = null;
+                d3.select('#svgMenu').style("display", "none");
+                d3.select("#svgInfos").style("display", "none");
+                d3.select("#svgShape").style("display", "none");
+                d3.select("#svgCarbons").style("display", "none");
+                d3.select("#svgSubstituents").style("display", "none");
+                d3.select("#pieLinkCarbon").style("display", "none");
+            }
+        }
     }
 };
 
