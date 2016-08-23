@@ -135,6 +135,7 @@ function displayTree() {
         .on('click', function () {
             // On click, simply display menu and hide all other svg's
             d3.event.stopPropagation();
+            d3.select("#deleteNode").style("display", "none");
             d3.select("#copyNode").style("display", "none");
             d3.select("#pasteNode").style("display", "none");
             updateMenu();
@@ -146,7 +147,6 @@ function displayTree() {
         })
         .on("contextmenu", function (d) {
             d3.event.preventDefault();
-            d3.select("#copyNode").style("display", "none");
             var yModification = 0;
             const node = d.node;
             d3.selectAll("svg")
@@ -155,14 +155,27 @@ function displayTree() {
                         yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
                     }
                 });
-            d3.select("#copyNode").on('click', function() { // Click on copy option
-                copiedNode = node; // Copy the node clicked
+            d3.select("#deleteNode").on('click', function() { // Click on delete option
+                deleteNode(node); // Copy the node clicked
+                $('#deleteNode').fadeOut(400); // Hide the delete option
                 $('#copyNode').fadeOut(400); // Hide the copy option
                 $('#pasteNode').fadeOut(400); // Hide the paste option
             });
-            $('#copyNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+            var yDeletion = 0;
+            if (node != sugar.getRootNode()) {
+                yDeletion = 22;
+                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+            }
+            $('#copyNode').css({'top': mouseY - yModification + yDeletion, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+
+            d3.select("#copyNode").on('click', function() { // Click on copy option
+                copiedNode = node; // Copy the node clicked
+                $('#deleteNode').fadeOut(400); // Hide the delete option
+                $('#copyNode').fadeOut(400); // Hide the copy option
+                $('#pasteNode').fadeOut(400); // Hide the paste option
+            });
             if (copiedNode != null) { // If there is a copied node
-                $('#pasteNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
+                $('#pasteNode').css({'top': mouseY - yModification + yDeletion + 22, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
                 d3.select("#pasteNode").on('click', function() { // On click on paste option
                    pasteNewNode(node);
                 });
@@ -267,6 +280,7 @@ function pasteNewNode(node) {
     for (var link of copyOfLinks) { // Add all links to the graph
         sugar.graph.addEdge(link);
     }
+    $('#deleteNode').fadeOut(400); // Hide the delete option
     $('#copyNode').fadeOut(400); // Hide the copy option
     $('#pasteNode').fadeOut(400); // Hide the paste option
     displayTree(); // Display the tree with new structure
