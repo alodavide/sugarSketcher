@@ -53,183 +53,189 @@ var tree = d3.layout.tree().size([150,150]); // Create the tree layout
  * Display the tree with new data
  */
 function displayTree() {
-    var nodes = tree.nodes(treeData); // Tree nodes
-    var links = tree.links(nodes); // Tree links
-
     var treeSvg = d3.select("#svgTree"); // Get the svgTree
     treeSvg.selectAll('.node').remove(); // Remove all the nodes
     treeSvg.selectAll('.nodelink').remove(); // Remove all the links
     treeSvg.selectAll('.linkLabel').remove(); // Remove all link labels
 
-    vis.selectAll(".nodelink")
-        .data(links)
-        .enter().append("line") // Append a new line for each link
-        .attr("class", function(d) {
-            // If anomericity is alpha, then add dashed class to the link
-            if (d.target.node.anomericity.name == "ALPHA") {
-                return "nodelink dashedNodeLink";
-            } else {
-                return "nodelink";
-            }
-        })
-        // Calculate X and Y of source and targets, and draw the line
-        .attr("x1", function(d) { return calculateXandYNode(d.source)[1]; })
-        .attr("y1", function(d) { return calculateXandYNode(d.source)[0]; })
-        .attr("x2", function(d) { return calculateXandYNode(d.target)[1]; })
-        .attr("y2", function(d) { return calculateXandYNode(d.target)[0]; })
-        .attr('pointer-events', 'none');
+    if (sugar.rootIsSet()) {
+    var nodes = tree.nodes(treeData); // Tree nodes
+    var links = tree.links(nodes); // Tree links
 
-    var linkLabel = vis.selectAll(".linkLabel") // Link labels
-        .data(links)
-        .enter().append("text")
-        .attr("class", "linkLabel")
-        .attr("x", function(d) {
-            var finalX; // Final x of the label
-            var source = calculateXandYNode(d.source); // Calculate source coordinates
-            var target = calculateXandYNode(d.target); // Calculate target coordinates
-            var usualX = (source[1] + target[1])/2; // Get x of the middle of the link
-            finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
-            return finalX; // Return the obtained value
-        })
-        .attr("y", function(d) {
-            var finalY; // Final y of the label
-            var source = calculateXandYNode(d.source); // Calculate source coordinates
-            var target = calculateXandYNode(d.target); // Calculate target coordinates
-            var usualY = (source[0] + target[0])/2; // Get y of the middle of the link
-            finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon .value][0]; // Add value to have a visible display
-            return finalY; // Return the obtained value
-        })
-        .text(function(d) {
-            var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
-            var anomericity; // Anomericity of the target node
-            if (d.target.node.anomericity.name == "ALPHA") {
-                anomericity = "α"
-            } else if (d.target.node.anomericity.name == "BETA") {
-                anomericity = "β";
-            } else {
-                anomericity = "?"
-            }
-            var linkedCarbonLabel;
-            if (link.linkedCarbon.value == 'undefined') {
-                linkedCarbonLabel = "?";
-            } else {
-                linkedCarbonLabel = link.linkedCarbon.value;
-            }
-            return anomericity + " / " + linkedCarbonLabel; // Text of the label
-        });
-
-    // Create nodes
-    var node = vis.selectAll("g.node")
-        .data(nodes)
-        .enter().append("g")
-        .attr("x", function(d) {
-            return calculateXandYNode(d)[0]; // Calculate x
-        })
-        .attr("y", function(d) {
-            return calculateXandYNode(d)[1]; // Calculate y
-        })
-        .attr("transform", function (d) {
-            // Translation for display
-            return "translate(" + calculateXandYNode(d)[1] + "," + calculateXandYNode(d)[0] + ")";
-        })
-        .on('click', function () {
-            // On click, simply display menu and hide all other svg's
-            d3.event.stopPropagation();
-            d3.select("#deleteNode").style("display", "none");
-            d3.select("#copyNode").style("display", "none");
-            d3.select("#pasteNode").style("display", "none");
-            updateMenu();
-            d3.select("#svgInfos").style("display", "none");
-            d3.select("#svgSubstituents").style("display", "none");
-            d3.select("#svgShape").style("display", "none");
-            d3.select("#svgCarbons").style("display", "none");
-            d3.select("#svgMenu").style("display", "block");
-        })
-        .on("contextmenu", function (d) {
-            d3.event.preventDefault();
-            var yModification = 0;
-            const node = d.node;
-            d3.selectAll("svg")
-                .filter(function() {
-                    if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
-                        yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
-                    }
-                });
-            d3.select("#deleteNode").on('click', function() { // Click on delete option
-                deleteNode(node); // Copy the node clicked
-                $('#deleteNode').fadeOut(400); // Hide the delete option
-                $('#copyNode').fadeOut(400); // Hide the copy option
-                $('#pasteNode').fadeOut(400); // Hide the paste option
-            });
-            var yDeletion = 0;
-            if (node != sugar.getRootNode()) {
-                yDeletion = 22;
-                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
-            }
-            $('#copyNode').css({'top': mouseY - yModification + yDeletion, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
-
-            d3.select("#copyNode").on('click', function() { // Click on copy option
-                copiedNode = node; // Copy the node clicked
-                $('#deleteNode').fadeOut(400); // Hide the delete option
-                $('#copyNode').fadeOut(400); // Hide the copy option
-                $('#pasteNode').fadeOut(400); // Hide the paste option
-            });
-            if (copiedNode != null) { // If there is a copied node
-                $('#pasteNode').css({'top': mouseY - yModification + yDeletion + 22, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
-                d3.select("#pasteNode").on('click', function() { // On click on paste option
-                   pasteNewNode(node);
-                });
-            }
-        });
-
-    // For each node, append a path
-    node.append("path")
-        .attr('class', 'node')
-        // Use superformula shapes
-        .attr("d", d3.superformula()
-            .size(400)
-            .type(function(d) {
-                if (d.node instanceof sb.Substituent) {
-                    return "circle";
+        vis.selectAll(".nodelink")
+            .data(links)
+            .enter().append("line") // Append a new line for each link
+            .attr("class", function (d) {
+                // If anomericity is alpha, then add dashed class to the link
+                if (d.target.node.anomericity.name == "ALPHA") {
+                    return "nodelink dashedNodeLink";
                 } else {
-                    return d.node.monosaccharideType.shape.toLowerCase(); // Get the shape of the monosaccharide type
+                    return "nodelink";
                 }
-            }))
-        .attr("transform", function(d) {
-            if (d.node instanceof sb.Substituent) {
-                return;
-            }
-            var shape = d.node.monosaccharideType.shape;
-            // Rotations to have star and triangle well oriented
-            if (shape == "star") {
-                return "rotate(-20)";
-            } else if (shape == "triangle") {
-                return "rotate(30)";
-            }
-        })
-        .style('fill', function(d) {
-            if (d.node instanceof sb.Substituent) {
-                return "blue";
-            } else {
-                // If shape is bisected, we create a gradient and link it to the new node
-                if(d.node.monosaccharideType.bisected) {
-                    var gradientId = "gradient" + randomString(6); // Generate a random id for the gradient
-                    var shape = d.node.monosaccharideType.shape;
-                    if (shape == 'square') {
-                        createSquareLinearGradient(d.node.monosaccharideType.color, gradientId);
-                    } else if (shape == 'diamond') {
-                        createDiamondLinearGradient(d.node.monosaccharideType, gradientId);
+            })
+            // Calculate X and Y of source and targets, and draw the line
+            .attr("x1", function (d) {
+                return calculateXandYNode(d.source)[1];
+            })
+            .attr("y1", function (d) {
+                return calculateXandYNode(d.source)[0];
+            })
+            .attr("x2", function (d) {
+                return calculateXandYNode(d.target)[1];
+            })
+            .attr("y2", function (d) {
+                return calculateXandYNode(d.target)[0];
+            })
+            .attr('pointer-events', 'none');
+
+        var linkLabel = vis.selectAll(".linkLabel") // Link labels
+            .data(links)
+            .enter().append("text")
+            .attr("class", "linkLabel")
+            .attr("x", function (d) {
+                var finalX; // Final x of the label
+                var source = calculateXandYNode(d.source); // Calculate source coordinates
+                var target = calculateXandYNode(d.target); // Calculate target coordinates
+                var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
+                finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+                return finalX; // Return the obtained value
+            })
+            .attr("y", function (d) {
+                var finalY; // Final y of the label
+                var source = calculateXandYNode(d.source); // Calculate source coordinates
+                var target = calculateXandYNode(d.target); // Calculate target coordinates
+                var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
+                finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
+                return finalY; // Return the obtained value
+            })
+            .text(function (d) {
+                var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
+                var anomericity; // Anomericity of the target node
+                if (d.target.node.anomericity.name == "ALPHA") {
+                    anomericity = "α"
+                } else if (d.target.node.anomericity.name == "BETA") {
+                    anomericity = "β";
+                } else {
+                    anomericity = "?"
+                }
+                var linkedCarbonLabel;
+                if (link.linkedCarbon.value == 'undefined') {
+                    linkedCarbonLabel = "?";
+                } else {
+                    linkedCarbonLabel = link.linkedCarbon.value;
+                }
+                return anomericity + " / " + linkedCarbonLabel; // Text of the label
+            });
+
+        // Create nodes
+        var node = vis.selectAll("g.node")
+            .data(nodes)
+            .enter().append("g")
+            .attr("x", function (d) {
+                return calculateXandYNode(d)[0]; // Calculate x
+            })
+            .attr("y", function (d) {
+                return calculateXandYNode(d)[1]; // Calculate y
+            })
+            .attr("transform", function (d) {
+                // Translation for display
+                return "translate(" + calculateXandYNode(d)[1] + "," + calculateXandYNode(d)[0] + ")";
+            })
+            .on('click', function () {
+                // On click, simply display menu and hide all other svg's
+                d3.event.stopPropagation();
+                d3.select("#deleteNode").style("display", "none");
+                d3.select("#copyNode").style("display", "none");
+                d3.select("#pasteNode").style("display", "none");
+                updateMenu();
+                d3.select("#svgInfos").style("display", "none");
+                d3.select("#svgSubstituents").style("display", "none");
+                d3.select("#svgShape").style("display", "none");
+                d3.select("#svgCarbons").style("display", "none");
+                d3.select("#svgMenu").style("display", "block");
+            })
+            .on("contextmenu", function (d) {
+                d3.event.preventDefault();
+                var yModification = 0;
+                const node = d.node;
+                d3.selectAll("svg")
+                    .filter(function () {
+                        if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
+                            yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
+                        }
+                    });
+                d3.select("#deleteNode").on('click', function () { // Click on delete option
+                    deleteNode(node); // Delete the node clicked
+                    $('#deleteNode').fadeOut(400); // Hide the delete option
+                    $('#copyNode').fadeOut(400); // Hide the copy option
+                    $('#pasteNode').fadeOut(400); // Hide the paste option
+                });
+                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+                $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+
+                d3.select("#copyNode").on('click', function () { // Click on copy option
+                    copiedNode = node; // Copy the node clicked
+                    $('#deleteNode').fadeOut(400); // Hide the delete option
+                    $('#copyNode').fadeOut(400); // Hide the copy option
+                    $('#pasteNode').fadeOut(400); // Hide the paste option
+                });
+                if (copiedNode != null) { // If there is a copied node
+                    $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
+                    d3.select("#pasteNode").on('click', function () { // On click on paste option
+                        pasteNewNode(node);
+                    });
+                }
+            });
+
+        // For each node, append a path
+        node.append("path")
+            .attr('class', 'node')
+            // Use superformula shapes
+            .attr("d", d3.superformula()
+                .size(400)
+                .type(function (d) {
+                    if (d.node instanceof sb.Substituent) {
+                        return "circle";
                     } else {
-                        createTriangleLinearGradient(d.node.monosaccharideType.color, gradientId);
+                        return d.node.monosaccharideType.shape.toLowerCase(); // Get the shape of the monosaccharide type
                     }
-                    return "url(#" + gradientId +")";
-                } else { // If not bisected, simply get the monosaccharide type color
-                    return d.node.monosaccharideType.color;
+                }))
+            .attr("transform", function (d) {
+                if (d.node instanceof sb.Substituent) {
+                    return;
                 }
-            }
-        })
-        .style('stroke', 'black') // Stroke to see white shapes
-        .on('click', clickCircle); // Select the node on click
+                var shape = d.node.monosaccharideType.shape;
+                // Rotations to have star and triangle well oriented
+                if (shape == "star") {
+                    return "rotate(-20)";
+                } else if (shape == "triangle") {
+                    return "rotate(30)";
+                }
+            })
+            .style('fill', function (d) {
+                if (d.node instanceof sb.Substituent) {
+                    return "blue";
+                } else {
+                    // If shape is bisected, we create a gradient and link it to the new node
+                    if (d.node.monosaccharideType.bisected) {
+                        var gradientId = "gradient" + randomString(6); // Generate a random id for the gradient
+                        var shape = d.node.monosaccharideType.shape;
+                        if (shape == 'square') {
+                            createSquareLinearGradient(d.node.monosaccharideType.color, gradientId);
+                        } else if (shape == 'diamond') {
+                            createDiamondLinearGradient(d.node.monosaccharideType, gradientId);
+                        } else {
+                            createTriangleLinearGradient(d.node.monosaccharideType.color, gradientId);
+                        }
+                        return "url(#" + gradientId + ")";
+                    } else { // If not bisected, simply get the monosaccharide type color
+                        return d.node.monosaccharideType.color;
+                    }
+                }
+            })
+            .style('stroke', 'black') // Stroke to see white shapes
+            .on('click', clickCircle); // Select the node on click
+    }
 }
 
 

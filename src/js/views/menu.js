@@ -472,11 +472,8 @@ document.onkeydown = function (e) {
         }
     } else if (e.keyCode == 46) { // Delete button keycode
         if (clickedNode != null) { // If there is no clicked node, then no action
-            if(clickedNode == sugar.getRootNode()) { // If the clicked node is the root, can't delete, just update
-                console.log("cant delete root");
-            } else { // Else delete the node from the graph, and then from the tree
+            // Else delete the node from the graph, and then from the tree
                 deleteNode(clickedNode);
-            }
         }
     }
 };
@@ -486,13 +483,23 @@ document.onkeydown = function (e) {
  * @param node The node to delete
  */
 function deleteNode(node) {
-    deleteAllChildrenInGraph(node);
-    sugar.removeNodeById(node.id);
-    searchAndRemoveNodeInTree(treeData, node);
+    if (node == sugar.getRootNode()) {
+        // Clear treeData
+        treeData = {};
+        sugar.clear();
+    } else {
+        deleteAllChildrenInGraph(node);
+        sugar.removeNodeById(node.id);
+        searchAndRemoveNodeInTree(treeData, node);
+    }
     displayTree(); // Display back the tree
     clickedNode = null; // Reinitialize the clicked node
-    // Hide all menus
-    d3.select('#svgMenu').style("display", "none");
+    // Hide all menus except main one if we deleted the root
+    if (!sugar.rootIsSet()) {
+        d3.select('#svgMenu').style("display", "block");
+    } else {
+        d3.select('#svgMenu').style("display", "none");
+    }
     d3.select("#svgInfos").style("display", "none");
     d3.select("#svgShape").style("display", "none");
     d3.select("#svgCarbons").style("display", "none");
