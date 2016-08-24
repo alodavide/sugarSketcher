@@ -494,17 +494,16 @@ function deleteNode(node) {
     }
     displayTree(); // Display back the tree
     clickedNode = null; // Reinitialize the clicked node
-    // Hide all menus except main one if we deleted the root
-    if (!sugar.rootIsSet()) {
-        d3.select('#svgMenu').style("display", "block");
-    } else {
-        d3.select('#svgMenu').style("display", "none");
-    }
+    // Hide all menus
+    d3.select('#svgMenu').style("display", "none");
     d3.select("#svgInfos").style("display", "none");
     d3.select("#svgShape").style("display", "none");
     d3.select("#svgCarbons").style("display", "none");
     d3.select("#svgSubstituents").style("display", "none");
     d3.select("#pieLinkCarbon").style("display", "none");
+    if (!sugar.rootIsSet()) { // If we deleted the root, update menu
+        updateMenu();
+    }
 }
 
 /**
