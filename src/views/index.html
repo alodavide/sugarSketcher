@@ -163,5 +163,23 @@
 <script src="../js/views/menu.js"></script>
 <script src="../js/views/visualization.js"></script>
 <script src="../js/views/chart.js"></script>
+
+
+<svg id="svgMenu2">
+    <g id="chart">
+        <g id="actions">
+            <rect width="500" height="40" rx="15" ry="15" y="0" x="0" id="exportFormula" class="bar choice"></rect>
+            <rect width="500" height="40" rx="15" ry="15" y="0" x="500" id="typeFormula" class="bar choice"></rect>
+        </g>
+        <g id="labels">
+            <text class="label" x="250" y="8">Export formula</text>
+            <text class="label" x="750" y="8">Type formula</text>
+        </g>
+    </g>
+</svg>
+<textarea id="formula"></textarea>
+
+<span id="copyMsg" style="opacity: 0;"></span>
+
 </body>
 </html>

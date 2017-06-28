@@ -95,12 +95,12 @@
     overflow: visible;
 }
 
-#svgMenu {
+#svgMenu, #svgMenu2 {
     display:none;
     overflow: visible;
 }
 
-#svgMenu, #svgShape, #svgInfos, #svgCarbons, #svgSubstituents{
+#svgMenu, #svgMenu2, #svgShape, #svgInfos, #svgCarbons, #svgSubstituents{
     margin: 0 auto 10px;
 }
 

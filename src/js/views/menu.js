@@ -8,6 +8,8 @@
 var sugar;
 
 // Function called when document is ready
+
+
 $(document).ready(function() {
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
@@ -20,6 +22,34 @@ $(document).ready(function() {
         // Push the new clicked substituent in infosTable
         infosTable.push(d3.select(d3.event.target).attr("value"));
         displayPie(); // Dispaly the piechart to choose linked carbon
+    });
+    d3.select("#exportGlycoCT").on('click', function() {
+        d3.select("#formula").style("display","block");
+        $('#formula').val(exportGlycoCT());
+        var formula = document.querySelector("#formula");
+            formula.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            d3.select("#copyMsg")
+                .transition(1000)
+                .style("color", "green")
+                .style("opacity", 1)
+                .text("The formula has been copied to the Clipboard.");
+        } catch (err) {
+            d3.select("#copyMsg")
+                .transition(1000)
+                .style("color", "black")
+                .style("opacity", 1)
+                .text("Please use Ctrl+C.");
+}
+    });
+
+    d3.select("#typeFormula").on('click', function() {
+        d3.select("#formula").style("display","block");
+        $('#formula').val("");
+        d3.select("#copyMsg")
+            .text("");
     });
 });
 
@@ -224,6 +254,10 @@ function updateMenu(chosenDivision) {
         height: menuDimensions.height,
         width: menuDimensions.width
     });
+    var svgMenu2 = d3.select("#svgMenu2").attr({
+        height: menuDimensions.height,
+        width: menuDimensions.width
+    });
     var newMenuAction = [];
 
     // This case happens when update is called with no parameter (first update)
@@ -236,6 +270,7 @@ function updateMenu(chosenDivision) {
         d3.select("#svgInfos").transition().style("display", "none");
         d3.select("#svgCarbons").transition().style("display", "none");
         d3.select("#svgMenu").transition().style("display", "block");
+        d3.select("#svgMenu2").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
         menuChosenPath.push(chosenDivision);
@@ -261,6 +296,7 @@ function updateMenu(chosenDivision) {
         d3.select("#svgMenu").transition().style("display", "none");
         return;
     }
+
 
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length; // Calculate width of each rect of the menu
     var bars = actions.selectAll("rect").data(newMenuAction);
@@ -539,6 +575,7 @@ function createNewNode() {
         var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected); // Get the monosaccharide type
         var generatedNodeId = randomString(7); // Generate an id
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring); // Create new monosaccharide
+        res.push(monosaccharide);
         if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
             sugar = new sb.Sugar("Sugar", monosaccharide);
             updateTreeVisualization(); // Update visualization in the svg

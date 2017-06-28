@@ -11,47 +11,56 @@ MonosaccharideType.initEnum({
     Hex: {
         shape: 'circle',
         color: '#FFFFFF',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Glc: {
         shape: 'circle',
         color: '#0080FF',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Man: {
         shape: 'circle',
         color: '#00FF00',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Gal: {
         shape: 'circle',
         color: '#FFD900',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Gul: {
         shape: 'circle',
         color: '#FF8000',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Alt: {
         shape: 'circle',
         color: '#FF87C2',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     All: {
         shape: 'circle',
         color: '#9E1FFF',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Tal: {
         shape: 'circle',
         color: '#96F2F7',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     Ido: {
         shape: 'circle',
         color: '#977335',
-        bisected: false
+        bisected: false,
+        superclass: "HEX"
     },
     HexNAc: {
         shape: 'square',
@@ -276,27 +285,32 @@ MonosaccharideType.initEnum({
     Pen: {
         shape: 'star',
         color: '#FFFFFF',
-        bisected: false
+        bisected: false,
+        superclass: "PEN"
     },
     Ara: {
         shape: 'star',
         color: '#00FF00',
-        bisected: false
+        bisected: false,
+        superclass: "PEN"
     },
     Lyx: {
         shape: 'star',
         color: '#FFD900',
-        bisected: false
+        bisected: false,
+        superclass: "PEN"
     },
     Xyl: {
         shape: 'star',
         color: '#FF8000',
-        bisected: false
+        bisected: false,
+        superclass: "PEN"
     },
     Rib: {
         shape: 'star',
         color: '#FF87C2',
-        bisected: false
+        bisected: false,
+        superclass: "PEN"
     },
     Nonu: {
         shape: 'diamond',

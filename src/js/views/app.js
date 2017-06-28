@@ -1,11 +1,12 @@
 var treeData = {};
+var res = [];
 var selectedNode = null;
 var clickedNode = null;
 var draggingNode = null;
 var copiedNode = null;
 
 //Values for links X and Y
-var XYvalues = {1: [70, 0], 2: [0, 50], 3: [-50, 50], 4: [-70, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-50]};
+var XYvalues = {1: [50, 0], 2: [0, 50], 3: [-50, 50], 4: [-50, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-1]};
 // Values for links labels X and Y
 var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 'undefined': [0,0]};
 
@@ -87,6 +88,7 @@ function displayTree() {
                 return calculateXandYNode(d.target)[0];
             })
             .attr('pointer-events', 'none');
+
 
         var linkLabel = vis.selectAll(".linkLabel") // Link labels
             .data(links)
@@ -416,6 +418,22 @@ function findLinkForMono(monosaccharide) {
     }
 }
 
+
+/**
+ * Tells if there is already a node at a given position x, y
+ * @param x, y
+ */
+function isAvailible(x, y)
+{
+    for (var node of res)
+    {
+        if (node.x == x && node.y == y)
+            return false;
+    }
+    return true;
+}
+
+
 /**
  * Calculate X and Y for a node (using our fixed modification values), recursivity from node to root
  * @param node The node for which we want to calculate new coordinates
@@ -561,6 +579,65 @@ function createTriangleLinearGradient(color, gradientId) {
 }
 
 
+function exportGlycoCT() {
+    if (res.length == 0)
+    {
+        return "";
+    }
+    var linkNumber = 1;
+    var formula = "RES\n";
+    for (var i = 0; i < res.length; i++)
+    {
+        formula += i+1 + "b:";
+        switch(res[i]._anomericity.name) {
+            case "ALPHA":
+                formula += "a";
+                break;
+            case "BETA":
+                formula += "b";
+                break;
+            default:
+                formula += "x";
+                break;
+        }
+        formula += "-";
+        switch(res[i]._isomer.name) {
+            case "L":
+                formula += "l";
+                break;
+            case "D":
+                formula += "d";
+                break;
+            default:
+                formula += "x";
+                break;
+        }
+        formula += res[i]._monosaccharideType.name.toLowerCase()+"-";
+        if (res[i]._monosaccharideType.superclass)
+            formula += res[i]._monosaccharideType.superclass.toUpperCase();
+        else
+            formula += "HEX";
+
+        formula += "-";
+
+        switch (res[i]._ringType.name) {
+            case "P":
+                formula += "1:5";
+            case "F":
+                formula += "1:4";
+            default:
+                formula += "x:x";
+        }
+
+        formula += "\nLIN\n";
 
 
 
+    }
+    return formula;
+}
+
+function exportIUPAC() {
+    var formula = "";
+    return formula;
+}
