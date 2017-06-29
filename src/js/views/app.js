@@ -1,12 +1,16 @@
 var treeData = {};
 var res = [];
+var shapes = {};
 var selectedNode = null;
 var clickedNode = null;
 var draggingNode = null;
 var copiedNode = null;
 
+var gap = 50;
+var origin = [200, 900];
+
 //Values for links X and Y
-var XYvalues = {1: [50, 0], 2: [0, 50], 3: [-50, 50], 4: [-50, 0], 5: [0, -50], 6: [-50, -50], 'undefined': [0,-1]};
+var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [0, -1*gap], 6: [-1*gap, -1*gap], 'undefined': [0,-1*gap]};
 // Values for links labels X and Y
 var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 'undefined': [0,0]};
 
@@ -76,16 +80,16 @@ function displayTree() {
             })
             // Calculate X and Y of source and targets, and draw the line
             .attr("x1", function (d) {
-                return calculateXandYNode(d.source)[1];
+                return shapes[d.source.node.id][1];
             })
             .attr("y1", function (d) {
-                return calculateXandYNode(d.source)[0];
+                return shapes[d.source.node.id][0];
             })
             .attr("x2", function (d) {
-                return calculateXandYNode(d.target)[1];
+                return shapes[d.target.node.id][1];
             })
             .attr("y2", function (d) {
-                return calculateXandYNode(d.target)[0];
+                return shapes[d.target.node.id][0];
             })
             .attr('pointer-events', 'none');
 
@@ -96,16 +100,16 @@ function displayTree() {
             .attr("class", "linkLabel")
             .attr("x", function (d) {
                 var finalX; // Final x of the label
-                var source = calculateXandYNode(d.source); // Calculate source coordinates
-                var target = calculateXandYNode(d.target); // Calculate target coordinates
+                var source = shapes[d.source.node.id]; // Calculate source coordinates
+                var target = shapes[d.target.node.id]; // Calculate target coordinates
                 var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
                 finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
                 return finalX; // Return the obtained value
             })
             .attr("y", function (d) {
                 var finalY; // Final y of the label
-                var source = calculateXandYNode(d.source); // Calculate source coordinates
-                var target = calculateXandYNode(d.target); // Calculate target coordinates
+                var source = shapes[d.source.node.id]; // Calculate source coordinates
+                var target = shapes[d.target.node.id]; // Calculate target coordinates
                 var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
                 finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
                 return finalY; // Return the obtained value
@@ -134,14 +138,14 @@ function displayTree() {
             .data(nodes)
             .enter().append("g")
             .attr("x", function (d) {
-                return calculateXandYNode(d)[0]; // Calculate x
+                return shapes[d.node.id][0]; // Calculate x
             })
             .attr("y", function (d) {
-                return calculateXandYNode(d)[1]; // Calculate y
+                return shapes[d.node.id][1]; // Calculate y
             })
             .attr("transform", function (d) {
                 // Translation for display
-                return "translate(" + calculateXandYNode(d)[1] + "," + calculateXandYNode(d)[0] + ")";
+                return "translate(" + shapes[d.node.id][1] + "," + shapes[d.node.id][0] + ")";
             })
             .on('click', function () {
                 // On click, simply display menu and hide all other svg's
@@ -425,9 +429,9 @@ function findLinkForMono(monosaccharide) {
  */
 function isAvailible(x, y)
 {
-    for (var node of res)
+    for (var shape in shapes)
     {
-        if (node.x == x && node.y == y)
+        if (shape.x == x && shape.y == y)
             return false;
     }
     return true;
@@ -447,21 +451,31 @@ function calculateXandYNode(node) {
         // Calculate new coordinates for the wanted node
         for (var n of tree.nodes(treeData)) {
             if (n.node == link.sourceNode) {
-                var source = calculateXandYNode(n);
+                var source = shapes[n.node.id];
                 sourceX = source[0];
                 sourceY = source[1];
             }
         }
+
         // Modifications we have to do on the obtained value
         var modificationsXY = XYvalues[anomerCarbon];
         var newX = sourceX  + modificationsXY[1]; // Apply the modification on x
         var newY = sourceY + modificationsXY[0]; // Apply the modification on y
+
+        if (!isAvailible(newX, newY))
+        {
+            newX = findNewSpot(newX,newY, link.linkedCarbon.value)[0];
+            newY = findNewSpot(newX,newY, link.linkedCarbon.value)[1];
+        }
+
         return [newX, newY]; // Return the obtained coordinates
 
     } else { // If the node is the root, just add 150 to the x and 900 to y to display it on the right of the svg
-        return [node.x + 150, node.y + 900];
+        return [origin[0], origin[1]];
     }
 }
+
+
 
 /**
  * Create a linear gradient for a square
@@ -576,6 +590,30 @@ function createTriangleLinearGradient(color, gradientId) {
         .attr("offset", "60%")
         .attr("stop-color", color)
         .attr("stop-opacity", 1);
+}
+
+/**
+ * Returns a new availible position for a shape to be at.
+ * @param x, y, linkedCarbon
+ */
+function findNewSpot(x, y, linked)
+{
+    console.log("linked:" + linked);
+    return [x, y];
+}
+
+/**
+ * Tells if a position x, y is availible or not
+ * @param x, y
+ */
+function isAvailible(x, y)
+{
+    for (var shape in shapes)
+    {
+        if (shape.x == x && shape.y == y)
+            return false;
+    }
+    return true;
 }
 
 

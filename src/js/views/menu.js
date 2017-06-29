@@ -559,6 +559,7 @@ function deleteAllChildrenInGraph(node) {
  * Create a new node using the informations selected by the user
  */
 function createNewNode() {
+    isAvailible(275,850);
     var typeNodeToAdd = infosTable[1]; // Selected type, monosaccharide or substituent
     if (typeNodeToAdd == "Monosaccharide") {
         var shape = infosTable[2]; // Selected shape
@@ -575,16 +576,28 @@ function createNewNode() {
         var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected); // Get the monosaccharide type
         var generatedNodeId = randomString(7); // Generate an id
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring); // Create new monosaccharide
+
         res.push(monosaccharide);
+
+
         if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
             sugar = new sb.Sugar("Sugar", monosaccharide);
+            var node = {"node":monosaccharide};
+            var shape = calculateXandYNode(node);
+            shapes[generatedNodeId] = shape;
             updateTreeVisualization(); // Update visualization in the svg
+            displayTree();
         } else {
             var generatedEdgeId = randomString(7); // If tree not empty, generate id, create linkage and update visualziation
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
+            var node = {"node":monosaccharide};
+            var shape = calculateXandYNode(node);
+            shapes[generatedNodeId] = shape;
+            displayTree();
         }
+
     }
 }
 

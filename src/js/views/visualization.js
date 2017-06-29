@@ -19,7 +19,6 @@ function updateTreeVisualization(newLink) {
     } else { // If tree already has a root, add the node in the tree
         searchAndAddNodeInTree(treeData, newLink);
     }
-    displayTree(); // Display the tree after the update
 }
 
 /**
