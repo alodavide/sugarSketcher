@@ -10,7 +10,7 @@ var gap = 50;
 var origin = [200, 900];
 
 //Values for links X and Y
-var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [0, -1*gap], 6: [-1*gap, -1*gap], 'undefined': [0,-1*gap]};
+var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 'undefined': [0,-1*gap]};
 // Values for links labels X and Y
 var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 'undefined': [0,0]};
 
@@ -602,43 +602,82 @@ function findNewSpot(x, y, linked, occupyingNode)
 {
     switch(linked) {
         case 1: // Right
-
+            y = shapes[clickedNode.id][1];
+            var limit = y;
+            for (var id in shapes)
+            {
+                if (shapes[id][1] <= limit)
+                {
+                    moveShape(id, 0, -1*gap);
+                }
+            }
             break;
         case 2: // Down
-            /*for (var id in shapes)
+            x = shapes[clickedNode.id][0];
+            var limit = x;
+            for (var id in shapes)
             {
-                if (id != clickedNode.id)
+                if (shapes[id][0] <= limit) // if the shape is higher or same Y as clickedNode
                 {
-                    if (shapes[id][1] <= shapes[clickedNode.id][1]) // if the shape is higher or same Y as clickedNode
-                    {
-                        moveShape(id, 0, -1*gap);
-                    }
-                    moveShape(clickedNode.id,0,-1*gap);
+                    moveShape(id, -1*gap, 0);
                 }
-            }*/
+            }
             break;
-
         case 3:
             x += gap;
             while (isAvailible(x, y) != "")
                 x += gap;
             break;
         case 4: // Left
-
+            y = shapes[clickedNode.id][1];
+            var limit = y;
+            for (var id in shapes)
+            {
+                if (shapes[id][1] >= limit)
+                {
+                    moveShape(id, 0, gap);
+                }
+            }
             break;
         case 5: // Left
-
+            y = shapes[clickedNode.id][1];
+            var limit = y;
+            for (var id in shapes)
+            {
+                if (shapes[id][1] >= limit)
+                {
+                    moveShape(id, 0, gap);
+                }
+            }
             break;
         case 6:
             x -= gap;
             while (isAvailible(x, y) != "")
                 x -= gap;
             break;
-        case "undefined":
-
+        case "undefined": // Up
+            x = shapes[clickedNode.id][0];
+            var limit = x;
+            for (var id in shapes)
+            {
+                if (shapes[id][0] >= limit) // if the shape is higher or same Y as clickedNode
+                {
+                    moveShape(id, gap, 0);
+                }
+            }
             break;
     }
     return [x, y];
+}
+
+/**
+ * Moves a node
+ * @param id, addX, addY
+ */
+function moveShape(id, addX, addY)
+{
+    shapes[id][0] += addX;
+    shapes[id][1] += addY;
 }
 
 
