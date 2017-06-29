@@ -424,17 +424,17 @@ function findLinkForMono(monosaccharide) {
 
 
 /**
- * Tells if there is already a node at a given position x, y
+ * Tells if there is already a node at a given position x, y and returns its id if so
  * @param x, y
  */
 function isAvailible(x, y)
 {
     for (var shape in shapes)
     {
-        if (shape.x == x && shape.y == y)
-            return false;
+        if (shapes[shape][0] == x && shapes[shape][1] == y)
+            return shape;
     }
-    return true;
+    return "";
 }
 
 
@@ -462,10 +462,12 @@ function calculateXandYNode(node) {
         var newX = sourceX  + modificationsXY[1]; // Apply the modification on x
         var newY = sourceY + modificationsXY[0]; // Apply the modification on y
 
-        if (!isAvailible(newX, newY))
+        var availible = isAvailible(newX, newY);
+        if (availible != "")
         {
-            newX = findNewSpot(newX,newY, link.linkedCarbon.value)[0];
-            newY = findNewSpot(newX,newY, link.linkedCarbon.value)[1];
+            var newPos = findNewSpot(newX,newY, link.linkedCarbon.value, availible);
+            newX = newPos[0];
+            newY = newPos[1];
         }
 
         return [newX, newY]; // Return the obtained coordinates
@@ -596,24 +598,47 @@ function createTriangleLinearGradient(color, gradientId) {
  * Returns a new availible position for a shape to be at.
  * @param x, y, linkedCarbon
  */
-function findNewSpot(x, y, linked)
+function findNewSpot(x, y, linked, occupyingNode)
 {
-    console.log("linked:" + linked);
-    return [x, y];
-}
+    switch(linked) {
+        case 1: // Right
 
-/**
- * Tells if a position x, y is availible or not
- * @param x, y
- */
-function isAvailible(x, y)
-{
-    for (var shape in shapes)
-    {
-        if (shape.x == x && shape.y == y)
-            return false;
+            break;
+        case 2: // Down
+            /*for (var id in shapes)
+            {
+                if (id != clickedNode.id)
+                {
+                    if (shapes[id][1] <= shapes[clickedNode.id][1]) // if the shape is higher or same Y as clickedNode
+                    {
+                        moveShape(id, 0, -1*gap);
+                    }
+                    moveShape(clickedNode.id,0,-1*gap);
+                }
+            }*/
+            break;
+
+        case 3:
+            x += gap;
+            while (isAvailible(x, y) != "")
+                x += gap;
+            break;
+        case 4: // Left
+
+            break;
+        case 5: // Left
+
+            break;
+        case 6:
+            x -= gap;
+            while (isAvailible(x, y) != "")
+                x -= gap;
+            break;
+        case "undefined":
+
+            break;
     }
-    return true;
+    return [x, y];
 }
 
 
