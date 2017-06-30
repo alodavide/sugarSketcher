@@ -528,6 +528,7 @@ function deleteNode(node) {
         sugar.removeNodeById(node.id);
         searchAndRemoveNodeInTree(treeData, node);
     }
+    delete shapes[node.id]; // TODO: REMOVE ALL CHILDREN TOO
     displayTree(); // Display back the tree
     clickedNode = null; // Reinitialize the clicked node
     // Hide all menus
@@ -559,7 +560,6 @@ function deleteAllChildrenInGraph(node) {
  * Create a new node using the informations selected by the user
  */
 function createNewNode() {
-    isAvailible(275,850);
     var typeNodeToAdd = infosTable[1]; // Selected type, monosaccharide or substituent
     if (typeNodeToAdd == "Monosaccharide") {
         var shape = infosTable[2]; // Selected shape
@@ -606,7 +606,7 @@ function createNewNode() {
  * @param linkCarbon The link carbon value
  */
 function createNewSubstituent (linkCarbon) {
-    var subLabel = infosTable[2]; // Get the label of the substituent
+    var subLabel = infosTable[1]; // Get the label of the substituent
     var subType = getSubstituentTypeFromLabel(subLabel); // Get the SubstituentType
     var generatedSubId = randomString(7); // Random id for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
@@ -614,9 +614,9 @@ function createNewSubstituent (linkCarbon) {
     var generatedEdgeSubId = randomString(7); // Random id for edge
     // Create the linkage
     var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
-    sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkage
-    // TODO visualization with subs
+    sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkag;
     updateTreeVisualization(subLinkage);
+    displayTree();
 }
 
 /**

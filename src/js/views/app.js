@@ -71,25 +71,39 @@ function displayTree() {
             .data(links)
             .enter().append("line") // Append a new line for each link
             .attr("class", function (d) {
-                // If anomericity is alpha, then add dashed class to the link
-                if (d.target.node.anomericity.name == "ALPHA") {
-                    return "nodelink dashedNodeLink";
-                } else {
-                    return "nodelink";
+                if (d.target.node["anomericity"]) { // Monosaccharide
+                    // If anomericity is alpha, then add dashed class to the link
+                    if (d.target.node.anomericity.name == "ALPHA") {
+                        return "nodelink dashedNodeLink";
+                    } else {
+                        return "nodelink";
+                    }
+                }
+                else // Substituant
+                {
+                    return "";
                 }
             })
             // Calculate X and Y of source and targets, and draw the line
             .attr("x1", function (d) {
-                return shapes[d.source.node.id][1];
+                if (d.target.node["anomericity"]) // Monosaccharide
+                    return shapes[d.source.node.id][1];
+                return 0;
             })
             .attr("y1", function (d) {
-                return shapes[d.source.node.id][0];
+                if (d.target.node["anomericity"]) // Monosaccharide
+                    return shapes[d.source.node.id][0];
+                return 0;
             })
             .attr("x2", function (d) {
-                return shapes[d.target.node.id][1];
+                if (d.target.node["anomericity"]) // Monosaccharide
+                    return shapes[d.target.node.id][1];
+                return 0;
             })
             .attr("y2", function (d) {
-                return shapes[d.target.node.id][0];
+                if (d.target.node["anomericity"]) // Monosaccharide
+                    return shapes[d.target.node.id][0];
+                return 0;
             })
             .attr('pointer-events', 'none');
 
@@ -101,51 +115,79 @@ function displayTree() {
             .attr("x", function (d) {
                 var finalX; // Final x of the label
                 var source = shapes[d.source.node.id]; // Calculate source coordinates
-                var target = shapes[d.target.node.id]; // Calculate target coordinates
-                var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
-                finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+                if (d.target.node["anomericity"]) // Monosaccharide
+                {
+                    var target = shapes[d.target.node.id]; // Calculate target coordinates
+                    var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
+                    finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+                }
+                else // Substituant
+                {
+                    finalX = findSubstituantLabelSpot(source[0], source[1])[1];
+                }
+
                 return finalX; // Return the obtained value
             })
             .attr("y", function (d) {
                 var finalY; // Final y of the label
                 var source = shapes[d.source.node.id]; // Calculate source coordinates
-                var target = shapes[d.target.node.id]; // Calculate target coordinates
-                var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
-                finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
+                if (d.target.node["anomericity"]) // Monosaccharide
+                {
+                    var target = shapes[d.target.node.id]; // Calculate target coordinates
+                    var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
+                    finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
+                }
+                else // Substituant
+                {
+                    finalY = findSubstituantLabelSpot(source[0], source[1])[0];
+                }
                 return finalY; // Return the obtained value
             })
             .text(function (d) {
-                var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
-                var anomericity; // Anomericity of the target node
-                if (d.target.node.anomericity.name == "ALPHA") {
-                    anomericity = "α"
-                } else if (d.target.node.anomericity.name == "BETA") {
-                    anomericity = "β";
-                } else {
-                    anomericity = "?"
+                if (d.target.node["anomericity"]) // Monosaccharide
+                {
+                    var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
+                    var anomericity; // Anomericity of the target node
+                    if (d.target.node.anomericity.name == "ALPHA") {
+                        anomericity = "α"
+                    } else if (d.target.node.anomericity.name == "BETA") {
+                        anomericity = "β";
+                    } else {
+                        anomericity = "?"
+                    }
+                    var linkedCarbonLabel;
+                    if (link.linkedCarbon.value == 'undefined') {
+                        linkedCarbonLabel = "?";
+                    } else {
+                        linkedCarbonLabel = link.linkedCarbon.value;
+                    }
+                    return anomericity + " / " + linkedCarbonLabel; // Text of the label
                 }
-                var linkedCarbonLabel;
-                if (link.linkedCarbon.value == 'undefined') {
-                    linkedCarbonLabel = "?";
-                } else {
-                    linkedCarbonLabel = link.linkedCarbon.value;
+                else
+                {
+                    return d.target.node._substituentType.label;
                 }
-                return anomericity + " / " + linkedCarbonLabel; // Text of the label
             });
 
         // Create nodes
         var node = vis.selectAll("g.node")
             .data(nodes)
             .enter().append("g")
+            .style("visibility", function(d) {
+                return (d.node["anomericity"]) ? "visible" : "hidden"; // Do not display Substituant nodes
+            })
             .attr("x", function (d) {
-                return shapes[d.node.id][0]; // Calculate x
+                if (d.node["anomericity"]) // Monosaccharide
+                    return shapes[d.node.id][0];
             })
             .attr("y", function (d) {
-                return shapes[d.node.id][1]; // Calculate y
+                if (d.node["anomericity"]) // Monosaccharide
+                    return shapes[d.node.id][1];
             })
             .attr("transform", function (d) {
                 // Translation for display
-                return "translate(" + shapes[d.node.id][1] + "," + shapes[d.node.id][0] + ")";
+                if (d.node["anomericity"]) // Monosaccharide
+                    return "translate(" + shapes[d.node.id][1] + "," + shapes[d.node.id][0] + ")";
             })
             .on('click', function () {
                 // On click, simply display menu and hide all other svg's
@@ -668,6 +710,36 @@ function findNewSpot(x, y, linked, occupyingNode)
             break;
     }
     return [x, y];
+}
+
+
+/**
+ * Finds a spot where a substituant Label is readable (i.e no link going through it)
+ * @param x, y : Coordinates of the source
+ */
+function findSubstituantLabelSpot(x, y)
+{
+    if (isAvailible(x+gap, y) != "")
+    {
+        if (isAvailible(x, y+gap) != "")
+        {
+            if (isAvailible(x-gap, y) != "")
+            {
+                if (isAvailible(x, y-gap) != "")
+                {
+                    return [x-18, y+18];
+                }
+                else
+                    return [x-7, y-18];
+            }
+            else
+                return [x-24, y];
+        }
+        else
+            return [x-7, y+18];
+    }
+    else
+        return [x+16, y];
 }
 
 /**
