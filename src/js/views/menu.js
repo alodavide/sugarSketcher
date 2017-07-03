@@ -605,7 +605,11 @@ function createNewNode() {
  * @param linkCarbon The link carbon value
  */
 function createNewSubstituent (linkCarbon) {
-    var subLabel = infosTable[1]; // Get the label of the substituent
+    console.log(infosTable);
+    if (infosTable[1] == "Substituent")
+        var subLabel = infosTable[2];
+    else
+        var subLabel = infosTable[1]; // Get the label of the substituent
     var subType = getSubstituentTypeFromLabel(subLabel); // Get the SubstituentType
     var generatedSubId = randomString(7); // Random id for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
