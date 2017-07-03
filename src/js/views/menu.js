@@ -27,7 +27,7 @@ $(document).ready(function() {
         d3.select("#formula").style("display","block");
         $('#formula').val(exportGlycoCT());
         var formula = document.querySelector("#formula");
-            formula.select();
+        formula.select();
 
         try {
             var successful = document.execCommand('copy');
@@ -42,10 +42,11 @@ $(document).ready(function() {
                 .style("color", "black")
                 .style("opacity", 1)
                 .text("Please use Ctrl+C.");
-}
+        }
     });
 
     d3.select("#typeFormula").on('click', function() {
+        test(5);
         d3.select("#formula").style("display","block");
         $('#formula').val("");
         d3.select("#copyMsg")
@@ -341,15 +342,15 @@ function updateMenu(chosenDivision) {
                 infosTable.push(d.division);
                 updateMenu(d.division);
             }).on("mouseover", function (d) {
-                // On hover of addNode, we display its two subdivisions
-                if (d.division == "addNode") {
-                    manageHoverAddNode(d, actions);
-                    // Add the two labels for monosaccharide and substituents
-                    labels.selectAll("text")[0][0].remove();
-                    labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
-                    labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
-                }
-            });
+            // On hover of addNode, we display its two subdivisions
+            if (d.division == "addNode") {
+                manageHoverAddNode(d, actions);
+                // Add the two labels for monosaccharide and substituents
+                labels.selectAll("text")[0][0].remove();
+                labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
+                labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
+            }
+        });
         textNodes.enter().append("text")
             .attr("class", "label")
             .attr("x", function (d, i) {
@@ -509,7 +510,7 @@ document.onkeydown = function (e) {
     } else if (e.keyCode == 46) { // Delete button keycode
         if (clickedNode != null) { // If there is no clicked node, then no action
             // Else delete the node from the graph, and then from the tree
-                deleteNode(clickedNode);
+            deleteNode(clickedNode);
         }
     }
 };
@@ -576,8 +577,6 @@ function createNewNode() {
         var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected); // Get the monosaccharide type
         var generatedNodeId = randomString(7); // Generate an id
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring); // Create new monosaccharide
-
-        res.push(monosaccharide);
 
 
         if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
@@ -762,3 +761,30 @@ function randomString(length) {
 }
 
 
+/**
+ * Generates n glycan for testing purposes
+ * @param n
+ */
+function test(n)
+{
+    for (var i = 0; i < n; i++)
+    {
+        var linked = Math.abs(Math.floor(Math.random()*10) - 3);
+        if (linked == 0)
+            linked = "?";
+        const colorChoice = ["blue", "yellow", "green", "orange", "pink", "purple", "lightBlue", "brown"];
+        var color = colorChoice[Math.abs(Math.floor(Math.random()*10) - 2)];
+        infosTable = [];
+        infosTable.push("addNode");
+        infosTable.push("Monosaccharide");
+        infosTable.push("square");
+        infosTable.push(color+"Color");
+        infosTable.push("β");
+        infosTable.push("L");
+        infosTable.push("F");
+        infosTable.push(linked);
+        infosTable.push(linked);
+        createNewNode();
+        clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];
+    }
+}

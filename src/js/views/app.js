@@ -1,5 +1,4 @@
 var treeData = {};
-var res = [];
 var shapes = {};
 var selectedNode = null;
 var clickedNode = null;
@@ -123,14 +122,14 @@ function displayTree() {
                 }
                 else // Substituant
                 {
-                    finalX = findSubstituantLabelSpot(source[0], source[1])[1];
+                    finalX = findSubstituantLabelSpot(source[0], source[1], "")[1];
                 }
 
                 return finalX; // Return the obtained value
             })
             .attr("y", function (d) {
                 var finalY; // Final y of the label
-                var source = shapes[d.source.node.id]; // Calculate source coordinates
+                var source = shapes[d.source.node.id]; // Get source coordinates
                 if (d.target.node["anomericity"]) // Monosaccharide
                 {
                     var target = shapes[d.target.node.id]; // Calculate target coordinates
@@ -139,7 +138,7 @@ function displayTree() {
                 }
                 else // Substituant
                 {
-                    finalY = findSubstituantLabelSpot(source[0], source[1])[0];
+                    finalY = findSubstituantLabelSpot(source[0], source[1], d.target.node._substituentType.label)[0];
                 }
                 return finalY; // Return the obtained value
             })
@@ -716,9 +715,11 @@ function findNewSpot(x, y, linked, occupyingNode)
 /**
  * Finds a spot where a substituant Label is readable (i.e no link going through it)
  * @param x, y : Coordinates of the source
+ * @param label: label, to calculate offset to node
  */
-function findSubstituantLabelSpot(x, y)
+function findSubstituantLabelSpot(x, y, label)
 {
+    var labelSize = label.length;
     if (isAvailible(x+gap, y) != "")
     {
         if (isAvailible(x, y+gap) != "")
@@ -736,7 +737,10 @@ function findSubstituantLabelSpot(x, y)
                 return [x-24, y];
         }
         else
+        {
             return [x-7, y+18];
+        }
+
     }
     else
         return [x+16, y];
@@ -754,6 +758,8 @@ function moveShape(id, addX, addY)
 
 
 function exportGlycoCT() {
+    var resId = {};
+    var res = sugar.graph.nodes();
     if (res.length == 0)
     {
         return "";
@@ -803,11 +809,31 @@ function exportGlycoCT() {
                 formula += "x:x";
         }
 
-        formula += "\nLIN\n";
+        formula += "\n";
 
-
+        resId[res[i].id] = i+1;
 
     }
+
+    formula += "LIN\n";
+    var edges = sugar.graph.edges();
+    for (var i = 0; i < edges.length; i++)
+    {
+        formula += i+1 + ":";
+
+        formula += resId[edges[i].sourceNode.getId()];
+
+        formula += "o"; // CHANGE
+
+        formula += "(" + edges[i].linkedCarbon.value + "+" + edges[i].anomerCarbon.value + ")";
+
+        formula += resId[edges[i].targetNode.getId()];
+
+        formula += "d"; // CHANGE
+
+        formula += "\n";
+    }
+
     return formula;
 }
 
@@ -815,3 +841,6 @@ function exportIUPAC() {
     var formula = "";
     return formula;
 }
+
+
+
