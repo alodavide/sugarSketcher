@@ -8,6 +8,8 @@
 var sugar;
 
 // Function called when document is ready
+
+
 $(document).ready(function() {
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
@@ -20,6 +22,47 @@ $(document).ready(function() {
         // Push the new clicked substituent in infosTable
         infosTable.push(d3.select(d3.event.target).attr("value"));
         displayPie(); // Dispaly the piechart to choose linked carbon
+    });
+    d3.select("#exportGlycoCT").on('click', function() {
+        d3.select("#formula").style("display","block");
+        $('#formula').val(exportGlycoCT());
+        $('#formula').select();
+        var formula = document.querySelector("#formula");
+
+        try {
+            var successful = document.execCommand('copy');
+            d3.select("#copyMsg")
+                .transition(1000)
+                .style("color", "green")
+                .style("opacity", 1)
+                .text("The formula has been copied to the Clipboard.");
+        } catch (err) {
+            d3.select("#copyMsg")
+                .transition(1000)
+                .style("color", "black")
+                .style("opacity", 1)
+                .text("Please use Ctrl+C.");
+        }
+        d3.select("#validateFormula").style("display", "none");
+    });
+
+    d3.select("#typeFormula").on('click', function() {
+        d3.select("#formula").style("display","block");
+        d3.select("#validateFormula").style("display", "block");
+        $('#formula').val("");
+        $('#formula').focus();
+        d3.select("#copyMsg")
+            .text("");
+        d3.select("#validateFormula")
+            .style("display", "block")
+            .on('click', function(d) {
+                treeData = {};
+                if (sugar)
+                    sugar.clear();
+                shapes = [];
+                parseGlycoCT($('#formula').val());
+                clickedNode = null;
+            });
     });
 });
 
@@ -224,6 +267,10 @@ function updateMenu(chosenDivision) {
         height: menuDimensions.height,
         width: menuDimensions.width
     });
+    var svgMenu2 = d3.select("#svgMenu2").attr({
+        height: menuDimensions.height,
+        width: menuDimensions.width
+    });
     var newMenuAction = [];
 
     // This case happens when update is called with no parameter (first update)
@@ -236,6 +283,7 @@ function updateMenu(chosenDivision) {
         d3.select("#svgInfos").transition().style("display", "none");
         d3.select("#svgCarbons").transition().style("display", "none");
         d3.select("#svgMenu").transition().style("display", "block");
+        d3.select("#svgMenu2").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
         menuChosenPath.push(chosenDivision);
@@ -262,8 +310,10 @@ function updateMenu(chosenDivision) {
         return;
     }
 
+
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length; // Calculate width of each rect of the menu
     var bars = actions.selectAll("rect").data(newMenuAction);
+    var textNodes = labels.selectAll("text").data(newMenuAction); // Get all the labels of the menu
 
     // If we are not displaying colors
     if (newMenuAction != colorDivisions) {
@@ -282,9 +332,7 @@ function updateMenu(chosenDivision) {
             })
             .attr("rx", 15) // Corner for the rect
             .attr("ry", 15) // Cornet for the rect
-            .attr("class", function (d) {
-                    return "bar choice";
-            })
+            .attr("class",  "bar choice")
             .style("fill", function (d) {
                 return d.display_division
             })
@@ -296,7 +344,6 @@ function updateMenu(chosenDivision) {
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                         return;
                     }
-                    //TODO update substituent menu
                     if (clickedNode instanceof sb.Substituent) {
                         document.getElementById("error").innerHTML = "No update possible for Substituent !";
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
@@ -307,14 +354,25 @@ function updateMenu(chosenDivision) {
                 infosTable.push(d.division);
                 updateMenu(d.division);
             }).on("mouseover", function (d) {
-                // On hover of addNode, we display its two subdivisions
-                if (d.division == "addNode") {
-                    manageHoverAddNode(d, actions);
-                    // Add the two labels for monosaccharide and substituents
-                    labels.selectAll("text")[0][0].remove();
-                    labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
-                    labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
-                }
+            // On hover of addNode, we display its two subdivisions
+            if (d.division == "addNode") {
+                manageHoverAddNode(d, actions);
+                // Add the two labels for monosaccharide and substituents
+                labels.selectAll("text")[0][0].remove();
+                labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
+                labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
+            }
+        });
+        textNodes.enter().append("text")
+            .attr("class", "label")
+            .attr("x", function (d, i) {
+                return (menuDimensions.barWidth * i) + (menuDimensions.barWidth / 2);
+            })
+            .attr("y", function () {
+                return menuDimensions.height/5; // Choose an y to center label
+            })
+            .text(function (d) {
+                return d.display_division;
             });
     } else { // If we are displaying colors
         d3.select("#svgMenu").style("height", "60px"); // Update height to show circles and labels of monosaccharides
@@ -327,9 +385,7 @@ function updateMenu(chosenDivision) {
                 return d.division;
             })
             .attr("r", 20)
-            .attr("class", function () {
-                return "bar choice choiceWhiteStroke"
-            })
+            .attr("class", "bar choice choiceWhiteStroke")
             .style("fill", function (d) {
                 return d.display_division;
             })
@@ -368,25 +424,6 @@ function updateMenu(chosenDivision) {
                     updateMenu(d.division);
                 }
             });
-    }
-
-    /*
-     *  Label drawing block
-     */
-    var textNodes = labels.selectAll("text").data(newMenuAction); // Get all the labels of the menu
-    if (newMenuAction != colorDivisions) { // If we are not displaying colors, we add text
-        textNodes.enter().append("text")
-            .attr("class", "label")
-            .attr("x", function (d, i) {
-                return (menuDimensions.barWidth * i) + (menuDimensions.barWidth / 2);
-            })
-            .attr("y", function () {
-                return menuDimensions.height/5; // Choose an y to center label
-            })
-            .text(function (d) {
-                return d.display_division;
-            });
-    } else { // If colors, we get the monosaccharide type associated for each combination of color and shape
         textNodes.enter().append("text")
             .attr("class", "labelMonoChoice")
             .attr("x", function(d, i) {
@@ -407,7 +444,7 @@ function updateMenu(chosenDivision) {
                     labelMono = "";
                 }
                 return labelMono;
-            })
+            });
     }
 
     // If not the first menu, we add a cancel button to come back to last step
@@ -482,8 +519,56 @@ document.onkeydown = function (e) {
             d3.select("#svgSubstituents").style("display", "none");
             d3.select("#pieLinkCarbon").style("display", "none");
         }
+    } else if (e.keyCode == 46) { // Delete button keycode
+        if (clickedNode != null) { // If there is no clicked node, then no action
+            // Else delete the node from the graph, and then from the tree
+            deleteNode(clickedNode);
+        }
     }
 };
+
+/**
+ * Delete the clicked node from the graph and the tree
+ * @param node The node to delete
+ */
+function deleteNode(node) {
+    if (node == sugar.getRootNode()) {
+        // Clear treeData
+        treeData = {};
+        sugar.clear();
+        shapes = [];
+    } else {
+        deleteAllChildrenInGraph(node);
+        sugar.removeNodeById(node.id);
+        searchAndRemoveNodeInTree(treeData, node);
+    }
+    delete shapes[node.id]; // TODO: REMOVE ALL CHILDREN TOO
+    displayTree(); // Display back the tree
+    clickedNode = null; // Reinitialize the clicked node
+    // Hide all menus
+    d3.select('#svgMenu').style("display", "none");
+    d3.select("#svgInfos").style("display", "none");
+    d3.select("#svgShape").style("display", "none");
+    d3.select("#svgCarbons").style("display", "none");
+    d3.select("#svgSubstituents").style("display", "none");
+    d3.select("#pieLinkCarbon").style("display", "none");
+    if (!sugar.rootIsSet()) { // If we deleted the root, update menu
+        updateMenu();
+    }
+}
+
+/**
+ * Delete all children nodes in the graph structure
+ * @param node The node from which we want to delete children
+ */
+function deleteAllChildrenInGraph(node) {
+    for (var edge of sugar.graph.edges()) {
+        if (edge.sourceNode == node) {
+            sugar.removeNodeById(edge.targetNode.id);
+            deleteAllChildrenInGraph(edge.targetNode);
+        }
+    }
+}
 
 /**
  * Create a new node using the informations selected by the user
@@ -505,15 +590,26 @@ function createNewNode() {
         var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected); // Get the monosaccharide type
         var generatedNodeId = randomString(7); // Generate an id
         var monosaccharide = new sb.Monosaccharide(generatedNodeId,monoType,anomericity, isomer, ring); // Create new monosaccharide
+
+
         if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
             sugar = new sb.Sugar("Sugar", monosaccharide);
+            var node = {"node":monosaccharide};
+            var shape = calculateXandYNode(node);
+            shapes[generatedNodeId] = shape;
             updateTreeVisualization(); // Update visualization in the svg
+            displayTree();
         } else {
             var generatedEdgeId = randomString(7); // If tree not empty, generate id, create linkage and update visualziation
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
+            var node = {"node":monosaccharide};
+            var shape = calculateXandYNode(node);
+            shapes[generatedNodeId] = shape;
+            displayTree();
         }
+        return generatedNodeId;
     }
 }
 
@@ -522,7 +618,10 @@ function createNewNode() {
  * @param linkCarbon The link carbon value
  */
 function createNewSubstituent (linkCarbon) {
-    var subLabel = infosTable[2]; // Get the label of the substituent
+    if (infosTable[1] == "Substituent")
+        var subLabel = infosTable[2];
+    else
+        var subLabel = infosTable[1]; // Get the label of the substituent
     var subType = getSubstituentTypeFromLabel(subLabel); // Get the SubstituentType
     var generatedSubId = randomString(7); // Random id for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
@@ -530,9 +629,9 @@ function createNewSubstituent (linkCarbon) {
     var generatedEdgeSubId = randomString(7); // Random id for edge
     // Create the linkage
     var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
-    sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkage
-    // TODO visualization with subs
+    sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkag;
     updateTreeVisualization(subLinkage);
+    displayTree();
 }
 
 /**
@@ -678,3 +777,30 @@ function randomString(length) {
 }
 
 
+/**
+ * Generates n glycan for testing purposes
+ * @param n
+ */
+function test(n)
+{
+    for (var i = 0; i < n; i++)
+    {
+        var linked = Math.abs(Math.floor(Math.random()*10) - 3);
+        if (linked == 0)
+            linked = "?";
+        const colorChoice = ["blue", "yellow", "green", "orange", "pink", "purple", "lightBlue", "brown"];
+        var color = colorChoice[Math.abs(Math.floor(Math.random()*10) - 2)];
+        infosTable = [];
+        infosTable.push("addNode");
+        infosTable.push("Monosaccharide");
+        infosTable.push("square");
+        infosTable.push(color+"Color");
+        infosTable.push("β");
+        infosTable.push("L");
+        infosTable.push("F");
+        infosTable.push(linked);
+        infosTable.push(linked);
+        createNewNode();
+        clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];
+    }
+}

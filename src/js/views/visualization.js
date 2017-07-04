@@ -19,7 +19,6 @@ function updateTreeVisualization(newLink) {
     } else { // If tree already has a root, add the node in the tree
         searchAndAddNodeInTree(treeData, newLink);
     }
-    displayTree(); // Display the tree after the update
 }
 
 /**
@@ -91,4 +90,48 @@ function updateNodeInTree(root, newMonosaccharide) {
         }
     }
     displayTree(); // Display the tree after the update
+}
+
+/**
+ * Search and remove a node from the tree
+ * @param root The node from which we search in the tree
+ * @param node The node we are searching
+ */
+function searchAndRemoveNodeInTree(root, node) {
+    if(root.children != null) { // If the root has children
+        for (var i = 0; i < root.children.length; i++) { // Loop on children
+            if (root.children[i].node == node) { // If one child corresponds, remove it
+                root.children.splice(i, 1);
+            } else {
+                searchAndRemoveNodeInTree(root.children[i], node); // Recursivity call on children
+            }
+        }
+    }
+}
+
+function deleteChildrenFromShapes(root) {
+    if (root.children != null) {
+        for (var i = 0; i < root.children.length; i++) { // Loop on children
+            delete shapes[root.children[i].node.id];
+            delete res[root.children[i].node.id];
+            deleteChildrenFromShapes(root.children[i]);
+        }
+    }
+}
+
+function findNodeInTree(root, node) {
+    if (root.node == node)
+        return root;
+    if (root.children != null) {
+        for (var i = 0; i < root.children.length; i++)
+        {
+            console.log(root.children[i].node);
+            console.log(node);
+            if (root.children[i].node == node) {
+                return (root.children[i]);
+            }
+            else
+                findNodeInTree(root.children[i], node);
+        }
+    }
 }

@@ -24,6 +24,16 @@
     display: none;
 }
 
+.errorLabel {
+    font-size: 18px; !important;
+    display:block;
+    stroke: black;!important;
+    fill:black;!important;
+    text-anchor: middle;
+    alignment-baseline: text-before-edge;
+    dominant-baseline: text-before-edge;
+}
+
 .linkLabel {
     stroke:black;
     fill:black;
@@ -56,6 +66,16 @@
     width:1000px;
 }
 
+#validateFormula {
+    display:none;
+    width:150px;
+    height:30px;
+    padding: 5px 5px 5px 5px;
+    margin-right:auto;
+    margin-left:auto;
+    font-weight: bold;
+}
+
 #svgShape {
     height: 60px;
     width:1000px;
@@ -85,12 +105,12 @@
     overflow: visible;
 }
 
-#svgMenu {
+#svgMenu, #svgMenu2 {
     display:none;
     overflow: visible;
 }
 
-#svgMenu, #svgShape, #svgInfos, #svgCarbons, #svgSubstituents{
+#svgMenu, #svgMenu2, #svgShape, #svgInfos, #svgCarbons, #svgSubstituents{
     margin: 0 auto 10px;
 }
 
@@ -133,4 +153,19 @@
 
 #anomericityTitleChoice, .choiceAnomericity {
     fill:#ff4d4d; !important;
+}
+
+#copyNode, #pasteNode, #deleteNode {
+    position:absolute;
+    cursor:pointer;
+    display:none;
+    width:50px;
+    height:20px;
+    margin-left:-100px;
+    background-color: red;
+    color: white;
+    font-family: Calibri;
+    font-size: 14px;
+    text-align:center;
+    border-radius: 10px;
 }

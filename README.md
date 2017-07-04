@@ -1,4 +1,4 @@
-# SugarBuilder [![Build Status](https://travis-ci.org/alodavide/sugarBuilder.svg?branch=master)](https://travis-ci.org/alodavide/sugarBuilder) [![Coverage Status](https://coveralls.io/repos/github/alodavide/sugarBuilder/badge.svg?branch=master)](https://coveralls.io/github/alodavide/sugarBuilder?branch=master)
+# SugarSketcher [![Build Status](https://travis-ci.org/alodavide/sugarBuilder.svg?branch=master)](https://travis-ci.org/alodavide/sugarBuilder) [![Coverage Status](https://coveralls.io/repos/github/alodavide/sugarBuilder/badge.svg?branch=master)](https://coveralls.io/github/alodavide/sugarBuilder?branch=master)
 A tiny library to build sugars in javascript
 
 To install it please run npm init.
