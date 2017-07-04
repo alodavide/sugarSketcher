@@ -26,8 +26,8 @@ $(document).ready(function() {
     d3.select("#exportGlycoCT").on('click', function() {
         d3.select("#formula").style("display","block");
         $('#formula').val(exportGlycoCT());
+        $('#formula').select();
         var formula = document.querySelector("#formula");
-        formula.select();
 
         try {
             var successful = document.execCommand('copy');
@@ -43,14 +43,25 @@ $(document).ready(function() {
                 .style("opacity", 1)
                 .text("Please use Ctrl+C.");
         }
+        d3.select("#validateFormula").style("display", "none");
     });
 
     d3.select("#typeFormula").on('click', function() {
-        test(5);
         d3.select("#formula").style("display","block");
+        d3.select("#validateFormula").style("display", "block");
         $('#formula').val("");
+        $('#formula').focus();
         d3.select("#copyMsg")
             .text("");
+        d3.select("#validateFormula")
+            .style("display", "block")
+            .on('click', function(d) {
+                treeData = {};
+                if (sugar)
+                    sugar.clear();
+                shapes = [];
+                parseGlycoCT($('#formula').val());
+            });
     });
 });
 
@@ -524,6 +535,7 @@ function deleteNode(node) {
         // Clear treeData
         treeData = {};
         sugar.clear();
+        shapes = [];
     } else {
         deleteAllChildrenInGraph(node);
         sugar.removeNodeById(node.id);
@@ -596,7 +608,7 @@ function createNewNode() {
             shapes[generatedNodeId] = shape;
             displayTree();
         }
-
+        return generatedNodeId;
     }
 }
 
@@ -605,7 +617,6 @@ function createNewNode() {
  * @param linkCarbon The link carbon value
  */
 function createNewSubstituent (linkCarbon) {
-    console.log(infosTable);
     if (infosTable[1] == "Substituent")
         var subLabel = infosTable[2];
     else

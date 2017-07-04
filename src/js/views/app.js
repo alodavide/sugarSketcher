@@ -738,7 +738,7 @@ function findSubstituantLabelSpot(x, y, label)
         }
         else
         {
-            return [x-7, y+18];
+            return [x-7, y - 0.5 * labelSize * labelSize + 8 * labelSize + 20];
         }
 
     }
@@ -837,9 +837,120 @@ function exportGlycoCT() {
     return formula;
 }
 
-function exportIUPAC() {
-    var formula = "";
-    return formula;
+
+
+function parseGlycoCT(formula) {
+    var res = formula.split("LIN")[0].split("\n");
+    var links = formula.split("LIN")[1].split("\n");
+    var residueListById = [""];
+    var nodesIds = {};
+    if (res[0] == "RES") {
+        res[0] = "";
+        for (var residueId in res) {
+            if (res[residueId] != "") {
+                var residue = res[residueId].split(':');
+                residueListById.push(residue);
+            }
+        }
+
+        // Get link
+        for (linkId in links) {
+            if (links[linkId] != "") {
+                var link = links[linkId];
+                var sourceId = link.substring(2,3);
+                if (residueListById[sourceId] != "") // Node is not already drawn
+                {
+                    var nodeId = createResidue(residueListById[sourceId], "?", "?");
+                    residueListById[sourceId] = "";
+                    nodesIds[sourceId] = nodeId;
+                }
+                var targetId = link.split(")")[1].substring(0,1);
+                var linkages = link.split(/[\(\)]+/)[1];
+                var linkedCarbon, anomerCarbon;
+                if (linkages.substring(0, 2) == "-1") { // if linkedcarbon is undefined
+                    linkedCarbon = "?";
+                    anomerCarbon = linkages.substring(2, 4) == "-1" ? "?" : linkages.substring(2, 3);
+                }
+                else {
+                    linkedCarbon = linkages.substring(0, 1);
+                    anomerCarbon = linkages.substring(2, 4) == "-1" ? "?" : linkages.substring(2, 3);
+                }
+                for (var node of sugar.graph.nodes()) { // clickedNode = sourceNode
+                   if (node.id == nodesIds[sourceId])
+                    clickedNode = node;
+                }
+                console.log("Source: " + sourceId);
+                console.log("Target: " + targetId);
+                var nodeId = createResidue(residueListById[targetId],linkedCarbon, anomerCarbon);
+                residueListById[targetId] = "";
+                nodesIds[targetId] = nodeId;
+            }
+        }
+    }
+}
+
+function createResidue(residue, linkedCarbon, anomerCarbon)
+{
+    if (residue[0].substring(1) == "b") { // mono
+        if (residue[1].substring(0, 1) == "b") {
+            var anomericity = "β";
+        }
+        else if (residue[0].substring(0, 1) == "a") {
+            var anomericity = "α";
+        }
+        else {
+            var anomericity = "?";
+        }
+
+        var dashSplit = residue[1].split("-");
+        var stemType = dashSplit[1];
+        var isomer = stemType.substring(0, 1);
+        if (isomer == "x")
+            isomer = "?";
+        stemType = stemType.substring(1);
+        var superclass = dashSplit[2];
+        var ringStart = dashSplit[3];
+        var ringStop = residue[2].substring(0, 1);
+        var ringType;
+        if (ringStart == "1" && ringStop == "4")
+            ringType = "F";
+        else if (ringStart == "1" && ringStop == "5")
+            ringType = "P";
+        else
+            ringType = "?";
+
+        for (var type of sb.MonosaccharideType)
+        {
+            if (type.name.toLowerCase() == stemType)
+            {
+                var shape = type.shape;
+                if (type.bisected)
+                    shape = "bisected"+shape;
+                for (colorChoice in colorDivisions)
+                {
+                    if (colorDivisions[colorChoice].display_division == type.color)
+                        var color = colorDivisions[colorChoice].division;
+                }
+            }
+        }
+
+        infosTable[0] = "addNode";
+        infosTable[1] = "Monosaccharide";
+        infosTable[2] = shape;
+        infosTable[3] = color;
+        infosTable[4] = anomericity;
+        infosTable[5] = isomer.toUpperCase();
+        infosTable[6] = ringType;
+        infosTable[7] = linkedCarbon;
+        infosTable[8] = anomerCarbon;
+
+        var nodeId = createNewNode();
+        return nodeId;
+
+    }
+    else if (residue[0].substring(1) == "s") { // substituent
+
+    }
 }
 
 
