@@ -865,6 +865,34 @@
     });
 
 
+
+    /**
+     * This method return all the children of a specific node. An error is thrown if the node
+     * does not exist.
+     *
+     * @param  {string} id The edge id.
+     * @return {object|array}      The related node or array of nodes.
+     */
+    graph.addMethod('getChildren', function(id) {
+        // Check that the arguments are valid:
+        if ((typeof id !== 'string' && typeof id !== 'number') ||
+            arguments.length !== 1)
+            throw 'getChildren: Wrong arguments.';
+
+        if (!this.nodesIndex[id])
+            throw 'The node "' + id + '" does not exist.';
+        var n = [];
+        for (var node in this.outNeighborsIndex[id]){
+            if (typeof node === 'string' || typeof node === 'number')
+                n.push(this.nodesIndex[node]);
+            else
+                throw 'nodes: Wrong arguments.';
+        }
+
+        return n;
+    });
+
+
     /**
      * EXPORT:
      * *******

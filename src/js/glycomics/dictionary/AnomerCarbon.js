@@ -5,7 +5,20 @@
 
 import {Enum} from 'enumify';
 
-export default class AnomerCarbon extends Enum {}
+export default class AnomerCarbon extends Enum {
+
+    getAnomerCarbon(value) {
+        switch (value){
+            case 1: return AnomerCarbon.ONE;
+            case 2: return AnomerCarbon.TWO;
+            case 3: return AnomerCarbon.THREE;
+            case 4: return AnomerCarbon.FOUR;
+            case 5: return AnomerCarbon.FIVE;
+            case 6: return AnomerCarbon.SIX;
+            default: return AnomerCarbon.UNDEFINED;
+        }
+    }
+}
 
 AnomerCarbon.initEnum({
     ONE: {

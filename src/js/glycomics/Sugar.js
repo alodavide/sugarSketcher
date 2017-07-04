@@ -406,6 +406,61 @@ export default class Sugar{
         }
     }
 
+    /**
+     * This method reads an object and adds a structure.
+     * Please use id root for the root node!
+     * Here is an example:
+     *
+     *   var mySugar = new Sugar();
+     *   mySugar.addStructure({
+     *     nodes: [
+     *       {
+     *         id: 'root',
+     *         nodeType: 'Monosaccharide',
+     *         monosaccharideType: ''
+     *         anomericity: '',
+     *         isomer: '',
+     *         ringType: ''
+     *       },
+     *       {
+     *         id: 'n1',
+     *         nodeType: 'Monosaccharide',
+     *         monosaccharideType: ''
+     *         anomericity: '',
+     *         isomer: '',
+     *         ringType: ''
+     *       }
+     *     ],
+     *     edges: [
+     *       {
+     *         id: 'e0',
+     *         source: 'root',
+     *         target: 'n1',
+     *         linkedCarbon: '',
+     *         anomerCarbon: '',
+     *         linkageType:
+     *       }
+     *     ]
+     *   });
+     *
+     * @param  {object} g The graph object.
+     * @return {object}   The graph instance.
+     */
+    addStructure(structure){
+        var i,
+            a,
+            l;
+
+        a = g.nodes || [];
+        for (i = 0, l = a.length; i < l; i++)
+            this.addNode(a[i]);
+
+        a = g.edges || [];
+        for (i = 0, l = a.length; i < l; i++)
+            this.addEdge(a[i]);
+
+        return this;
+    }
 
 
     /**

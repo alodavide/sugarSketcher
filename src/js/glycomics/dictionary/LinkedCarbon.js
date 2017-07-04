@@ -5,7 +5,22 @@
 
 import {Enum} from 'enumify';
 
-export default class LinkedCarbon extends Enum {}
+export default class LinkedCarbon extends Enum {
+    getLinkedCarbon(value) {
+        switch (value){
+            case 1: return LinkedCarbon.ONE;
+            case 2: return LinkedCarbon.TWO;
+            case 3: return LinkedCarbon.THREE;
+            case 4: return LinkedCarbon.FOUR;
+            case 5: return LinkedCarbon.FIVE;
+            case 6: return LinkedCarbon.SIX;
+            case 7: return LinkedCarbon.SEVEN;
+            case 8: return LinkedCarbon.EIGHT;
+            case 9: return LinkedCarbon.NINE;
+            default: return LinkedCarbon.UNDEFINED;
+        }
+    }
+}
 
 LinkedCarbon.initEnum({
     ONE: {

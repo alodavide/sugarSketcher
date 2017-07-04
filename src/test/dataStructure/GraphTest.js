@@ -786,3 +786,53 @@ test('Custom indexes', function() {
         'Indexes work, and the scope is effectively shared with custom methods.'
     );
 });
+
+
+test('Builtin indexes', function() {
+    var graph = {
+        nodes: [
+            {
+                id: 'n0',
+                label: 'Node 0',
+                myNodeAttr: 123
+            },
+            {
+                id: 'n1',
+                label: 'Node 1'
+            },
+            {
+                id: 'n2',
+                label: 'Node 2'
+            }
+        ],
+        edges: [
+            {
+                id: 'e0',
+                source: 'n0',
+                target: 'n1',
+                myEdgeAttr: 123
+            },
+            {
+                id: 'e1',
+                source: 'n0',
+                target: 'n2'
+            },
+            {
+                id: 'e2',
+                source: 'n1',
+                target: 'n2'
+            },
+        ]
+    };
+
+    var g = new Graph.graph();
+    g.read(graph);
+    var children = g.getChildren('n0');
+    console.log(children[0]);
+    console.log(children[1]);
+    deepEqual(
+        children.length,
+        2,
+        'Children number'
+    );
+});

@@ -15,3 +15,14 @@ QUnit.test( "Test AnomerCarbon value" , function( assert ) {
     assert.notOk(AnomerCarbon.ONE.value === 3);
     assert.notOk(AnomerCarbon.UNDEFINED.value === 'ciao');
 });
+
+
+QUnit.test( "Get by Name" , function( assert ) {
+
+    assert.ok(AnomerCarbon.enumValueOf('ONE').value === 1);
+    assert.ok(AnomerCarbon.enumValueOf('UNDEFINED').value === 'undefined');
+    assert.ok(AnomerCarbon.enumValueOf('UNDEFINED') === AnomerCarbon.UNDEFINED);
+    assert.ok(AnomerCarbon.enumValueOf('ONE') === AnomerCarbon.ONE);
+    assert.notOk(AnomerCarbon.enumValueOf('UNDEFINED').value === 3);
+    assert.notOk(AnomerCarbon.enumValueOf('UNDEFINED').value === 'ciao');
+});
