@@ -904,7 +904,7 @@
         sigma.classes.graph = graph;
     } else if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports)
-            module.exports = graph;
+            exports = module.exports = graph;
         exports.graph = graph;
     } else
         this.graph = graph;
