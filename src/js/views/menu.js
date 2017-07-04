@@ -178,7 +178,7 @@ substituentDisplayMore.on("click", function() {
     var subsRects = d3.select("#actionsSubs"); // Rects for substituents
     var subsLabels = d3.select("#labelsSubs"); // Labels for substituents
     var subTypes = [];
-    var mostUsedTypes = ["S", "P", "NAc", "Acetyl", "Methyl"]; // Most used substituent types
+    var mostUsedTypes = ["S", "P", "NAc", "Ac", "Methyl"]; // Most used substituent types
     // Add all substituent in an array, except the most used ones and the undefined one
     for (var type of sb.SubstituentType) {
         if (type.label != 'undefined' && mostUsedTypes.indexOf(type.label) == -1) {
@@ -632,6 +632,7 @@ function createNewSubstituent (linkCarbon) {
     sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkag;
     updateTreeVisualization(subLinkage);
     displayTree();
+    return generatedSubId;
 }
 
 /**

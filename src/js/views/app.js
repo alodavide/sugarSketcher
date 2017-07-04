@@ -803,10 +803,13 @@ function exportGlycoCT() {
         switch (res[i]._ringType.name) {
             case "P":
                 formula += "1:5";
+                break;
             case "F":
                 formula += "1:4";
+                break;
             default:
                 formula += "x:x";
+                break;
         }
 
         formula += "\n";
@@ -901,11 +904,9 @@ function createResidue(residue, linkedCarbon, anomerCarbon)
     if (residue[0].substring(1) == "b") { // mono
         if (residue[1].substring(0, 1) == "b") {
             var anomericity = "β";
-            console.log("beta");
         }
         else if (residue[1].substring(0, 1) == "a") {
             var anomericity = "α";
-            console.log("alpha");
         }
         else {
             var anomericity = "?";
@@ -943,6 +944,7 @@ function createResidue(residue, linkedCarbon, anomerCarbon)
             }
         }
 
+        infosTable = [];
         infosTable[0] = "addNode";
         infosTable[1] = "Monosaccharide";
         infosTable[2] = shape;
@@ -958,7 +960,17 @@ function createResidue(residue, linkedCarbon, anomerCarbon)
 
     }
     else if (residue[0].substring(1) == "s") { // substituent
-
+        var subName = residue[1].substring(2);
+        for (var sub of sb.SubstituentType.enumValues)
+        {
+            if (subName == sub.name.toLowerCase())
+                var subLabel = sub.label;
+        }
+        infosTable = [];
+        infosTable[0] = "addNode";
+        infosTable[1] = subLabel;
+        createNewSubstituent();
+        return "";
     }
 }
 

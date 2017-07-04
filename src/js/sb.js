@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -149,15 +149,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	//Linkages
 	/**
+	 * This file allows the creation of a bundle library. 
 	 * Author:  Davide Alocci
 	 * Version: 0.0.1
 	 */
 	
 	//Data Structure
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -911,6 +912,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	
 	    /**
+	     * This method return all the children of a specific node. An error is thrown if the node
+	     * does not exist.
+	     *
+	     * @param  {string} id The edge id.
+	     * @return {object|array}      The related node or array of nodes.
+	     */
+	    graph.addMethod('getChildren', function (id) {
+	        // Check that the arguments are valid:
+	        if (typeof id !== 'string' && typeof id !== 'number' || arguments.length !== 1) throw 'getChildren: Wrong arguments.';
+	
+	        if (!this.nodesIndex[id]) throw 'The node "' + id + '" does not exist.';
+	        var n = [];
+	        for (var node in this.outNeighborsIndex[id]) {
+	            if (typeof node === 'string' || typeof node === 'number') n.push(this.nodesIndex[node]);else throw 'nodes: Wrong arguments.';
+	        }
+	
+	        return n;
+	    });
+	
+	    /**
 	     * EXPORT:
 	     * *******
 	     *
@@ -925,9 +946,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else this.graph = graph;
 	}).call(undefined);
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -995,9 +1016,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports.default = Edge;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 	
@@ -1037,15 +1058,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	exports.default = Node;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _enumify = __webpack_require__(5);
 	
@@ -1064,8 +1087,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function AnomerCarbon() {
 	        _classCallCheck(this, AnomerCarbon);
 	
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(AnomerCarbon).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (AnomerCarbon.__proto__ || Object.getPrototypeOf(AnomerCarbon)).apply(this, arguments));
 	    }
+	
+	    _createClass(AnomerCarbon, [{
+	        key: 'getAnomerCarbon',
+	        value: function getAnomerCarbon(value) {
+	            switch (value) {
+	                case 1:
+	                    return AnomerCarbon.ONE;
+	                case 2:
+	                    return AnomerCarbon.TWO;
+	                case 3:
+	                    return AnomerCarbon.THREE;
+	                case 4:
+	                    return AnomerCarbon.FOUR;
+	                case 5:
+	                    return AnomerCarbon.FIVE;
+	                case 6:
+	                    return AnomerCarbon.SIX;
+	                default:
+	                    return AnomerCarbon.UNDEFINED;
+	            }
+	        }
+	    }]);
 	
 	    return AnomerCarbon;
 	}(_enumify.Enum);
@@ -1097,9 +1142,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 	
@@ -1311,9 +1356,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return target;
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -1338,7 +1383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Anomericity() {
 	    _classCallCheck(this, Anomericity);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Anomericity).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Anomericity.__proto__ || Object.getPrototypeOf(Anomericity)).apply(this, arguments));
 	  }
 	
 	  return Anomericity;
@@ -1349,9 +1394,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Anomericity.initEnum(['ALPHA', 'BETA', 'UNDEFINED']);
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -1376,7 +1421,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Isomer() {
 	    _classCallCheck(this, Isomer);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Isomer).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Isomer.__proto__ || Object.getPrototypeOf(Isomer)).apply(this, arguments));
 	  }
 	
 	  return Isomer;
@@ -1387,15 +1432,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Isomer.initEnum(['L', 'D', 'UNDEFINED']);
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _enumify = __webpack_require__(5);
 	
@@ -1414,8 +1461,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function LinkedCarbon() {
 	        _classCallCheck(this, LinkedCarbon);
 	
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(LinkedCarbon).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (LinkedCarbon.__proto__ || Object.getPrototypeOf(LinkedCarbon)).apply(this, arguments));
 	    }
+	
+	    _createClass(LinkedCarbon, [{
+	        key: 'getLinkedCarbon',
+	        value: function getLinkedCarbon(value) {
+	            switch (value) {
+	                case 1:
+	                    return LinkedCarbon.ONE;
+	                case 2:
+	                    return LinkedCarbon.TWO;
+	                case 3:
+	                    return LinkedCarbon.THREE;
+	                case 4:
+	                    return LinkedCarbon.FOUR;
+	                case 5:
+	                    return LinkedCarbon.FIVE;
+	                case 6:
+	                    return LinkedCarbon.SIX;
+	                case 7:
+	                    return LinkedCarbon.SEVEN;
+	                case 8:
+	                    return LinkedCarbon.EIGHT;
+	                case 9:
+	                    return LinkedCarbon.NINE;
+	                default:
+	                    return LinkedCarbon.UNDEFINED;
+	            }
+	        }
+	    }]);
 	
 	    return LinkedCarbon;
 	}(_enumify.Enum);
@@ -1456,537 +1531,533 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _enumify = __webpack_require__(5);
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+	
 	var MonosaccharideType = function (_Enum) {
 	    _inherits(MonosaccharideType, _Enum);
-
+	
 	    function MonosaccharideType() {
 	        _classCallCheck(this, MonosaccharideType);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(MonosaccharideType).apply(this, arguments));
+	
+	        return _possibleConstructorReturn(this, (MonosaccharideType.__proto__ || Object.getPrototypeOf(MonosaccharideType)).apply(this, arguments));
 	    }
-
+	
 	    return MonosaccharideType;
 	}(_enumify.Enum);
-
+	
 	exports.default = MonosaccharideType;
-
-
+	
+	
 	MonosaccharideType.initEnum({
-        Hex: {
-            shape: 'circle',
-            color: '#FFFFFF',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Glc: {
-            shape: 'circle',
-            color: '#0080FF',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Man: {
-            shape: 'circle',
-            color: '#00FF00',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Gal: {
-            shape: 'circle',
-            color: '#FFD900',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Gul: {
-            shape: 'circle',
-            color: '#FF8000',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Alt: {
-            shape: 'circle',
-            color: '#FF87C2',
-            bisected: false,
-            superclass: "HEX"
-        },
-        All: {
-            shape: 'circle',
-            color: '#9E1FFF',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Tal: {
-            shape: 'circle',
-            color: '#96F2F7',
-            bisected: false,
-            superclass: "HEX"
-        },
-        Ido: {
-            shape: 'circle',
-            color: '#977335',
-            bisected: false,
-            superclass: "HEX"
-        },
-        HexNAc: {
-            shape: 'square',
-            color: '#FFFFFF',
-            bisected: false
-        },
-        GlcNAc: {
-            shape: 'square',
-            color: '#0080FF',
-            bisected: false
-        },
-        ManNAc: {
-            shape: 'square',
-            color: '#00FF00',
-            bisected: false
-        },
-        GalNAc: {
-            shape: 'square',
-            color: '#FFD900',
-            bisected: false
-        },
-        GulNAc: {
-            shape: 'square',
-            color: '#FF8000',
-            bisected: false
-        },
-        AltNAc: {
-            shape: 'square',
-            color: '#FF87C2',
-            bisected: false
-        },
-        AllNAc: {
-            shape: 'square',
-            color: '#9E1FFF',
-            bisected: false
-        },
-        TalNAc: {
-            shape: 'square',
-            color: '#96F2F7',
-            bisected: false
-        },
-        IdoNAc: {
-            shape: 'square',
-            color: '#977335',
-            bisected: false
-        },
-        HexN: {
-            shape: 'square',
-            color: '#FFFFFF',
-            bisected: true
-        },
-        GlcN: {
-            shape: 'square',
-            color: '#0080FF',
-            bisected: true
-        },
-        ManN: {
-            shape: 'square',
-            color: '#00FF00',
-            bisected: true
-        },
-        GalN: {
-            shape: 'square',
-            color: '#FFD900',
-            bisected: true
-        },
-        GulN: {
-            shape: 'square',
-            color: '#FF8000',
-            bisected: true
-        },
-        AltN: {
-            shape: 'square',
-            color: '#FF87C2',
-            bisected: true
-        },
-        AllN: {
-            shape: 'square',
-            color: '#9E1FFF',
-            bisected: true
-        },
-        TalN: {
-            shape: 'square',
-            color: '#96F2F7',
-            bisected: true
-        },
-        IdoN: {
-            shape: 'square',
-            color: '#977335',
-            bisected: true
-        },
-        HexA: {
-            shape: 'diamond',
-            color: '#FFFFFF',
-            bisected: true
-        },
-        GlcA: {
-            shape: 'diamond',
-            color: '#0080FF',
-            bisected: true
-        },
-        ManA: {
-            shape: 'diamond',
-            color: '#00FF00',
-            bisected: true
-        },
-        GalA: {
-            shape: 'diamond',
-            color: '#FFD900',
-            bisected: true
-        },
-        GulA: {
-            shape: 'diamond',
-            color: '#FF8000',
-            bisected: true
-        },
-        AltA: {
-            shape: 'diamond',
-            color: '#FF87C2',
-            bisected: true
-        },
-        AllA: {
-            shape: 'diamond',
-            color: '#9E1FFF',
-            bisected: true
-        },
-        TalA: {
-            shape: 'diamond',
-            color: '#96F2F7',
-            bisected: true
-        },
-        IdoA: {
-            shape: 'diamond',
-            color: '#977335',
-            bisected: true
-        },
-        dHex: {
-            shape: 'triangle',
-            color: '#FFFFFF',
-            bisected: false
-        },
-        Qui: {
-            shape: 'triangle',
-            color: '#0080FF',
-            bisected: false
-        },
-        Rha: {
-            shape: 'triangle',
-            color: '#00FF00',
-            bisected: false
-        },
-        SixdAlt: {
-            shape: 'triangle',
-            color: '#FF87C2',
-            bisected: false
-        },
-        SixdTal: {
-            shape: 'triangle',
-            color: '#96F2F7',
-            bisected: false
-        },
-        Fuc: {
-            shape: 'triangle',
-            color: '#FF0000',
-            bisected: false
-        },
-        dHexNAc: {
-            shape: 'triangle',
-            color: '#FFFFFF',
-            bisected: true
-        },
-        QuiNAc: {
-            shape: 'triangle',
-            color: '#0080FF',
-            bisected: true
-        },
-        RhaNAc: {
-            shape: 'triangle',
-            color: '#00FF00',
-            bisected: true
-        },
-        FucNAc: {
-            shape: 'triangle',
-            color: '#FF0000',
-            bisected: true
-        },
-        Di_dHex: {
-            shape: 'rectangle',
-            color: '#FFFFFF',
-            bisected: false
-        },
-        Oli: {
-            shape: 'rectangle',
-            color: '#0080FF',
-            bisected: false
-        },
-        Tyv: {
-            shape: 'rectangle',
-            color: '#00FF00',
-            bisected: false
-        },
-        Abe: {
-            shape: 'rectangle',
-            color: '#FF8000',
-            bisected: false
-        },
-        Par: {
-            shape: 'rectangle',
-            color: '#FF87C2',
-            bisected: false
-        },
-        Dig: {
-            shape: 'rectangle',
-            color: '#9E1FFF',
-            bisected: false
-        },
-        Col: {
-            shape: 'rectangle',
-            color: '#96F2F7',
-            bisected: false
-        },
-        Pen: {
-            shape: 'star',
-            color: '#FFFFFF',
-            bisected: false,
-            superclass: "PEN"
-        },
-        Ara: {
-            shape: 'star',
-            color: '#00FF00',
-            bisected: false,
-            superclass: "PEN"
-        },
-        Lyx: {
-            shape: 'star',
-            color: '#FFD900',
-            bisected: false,
-            superclass: "PEN"
-        },
-        Xyl: {
-            shape: 'star',
-            color: '#FF8000',
-            bisected: false,
-            superclass: "PEN"
-        },
-        Rib: {
-            shape: 'star',
-            color: '#FF87C2',
-            bisected: false,
-            superclass: "PEN"
-        },
-        Nonu: {
-            shape: 'diamond',
-            color: '#FFFFFF',
-            bisected: false
-        },
-        Kdn: {
-            shape: 'diamond',
-            color: '#00FF00',
-            bisected: false
-        },
-        Neu5Ac: {
-            shape: 'diamond',
-            color: '#9E1FFF',
-            bisected: false
-        },
-        Neu5Gc: {
-            shape: 'diamond',
-            color: '#96F2F7',
-            bisected: false
-        },
-        Neu: {
-            shape: 'diamond',
-            color: '#977335',
-            bisected: false
-        },
-
-
-
-        Unknown: {
-            shape: 'Hexagon',
-            color: '#FFFFFF',
-            bisected: false
-        },
-        Bac: {
-            shape: 'Hexagon',
-            color: '#0080FF',
-            bisected: false
-        },
-        LDManHep: {
-            shape: 'Hexagon',
-            color: '#00FF00',
-            bisected: false
-        },
-        Kdo: {
-            shape: 'Hexagon',
-            color: '#FFD900',
-            bisected: false
-        },
-        Dha: {
-            shape: 'Hexagon',
-            color: '#FF8000',
-            bisected: false
-        },
-        DDManHep: {
-            shape: 'Hexagon',
-            color: '#FF87C2',
-            bisected: false
-        },
-        MurNAc: {
-            shape: 'Hexagon',
-            color: '#9E1FFF',
-            bisected: false
-        },
-        MurNGc: {
-            shape: 'Hexagon',
-            color: '#96F2F7',
-            bisected: false
-        },
-        Mur: {
-            shape: 'Hexagon',
-            color: '#977335',
-            bisected: false
-        },
-
-
-
-        Assigned: {
-            shape: 'Pentagon',
-            color: '#FFFFFF',
-            bisected: false
-        },
-        Api: {
-            shape: 'Pentagon',
-            color: '#0080FF',
-            bisected: false
-        },
-        Fru: {
-            shape: 'Pentagon',
-            color: '#00FF00',
-            bisected: false
-        },
-        Tag: {
-            shape: 'Pentagon',
-            color: '#FFD900',
-            bisected: false
-        },
-        Sor: {
-            shape: 'Pentagon',
-            color: '#FF8000',
-            bisected: false
-        },
-        Psi: {
-            shape: 'Pentagon',
-            color: '#FF87C2',
-            bisected: false
-        },
-        UNDEFINED: {
-            shape: 'undefined',
-            color: 'undefined',
-            bisected: false
-        }
+	    Hex: {
+	        shape: 'circle',
+	        color: '#FFFFFF',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Glc: {
+	        shape: 'circle',
+	        color: '#0080FF',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Man: {
+	        shape: 'circle',
+	        color: '#00FF00',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Gal: {
+	        shape: 'circle',
+	        color: '#FFD900',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Gul: {
+	        shape: 'circle',
+	        color: '#FF8000',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Alt: {
+	        shape: 'circle',
+	        color: '#FF87C2',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    All: {
+	        shape: 'circle',
+	        color: '#9E1FFF',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Tal: {
+	        shape: 'circle',
+	        color: '#96F2F7',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    Ido: {
+	        shape: 'circle',
+	        color: '#977335',
+	        bisected: false,
+	        superclass: "HEX"
+	    },
+	    HexNAc: {
+	        shape: 'square',
+	        color: '#FFFFFF',
+	        bisected: false
+	    },
+	    GlcNAc: {
+	        shape: 'square',
+	        color: '#0080FF',
+	        bisected: false
+	    },
+	    ManNAc: {
+	        shape: 'square',
+	        color: '#00FF00',
+	        bisected: false
+	    },
+	    GalNAc: {
+	        shape: 'square',
+	        color: '#FFD900',
+	        bisected: false
+	    },
+	    GulNAc: {
+	        shape: 'square',
+	        color: '#FF8000',
+	        bisected: false
+	    },
+	    AltNAc: {
+	        shape: 'square',
+	        color: '#FF87C2',
+	        bisected: false
+	    },
+	    AllNAc: {
+	        shape: 'square',
+	        color: '#9E1FFF',
+	        bisected: false
+	    },
+	    TalNAc: {
+	        shape: 'square',
+	        color: '#96F2F7',
+	        bisected: false
+	    },
+	    IdoNAc: {
+	        shape: 'square',
+	        color: '#977335',
+	        bisected: false
+	    },
+	    HexN: {
+	        shape: 'square',
+	        color: '#FFFFFF',
+	        bisected: true
+	    },
+	    GlcN: {
+	        shape: 'square',
+	        color: '#0080FF',
+	        bisected: true
+	    },
+	    ManN: {
+	        shape: 'square',
+	        color: '#00FF00',
+	        bisected: true
+	    },
+	    GalN: {
+	        shape: 'square',
+	        color: '#FFD900',
+	        bisected: true
+	    },
+	    GulN: {
+	        shape: 'square',
+	        color: '#FF8000',
+	        bisected: true
+	    },
+	    AltN: {
+	        shape: 'square',
+	        color: '#FF87C2',
+	        bisected: true
+	    },
+	    AllN: {
+	        shape: 'square',
+	        color: '#9E1FFF',
+	        bisected: true
+	    },
+	    TalN: {
+	        shape: 'square',
+	        color: '#96F2F7',
+	        bisected: true
+	    },
+	    IdoN: {
+	        shape: 'square',
+	        color: '#977335',
+	        bisected: true
+	    },
+	    HexA: {
+	        shape: 'diamond',
+	        color: '#FFFFFF',
+	        bisected: true
+	    },
+	    GlcA: {
+	        shape: 'diamond',
+	        color: '#0080FF',
+	        bisected: true
+	    },
+	    ManA: {
+	        shape: 'diamond',
+	        color: '#00FF00',
+	        bisected: true
+	    },
+	    GalA: {
+	        shape: 'diamond',
+	        color: '#FFD900',
+	        bisected: true
+	    },
+	    GulA: {
+	        shape: 'diamond',
+	        color: '#FF8000',
+	        bisected: true
+	    },
+	    AltA: {
+	        shape: 'diamond',
+	        color: '#FF87C2',
+	        bisected: true
+	    },
+	    AllA: {
+	        shape: 'diamond',
+	        color: '#9E1FFF',
+	        bisected: true
+	    },
+	    TalA: {
+	        shape: 'diamond',
+	        color: '#96F2F7',
+	        bisected: true
+	    },
+	    IdoA: {
+	        shape: 'diamond',
+	        color: '#977335',
+	        bisected: true
+	    },
+	    dHex: {
+	        shape: 'triangle',
+	        color: '#FFFFFF',
+	        bisected: false
+	    },
+	    Qui: {
+	        shape: 'triangle',
+	        color: '#0080FF',
+	        bisected: false
+	    },
+	    Rha: {
+	        shape: 'triangle',
+	        color: '#00FF00',
+	        bisected: false
+	    },
+	    SixdAlt: {
+	        shape: 'triangle',
+	        color: '#FF87C2',
+	        bisected: false
+	    },
+	    SixdTal: {
+	        shape: 'triangle',
+	        color: '#96F2F7',
+	        bisected: false
+	    },
+	    Fuc: {
+	        shape: 'triangle',
+	        color: '#FF0000',
+	        bisected: false
+	    },
+	    dHexNAc: {
+	        shape: 'triangle',
+	        color: '#FFFFFF',
+	        bisected: true
+	    },
+	    QuiNAc: {
+	        shape: 'triangle',
+	        color: '#0080FF',
+	        bisected: true
+	    },
+	    RhaNAc: {
+	        shape: 'triangle',
+	        color: '#00FF00',
+	        bisected: true
+	    },
+	    FucNAc: {
+	        shape: 'triangle',
+	        color: '#FF0000',
+	        bisected: true
+	    },
+	    Di_dHex: {
+	        shape: 'rectangle',
+	        color: '#FFFFFF',
+	        bisected: false
+	    },
+	    Oli: {
+	        shape: 'rectangle',
+	        color: '#0080FF',
+	        bisected: false
+	    },
+	    Tyv: {
+	        shape: 'rectangle',
+	        color: '#00FF00',
+	        bisected: false
+	    },
+	    Abe: {
+	        shape: 'rectangle',
+	        color: '#FF8000',
+	        bisected: false
+	    },
+	    Par: {
+	        shape: 'rectangle',
+	        color: '#FF87C2',
+	        bisected: false
+	    },
+	    Dig: {
+	        shape: 'rectangle',
+	        color: '#9E1FFF',
+	        bisected: false
+	    },
+	    Col: {
+	        shape: 'rectangle',
+	        color: '#96F2F7',
+	        bisected: false
+	    },
+	    Pen: {
+	        shape: 'star',
+	        color: '#FFFFFF',
+	        bisected: false,
+	        superclass: "PEN"
+	    },
+	    Ara: {
+	        shape: 'star',
+	        color: '#00FF00',
+	        bisected: false,
+	        superclass: "PEN"
+	    },
+	    Lyx: {
+	        shape: 'star',
+	        color: '#FFD900',
+	        bisected: false,
+	        superclass: "PEN"
+	    },
+	    Xyl: {
+	        shape: 'star',
+	        color: '#FF8000',
+	        bisected: false,
+	        superclass: "PEN"
+	    },
+	    Rib: {
+	        shape: 'star',
+	        color: '#FF87C2',
+	        bisected: false,
+	        superclass: "PEN"
+	    },
+	    Nonu: {
+	        shape: 'diamond',
+	        color: '#FFFFFF',
+	        bisected: false
+	    },
+	    Kdn: {
+	        shape: 'diamond',
+	        color: '#00FF00',
+	        bisected: false
+	    },
+	    Neu5Ac: {
+	        shape: 'diamond',
+	        color: '#9E1FFF',
+	        bisected: false
+	    },
+	    Neu5Gc: {
+	        shape: 'diamond',
+	        color: '#96F2F7',
+	        bisected: false
+	    },
+	    Neu: {
+	        shape: 'diamond',
+	        color: '#977335',
+	        bisected: false
+	    },
+	
+	    Unknown: {
+	        shape: 'Hexagon',
+	        color: '#FFFFFF',
+	        bisected: false
+	    },
+	    Bac: {
+	        shape: 'Hexagon',
+	        color: '#0080FF',
+	        bisected: false
+	    },
+	    LDManHep: {
+	        shape: 'Hexagon',
+	        color: '#00FF00',
+	        bisected: false
+	    },
+	    Kdo: {
+	        shape: 'Hexagon',
+	        color: '#FFD900',
+	        bisected: false
+	    },
+	    Dha: {
+	        shape: 'Hexagon',
+	        color: '#FF8000',
+	        bisected: false
+	    },
+	    DDManHep: {
+	        shape: 'Hexagon',
+	        color: '#FF87C2',
+	        bisected: false
+	    },
+	    MurNAc: {
+	        shape: 'Hexagon',
+	        color: '#9E1FFF',
+	        bisected: false
+	    },
+	    MurNGc: {
+	        shape: 'Hexagon',
+	        color: '#96F2F7',
+	        bisected: false
+	    },
+	    Mur: {
+	        shape: 'Hexagon',
+	        color: '#977335',
+	        bisected: false
+	    },
+	
+	    Assigned: {
+	        shape: 'Pentagon',
+	        color: '#FFFFFF',
+	        bisected: false
+	    },
+	    Api: {
+	        shape: 'Pentagon',
+	        color: '#0080FF',
+	        bisected: false
+	    },
+	    Fru: {
+	        shape: 'Pentagon',
+	        color: '#00FF00',
+	        bisected: false
+	    },
+	    Tag: {
+	        shape: 'Pentagon',
+	        color: '#FFD900',
+	        bisected: false
+	    },
+	    Sor: {
+	        shape: 'Pentagon',
+	        color: '#FF8000',
+	        bisected: false
+	    },
+	    Psi: {
+	        shape: 'Pentagon',
+	        color: '#FF87C2',
+	        bisected: false
+	    },
+	    UNDEFINED: {
+	        shape: 'undefined',
+	        color: 'undefined',
+	        bisected: false
+	    }
 	});
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-
+	
 	var _enumify = __webpack_require__(5);
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+	
 	var RingType = function (_Enum) {
 	  _inherits(RingType, _Enum);
-
+	
 	  function RingType() {
 	    _classCallCheck(this, RingType);
-
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(RingType).apply(this, arguments));
+	
+	    return _possibleConstructorReturn(this, (RingType.__proto__ || Object.getPrototypeOf(RingType)).apply(this, arguments));
 	  }
-
+	
 	  return RingType;
 	}(_enumify.Enum);
-
+	
 	exports.default = RingType;
-
-
+	
+	
 	RingType.initEnum(['P', 'F', 'OPEN', 'UNDEFINED']);
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _enumify = __webpack_require__(5);
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+	
 	var SubstituentType = function (_Enum) {
 	    _inherits(SubstituentType, _Enum);
-
+	
 	    function SubstituentType() {
 	        _classCallCheck(this, SubstituentType);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(SubstituentType).apply(this, arguments));
+	
+	        return _possibleConstructorReturn(this, (SubstituentType.__proto__ || Object.getPrototypeOf(SubstituentType)).apply(this, arguments));
 	    }
-
+	
 	    return SubstituentType;
 	}(_enumify.Enum);
-
+	
 	exports.default = SubstituentType;
-
-
+	
+	
 	SubstituentType.initEnum({
 	    Acetyl: {
-	        label: 'Acetyl'
+	        label: 'Ac'
 	    },
 	    Bromo: {
 	        label: 'Br'
@@ -1995,10 +2066,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'Cl'
 	    },
 	    Ethyl: {
-	        label: 'Ethyl'
+	        label: 'Et'
 	    },
 	    Ethanolamine: {
-	        label: 'Ethanolamine'
+	        label: 'ETA'
 	    },
 	    Fluoro: {
 	        label: 'F'
@@ -2007,7 +2078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'Formyl'
 	    },
 	    Hydroxymethyl: {
-	        label: 'Hydroxymethyl'
+	        label: 'HM'
 	    },
 	    Imino: {
 	        label: 'Imino'
@@ -2080,50 +2151,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	});
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+	
 	var _GraphEdge = __webpack_require__(2);
-
+	
 	var _GraphEdge2 = _interopRequireDefault(_GraphEdge);
-
+	
 	var _AnomerCarbon = __webpack_require__(4);
-
+	
 	var _AnomerCarbon2 = _interopRequireDefault(_AnomerCarbon);
-
+	
 	var _LinkedCarbon = __webpack_require__(8);
-
+	
 	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
+	
+	
 	var GlycosidicLinkage = function (_Edge) {
 	    _inherits(GlycosidicLinkage, _Edge);
-
+	
 	    function GlycosidicLinkage(id, sourceNode, targetNode, anomerCarbon, linkedCarbon) {
 	        _classCallCheck(this, GlycosidicLinkage);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(GlycosidicLinkage).call(this, id, sourceNode, targetNode));
-
+	
+	        var _this = _possibleConstructorReturn(this, (GlycosidicLinkage.__proto__ || Object.getPrototypeOf(GlycosidicLinkage)).call(this, id, sourceNode, targetNode));
+	
 	        if (anomerCarbon instanceof _AnomerCarbon2.default) {
 	            _this._anomerCarbon = anomerCarbon;
 	        } else if (typeof anomerCarbon == 'undefined') {
@@ -2131,7 +2202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
 	        }
-
+	
 	        if (linkedCarbon instanceof _LinkedCarbon2.default) {
 	            _this._linkedCarbon = linkedCarbon;
 	        } else if (typeof linkedCarbon == 'undefined') {
@@ -2141,7 +2212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return _this;
 	    }
-
+	
 	    _createClass(GlycosidicLinkage, [{
 	        key: 'anomerCarbon',
 	        get: function get() {
@@ -2169,52 +2240,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return linkedCarbon;
 	        }
 	    }]);
-
+	
 	    return GlycosidicLinkage;
 	}(_GraphEdge2.default);
-
+	
 	exports.default = GlycosidicLinkage;
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+	
 	var _GraphEdge = __webpack_require__(2);
-
+	
 	var _GraphEdge2 = _interopRequireDefault(_GraphEdge);
-
+	
 	var _LinkedCarbon = __webpack_require__(8);
-
+	
 	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-
+	
+	
 	var SubstituentLinkage = function (_Edge) {
 	    _inherits(SubstituentLinkage, _Edge);
-
+	
 	    function SubstituentLinkage(id, target, source, linkedCarbon) {
 	        _classCallCheck(this, SubstituentLinkage);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SubstituentLinkage).call(this, id, target, source));
-
+	
+	        var _this = _possibleConstructorReturn(this, (SubstituentLinkage.__proto__ || Object.getPrototypeOf(SubstituentLinkage)).call(this, id, target, source));
+	
 	        if (linkedCarbon instanceof _LinkedCarbon2.default) {
 	            _this._linkedCarbon = linkedCarbon;
 	        } else if (typeof linkedCarbon == 'undefined') {
@@ -2224,7 +2295,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return _this;
 	    }
-
+	
 	    _createClass(SubstituentLinkage, [{
 	        key: 'linkedCarbon',
 	        get: function get() {
@@ -2239,63 +2310,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return linkedCarbon;
 	        }
 	    }]);
-
+	
 	    return SubstituentLinkage;
 	}(_GraphEdge2.default);
-
+	
 	exports.default = SubstituentLinkage;
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+	
 	var _GraphNode = __webpack_require__(3);
-
+	
 	var _GraphNode2 = _interopRequireDefault(_GraphNode);
-
+	
 	var _Anomericity = __webpack_require__(6);
-
+	
 	var _Anomericity2 = _interopRequireDefault(_Anomericity);
-
+	
 	var _Isomer = __webpack_require__(7);
-
+	
 	var _Isomer2 = _interopRequireDefault(_Isomer);
-
+	
 	var _RingType = __webpack_require__(10);
-
+	
 	var _RingType2 = _interopRequireDefault(_RingType);
-
+	
 	var _MonosaccharideType = __webpack_require__(9);
-
+	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+	
 	var Monosaccharide = function (_Node) {
 	    _inherits(Monosaccharide, _Node);
-
+	
 	    function Monosaccharide(id, monosaccharideType, anomericity, isomer, ringType) {
 	        _classCallCheck(this, Monosaccharide);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Monosaccharide).call(this, id));
-
+	
+	        var _this = _possibleConstructorReturn(this, (Monosaccharide.__proto__ || Object.getPrototypeOf(Monosaccharide)).call(this, id));
+	
 	        if (monosaccharideType instanceof _MonosaccharideType2.default) {
 	            _this._monosaccharideType = monosaccharideType;
 	        } else if (typeof monosaccharideType == 'undefined') {
@@ -2303,7 +2374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            throw 'Please use the MonosaccharideType class and forget about string. Extend the enum if you need a specific value';
 	        }
-
+	
 	        if (anomericity instanceof _Anomericity2.default) {
 	            _this._anomericity = anomericity;
 	        } else if (typeof anomericity == 'undefined') {
@@ -2311,7 +2382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            throw 'Please use the Anomericity class and forget about string. Extend the enum if you need a specific value';
 	        }
-
+	
 	        if (isomer instanceof _Isomer2.default) {
 	            _this._isomer = isomer;
 	        } else if (typeof isomer == 'undefined') {
@@ -2319,7 +2390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            throw 'Please use the Isomer class and forget about string. Extend the enum if you need a specific value';
 	        }
-
+	
 	        if (ringType instanceof _RingType2.default) {
 	            _this._ringType = ringType;
 	        } else if (typeof ringType == 'undefined') {
@@ -2327,10 +2398,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else {
 	            throw 'Please use the RingType class and forget about string. Extend the enum if you need a specific value';
 	        }
-
+	
 	        return _this;
 	    }
-
+	
 	    _createClass(Monosaccharide, [{
 	        key: 'ringType',
 	        get: function get() {
@@ -2380,51 +2451,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }]);
-
+	
 	    return Monosaccharide;
 	}(_GraphNode2.default);
-
+	
 	exports.default = Monosaccharide;
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+	
 	var _GraphNode = __webpack_require__(3);
-
+	
 	var _GraphNode2 = _interopRequireDefault(_GraphNode);
-
+	
 	var _SubstituentType = __webpack_require__(11);
-
+	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
+	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
+	
 	var Substituent = function (_Node) {
 	    _inherits(Substituent, _Node);
-
+	
 	    function Substituent(id, substituentType) {
 	        _classCallCheck(this, Substituent);
-
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Substituent).call(this, id));
-
+	
+	        var _this = _possibleConstructorReturn(this, (Substituent.__proto__ || Object.getPrototypeOf(Substituent)).call(this, id));
+	
 	        if (substituentType instanceof _SubstituentType2.default) {
 	            _this._substituentType = substituentType;
 	        } else if (typeof substituentType == 'undefined') {
@@ -2434,7 +2505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return _this;
 	    }
-
+	
 	    _createClass(Substituent, [{
 	        key: 'substituentType',
 	        get: function get() {
@@ -2448,22 +2519,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }]);
-
+	
 	    return Substituent;
 	}(_GraphNode2.default);
-
+	
 	exports.default = Substituent;
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
-
+	
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Author:  Davide Alocci
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
@@ -2473,46 +2544,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * At the moment all the attributes are mutable unless ids with targets and sources.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-
+	
+	
 	var _Monosaccharide = __webpack_require__(14);
-
+	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
-
+	
 	var _Substituent = __webpack_require__(15);
-
+	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
-
+	
 	var _GlycosidicLinkage = __webpack_require__(12);
-
+	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
-
+	
 	var _SubstituentLinkage = __webpack_require__(13);
-
+	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
-
+	
 	var _Graph = __webpack_require__(1);
-
+	
 	var _Graph2 = _interopRequireDefault(_Graph);
-
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+	
 	var Sugar = function () {
 	    function Sugar(id, rootNode) {
 	        _classCallCheck(this, Sugar);
-
+	
 	        if (typeof id !== 'string' && typeof id !== 'number') {
 	            throw 'The sugar must have a string or number id.';
 	        } else {
 	            this.id = id;
 	        }
-
+	
 	        this.rootSet = false;
 	        //Wrapping of Sigma.js graph datastructure.
 	        this.graph = new _Graph2.default.graph();
-
+	
 	        if (rootNode instanceof _Monosaccharide2.default) {
 	            this.rootNode = rootNode;
 	            try {
@@ -2520,75 +2591,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } catch (err) {
 	                throw 'Error adding node: ' + err;
 	            }
-
+	
 	            this.rootSet = true;
 	        } else if (typeof rootNode != 'undefined') {
 	            throw 'The Root Node can be undefined or a Monosaccharide ';
 	        }
 	    }
-
+	
 	    /**
 	     * Chech if the root of the Sugar is set.
 	     * @returns {boolean}
 	     */
-
+	
 	    _createClass(Sugar, [{
 	        key: 'rootIsSet',
 	        value: function rootIsSet() {
 	            return this.rootSet;
 	        }
-
+	
 	        /**
 	         * Get the Sugar Id
 	         * @returns {string} Sugar Id
 	         */
-
+	
 	    }, {
 	        key: 'getSugarId',
 	        value: function getSugarId() {
 	            return this.id;
 	        }
-
+	
 	        /**
 	         * Get the root node. Can only be a Monosaccharide
 	         * @returns {Monosaccharide} Root Monosaccharide
 	         */
-
+	
 	    }, {
 	        key: 'getRootNode',
 	        value: function getRootNode() {
 	            return this.rootNode;
 	        }
-
+	
 	        /**
 	         * Set the root node. Can only be a Monosaccharide
 	         * @param {Monosaccharide} rootNode The root node
 	         * @returns {Monosaccharide} The root node
 	         */
-
+	
 	    }, {
 	        key: 'setRootNode',
 	        value: function setRootNode(rootNode) {
 	            if (!(rootNode instanceof _Monosaccharide2.default)) {
 	                throw 'The Root Node can be only a Monosaccharide ';
 	            }
-
+	
 	            if (this.rootIsSet()) {
 	                throw 'The Root Node can only be set once. Create a new Sugar object.';
 	            }
-
+	
 	            this.rootNode = rootNode;
 	            this.graph.addNode(rootNode);
 	            this.rootSet = true;
 	            return rootNode;
 	        }
-
+	
 	        /**
 	         * Return the Node with the id specified by the user otherwise throw an error.
 	         * @param {string} id The node id
 	         * @returns {*} return a node object (Monosaccharide or Substituent in our case).
 	         */
-
+	
 	    }, {
 	        key: 'getNodeById',
 	        value: function getNodeById(id) {
@@ -2600,13 +2671,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            throw 'Error: The node does not exist';
 	        }
-
+	
 	        /**
 	         * Return the Edge with the id specified by the user otherwise throw an error.
 	         * @param {string} id The Edge id
 	         * @returns {*} return a linkage(edge) object (GlycosidicLinkage or SubstituentLinkage in our case).
 	         */
-
+	
 	    }, {
 	        key: 'getEdgeById',
 	        value: function getEdgeById(id) {
@@ -2618,7 +2689,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            throw 'Error: The node does not exist';
 	        }
-
+	
 	        /**
 	         * Return the Edge within sourceNode and targetNode
 	         * Throw an error if the edge does not exist.
@@ -2626,7 +2697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {string} id The Edge id
 	         * @returns {*} return a linkage(edge) object (GlycosidicLinkage or SubstituentLinkage in our case).
 	         */
-
+	
 	    }, {
 	        key: 'getEdge',
 	        value: function getEdge(sourceNode, targetNode) {
@@ -2637,13 +2708,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            throw 'No edge found between the sourceNode and targetNode';
 	        }
-
+	
 	        /**
 	         * Return the Monosaccharide with the id specified by the user otherwise throw an error.
 	         * @param {string} id The Monosaccharide id
 	         * @returns {Monosaccharide} return a Monosaccahride object
 	         */
-
+	
 	    }, {
 	        key: 'getMonosaccharideById',
 	        value: function getMonosaccharideById(id) {
@@ -2654,13 +2725,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can only return monosaccharide object';
 	            }
 	        }
-
+	
 	        /**
 	         * Return the Substituent with the id specified by the user otherwise throw an error.
 	         * @param {string} id The Substituent id
 	         * @returns {Substituent} return a Substituent object
 	         */
-
+	
 	    }, {
 	        key: 'getSubstituentById',
 	        value: function getSubstituentById(id) {
@@ -2671,13 +2742,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can only return substituent object';
 	            }
 	        }
-
+	
 	        /**
 	         * Return the GlycosidicLinkage with the id specified by the user otherwise throw an error.
 	         * @param {string} id The Edge id
 	         * @returns {GlycosidicLinkage} return a GlycosidicLinkage object
 	         */
-
+	
 	    }, {
 	        key: 'getGlycosidicLinkagebyID',
 	        value: function getGlycosidicLinkagebyID(id) {
@@ -2688,13 +2759,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can only return GlycosidicLinkage object';
 	            }
 	        }
-
+	
 	        /**
 	         * Return the SubstituentLinkage with the id specified by the user otherwise throw an error.
 	         * @param {string} id The Edge id
 	         * @returns {SubstituentLinkage} return a SubstituentLinkage object
 	         */
-
+	
 	    }, {
 	        key: 'getSubstituentLinkagebyId',
 	        value: function getSubstituentLinkagebyId(id) {
@@ -2705,13 +2776,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can only return SubstituentLinkage object';
 	            }
 	        }
-
+	
 	        /**
 	         * Return the GlycosidicLinkage within sourceNode and targhetNode
 	         * @param {string} id The Edge id
 	         * @returns {GlycosidicLinkage} return a GlycosidicLinkage object
 	         */
-
+	
 	    }, {
 	        key: 'getGlycosidicLinkage',
 	        value: function getGlycosidicLinkage(sourceNode, targetNode) {
@@ -2722,13 +2793,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can only return GlycosidicLinkage object';
 	            }
 	        }
-
+	
 	        /**
 	         * Return the SubstituentLinkage within sourceNode and targhetNode
 	         * @param {string} id The Edge id
 	         * @returns {SubstituentLinkage} return a SubstituentLinkage object
 	         */
-
+	
 	    }, {
 	        key: 'getSubstituentLinkage',
 	        value: function getSubstituentLinkage(sourceNode, targetNode) {
@@ -2739,14 +2810,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can only return SubstituentLinkage object';
 	            }
 	        }
-
+	
 	        /**
 	         * Add a new Monosaccharide to the Sugar with a pre-built Glycosidic Linkage.
 	         * @param {Monosaccharide} childNode The monosaccharide to add
 	         * @param {GlycosidicLinkage} glycosidicLinkage The edge to add
 	         * @returns {Monosaccharide} The monosaccharide added to the Sugar.
 	         */
-
+	
 	    }, {
 	        key: 'addMonosaccharide',
 	        value: function addMonosaccharide(childNode, glycosidicLinkage) {
@@ -2756,17 +2827,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	                throw 'Error: the childNode must be a Monosaccharide and the Linkage must be a GlycosidicLinkage';
 	            }
-
+	
 	            return childNode;
 	        }
-
+	
 	        /**
 	         * Add a new Substituent to the Sugar with a pre-built Substituent Linkage
 	         * @param {Substituent} childNode The substituent to add
 	         * @param {SubstituentLinkage}substituentLinkage The edge to add
 	         * @returns {Substituent} The substituent added to the Substituent.
 	         */
-
+	
 	    }, {
 	        key: 'addSubstituent',
 	        value: function addSubstituent(childNode, substituentLinkage) {
@@ -2782,7 +2853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return childNode;
 	        }
-
+	
 	        /**
 	         * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
 	         * @param {Node} parentNode The parentNode in the graph.(Monosaccharide or Substituent)
@@ -2791,7 +2862,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
 	         * @return {GlycosidicLinkage} the linkage created to add the node.
 	         */
-
+	
 	    }, {
 	        key: 'addMonosaccharideWithLinkage',
 	        value: function addMonosaccharideWithLinkage(parentNode, childNode, anomerCarbon, linkedCarbon) {
@@ -2805,7 +2876,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
-
+	
 	        /**
 	         * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
 	         * @param {Node} parentNode The parentNode in the graph.(Monosaccharide or Substituent)
@@ -2813,7 +2884,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
 	         * @return {SubstituentLinkage} the linkage created to add the node.
 	         */
-
+	
 	    }, {
 	        key: 'addSubstituentWithLinkage',
 	        value: function addSubstituentWithLinkage(parentNode, childNode, linkedCarbon) {
@@ -2832,7 +2903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {string} id The id of the node to be removed
 	         * @returns {Graph} Updated graph.
 	         */
-
+	
 	    }, {
 	        key: 'removeNodeById',
 	        value: function removeNodeById(id) {
@@ -2843,14 +2914,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'Error removing the Node: ' + err;
 	            }
 	        }
-
+	
 	        /**
 	         * Remove a Monosaccharide for the Sugar. It removes all the edges connected to the Monosaccharide.
 	         * Be carefull: The children will be detached from the tree.
 	         * @param {Monosaccharide} childNode The monosaccharide to be removed
 	         * @returns {Graph} Updated graph
 	         */
-
+	
 	    }, {
 	        key: 'removeMonosaccharide',
 	        value: function removeMonosaccharide(childNode) {
@@ -2865,14 +2936,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can remove only monosaccharide from the Sugar';
 	            }
 	        }
-
+	
 	        /**
 	         * Remove a Substituent for the Sugar. It removes all the edges connected to the Substituent.
 	         * Be carefull: The children will be detached from the tree.
 	         * @param {Substituent} childNode The substituent to be removed
 	         * @returns {Graph} Updated graph
 	         */
-
+	
 	    }, {
 	        key: 'removeSubstituent',
 	        value: function removeSubstituent(childNode) {
@@ -2887,13 +2958,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can remove only substituent from the Sugar';
 	            }
 	        }
-
+	
 	        /**
 	         * Remove a edge from the Sugar graph. This method works with Substituents and Monosaccharides
 	         * @param {string} id The id of the linkage to be removed
 	         * @returns {Graph} Updated graph.
 	         */
-
+	
 	    }, {
 	        key: 'removeLinkageById',
 	        value: function removeLinkageById(id) {
@@ -2904,13 +2975,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'Error removing the Node: ' + err;
 	            }
 	        }
-
+	
 	        /**
 	         * Remove a GlycosidicLinkage for the Sugar.
 	         * @param {GlycosidicLinkage} glycosidicLinkage The glycosidicLinkage to be removed
 	         * @returns {Graph} Updated graph
 	         */
-
+	
 	    }, {
 	        key: 'removeGlycosidicLinkage',
 	        value: function removeGlycosidicLinkage(linkage) {
@@ -2925,13 +2996,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can remove only GlycosidicLinkages from the Sugar';
 	            }
 	        }
-
+	
 	        /**
 	         * Remove a SubstituentLinkage for the Sugar.
 	         * @param {SubstituentLinkage} childNode The substituentLinkage to be removed
 	         * @returns {Graph} Updated graph
 	         */
-
+	
 	    }, {
 	        key: 'removeSubstituentLinkage',
 	        value: function removeSubstituentLinkage(linkage) {
@@ -2946,24 +3017,79 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw 'This method can remove only substituent from the Sugar';
 	            }
 	        }
-
+	
+	        /**
+	         * This method reads an object and adds a structure.
+	         * Please use id root for the root node!
+	         * Here is an example:
+	         *
+	         *   var mySugar = new Sugar();
+	         *   mySugar.addStructure({
+	         *     nodes: [
+	         *       {
+	         *         id: 'root',
+	         *         nodeType: 'Monosaccharide',
+	         *         monosaccharideType: ''
+	         *         anomericity: '',
+	         *         isomer: '',
+	         *         ringType: ''
+	         *       },
+	         *       {
+	         *         id: 'n1',
+	         *         nodeType: 'Monosaccharide',
+	         *         monosaccharideType: ''
+	         *         anomericity: '',
+	         *         isomer: '',
+	         *         ringType: ''
+	         *       }
+	         *     ],
+	         *     edges: [
+	         *       {
+	         *         id: 'e0',
+	         *         source: 'root',
+	         *         target: 'n1',
+	         *         linkedCarbon: '',
+	         *         anomerCarbon: '',
+	         *         linkageType:
+	         *       }
+	         *     ]
+	         *   });
+	         *
+	         * @param  {object} g The graph object.
+	         * @return {object}   The graph instance.
+	         */
+	
+	    }, {
+	        key: 'addStructure',
+	        value: function addStructure(structure) {
+	            var i, a, l;
+	
+	            a = g.nodes || [];
+	            for (i = 0, l = a.length; i < l; i++) {
+	                this.addNode(a[i]);
+	            }a = g.edges || [];
+	            for (i = 0, l = a.length; i < l; i++) {
+	                this.addEdge(a[i]);
+	            }return this;
+	        }
+	
 	        /**
 	         * The actual size of the sugar in terms of nodes.
 	         * Each monosaccharide and substituent count as 1
 	         * @returns {number} The size of the sugar
 	         */
-
+	
 	    }, {
 	        key: 'size',
 	        value: function size() {
 	            return this.graph.nodes().length;
 	        }
-
+	
 	        /**
 	         * Clear the sugar object and set Root to undefined.
 	         * Only the Id remains set (Id is immutable).
 	         */
-
+	
 	    }, {
 	        key: 'clear',
 	        value: function clear() {
@@ -2972,13 +3098,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.graph.clear();
 	        }
 	    }]);
-
+	
 	    return Sugar;
 	}();
-
+	
 	exports.default = Sugar;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;

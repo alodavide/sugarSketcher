@@ -9,7 +9,7 @@ export default class SubstituentType extends Enum {}
 
 SubstituentType.initEnum({
     Acetyl: {
-        label: 'Acetyl'
+        label: 'Ac'
     },
     Bromo: {
         label: 'Br'
@@ -18,10 +18,10 @@ SubstituentType.initEnum({
         label: 'Cl'
     },
     Ethyl: {
-        label: 'Ethyl'
+        label: 'Et'
     },
     Ethanolamine: {
-        label : 'Ethanolamine'
+        label : 'ETA'
     },
     Fluoro: {
         label: 'F'
@@ -30,7 +30,7 @@ SubstituentType.initEnum({
         label: 'Formyl'
     },
     Hydroxymethyl: {
-        label: 'Hydroxymethyl'
+        label: 'HM'
     },
     Imino: {
         label: 'Imino'
@@ -68,8 +68,8 @@ SubstituentType.initEnum({
     NSulfate: {
         label: 'NSulfate'
     },
-    NTriflouroacetyl: {
-        label: 'NTriflouroacetyl'
+    NTrifluoroacetyl: {
+        label: 'NTrifluoroacetyl'
     },
     Nitrat: {
         label: 'Nitrat'
