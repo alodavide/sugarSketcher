@@ -825,7 +825,12 @@ function exportGlycoCT() {
 
         formula += "o"; // CHANGE
 
-        formula += "(" + edges[i].linkedCarbon.value + "+" + edges[i].anomerCarbon.value + ")";
+        var linkedCarbon = edges[i].linkedCarbon.value == "undefined" ? -1 : edges[i].linkedCarbon.value;
+        var anomerCarbon = edges[i].anomerCarbon.value == "undefined" ? -1 : edges[i].anomerCarbon.value;
+        formula += "(" + linkedCarbon;
+        if (anomerCarbon != -1)
+            formula += "+";
+        formula += anomerCarbon + ")";
 
         formula += resId[edges[i].targetNode.getId()];
 
@@ -840,6 +845,10 @@ function exportGlycoCT() {
 
 
 function parseGlycoCT(formula) {
+    if (formula == "") {
+        displayTree();
+        return;
+    }
     var res = formula.split("LIN")[0].split("\n");
     var links = formula.split("LIN")[1].split("\n");
     var residueListById = [""];
@@ -879,8 +888,6 @@ function parseGlycoCT(formula) {
                    if (node.id == nodesIds[sourceId])
                     clickedNode = node;
                 }
-                console.log("Source: " + sourceId);
-                console.log("Target: " + targetId);
                 var nodeId = createResidue(residueListById[targetId],linkedCarbon, anomerCarbon);
                 residueListById[targetId] = "";
                 nodesIds[targetId] = nodeId;
@@ -894,9 +901,11 @@ function createResidue(residue, linkedCarbon, anomerCarbon)
     if (residue[0].substring(1) == "b") { // mono
         if (residue[1].substring(0, 1) == "b") {
             var anomericity = "β";
+            console.log("beta");
         }
-        else if (residue[0].substring(0, 1) == "a") {
+        else if (residue[1].substring(0, 1) == "a") {
             var anomericity = "α";
+            console.log("alpha");
         }
         else {
             var anomericity = "?";

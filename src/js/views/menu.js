@@ -61,6 +61,7 @@ $(document).ready(function() {
                     sugar.clear();
                 shapes = [];
                 parseGlycoCT($('#formula').val());
+                clickedNode = null;
             });
     });
 });
