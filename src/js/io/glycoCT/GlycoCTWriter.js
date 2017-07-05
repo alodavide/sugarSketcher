@@ -73,32 +73,35 @@ export default class GlycoCTWriter{
 
         }
 
-        formula += "LIN\n";
-        var edges = this.sugar.graph.edges();
-        for (i = 0; i < edges.length; i++)
+        if (this.sugar.graph.nodes().length > 1)
         {
-            formula += i+1 + ":";
-
-            formula += resId[edges[i].sourceNode.getId()];
-
-            formula += "o"; // CHANGE
-
-            var linkedCarbon = edges[i].linkedCarbon.value == "undefined" ? -1 : edges[i].linkedCarbon.value;
-            var anomerCarbon = edges[i].anomerCarbon.value == "undefined" ? -1 : edges[i].anomerCarbon.value;
-            formula += "(" + linkedCarbon;
-            if (anomerCarbon != -1)
+            formula += "LIN\n";
+            var edges = this.sugar.graph.edges();
+            for (i = 0; i < edges.length; i++)
             {
-                formula += "+";
+                formula += i+1 + ":";
+
+                formula += resId[edges[i].sourceNode.getId()];
+
+                formula += "o"; // CHANGE
+
+                var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
+                var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+                formula += "(" + linkedCarbon;
+                if (anomerCarbon != -1)
+                {
+                    formula += "+";
+                }
+                formula += anomerCarbon + ")";
+
+                formula += resId[edges[i].targetNode.getId()];
+
+                formula += "d"; // CHANGE
+
+                formula += "\n";
             }
-            formula += anomerCarbon + ")";
 
-            formula += resId[edges[i].targetNode.getId()];
-
-            formula += "d"; // CHANGE
-
-            formula += "\n";
         }
-
         return formula;
     }
 

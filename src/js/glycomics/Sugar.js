@@ -35,8 +35,8 @@ export default class Sugar{
             }
 
             this.rootSet = true;
-        } else if(typeof rootNode != 'undefined'){
-            throw 'The Root Node can be undefined or a Monosaccharide ';
+        } else if(typeof rootNode !== 'undefined'){
+            throw 'The Root Node cannot be undefined or a Monosaccharide ';
         }
 
     }

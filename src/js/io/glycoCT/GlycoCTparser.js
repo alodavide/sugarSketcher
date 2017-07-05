@@ -124,29 +124,29 @@ export default class GlycoCTParser{
             }
             else
             {
-                var ac = null;
+                var ac;
                 for (var anomC of AnomerCarbon)
                 {
-                    if (anomerCarbon === anomC.value)
+                    if (anomerCarbon === "?")
+                    {
+                        ac = AnomerCarbon.UNDEFINED;
+                    }
+                    if (parseInt(anomerCarbon) === anomC.value)
                     {
                         ac = anomC;
                     }
                 }
-                if (ac === null)
-                {
-                    ac = AnomerCarbon.UNDEFINED;
-                }
-                var lc = null;
+                var lc;
                 for (var linkedC of LinkedCarbon)
                 {
-                    if (linkedCarbon === linkedC.value)
+                    if (linkedCarbon === "?")
+                    {
+                        lc = LinkedCarbon.UNDEFINED;
+                    }
+                    if (parseInt(linkedCarbon) === linkedC.value)
                     {
                         lc = linkedC;
                     }
-                }
-                if (lc === null)
-                {
-                    lc = LinkedCarbon.UNDEFINED;
                 }
                 this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
             }
@@ -170,10 +170,23 @@ export default class GlycoCTParser{
 
     parseGlycoCT() {
         if (this.formula === "") {
-            return new Sugar();
+            return new Sugar("Sugar");
         }
         var res = this.formula.split("LIN")[0].split("\n");
-        var links = this.formula.split("LIN")[1].split("\n");
+        var links;
+        if (! this.formula.split("LIN")[1]) // Only one node without links
+        {
+            if (!res[1]) // wrong formula
+            {
+                return new Sugar("Sugar");
+            }
+            this.createResidue(res[1].split(":"), "r", "r");
+            return this.sugar;
+        }
+        else
+        {
+            links = this.formula.split("LIN")[1].split("\n");
+        }
         var residueListById = [""];
         var nodesIds = {};
         if (res[0] === "RES") {
@@ -196,13 +209,14 @@ export default class GlycoCTParser{
                         nodeId = this.createResidue(residueListById[sourceId], "r", "r");
                         residueListById[sourceId] = "";
                         nodesIds[sourceId] = nodeId;
+
                     }
                     var targetId = link.split(")")[1].substring(0,1);
                     var linkages = link.split(/[\(\)]+/)[1];
                     var linkedCarbon, anomerCarbon;
                     if (linkages.substring(0, 2) === "-1") { // if linkedcarbon is undefined
                         linkedCarbon = "?";
-                        anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
+                        anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
                     }
                     else {
                         linkedCarbon = linkages.substring(0, 1);
