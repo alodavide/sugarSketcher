@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -121,7 +121,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
+	var _GlycoCTParser = __webpack_require__(17);
+	
+	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
+	
+	var _GlycoCTWriter = __webpack_require__(18);
+	
+	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	//IO
+	
 	
 	//Glycomics Structure
 	//Dictionary
@@ -140,6 +151,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.SubstituentLinkage = _SubstituentLinkage2.default;
 	exports.Substituent = _Substituent2.default;
 	exports.Sugar = _Sugar2.default;
+	exports.GlycoCTParser = _GlycoCTParser2.default;
+	exports.GlycoCTWriter = _GlycoCTWriter2.default;
 	
 	//Sugar
 	
@@ -2116,8 +2129,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    NSulfate: {
 	        label: 'NSulfate'
 	    },
-	    NTriflouroacetyl: {
-	        label: 'NTriflouroacetyl'
+	    NTrifluoroacetyl: {
+	        label: 'NTrifluoroacetyl'
 	    },
 	    Nitrat: {
 	        label: 'Nitrat'
@@ -3103,6 +3116,534 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = Sugar;
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Author:  Davide Alocci
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+	
+	var _Sugar = __webpack_require__(16);
+	
+	var _Sugar2 = _interopRequireDefault(_Sugar);
+	
+	var _Anomericity = __webpack_require__(6);
+	
+	var _Anomericity2 = _interopRequireDefault(_Anomericity);
+	
+	var _MonosaccharideType = __webpack_require__(9);
+	
+	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
+	
+	var _Isomer = __webpack_require__(7);
+	
+	var _Isomer2 = _interopRequireDefault(_Isomer);
+	
+	var _RingType = __webpack_require__(10);
+	
+	var _RingType2 = _interopRequireDefault(_RingType);
+	
+	var _SubstituentType = __webpack_require__(11);
+	
+	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
+	
+	var _Monosaccharide = __webpack_require__(14);
+	
+	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
+	
+	var _AnomerCarbon = __webpack_require__(4);
+	
+	var _AnomerCarbon2 = _interopRequireDefault(_AnomerCarbon);
+	
+	var _LinkedCarbon = __webpack_require__(8);
+	
+	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	
+	var _Substituent = __webpack_require__(15);
+	
+	var _Substituent2 = _interopRequireDefault(_Substituent);
+	
+	var _SubstituentLinkage = __webpack_require__(13);
+	
+	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var GlycoCTParser = function () {
+	    function GlycoCTParser(formula) {
+	        _classCallCheck(this, GlycoCTParser);
+	
+	        this.formula = formula;
+	    }
+	
+	    _createClass(GlycoCTParser, [{
+	        key: 'randomString',
+	        value: function randomString(length) {
+	            // Possible chars in the generated string
+	            var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
+	
+	            if (!length) {
+	                // If no length specified, get a random length
+	                length = Math.floor(Math.random() * chars.length);
+	            }
+	
+	            var str = '';
+	            for (var i = 0; i < length; i++) {
+	                // Add random chars till length is the one specified
+	                str += chars[Math.floor(Math.random() * chars.length)];
+	            }
+	            return str;
+	        }
+	    }, {
+	        key: 'createResidue',
+	        value: function createResidue(residue, linkedCarbon, anomerCarbon) {
+	            if (residue[0].substring(1) === "b") {
+	                // monosaccharide
+	                var anomericity;
+	                var _iteratorNormalCompletion = true;
+	                var _didIteratorError = false;
+	                var _iteratorError = undefined;
+	
+	                try {
+	                    for (var _iterator = _Anomericity2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                        var anom = _step.value;
+	
+	                        if (residue[1].substring(0, 1) === "a") {
+	                            anomericity = _Anomericity2.default.ALPHA;
+	                        } else if (residue[1].substring(0, 1) === "b") {
+	                            anomericity = _Anomericity2.default.BETA;
+	                        } else {
+	                            anomericity = _Anomericity2.default.UNDEFINED;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError = true;
+	                    _iteratorError = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion && _iterator.return) {
+	                            _iterator.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError) {
+	                            throw _iteratorError;
+	                        }
+	                    }
+	                }
+	
+	                var dashSplit = residue[1].split("-");
+	                var stemType = dashSplit[1];
+	                var isomer;
+	                var _iteratorNormalCompletion2 = true;
+	                var _didIteratorError2 = false;
+	                var _iteratorError2 = undefined;
+	
+	                try {
+	                    for (var _iterator2 = _Isomer2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                        var isom = _step2.value;
+	
+	                        if (stemType.substring(0, 1) === "x") {
+	                            isomer = _Isomer2.default.UNDEFINED;
+	                        }
+	                        if (stemType.substring(0, 1) === isom.name.toLowerCase()) {
+	                            isomer = isom;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError2 = true;
+	                    _iteratorError2 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                            _iterator2.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError2) {
+	                            throw _iteratorError2;
+	                        }
+	                    }
+	                }
+	
+	                stemType = stemType.substring(1);
+	                var _iteratorNormalCompletion3 = true;
+	                var _didIteratorError3 = false;
+	                var _iteratorError3 = undefined;
+	
+	                try {
+	                    for (var _iterator3 = _MonosaccharideType2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                        var mono = _step3.value;
+	
+	                        if (mono.name.toLowerCase() === stemType) {
+	                            stemType = mono;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError3 = true;
+	                    _iteratorError3 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                            _iterator3.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError3) {
+	                            throw _iteratorError3;
+	                        }
+	                    }
+	                }
+	
+	                var superclass = dashSplit[2];
+	                var ringStart = dashSplit[3];
+	                var ringStop = residue[2].substring(0, 1);
+	                var ringType;
+	                if (ringStart === "1") {
+	                    if (ringStop === "4") {
+	                        ringType = _RingType2.default.F;
+	                    } else if (ringStop === "5") {
+	                        ringType = _RingType2.default.P;
+	                    } else {
+	                        ringType = _RingType2.default.UNDEFINED;
+	                    }
+	                }
+	                /*var shape, color;
+	                for (var type of sb.MonosaccharideType)
+	                {
+	                    if (type.name.toLowerCase() === stemType)
+	                    {
+	                        shape = type.shape;
+	                        if (type.bisected) {
+	                            shape = "bisected"+shape;
+	                        }
+	                        for (var colorChoice in colorDivisions)
+	                        {
+	                            if (colorDivisions[colorChoice].display_division === type.color) {
+	                                color = colorDivisions[colorChoice].division;
+	                            }
+	                        }
+	                    }
+	                }*/
+	
+	                var nodeId = this.randomString(7);
+	                var node = new _Monosaccharide2.default(nodeId, stemType, anomericity, isomer, ringType);
+	                if (linkedCarbon === "r" && anomerCarbon === "r") // Root
+	                    {
+	                        this.sugar = new _Sugar2.default("Sugar", node);
+	                    } else {
+	                    var ac = null;
+	                    var _iteratorNormalCompletion4 = true;
+	                    var _didIteratorError4 = false;
+	                    var _iteratorError4 = undefined;
+	
+	                    try {
+	                        for (var _iterator4 = _AnomerCarbon2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                            var anomC = _step4.value;
+	
+	                            if (anomerCarbon === anomC.value) {
+	                                ac = anomC;
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError4 = true;
+	                        _iteratorError4 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                                _iterator4.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError4) {
+	                                throw _iteratorError4;
+	                            }
+	                        }
+	                    }
+	
+	                    if (ac === null) {
+	                        ac = _AnomerCarbon2.default.UNDEFINED;
+	                    }
+	                    var lc = null;
+	                    var _iteratorNormalCompletion5 = true;
+	                    var _didIteratorError5 = false;
+	                    var _iteratorError5 = undefined;
+	
+	                    try {
+	                        for (var _iterator5 = _LinkedCarbon2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                            var linkedC = _step5.value;
+	
+	                            if (linkedCarbon === linkedC.value) {
+	                                lc = linkedC;
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError5 = true;
+	                        _iteratorError5 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                                _iterator5.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError5) {
+	                                throw _iteratorError5;
+	                            }
+	                        }
+	                    }
+	
+	                    if (lc === null) {
+	                        lc = _LinkedCarbon2.default.UNDEFINED;
+	                    }
+	                    this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
+	                }
+	                return nodeId;
+	            } else if (residue[0].substring(1) === "s") {
+	                // substituent
+	                var subName = residue[1].substring(2);
+	                var substituentType;
+	                var _iteratorNormalCompletion6 = true;
+	                var _didIteratorError6 = false;
+	                var _iteratorError6 = undefined;
+	
+	                try {
+	                    for (var _iterator6 = _SubstituentType2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                        var sub = _step6.value;
+	
+	                        if (subName === sub.name.toLowerCase()) {
+	                            substituentType = sub;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError6 = true;
+	                    _iteratorError6 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                            _iterator6.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError6) {
+	                            throw _iteratorError6;
+	                        }
+	                    }
+	                }
+	
+	                var subId = this.randomString(7);
+	                var substituent = new _Substituent2.default(subId, substituentType);
+	                var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, _LinkedCarbon2.default.UNDEFINED);
+	                this.sugar.addSubstituent(substituent, subLinkage);
+	            }
+	        }
+	    }, {
+	        key: 'parseGlycoCT',
+	        value: function parseGlycoCT() {
+	            if (this.formula === "") {
+	                return new _Sugar2.default();
+	            }
+	            var res = this.formula.split("LIN")[0].split("\n");
+	            var links = this.formula.split("LIN")[1].split("\n");
+	            var residueListById = [""];
+	            var nodesIds = {};
+	            if (res[0] === "RES") {
+	                res[0] = "";
+	                for (var residueId in res) {
+	                    if (res[residueId] !== "") {
+	                        var residue = res[residueId].split(':');
+	                        residueListById.push(residue);
+	                    }
+	                }
+	
+	                // Get link
+	                for (var linkId in links) {
+	                    if (links[linkId] !== "") {
+	                        var link = links[linkId];
+	                        var sourceId = link.substring(2, 3);
+	                        var nodeId;
+	                        if (residueListById[sourceId] !== "") // Root
+	                            {
+	                                nodeId = this.createResidue(residueListById[sourceId], "r", "r");
+	                                residueListById[sourceId] = "";
+	                                nodesIds[sourceId] = nodeId;
+	                            }
+	                        var targetId = link.split(")")[1].substring(0, 1);
+	                        var linkages = link.split(/[\(\)]+/)[1];
+	                        var linkedCarbon, anomerCarbon;
+	                        if (linkages.substring(0, 2) === "-1") {
+	                            // if linkedcarbon is undefined
+	                            linkedCarbon = "?";
+	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
+	                        } else {
+	                            linkedCarbon = linkages.substring(0, 1);
+	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
+	                        }
+	                        var _iteratorNormalCompletion7 = true;
+	                        var _didIteratorError7 = false;
+	                        var _iteratorError7 = undefined;
+	
+	                        try {
+	                            for (var _iterator7 = this.sugar.graph.nodes()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                                var node = _step7.value;
+	                                // clickedNode = sourceNode
+	                                if (node.id === nodesIds[sourceId]) {
+	                                    this.clickedNode = node;
+	                                }
+	                            }
+	                        } catch (err) {
+	                            _didIteratorError7 = true;
+	                            _iteratorError7 = err;
+	                        } finally {
+	                            try {
+	                                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                                    _iterator7.return();
+	                                }
+	                            } finally {
+	                                if (_didIteratorError7) {
+	                                    throw _iteratorError7;
+	                                }
+	                            }
+	                        }
+	
+	                        nodeId = this.createResidue(residueListById[targetId], linkedCarbon, anomerCarbon);
+	                        residueListById[targetId] = "";
+	                        nodesIds[targetId] = nodeId;
+	                    }
+	                }
+	            }
+	            return this.sugar;
+	        }
+	    }]);
+	
+	    return GlycoCTParser;
+	}();
+	
+	exports.default = GlycoCTParser;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * Created by Renaud on 05/07/2017.
+	 */
+	
+	var GlycoCTWriter = function () {
+	    function GlycoCTWriter(sugar) {
+	        _classCallCheck(this, GlycoCTWriter);
+	
+	        this.sugar = sugar;
+	    }
+	
+	    _createClass(GlycoCTWriter, [{
+	        key: "exportGlycoCT",
+	        value: function exportGlycoCT() {
+	            var resId = {};
+	            var res = this.sugar.graph.nodes();
+	            if (res.length === 0) {
+	                return "";
+	            }
+	            var linkNumber = 1;
+	            var formula = "RES\n";
+	            for (var i = 0; i < res.length; i++) {
+	                formula += i + 1 + "b:";
+	                switch (res[i]._anomericity.name) {
+	                    case "ALPHA":
+	                        formula += "a";
+	                        break;
+	                    case "BETA":
+	                        formula += "b";
+	                        break;
+	                    default:
+	                        formula += "x";
+	                        break;
+	                }
+	                formula += "-";
+	                switch (res[i]._isomer.name) {
+	                    case "L":
+	                        formula += "l";
+	                        break;
+	                    case "D":
+	                        formula += "d";
+	                        break;
+	                    default:
+	                        formula += "x";
+	                        break;
+	                }
+	                formula += res[i]._monosaccharideType.name.toLowerCase() + "-";
+	                if (res[i]._monosaccharideType.superclass) {
+	                    formula += res[i]._monosaccharideType.superclass.toUpperCase();
+	                } else {
+	                    formula += "HEX";
+	                }
+	
+	                formula += "-";
+	
+	                switch (res[i]._ringType.name) {
+	                    case "P":
+	                        formula += "1:5";
+	                        break;
+	                    case "F":
+	                        formula += "1:4";
+	                        break;
+	                    default:
+	                        formula += "x:x";
+	                        break;
+	                }
+	
+	                formula += "\n";
+	
+	                resId[res[i].id] = i + 1;
+	            }
+	
+	            formula += "LIN\n";
+	            var edges = this.sugar.graph.edges();
+	            for (i = 0; i < edges.length; i++) {
+	                formula += i + 1 + ":";
+	
+	                formula += resId[edges[i].sourceNode.getId()];
+	
+	                formula += "o"; // CHANGE
+	
+	                var linkedCarbon = edges[i].linkedCarbon.value == "undefined" ? -1 : edges[i].linkedCarbon.value;
+	                var anomerCarbon = edges[i].anomerCarbon.value == "undefined" ? -1 : edges[i].anomerCarbon.value;
+	                formula += "(" + linkedCarbon;
+	                if (anomerCarbon != -1) {
+	                    formula += "+";
+	                }
+	                formula += anomerCarbon + ")";
+	
+	                formula += resId[edges[i].targetNode.getId()];
+	
+	                formula += "d"; // CHANGE
+	
+	                formula += "\n";
+	            }
+	
+	            return formula;
+	        }
+	    }]);
+	
+	    return GlycoCTWriter;
+	}();
+	
+	exports.default = GlycoCTWriter;
 
 /***/ })
 /******/ ])

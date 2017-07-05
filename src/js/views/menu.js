@@ -25,7 +25,9 @@ $(document).ready(function() {
     });
     d3.select("#exportGlycoCT").on('click', function() {
         d3.select("#formula").style("display","block");
-        $('#formula').val(exportGlycoCT());
+        d3.select("#validateFormula").style("display", "none");
+        var writer = new sb.GlycoCTWriter(sugar);
+        $('#formula').val(writer.exportGlycoCT());
         $('#formula').select();
         var formula = document.querySelector("#formula");
 
@@ -60,7 +62,9 @@ $(document).ready(function() {
                 if (sugar)
                     sugar.clear();
                 shapes = [];
-                parseGlycoCT($('#formula').val());
+                var parser = new sb.GlycoCTParser($('#formula').val());
+                sugar = parser.parseGlycoCT();
+                displayTree();
                 clickedNode = null;
             });
     });
@@ -146,8 +150,7 @@ var colorDivisions = [{
 }, {
     division:"redColor",
     display_division: '#FF0000'
-}
-];
+}];
 
 // Menu, stocking the divisions of our menu, and subdivisions
 var menuAction = [{
