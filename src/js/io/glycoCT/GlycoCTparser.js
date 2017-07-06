@@ -212,7 +212,6 @@ export default class GlycoCTParser{
 
     updateNodeType(node, type)
     {
-        console.log(this.sugar.graph.nodes());
         for (var sugarNode of this.sugar.graph.nodes())
         {
             if (node === sugarNode)
@@ -220,7 +219,6 @@ export default class GlycoCTParser{
                 sugarNode.monosaccharideType = type;
             }
         }
-        console.log(this.sugar.graph.nodes());
     }
 
 

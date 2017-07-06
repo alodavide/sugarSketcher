@@ -3615,7 +3615,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'updateNodeType',
 	        value: function updateNodeType(node, type) {
-	            console.log(this.sugar.graph.nodes());
 	            var _iteratorNormalCompletion11 = true;
 	            var _didIteratorError11 = false;
 	            var _iteratorError11 = undefined;
@@ -3642,8 +3641,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
-	
-	            console.log(this.sugar.graph.nodes());
 	        }
 	    }, {
 	        key: 'parseGlycoCT',
@@ -3775,6 +3772,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
 	
+	var _MonosaccharideType = __webpack_require__(9);
+	
+	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
+	
+	var _LinkedCarbon = __webpack_require__(8);
+	
+	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3787,10 +3792,168 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    _createClass(GlycoCTWriter, [{
+	        key: "getSub",
+	        value: function getSub(label) {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = _SubstituentType2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var sub = _step.value;
+	
+	                    if (sub.label.toLowerCase() === label.toLowerCase()) return sub;
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "getMono",
+	        value: function getMono(name) {
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+	
+	            try {
+	                for (var _iterator2 = _MonosaccharideType2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var mono = _step2.value;
+	
+	                    if (mono.name.toLowerCase() === name.toLowerCase()) return mono;
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "writeSub",
+	        value: function writeSub(i, substituent) {
+	            var formula = "";
+	            formula += i + 1 + "s:";
+	            var subName = substituent.substituentType.name;
+	            var substituentType = "";
+	            var _iteratorNormalCompletion3 = true;
+	            var _didIteratorError3 = false;
+	            var _iteratorError3 = undefined;
+	
+	            try {
+	                for (var _iterator3 = _GlycoCTSubstituents2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var sub = _step3.value;
+	
+	                    if (subName.toLowerCase() === sub.name.toLowerCase()) {
+	                        substituentType = sub.glycoct;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                        _iterator3.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError3) {
+	                        throw _iteratorError3;
+	                    }
+	                }
+	            }
+	
+	            if (substituentType === "") {
+	                var _iteratorNormalCompletion4 = true;
+	                var _didIteratorError4 = false;
+	                var _iteratorError4 = undefined;
+	
+	                try {
+	                    for (var _iterator4 = _SubstituentType2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                        sub = _step4.value;
+	
+	                        if (subName.toLowerCase() === sub.name.toLowerCase()) {
+	                            substituentType = sub.name.toLowerCase();
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError4 = true;
+	                    _iteratorError4 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                            _iterator4.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError4) {
+	                            throw _iteratorError4;
+	                        }
+	                    }
+	                }
+	            }
+	            formula += substituentType + "\n";
+	            return formula;
+	        }
+	    }, {
+	        key: "writeSubLink",
+	        value: function writeSubLink(i, source, target, linkedCarbon, anomerCarbon) {
+	            var formula = "";
+	            formula += i + 1 + ":" + source + "d";
+	
+	            formula += "(" + linkedCarbon;
+	            if (anomerCarbon != -1) {
+	                formula += "+";
+	            }
+	            formula += anomerCarbon + ")";
+	
+	            formula += target + "n";
+	
+	            formula += "\n";
+	
+	            return formula;
+	        }
+	    }, {
+	        key: "writeMonoLink",
+	        value: function writeMonoLink(i, source, target, linkedCarbon, anomerCarbon) {
+	            var formula = "";
+	            formula += i + ":" + source + "o";
+	
+	            formula += "(" + linkedCarbon;
+	            if (anomerCarbon != -1) {
+	                formula += "+";
+	            }
+	            formula += anomerCarbon + ")";
+	
+	            formula += target + "d";
+	
+	            formula += "\n";
+	
+	            return formula;
+	        }
+	    }, {
 	        key: "exportGlycoCT",
 	        value: function exportGlycoCT() {
 	            var resId = {};
 	            var res = this.sugar.graph.nodes();
+	            var associatedSubs = [];
 	            if (res.length === 0) {
 	                return "";
 	            }
@@ -3798,65 +3961,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var formula = "RES\n";
 	            for (var i = 0; i < res.length; i++) {
 	                if (res[i] instanceof _Substituent2.default) {
-	                    formula += i + 1 + "s:";
-	                    var subName = res[i].substituentType.name;
-	                    var substituentType = "";
-	                    var _iteratorNormalCompletion = true;
-	                    var _didIteratorError = false;
-	                    var _iteratorError = undefined;
-	
-	                    try {
-	                        for (var _iterator = _GlycoCTSubstituents2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                            var sub = _step.value;
-	
-	                            if (subName.toLowerCase() === sub.name.toLowerCase()) {
-	                                substituentType = sub.glycoct;
-	                            }
-	                        }
-	                    } catch (err) {
-	                        _didIteratorError = true;
-	                        _iteratorError = err;
-	                    } finally {
-	                        try {
-	                            if (!_iteratorNormalCompletion && _iterator.return) {
-	                                _iterator.return();
-	                            }
-	                        } finally {
-	                            if (_didIteratorError) {
-	                                throw _iteratorError;
-	                            }
-	                        }
-	                    }
-	
-	                    if (substituentType === "") {
-	                        var _iteratorNormalCompletion2 = true;
-	                        var _didIteratorError2 = false;
-	                        var _iteratorError2 = undefined;
-	
-	                        try {
-	                            for (var _iterator2 = _SubstituentType2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                                sub = _step2.value;
-	
-	                                if (subName.toLowerCase() === sub.name.toLowerCase()) {
-	                                    substituentType = sub.name.toLowerCase();
-	                                }
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError2 = true;
-	                            _iteratorError2 = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                                    _iterator2.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError2) {
-	                                    throw _iteratorError2;
-	                                }
-	                            }
-	                        }
-	                    }
-	                    formula += substituentType;
+	                    formula += this.writeSub(i, res[i]);
 	                } else {
 	                    formula += i + 1 + "b:";
 	                    switch (res[i]._anomericity.name) {
@@ -3882,7 +3987,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            formula += "x";
 	                            break;
 	                    }
-	                    formula += res[i]._monosaccharideType.name.toLowerCase() + "-";
+	                    if (this.getMono(res[i]._monosaccharideType.name.toLowerCase()) && res[i]._monosaccharideType.name.length > 3) {
+	                        formula += res[i]._monosaccharideType.name.toLowerCase().substring(0, 3);
+	                        // Add the associated sub seperately
+	                        var assocSubType = this.getSub(res[i]._monosaccharideType.name.substring(3));
+	                        var assocSub = new _Substituent2.default(randomString(7), assocSubType);
+	                        associatedSubs.push([assocSub, i + 1]);
+	                    } else {
+	                        formula += res[i]._monosaccharideType.name.toLowerCase();
+	                    }
+	                    formula += "-";
 	                    if (res[i]._monosaccharideType.superclass) {
 	                        formula += res[i]._monosaccharideType.superclass.toUpperCase();
 	                    } else {
@@ -3908,42 +4022,78 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                resId[res[i].id] = i + 1;
 	            }
+	            var _iteratorNormalCompletion5 = true;
+	            var _didIteratorError5 = false;
+	            var _iteratorError5 = undefined;
+	
+	            try {
+	                for (var _iterator5 = associatedSubs[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var pair = _step5.value;
+	
+	                    var associatedSub = pair[0];
+	                    formula += this.writeSub(i, associatedSub);
+	                    i++;
+	                    pair[0] = i;
+	                }
+	            } catch (err) {
+	                _didIteratorError5 = true;
+	                _iteratorError5 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                        _iterator5.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError5) {
+	                        throw _iteratorError5;
+	                    }
+	                }
+	            }
 	
 	            if (this.sugar.graph.nodes().length > 1) {
 	                formula += "LIN\n";
 	                var edges = this.sugar.graph.edges();
 	                for (i = 0; i < edges.length; i++) {
-	                    formula += i + 1 + ":";
-	
-	                    formula += resId[edges[i].sourceNode.getId()];
-	
-	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
-	                        formula += "o";
-	                    } else {
-	                        formula += "d";
-	                    }
+	                    var source = resId[edges[i].sourceNode.getId()];
 	
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-	                    var anomerCarbon = 1;
-	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
-	                        anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
-	                    }
-	                    formula += "(" + linkedCarbon;
-	                    if (anomerCarbon != -1) {
-	                        formula += "+";
-	                    }
-	                    formula += anomerCarbon + ")";
+	                    var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
 	
-	                    formula += resId[edges[i].targetNode.getId()];
+	                    var target = resId[edges[i].targetNode.getId()];
 	
 	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
-	                        formula += "d";
+	                        formula += this.writeMonoLink(i + 1, source, target, linkedCarbon, anomerCarbon);
 	                    } else {
-	                        formula += "n";
+	                        formula += this.writeSubLink(i + 1, source, target, linkedCarbon, anomerCarbon);
 	                    }
-	
-	                    formula += "\n";
 	                }
+	
+	                var _iteratorNormalCompletion6 = true;
+	                var _didIteratorError6 = false;
+	                var _iteratorError6 = undefined;
+	
+	                try {
+	                    for (var _iterator6 = associatedSubs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                        pair = _step6.value;
+	
+	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
+	                        i++;
+	                    }
+	                } catch (err) {
+	                    _didIteratorError6 = true;
+	                    _iteratorError6 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                            _iterator6.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError6) {
+	                            throw _iteratorError6;
+	                        }
+	                    }
+	                }
+	
 	                if (formula.substring(formula.length - 1) == '\n') // Remove final \n
 	                    {
 	                        formula = formula.substring(0, formula.length - 1);
