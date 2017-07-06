@@ -542,11 +542,12 @@ function deleteNode(node) {
         sugar.clear();
         shapes = [];
     } else {
+        deleteAllShapesInGraph(node);
         deleteAllChildrenInGraph(node);
         sugar.removeNodeById(node.id);
         searchAndRemoveNodeInTree(treeData, node);
     }
-    delete shapes[node.id]; // TODO: REMOVE ALL CHILDREN TOO
+    delete shapes[node.id];
     displayTree(); // Display back the tree
     clickedNode = null; // Reinitialize the clicked node
     // Hide all menus
@@ -559,6 +560,7 @@ function deleteNode(node) {
     if (!sugar.rootIsSet()) { // If we deleted the root, update menu
         updateMenu();
     }
+    console.log(shapes);
 }
 
 /**
@@ -570,6 +572,16 @@ function deleteAllChildrenInGraph(node) {
         if (edge.sourceNode == node) {
             sugar.removeNodeById(edge.targetNode.id);
             deleteAllChildrenInGraph(edge.targetNode);
+        }
+    }
+}
+
+function deleteAllShapesInGraph(node) { // has to be separate from the deleteAllChildrenInGraph because it updates the sugar on the fly
+    for (var edge of sugar.graph.edges()) {
+        if (edge.sourceNode == node) {
+            delete shapes[node.id];
+            delete shapes[edge.targetNode.id];
+            deleteAllShapesInGraph(edge.targetNode);
         }
     }
 }
