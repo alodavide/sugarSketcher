@@ -16,6 +16,21 @@ export default class GlycoCTWriter{
         this.sugar = sugar;
     }
 
+    randomString(length) {
+        // Possible chars in the generated string
+        var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
+
+        if (! length) { // If no length specified, get a random length
+            length = Math.floor(Math.random() * chars.length);
+        }
+
+        var str = '';
+        for (var i = 0; i < length; i++) { // Add random chars till length is the one specified
+            str += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return str;
+    }
+
     getSub(label)
     {
         for (var sub of SubstituentType)
@@ -142,7 +157,7 @@ export default class GlycoCTWriter{
                     formula += res[i]._monosaccharideType.name.toLowerCase().substring(0,3);
                     // Add the associated sub seperately
                     var assocSubType = this.getSub(res[i]._monosaccharideType.name.substring(3));
-                    var assocSub = new Substituent(randomString(7),assocSubType);
+                    var assocSub = new Substituent(this.randomString(7),assocSubType);
                     associatedSubs.push([assocSub,i+1]);
                 }
                 else

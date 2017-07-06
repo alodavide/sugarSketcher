@@ -3792,6 +3792,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    _createClass(GlycoCTWriter, [{
+	        key: "randomString",
+	        value: function randomString(length) {
+	            // Possible chars in the generated string
+	            var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
+	
+	            if (!length) {
+	                // If no length specified, get a random length
+	                length = Math.floor(Math.random() * chars.length);
+	            }
+	
+	            var str = '';
+	            for (var i = 0; i < length; i++) {
+	                // Add random chars till length is the one specified
+	                str += chars[Math.floor(Math.random() * chars.length)];
+	            }
+	            return str;
+	        }
+	    }, {
 	        key: "getSub",
 	        value: function getSub(label) {
 	            var _iteratorNormalCompletion = true;
@@ -3991,7 +4009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        formula += res[i]._monosaccharideType.name.toLowerCase().substring(0, 3);
 	                        // Add the associated sub seperately
 	                        var assocSubType = this.getSub(res[i]._monosaccharideType.name.substring(3));
-	                        var assocSub = new _Substituent2.default(randomString(7), assocSubType);
+	                        var assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
 	                        associatedSubs.push([assocSub, i + 1]);
 	                    } else {
 	                        formula += res[i]._monosaccharideType.name.toLowerCase();
@@ -4076,6 +4094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator6 = associatedSubs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
 	                        pair = _step6.value;
 	
+	                        console.log(pair);
 	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
 	                        i++;
 	                    }

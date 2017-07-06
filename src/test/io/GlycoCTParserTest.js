@@ -50,7 +50,7 @@ QUnit.test( "Test two monosaccharide" , function( assert ) {
 
 QUnit.test( "Test Parser Writer" , function( assert ) {
 
-    var formulaInput ="RES\n1b:x-dglc-HEX-1:5\n2b:x-dglc-HEX-1:5\n3b:x-dgal-HEX-1:5\n4b:x-dgal-HEX-1:5\n5b:x-lgal-HEX-1:5\n6s:n-acetyl\n7s:n-acetyl\n8s:n-acetyl\nLIN\n1:1o(1+1)2d\n2:2o(2+1)3d\n3:3o(3+1)4d\n4:4o(4+1)5d\n5:4d(5+1)6n\n6:3d(6+1)7n\n7:2d(-1+1)8n";
+    var formulaInput ="RES\n1b:x-dglc-HEX-1:5\n2b:x-dglc-HEX-1:5\n3b:x-dgal-HEX-1:5\n4b:x-dgal-HEX-1:5\n5b:x-lgal-HEX-1:5\n6s:n-acetyl\n7s:n-acetyl\n8s:n-acetyl\nLIN\n1:1o(1+1)2d\n2:2o(2+1)3d\n3:3o(3+1)4d\n4:4o(4+1)5d\n5:2d(-1-1)6n\n6:3d(-1-1)7n\n7:4d(-1-1)8n";
     var parser = new GlycoCTParser(formulaInput);
     var sugar = parser.parseGlycoCT();
     var writer = new GlycoCTWriter(sugar);
