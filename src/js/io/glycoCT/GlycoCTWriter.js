@@ -2,6 +2,10 @@
  * Created by Renaud on 05/07/2017.
  */
 
+import Substituent from "../../glycomics/nodes/Substituent";
+import SubstituentType from "../../glycomics/dictionary/SubstituentType";
+import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
+import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
 export default class GlycoCTWriter{
 
     constructor(sugar){
@@ -19,52 +23,67 @@ export default class GlycoCTWriter{
         var formula = "RES\n";
         for (var i = 0; i < res.length; i++)
         {
-            formula += i+1 + "b:";
-            switch(res[i]._anomericity.name) {
-                case "ALPHA":
-                    formula += "a";
-                    break;
-                case "BETA":
-                    formula += "b";
-                    break;
-                default:
-                    formula += "x";
-                    break;
+            if (res[i] instanceof Substituent)
+            {
+                formula += i+1 + "s:n-";
+                var subName = res[i].substituentType.name;
+                var substituentType = "";
+                for (var sub of SubstituentType) {
+                    if (subName.toLowerCase() === sub.name.toLowerCase()) {
+                        substituentType = sub.name.toLowerCase();
+                    }
+                }
+                formula += substituentType;
             }
-            formula += "-";
-            switch(res[i]._isomer.name) {
-                case "L":
-                    formula += "l";
-                    break;
-                case "D":
-                    formula += "d";
-                    break;
-                default:
-                    formula += "x";
-                    break;
-            }
-            formula += res[i]._monosaccharideType.name.toLowerCase()+"-";
-            if (res[i]._monosaccharideType.superclass) {
-                formula += res[i]._monosaccharideType.superclass.toUpperCase();
-            }
-
             else
             {
-                formula += "HEX";
-            }
+                formula += i+1 + "b:";
+                switch(res[i]._anomericity.name) {
+                    case "ALPHA":
+                        formula += "a";
+                        break;
+                    case "BETA":
+                        formula += "b";
+                        break;
+                    default:
+                        formula += "x";
+                        break;
+                }
+                formula += "-";
+                switch(res[i]._isomer.name) {
+                    case "L":
+                        formula += "l";
+                        break;
+                    case "D":
+                        formula += "d";
+                        break;
+                    default:
+                        formula += "x";
+                        break;
+                }
+                formula += res[i]._monosaccharideType.name.toLowerCase()+"-";
+                if (res[i]._monosaccharideType.superclass) {
+                    formula += res[i]._monosaccharideType.superclass.toUpperCase();
+                }
 
-            formula += "-";
+                else
+                {
+                    formula += "HEX";
+                }
 
-            switch (res[i]._ringType.name) {
-                case "P":
-                    formula += "1:5";
-                    break;
-                case "F":
-                    formula += "1:4";
-                    break;
-                default:
-                    formula += "x:x";
-                    break;
+                formula += "-";
+
+                switch (res[i]._ringType.name) {
+                    case "P":
+                        formula += "1:5";
+                        break;
+                    case "F":
+                        formula += "1:4";
+                        break;
+                    default:
+                        formula += "x:x";
+                        break;
+                }
             }
 
             formula += "\n";
@@ -83,10 +102,20 @@ export default class GlycoCTWriter{
 
                 formula += resId[edges[i].sourceNode.getId()];
 
-                formula += "o"; // CHANGE
+                if (edges[i] instanceof GlycosidicLinkage){
+                    formula += "o";
+                }
+                else
+                {
+                    formula += "d";
+                }
 
                 var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-                var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+                var anomerCarbon = 1;
+                if (edges[i] instanceof GlycosidicLinkage)
+                {
+                    anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+                }
                 formula += "(" + linkedCarbon;
                 if (anomerCarbon != -1)
                 {
@@ -96,9 +125,20 @@ export default class GlycoCTWriter{
 
                 formula += resId[edges[i].targetNode.getId()];
 
-                formula += "d"; // CHANGE
+                if (edges[i] instanceof GlycosidicLinkage)
+                {
+                    formula += "d";
+                }
+                else
+                {
+                    formula += "n";
+                }
 
                 formula += "\n";
+            }
+            if (formula.substring(formula.length-1) == '\n') // Remove final \n
+            {
+                formula = formula.substring(0,formula.length-1);
             }
 
         }

@@ -161,9 +161,21 @@ export default class GlycoCTParser{
                     substituentType = sub;
                 }
             }
+            var lcs;
+            for (var linkedCS of LinkedCarbon)
+            {
+                if (linkedCarbon === "?")
+                {
+                    lcs = LinkedCarbon.UNDEFINED;
+                }
+                if (parseInt(linkedCarbon) === linkedCS.value)
+                {
+                    lcs = linkedCS;
+                }
+            }
             var subId = this.randomString(7);
             var substituent = new Substituent(subId,substituentType);
-            var subLinkage = new SubstituentLinkage(this.randomString(7), this.clickedNode, substituent, LinkedCarbon.UNDEFINED);
+            var subLinkage = new SubstituentLinkage(this.randomString(7), this.clickedNode, substituent, lcs);
             this.sugar.addSubstituent(substituent, subLinkage);
         }
     }
@@ -220,6 +232,7 @@ export default class GlycoCTParser{
                         anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
                     }
                     else {
+
                         linkedCarbon = linkages.substring(0, 1);
                         anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
                     }

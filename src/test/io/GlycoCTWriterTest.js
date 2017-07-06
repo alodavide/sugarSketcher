@@ -50,5 +50,5 @@ QUnit.test( "Test two nodes" , function( assert ) {
 
     var writer = new GlycoCTWriter(sugar);
     var formula = writer.exportGlycoCT();
-    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+4)2d\n2:2o(-1-1)3d\n", 'Check two nodes');
+    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+4)2d\n2:2o(-1-1)3d", 'Check two nodes');
 });
