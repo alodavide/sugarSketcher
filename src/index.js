@@ -18,6 +18,7 @@ import LinkedCarbon from './js/glycomics/dictionary/LinkedCarbon';
 import MonosaccharideType from './js/glycomics/dictionary/MonosaccharideType';
 import RingType from './js/glycomics/dictionary/RingType';
 import SubstituentType from './js/glycomics/dictionary/SubstituentType';
+import GlycoCTSubstituents from './js/glycomics/dictionary/GlycoCTSubstituents';
 
 //Linkages
 import GlycosidicLinkage from './js/glycomics/linkages/GlycosidicLinkage';
@@ -37,4 +38,4 @@ import GlycoCTWriter from './js/io/glycoCT/GlycoCTWriter';
 
 export { Graph, GraphEdge, GraphNode, AnomerCarbon, Anomericity, Isomer, 
     LinkedCarbon, MonosaccharideType, RingType, Monosaccharide, SubstituentType, 
-    GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser, GlycoCTWriter};
+    GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser, GlycoCTWriter, GlycoCTSubstituents};

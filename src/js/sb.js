@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -101,41 +101,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _GlycosidicLinkage = __webpack_require__(12);
+	var _GlycoCTSubstituents = __webpack_require__(12);
+	
+	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
+	
+	var _GlycosidicLinkage = __webpack_require__(13);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(13);
+	var _SubstituentLinkage = __webpack_require__(14);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
-	var _Monosaccharide = __webpack_require__(14);
+	var _Monosaccharide = __webpack_require__(15);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(15);
+	var _Substituent = __webpack_require__(16);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _Sugar = __webpack_require__(16);
+	var _Sugar = __webpack_require__(17);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
-	var _GlycoCTParser = __webpack_require__(17);
+	var _GlycoCTParser = __webpack_require__(18);
 	
 	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
 	
-	var _GlycoCTWriter = __webpack_require__(18);
+	var _GlycoCTWriter = __webpack_require__(19);
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	//IO
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -153,6 +160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Sugar = _Sugar2.default;
 	exports.GlycoCTParser = _GlycoCTParser2.default;
 	exports.GlycoCTWriter = _GlycoCTWriter2.default;
+	exports.GlycoCTSubstituents = _GlycoCTSubstituents2.default;
 	
 	//Sugar
 	
@@ -161,13 +169,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	//Linkages
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
 	
-	//Data Structure
+	
+	//Glycomics Structure
+	//Dictionary
 
 /***/ }),
 /* 1 */
@@ -2168,6 +2173,47 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _enumify = __webpack_require__(5);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 06/07/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var GlycoCTSubstituents = function (_Enum) {
+	    _inherits(GlycoCTSubstituents, _Enum);
+	
+	    function GlycoCTSubstituents() {
+	        _classCallCheck(this, GlycoCTSubstituents);
+	
+	        return _possibleConstructorReturn(this, (GlycoCTSubstituents.__proto__ || Object.getPrototypeOf(GlycoCTSubstituents)).apply(this, arguments));
+	    }
+	
+	    return GlycoCTSubstituents;
+	}(_enumify.Enum);
+	
+	exports.default = GlycoCTSubstituents;
+	
+	
+	GlycoCTSubstituents.initEnum({
+	    NAcetyl: {
+	        glycoct: "n-acetyl"
+	    }
+	});
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -2260,7 +2306,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycosidicLinkage;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2330,7 +2376,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SubstituentLinkage;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2471,7 +2517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Monosaccharide;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2539,7 +2585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Substituent;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2559,19 +2605,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
 	
-	var _Monosaccharide = __webpack_require__(14);
+	var _Monosaccharide = __webpack_require__(15);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(15);
+	var _Substituent = __webpack_require__(16);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _GlycosidicLinkage = __webpack_require__(12);
+	var _GlycosidicLinkage = __webpack_require__(13);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(13);
+	var _SubstituentLinkage = __webpack_require__(14);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -3118,7 +3164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Sugar;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3132,7 +3178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Sugar = __webpack_require__(16);
+	var _Sugar = __webpack_require__(17);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
@@ -3156,7 +3202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _Monosaccharide = __webpack_require__(14);
+	var _Monosaccharide = __webpack_require__(15);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
@@ -3168,13 +3214,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
 	
-	var _Substituent = __webpack_require__(15);
+	var _Substituent = __webpack_require__(16);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _SubstituentLinkage = __webpack_require__(13);
+	var _SubstituentLinkage = __webpack_require__(14);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
+	
+	var _GlycoCTSubstituents = __webpack_require__(12);
+	
+	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3408,18 +3458,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return nodeId;
 	            } else if (residue[0].substring(1) === "s") {
 	                // substituent
-	                var subName = residue[1].substring(2);
+	                var subName = residue[1];
 	                var substituentType;
 	                var _iteratorNormalCompletion6 = true;
 	                var _didIteratorError6 = false;
 	                var _iteratorError6 = undefined;
 	
 	                try {
-	                    for (var _iterator6 = _SubstituentType2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                    for (var _iterator6 = _GlycoCTSubstituents2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
 	                        var sub = _step6.value;
 	
-	                        if (subName === sub.name.toLowerCase()) {
-	                            substituentType = sub;
+	                        if (subName === sub.glycoct) {
+	                            subName = sub.name;
 	                        }
 	                    }
 	                } catch (err) {
@@ -3437,20 +3487,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var lc;
 	                var _iteratorNormalCompletion7 = true;
 	                var _didIteratorError7 = false;
 	                var _iteratorError7 = undefined;
 	
 	                try {
-	                    for (var _iterator7 = _LinkedCarbon2.default[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                        var linkedC = _step7.value;
+	                    for (var _iterator7 = _SubstituentType2.default[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                        var subType = _step7.value;
 	
-	                        if (linkedCarbon === "?") {
-	                            lc = _LinkedCarbon2.default.UNDEFINED;
-	                        }
-	                        if (parseInt(linkedCarbon) === linkedC.value) {
-	                            lc = linkedC;
+	                        if (subName.toLowerCase() === subType.name.toLowerCase()) {
+	                            substituentType = subType;
 	                        }
 	                    }
 	                } catch (err) {
@@ -3468,9 +3514,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
+	                var lcs;
+	                var _iteratorNormalCompletion8 = true;
+	                var _didIteratorError8 = false;
+	                var _iteratorError8 = undefined;
+	
+	                try {
+	                    for (var _iterator8 = _LinkedCarbon2.default[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                        var linkedCS = _step8.value;
+	
+	                        if (linkedCarbon === "?") {
+	                            lcs = _LinkedCarbon2.default.UNDEFINED;
+	                        }
+	                        if (parseInt(linkedCarbon) === linkedCS.value) {
+	                            lcs = linkedCS;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError8 = true;
+	                    _iteratorError8 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                            _iterator8.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError8) {
+	                            throw _iteratorError8;
+	                        }
+	                    }
+	                }
+	
 	                var subId = this.randomString(7);
 	                var substituent = new _Substituent2.default(subId, substituentType);
-	                var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, lc);
+	                if (this.clickedNode.monosaccharideType.name.toLowerCase() + subName) var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, lcs);
 	                this.sugar.addSubstituent(substituent, subLinkage);
 	            }
 	        }
@@ -3528,29 +3605,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            linkedCarbon = linkages.substring(0, 1);
 	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
 	                        }
-	                        var _iteratorNormalCompletion8 = true;
-	                        var _didIteratorError8 = false;
-	                        var _iteratorError8 = undefined;
+	                        var _iteratorNormalCompletion9 = true;
+	                        var _didIteratorError9 = false;
+	                        var _iteratorError9 = undefined;
 	
 	                        try {
-	                            for (var _iterator8 = this.sugar.graph.nodes()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                                var node = _step8.value;
+	                            for (var _iterator9 = this.sugar.graph.nodes()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                                var node = _step9.value;
 	                                // clickedNode = sourceNode
 	                                if (node.id === nodesIds[sourceId]) {
 	                                    this.clickedNode = node;
 	                                }
 	                            }
 	                        } catch (err) {
-	                            _didIteratorError8 = true;
-	                            _iteratorError8 = err;
+	                            _didIteratorError9 = true;
+	                            _iteratorError9 = err;
 	                        } finally {
 	                            try {
-	                                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                                    _iterator8.return();
+	                                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                                    _iterator9.return();
 	                                }
 	                            } finally {
-	                                if (_didIteratorError8) {
-	                                    throw _iteratorError8;
+	                                if (_didIteratorError9) {
+	                                    throw _iteratorError9;
 	                                }
 	                            }
 	                        }
@@ -3571,7 +3648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTParser;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3584,7 +3661,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 05/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Substituent = __webpack_require__(15);
+	var _Substituent = __webpack_require__(16);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
@@ -3592,13 +3669,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _SubstituentLinkage = __webpack_require__(13);
+	var _SubstituentLinkage = __webpack_require__(14);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
-	var _GlycosidicLinkage = __webpack_require__(12);
+	var _GlycosidicLinkage = __webpack_require__(13);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
+	
+	var _GlycoCTSubstituents = __webpack_require__(12);
+	
+	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3623,7 +3704,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var formula = "RES\n";
 	            for (var i = 0; i < res.length; i++) {
 	                if (res[i] instanceof _Substituent2.default) {
-	                    formula += i + 1 + "s:n-";
+	                    formula += i + 1 + "s:";
 	                    var subName = res[i].substituentType.name;
 	                    var substituentType = "";
 	                    var _iteratorNormalCompletion = true;
@@ -3631,11 +3712,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var _iteratorError = undefined;
 	
 	                    try {
-	                        for (var _iterator = _SubstituentType2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                        for (var _iterator = _GlycoCTSubstituents2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                            var sub = _step.value;
 	
 	                            if (subName.toLowerCase() === sub.name.toLowerCase()) {
-	                                substituentType = sub.name.toLowerCase();
+	                                substituentType = sub.glycoct;
 	                            }
 	                        }
 	                    } catch (err) {
@@ -3653,6 +3734,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
+	                    if (substituentType === "") {
+	                        var _iteratorNormalCompletion2 = true;
+	                        var _didIteratorError2 = false;
+	                        var _iteratorError2 = undefined;
+	
+	                        try {
+	                            for (var _iterator2 = _SubstituentType2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                                sub = _step2.value;
+	
+	                                if (subName.toLowerCase() === sub.name.toLowerCase()) {
+	                                    substituentType = sub.name.toLowerCase();
+	                                }
+	                            }
+	                        } catch (err) {
+	                            _didIteratorError2 = true;
+	                            _iteratorError2 = err;
+	                        } finally {
+	                            try {
+	                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                                    _iterator2.return();
+	                                }
+	                            } finally {
+	                                if (_didIteratorError2) {
+	                                    throw _iteratorError2;
+	                                }
+	                            }
+	                        }
+	                    }
 	                    formula += substituentType;
 	                } else {
 	                    formula += i + 1 + "b:";

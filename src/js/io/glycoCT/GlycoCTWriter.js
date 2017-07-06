@@ -6,6 +6,7 @@ import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentType from "../../glycomics/dictionary/SubstituentType";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
+import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
 export default class GlycoCTWriter{
 
     constructor(sugar){
@@ -25,12 +26,20 @@ export default class GlycoCTWriter{
         {
             if (res[i] instanceof Substituent)
             {
-                formula += i+1 + "s:n-";
+                formula += i+1 + "s:";
                 var subName = res[i].substituentType.name;
                 var substituentType = "";
-                for (var sub of SubstituentType) {
+                for (var sub of GlycoCTSubstituents) {
                     if (subName.toLowerCase() === sub.name.toLowerCase()) {
-                        substituentType = sub.name.toLowerCase();
+                        substituentType = sub.glycoct;
+                    }
+                }
+                if (substituentType === "")
+                {
+                    for (sub of SubstituentType) {
+                        if (subName.toLowerCase() === sub.name.toLowerCase()) {
+                            substituentType = sub.name.toLowerCase();
+                        }
                     }
                 }
                 formula += substituentType;

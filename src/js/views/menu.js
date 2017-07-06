@@ -61,7 +61,6 @@ $(document).ready(function() {
                 treeData = {};
                 if (sugar)
                     sugar.clear();
-                shapes = [];
                 var parser = new sb.GlycoCTParser($('#formula').val());
                 sugar = parser.parseGlycoCT();
                 generateShapes();
@@ -824,6 +823,7 @@ function test(n)
 
 function generateShapes()
 {
+    shapes = [];
     for (var mono of sugar.graph.nodes())
     {
         var link;
@@ -839,11 +839,11 @@ function generateShapes()
             var shape = calculateXandYNode(node);
             shapes[node.node.id] = shape;
             updateTreeVisualization(); // Update visualization in the svg
-            displayTree();
         } else {
             if (link instanceof sb.GlycosidicLinkage) {
                 updateTreeVisualization(link);
                 var node = {"node":mono};
+                console.log(node);
                 var shape = calculateXandYNode(node);
                 shapes[node.node.id] = shape;
             }
@@ -851,7 +851,6 @@ function generateShapes()
             {
                 updateTreeVisualization(link);
             }
-            displayTree();
         }
     }
     clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];

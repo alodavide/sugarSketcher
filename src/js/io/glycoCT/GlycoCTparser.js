@@ -14,6 +14,7 @@ import AnomerCarbon from "../../glycomics/dictionary/AnomerCarbon";
 import LinkedCarbon from "../../glycomics/dictionary/LinkedCarbon";
 import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
+import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
 
 export default class GlycoCTParser{
 
@@ -154,11 +155,16 @@ export default class GlycoCTParser{
             return nodeId;
         }
         else if (residue[0].substring(1) === "s") { // substituent
-            var subName = residue[1].substring(2);
+            var subName = residue[1];
             var substituentType;
-            for (var sub of SubstituentType) {
-                if (subName === sub.name.toLowerCase()) {
-                    substituentType = sub;
+            for (var sub of GlycoCTSubstituents) {
+                if (subName === sub.glycoct) {
+                    subName = sub.name;
+                }
+            }
+            for (var subType of SubstituentType) {
+                if (subName.toLowerCase() === subType.name.toLowerCase()) {
+                    substituentType = subType;
                 }
             }
             var lcs;
@@ -175,6 +181,7 @@ export default class GlycoCTParser{
             }
             var subId = this.randomString(7);
             var substituent = new Substituent(subId,substituentType);
+            //if (this.clickedNode.monosaccharideType.name.toLowerCase()+subName)
             var subLinkage = new SubstituentLinkage(this.randomString(7), this.clickedNode, substituent, lcs);
             this.sugar.addSubstituent(substituent, subLinkage);
         }

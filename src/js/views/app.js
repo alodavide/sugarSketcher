@@ -336,6 +336,9 @@ function pasteNewNode(node) {
     $('#deleteNode').fadeOut(400); // Hide the delete option
     $('#copyNode').fadeOut(400); // Hide the copy option
     $('#pasteNode').fadeOut(400); // Hide the paste option
+
+    generateShapes();
+
     displayTree(); // Display the tree with new structure
 }
 
