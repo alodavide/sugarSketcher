@@ -3256,18 +3256,74 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return str;
 	        }
 	    }, {
+	        key: 'getSub',
+	        value: function getSub(name) {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = _SubstituentType2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var sub = _step.value;
+	
+	                    if (sub.name === name) return sub;
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'getMono',
+	        value: function getMono(name) {
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+	
+	            try {
+	                for (var _iterator2 = _MonosaccharideType2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var mono = _step2.value;
+	
+	                    if (mono.name === name) return mono;
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
 	        key: 'createResidue',
 	        value: function createResidue(residue, linkedCarbon, anomerCarbon) {
 	            if (residue[0].substring(1) === "b") {
 	                // monosaccharide
 	                var anomericity;
-	                var _iteratorNormalCompletion = true;
-	                var _didIteratorError = false;
-	                var _iteratorError = undefined;
+	                var _iteratorNormalCompletion3 = true;
+	                var _didIteratorError3 = false;
+	                var _iteratorError3 = undefined;
 	
 	                try {
-	                    for (var _iterator = _Anomericity2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                        var anom = _step.value;
+	                    for (var _iterator3 = _Anomericity2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                        var anom = _step3.value;
 	
 	                        if (residue[1].substring(0, 1) === "a") {
 	                            anomericity = _Anomericity2.default.ALPHA;
@@ -3275,67 +3331,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            anomericity = _Anomericity2.default.BETA;
 	                        } else {
 	                            anomericity = _Anomericity2.default.UNDEFINED;
-	                        }
-	                    }
-	                } catch (err) {
-	                    _didIteratorError = true;
-	                    _iteratorError = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion && _iterator.return) {
-	                            _iterator.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError) {
-	                            throw _iteratorError;
-	                        }
-	                    }
-	                }
-	
-	                var dashSplit = residue[1].split("-");
-	                var stemType = dashSplit[1];
-	                var isomer;
-	                var _iteratorNormalCompletion2 = true;
-	                var _didIteratorError2 = false;
-	                var _iteratorError2 = undefined;
-	
-	                try {
-	                    for (var _iterator2 = _Isomer2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                        var isom = _step2.value;
-	
-	                        if (stemType.substring(0, 1) === "x") {
-	                            isomer = _Isomer2.default.UNDEFINED;
-	                        }
-	                        if (stemType.substring(0, 1) === isom.name.toLowerCase()) {
-	                            isomer = isom;
-	                        }
-	                    }
-	                } catch (err) {
-	                    _didIteratorError2 = true;
-	                    _iteratorError2 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                            _iterator2.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError2) {
-	                            throw _iteratorError2;
-	                        }
-	                    }
-	                }
-	
-	                stemType = stemType.substring(1);
-	                var _iteratorNormalCompletion3 = true;
-	                var _didIteratorError3 = false;
-	                var _iteratorError3 = undefined;
-	
-	                try {
-	                    for (var _iterator3 = _MonosaccharideType2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                        var mono = _step3.value;
-	
-	                        if (mono.name.toLowerCase() === stemType) {
-	                            stemType = mono;
 	                        }
 	                    }
 	                } catch (err) {
@@ -3349,6 +3344,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    } finally {
 	                        if (_didIteratorError3) {
 	                            throw _iteratorError3;
+	                        }
+	                    }
+	                }
+	
+	                var dashSplit = residue[1].split("-");
+	                var stemType = dashSplit[1];
+	                var isomer;
+	                var _iteratorNormalCompletion4 = true;
+	                var _didIteratorError4 = false;
+	                var _iteratorError4 = undefined;
+	
+	                try {
+	                    for (var _iterator4 = _Isomer2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                        var isom = _step4.value;
+	
+	                        if (stemType.substring(0, 1) === "x") {
+	                            isomer = _Isomer2.default.UNDEFINED;
+	                        }
+	                        if (stemType.substring(0, 1) === isom.name.toLowerCase()) {
+	                            isomer = isom;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError4 = true;
+	                    _iteratorError4 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                            _iterator4.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError4) {
+	                            throw _iteratorError4;
+	                        }
+	                    }
+	                }
+	
+	                stemType = stemType.substring(1);
+	                var _iteratorNormalCompletion5 = true;
+	                var _didIteratorError5 = false;
+	                var _iteratorError5 = undefined;
+	
+	                try {
+	                    for (var _iterator5 = _MonosaccharideType2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                        var mono = _step5.value;
+	
+	                        if (mono.name.toLowerCase() === stemType) {
+	                            stemType = mono;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError5 = true;
+	                    _iteratorError5 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                            _iterator5.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError5) {
+	                            throw _iteratorError5;
 	                        }
 	                    }
 	                }
@@ -3392,13 +3448,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        this.sugar = new _Sugar2.default("Sugar", node);
 	                    } else {
 	                    var ac;
-	                    var _iteratorNormalCompletion4 = true;
-	                    var _didIteratorError4 = false;
-	                    var _iteratorError4 = undefined;
+	                    var _iteratorNormalCompletion6 = true;
+	                    var _didIteratorError6 = false;
+	                    var _iteratorError6 = undefined;
 	
 	                    try {
-	                        for (var _iterator4 = _AnomerCarbon2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                            var anomC = _step4.value;
+	                        for (var _iterator6 = _AnomerCarbon2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                            var anomC = _step6.value;
 	
 	                            if (anomerCarbon === "?") {
 	                                ac = _AnomerCarbon2.default.UNDEFINED;
@@ -3408,28 +3464,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            }
 	                        }
 	                    } catch (err) {
-	                        _didIteratorError4 = true;
-	                        _iteratorError4 = err;
+	                        _didIteratorError6 = true;
+	                        _iteratorError6 = err;
 	                    } finally {
 	                        try {
-	                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	                                _iterator4.return();
+	                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                _iterator6.return();
 	                            }
 	                        } finally {
-	                            if (_didIteratorError4) {
-	                                throw _iteratorError4;
+	                            if (_didIteratorError6) {
+	                                throw _iteratorError6;
 	                            }
 	                        }
 	                    }
 	
 	                    var lc;
-	                    var _iteratorNormalCompletion5 = true;
-	                    var _didIteratorError5 = false;
-	                    var _iteratorError5 = undefined;
+	                    var _iteratorNormalCompletion7 = true;
+	                    var _didIteratorError7 = false;
+	                    var _iteratorError7 = undefined;
 	
 	                    try {
-	                        for (var _iterator5 = _LinkedCarbon2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                            var linkedC = _step5.value;
+	                        for (var _iterator7 = _LinkedCarbon2.default[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                            var linkedC = _step7.value;
 	
 	                            if (linkedCarbon === "?") {
 	                                lc = _LinkedCarbon2.default.UNDEFINED;
@@ -3439,16 +3495,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            }
 	                        }
 	                    } catch (err) {
-	                        _didIteratorError5 = true;
-	                        _iteratorError5 = err;
+	                        _didIteratorError7 = true;
+	                        _iteratorError7 = err;
 	                    } finally {
 	                        try {
-	                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-	                                _iterator5.return();
+	                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                                _iterator7.return();
 	                            }
 	                        } finally {
-	                            if (_didIteratorError5) {
-	                                throw _iteratorError5;
+	                            if (_didIteratorError7) {
+	                                throw _iteratorError7;
 	                            }
 	                        }
 	                    }
@@ -3460,74 +3516,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // substituent
 	                var subName = residue[1];
 	                var substituentType;
-	                var _iteratorNormalCompletion6 = true;
-	                var _didIteratorError6 = false;
-	                var _iteratorError6 = undefined;
-	
-	                try {
-	                    for (var _iterator6 = _GlycoCTSubstituents2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                        var sub = _step6.value;
-	
-	                        if (subName === sub.glycoct) {
-	                            subName = sub.name;
-	                        }
-	                    }
-	                } catch (err) {
-	                    _didIteratorError6 = true;
-	                    _iteratorError6 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                            _iterator6.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError6) {
-	                            throw _iteratorError6;
-	                        }
-	                    }
-	                }
-	
-	                var _iteratorNormalCompletion7 = true;
-	                var _didIteratorError7 = false;
-	                var _iteratorError7 = undefined;
-	
-	                try {
-	                    for (var _iterator7 = _SubstituentType2.default[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                        var subType = _step7.value;
-	
-	                        if (subName.toLowerCase() === subType.name.toLowerCase()) {
-	                            substituentType = subType;
-	                        }
-	                    }
-	                } catch (err) {
-	                    _didIteratorError7 = true;
-	                    _iteratorError7 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
-	                            _iterator7.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError7) {
-	                            throw _iteratorError7;
-	                        }
-	                    }
-	                }
-	
-	                var lcs;
 	                var _iteratorNormalCompletion8 = true;
 	                var _didIteratorError8 = false;
 	                var _iteratorError8 = undefined;
 	
 	                try {
-	                    for (var _iterator8 = _LinkedCarbon2.default[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                        var linkedCS = _step8.value;
+	                    for (var _iterator8 = _GlycoCTSubstituents2.default[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                        var sub = _step8.value;
 	
-	                        if (linkedCarbon === "?") {
-	                            lcs = _LinkedCarbon2.default.UNDEFINED;
-	                        }
-	                        if (parseInt(linkedCarbon) === linkedCS.value) {
-	                            lcs = linkedCS;
+	                        if (subName === sub.glycoct) {
+	                            subName = sub.name;
 	                        }
 	                    }
 	                } catch (err) {
@@ -3545,11 +3543,107 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
+	                var _iteratorNormalCompletion9 = true;
+	                var _didIteratorError9 = false;
+	                var _iteratorError9 = undefined;
+	
+	                try {
+	                    for (var _iterator9 = _SubstituentType2.default[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                        var subType = _step9.value;
+	
+	                        if (subName.toLowerCase() === subType.name.toLowerCase()) {
+	                            substituentType = subType;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError9 = true;
+	                    _iteratorError9 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                            _iterator9.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError9) {
+	                            throw _iteratorError9;
+	                        }
+	                    }
+	                }
+	
+	                var lcs;
+	                var _iteratorNormalCompletion10 = true;
+	                var _didIteratorError10 = false;
+	                var _iteratorError10 = undefined;
+	
+	                try {
+	                    for (var _iterator10 = _LinkedCarbon2.default[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                        var linkedCS = _step10.value;
+	
+	                        if (linkedCarbon === "?") {
+	                            lcs = _LinkedCarbon2.default.UNDEFINED;
+	                        }
+	                        if (parseInt(linkedCarbon) === linkedCS.value) {
+	                            lcs = linkedCS;
+	                        }
+	                    }
+	                } catch (err) {
+	                    _didIteratorError10 = true;
+	                    _iteratorError10 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion10 && _iterator10.return) {
+	                            _iterator10.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError10) {
+	                            throw _iteratorError10;
+	                        }
+	                    }
+	                }
+	
 	                var subId = this.randomString(7);
 	                var substituent = new _Substituent2.default(subId, substituentType);
-	                if (this.clickedNode.monosaccharideType.name.toLowerCase() + subName) var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, lcs);
-	                this.sugar.addSubstituent(substituent, subLinkage);
+	                var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
+	                if (newType) {
+	                    this.updateNodeType(this.clickedNode, newType);
+	                } else {
+	                    var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, lcs);
+	                    this.sugar.addSubstituent(substituent, subLinkage);
+	                }
 	            }
+	        }
+	    }, {
+	        key: 'updateNodeType',
+	        value: function updateNodeType(node, type) {
+	            console.log(this.sugar.graph.nodes());
+	            var _iteratorNormalCompletion11 = true;
+	            var _didIteratorError11 = false;
+	            var _iteratorError11 = undefined;
+	
+	            try {
+	                for (var _iterator11 = this.sugar.graph.nodes()[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                    var sugarNode = _step11.value;
+	
+	                    if (node === sugarNode) {
+	                        sugarNode.monosaccharideType = type;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError11 = true;
+	                _iteratorError11 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                        _iterator11.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError11) {
+	                        throw _iteratorError11;
+	                    }
+	                }
+	            }
+	
+	            console.log(this.sugar.graph.nodes());
 	        }
 	    }, {
 	        key: 'parseGlycoCT',
@@ -3605,29 +3699,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            linkedCarbon = linkages.substring(0, 1);
 	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
 	                        }
-	                        var _iteratorNormalCompletion9 = true;
-	                        var _didIteratorError9 = false;
-	                        var _iteratorError9 = undefined;
+	                        var _iteratorNormalCompletion12 = true;
+	                        var _didIteratorError12 = false;
+	                        var _iteratorError12 = undefined;
 	
 	                        try {
-	                            for (var _iterator9 = this.sugar.graph.nodes()[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-	                                var node = _step9.value;
+	                            for (var _iterator12 = this.sugar.graph.nodes()[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                                var node = _step12.value;
 	                                // clickedNode = sourceNode
 	                                if (node.id === nodesIds[sourceId]) {
 	                                    this.clickedNode = node;
 	                                }
 	                            }
 	                        } catch (err) {
-	                            _didIteratorError9 = true;
-	                            _iteratorError9 = err;
+	                            _didIteratorError12 = true;
+	                            _iteratorError12 = err;
 	                        } finally {
 	                            try {
-	                                if (!_iteratorNormalCompletion9 && _iterator9.return) {
-	                                    _iterator9.return();
+	                                if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                                    _iterator12.return();
 	                                }
 	                            } finally {
-	                                if (_didIteratorError9) {
-	                                    throw _iteratorError9;
+	                                if (_didIteratorError12) {
+	                                    throw _iteratorError12;
 	                                }
 	                            }
 	                        }

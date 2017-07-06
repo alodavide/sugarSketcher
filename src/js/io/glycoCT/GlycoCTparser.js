@@ -37,6 +37,23 @@ export default class GlycoCTParser{
         return str;
     }
 
+    getSub(name)
+    {
+        for (var sub of SubstituentType)
+        {
+            if (sub.name === name)
+                return sub;
+        }
+    }
+
+    getMono(name)
+    {
+        for (var mono of MonosaccharideType)
+        {
+            if (mono.name === name)
+                return mono;
+        }
+    }
 
     createResidue(residue, linkedCarbon, anomerCarbon)
     {
@@ -181,10 +198,29 @@ export default class GlycoCTParser{
             }
             var subId = this.randomString(7);
             var substituent = new Substituent(subId,substituentType);
-            //if (this.clickedNode.monosaccharideType.name.toLowerCase()+subName)
-            var subLinkage = new SubstituentLinkage(this.randomString(7), this.clickedNode, substituent, lcs);
-            this.sugar.addSubstituent(substituent, subLinkage);
+            var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
+            if (newType) {
+                this.updateNodeType(this.clickedNode, newType);
+            }
+            else
+            {
+                var subLinkage = new SubstituentLinkage(this.randomString(7), this.clickedNode, substituent, lcs);
+                this.sugar.addSubstituent(substituent, subLinkage);
+            }
         }
+    }
+
+    updateNodeType(node, type)
+    {
+        console.log(this.sugar.graph.nodes());
+        for (var sugarNode of this.sugar.graph.nodes())
+        {
+            if (node === sugarNode)
+            {
+                sugarNode.monosaccharideType = type;
+            }
+        }
+        console.log(this.sugar.graph.nodes());
     }
 
 
@@ -256,4 +292,7 @@ export default class GlycoCTParser{
         }
         return this.sugar;
     }
+
+
+
 }

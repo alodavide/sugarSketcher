@@ -559,7 +559,6 @@ function deleteNode(node) {
     if (!sugar.rootIsSet()) { // If we deleted the root, update menu
         updateMenu();
     }
-    console.log(shapes);
 }
 
 /**
@@ -843,7 +842,6 @@ function generateShapes()
             if (link instanceof sb.GlycosidicLinkage) {
                 updateTreeVisualization(link);
                 var node = {"node":mono};
-                console.log(node);
                 var shape = calculateXandYNode(node);
                 shapes[node.node.id] = shape;
             }
