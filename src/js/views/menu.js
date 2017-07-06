@@ -64,6 +64,7 @@ $(document).ready(function() {
                 shapes = [];
                 var parser = new sb.GlycoCTParser($('#formula').val());
                 sugar = parser.parseGlycoCT();
+                generateShapes();
                 displayTree();
                 clickedNode = null;
             });
@@ -807,4 +808,39 @@ function test(n)
         createNewNode();
         clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];
     }
+}
+
+function generateShapes()
+{
+    for (var mono of sugar.graph.nodes())
+    {
+        var link;
+        for (var edge of sugar.graph.edges())
+        {
+            if (edge.target == mono.id)
+            {
+                link = edge;
+            }
+        }
+        if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
+            var node = {"node":mono};
+            var shape = calculateXandYNode(node);
+            shapes[node.node.id] = shape;
+            updateTreeVisualization(); // Update visualization in the svg
+            displayTree();
+        } else {
+            if (link instanceof sb.GlycosidicLinkage) {
+                updateTreeVisualization(link);
+                var node = {"node":mono};
+                var shape = calculateXandYNode(node);
+                shapes[node.node.id] = shape;
+            }
+            else
+            {
+                updateTreeVisualization(link);
+            }
+            displayTree();
+        }
+    }
+    clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];
 }

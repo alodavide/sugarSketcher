@@ -3316,6 +3316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        ringType = _RingType2.default.UNDEFINED;
 	                    }
 	                }
+	
 	                /*var shape, color;
 	                for (var type of sb.MonosaccharideType)
 	                {
@@ -3340,7 +3341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    {
 	                        this.sugar = new _Sugar2.default("Sugar", node);
 	                    } else {
-	                    var ac = null;
+	                    var ac;
 	                    var _iteratorNormalCompletion4 = true;
 	                    var _didIteratorError4 = false;
 	                    var _iteratorError4 = undefined;
@@ -3349,7 +3350,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        for (var _iterator4 = _AnomerCarbon2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
 	                            var anomC = _step4.value;
 	
-	                            if (anomerCarbon === anomC.value) {
+	                            if (anomerCarbon === "?") {
+	                                ac = _AnomerCarbon2.default.UNDEFINED;
+	                            }
+	                            if (parseInt(anomerCarbon) === anomC.value) {
 	                                ac = anomC;
 	                            }
 	                        }
@@ -3368,10 +3372,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
-	                    if (ac === null) {
-	                        ac = _AnomerCarbon2.default.UNDEFINED;
-	                    }
-	                    var lc = null;
+	                    var lc;
 	                    var _iteratorNormalCompletion5 = true;
 	                    var _didIteratorError5 = false;
 	                    var _iteratorError5 = undefined;
@@ -3380,7 +3381,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        for (var _iterator5 = _LinkedCarbon2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
 	                            var linkedC = _step5.value;
 	
-	                            if (linkedCarbon === linkedC.value) {
+	                            if (linkedCarbon === "?") {
+	                                lc = _LinkedCarbon2.default.UNDEFINED;
+	                            }
+	                            if (parseInt(linkedCarbon) === linkedC.value) {
 	                                lc = linkedC;
 	                            }
 	                        }
@@ -3399,9 +3403,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
-	                    if (lc === null) {
-	                        lc = _LinkedCarbon2.default.UNDEFINED;
-	                    }
 	                    this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
 	                }
 	                return nodeId;
@@ -3449,7 +3450,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return new _Sugar2.default("Sugar");
 	            }
 	            var res = this.formula.split("LIN")[0].split("\n");
-	            var links = this.formula.split("LIN")[1].split("\n");
+	            var links;
+	            if (!this.formula.split("LIN")[1]) // Only one node without links
+	                {
+	                    if (!res[1]) // wrong formula
+	                        {
+	                            return new _Sugar2.default("Sugar");
+	                        }
+	                    this.createResidue(res[1].split(":"), "r", "r");
+	                    return this.sugar;
+	                } else {
+	                links = this.formula.split("LIN")[1].split("\n");
+	            }
 	            var residueListById = [""];
 	            var nodesIds = {};
 	            if (res[0] === "RES") {
@@ -3479,7 +3491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (linkages.substring(0, 2) === "-1") {
 	                            // if linkedcarbon is undefined
 	                            linkedCarbon = "?";
-	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
+	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
 	                        } else {
 	                            linkedCarbon = linkages.substring(0, 1);
 	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
@@ -3612,30 +3624,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	                resId[res[i].id] = i + 1;
 	            }
 	
-	            formula += "LIN\n";
-	            var edges = this.sugar.graph.edges();
-	            for (i = 0; i < edges.length; i++) {
-	                formula += i + 1 + ":";
+	            if (this.sugar.graph.nodes().length > 1) {
+	                formula += "LIN\n";
+	                var edges = this.sugar.graph.edges();
+	                for (i = 0; i < edges.length; i++) {
+	                    formula += i + 1 + ":";
 	
-	                formula += resId[edges[i].sourceNode.getId()];
+	                    formula += resId[edges[i].sourceNode.getId()];
 	
-	                formula += "o"; // CHANGE
+	                    formula += "o"; // CHANGE
 	
-	                var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-	                var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
-	                formula += "(" + linkedCarbon;
-	                if (anomerCarbon != -1) {
-	                    formula += "+";
+	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
+	                    var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+	                    formula += "(" + linkedCarbon;
+	                    if (anomerCarbon != -1) {
+	                        formula += "+";
+	                    }
+	                    formula += anomerCarbon + ")";
+	
+	                    formula += resId[edges[i].targetNode.getId()];
+	
+	                    formula += "d"; // CHANGE
+	
+	                    formula += "\n";
 	                }
-	                formula += anomerCarbon + ")";
-	
-	                formula += resId[edges[i].targetNode.getId()];
-	
-	                formula += "d"; // CHANGE
-	
-	                formula += "\n";
 	            }
-	
 	            return formula;
 	        }
 	    }]);

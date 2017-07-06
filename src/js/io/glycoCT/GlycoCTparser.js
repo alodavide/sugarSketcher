@@ -98,6 +98,7 @@ export default class GlycoCTParser{
                 }
 
             }
+
             /*var shape, color;
             for (var type of sb.MonosaccharideType)
             {
