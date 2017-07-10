@@ -34,8 +34,10 @@ import Sugar from './js/glycomics/Sugar';
 //IO
 import GlycoCTParser from './js/io/glycoCT/GlycoCTParser';
 import GlycoCTWriter from './js/io/glycoCT/GlycoCTWriter';
+import NodeComparator from './js/io/NodeComparator';
 
 
 export { Graph, GraphEdge, GraphNode, AnomerCarbon, Anomericity, Isomer, 
     LinkedCarbon, MonosaccharideType, RingType, Monosaccharide, SubstituentType, 
-    GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser, GlycoCTWriter, GlycoCTSubstituents};
+    GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser,
+    GlycoCTWriter, GlycoCTSubstituents, NodeComparator};

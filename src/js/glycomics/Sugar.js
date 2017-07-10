@@ -481,4 +481,5 @@ export default class Sugar{
         this.rootNode = undefined;
         this.graph.clear();
     }
+
 }

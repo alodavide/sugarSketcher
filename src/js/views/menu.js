@@ -528,6 +528,9 @@ document.onkeydown = function (e) {
             deleteNode(clickedNode);
         }
     }
+    else if (e.keyCode == 13) { // enter
+        test(7);
+    }
 };
 
 /**

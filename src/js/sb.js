@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -133,16 +133,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
+	var _NodeComparator = __webpack_require__(20);
+	
+	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	//IO
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
+	//Sugar
 	
-	//Data Structure
+	
+	//Nodes
+	
+	
+	//Linkages
+	
+	
+	//Glycomics Structure
+	//Dictionary
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -161,18 +168,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.GlycoCTParser = _GlycoCTParser2.default;
 	exports.GlycoCTWriter = _GlycoCTWriter2.default;
 	exports.GlycoCTSubstituents = _GlycoCTSubstituents2.default;
+	exports.NodeComparator = _NodeComparator2.default;
 	
-	//Sugar
+	//IO
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Nodes
-	
-	
-	//Linkages
-	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 
 /***/ }),
 /* 1 */
@@ -4094,7 +4099,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator6 = associatedSubs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
 	                        pair = _step6.value;
 	
-	                        console.log(pair);
 	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
 	                        i++;
 	                    }
@@ -4126,6 +4130,240 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = GlycoCTWriter;
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * Created by Renaud on 10/07/2017.
+	 */
+	
+	var NodeComparator = function () {
+	    function NodeComparator() {
+	        _classCallCheck(this, NodeComparator);
+	    }
+	
+	    _createClass(NodeComparator, [{
+	        key: "compare",
+	        value: function compare(n1, n2) {
+	            var childrenN1 = this.children(n1);
+	            var childrenN2 = this.children(n2);
+	            if (childrenN1 > childrenN2) {
+	                return n1;
+	            } else if (chlidrenN1 === childrenN2) {
+	                var longestN1 = this.longestBranch(n1) - n1.depth;
+	                var longestN2 = this.longestBranch(n2) - n2.depth;
+	                if (longestN1 > longestN2) {
+	                    return n1;
+	                } else if (longestN1 === longestN2) {
+	                    var terminalsN1 = this.terminals(n1);
+	                    var terminalsN2 = this.terminals(n2);
+	                    if (terminalsN1 > terminalsN2) {
+	                        return n1;
+	                    } else if (terminalsN1 === terminalsN2) {
+	                        var branchingN1 = this.branching(n1);
+	                        var branchingN2 = this.branching(n2);
+	                        if (branchingN1 > branchingN2) {
+	                            return n1;
+	                        } else if (branchingN1 === branchingN2) {
+	                            if (n1.node.monosaccharideType.name > n2.node.monosaccharideType.name) {
+	                                return n1;
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	
+	            return n2;
+	        }
+	    }, {
+	        key: "longestBranch",
+	        value: function longestBranch(node) {
+	            if (node.children === undefined) {
+	                return node.depth;
+	            }
+	            var depths = [];
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = node.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var child = _step.value;
+	
+	                    depths.push(this.longestBranch(child));
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+	
+	            try {
+	                for (var _iterator2 = depths[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var depth = _step2.value;
+	
+	                    if (node.depth > depth) {
+	                        return node.depth;
+	                    } else {
+	                        return Math.max.apply(null, depths);
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "children",
+	        value: function children(node) {
+	            if (node.children === undefined) {
+	                return 1;
+	            }
+	            var nodes = [];
+	            var _iteratorNormalCompletion3 = true;
+	            var _didIteratorError3 = false;
+	            var _iteratorError3 = undefined;
+	
+	            try {
+	                for (var _iterator3 = node.children[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var child = _step3.value;
+	
+	                    nodes.push(this.children(child));
+	                }
+	            } catch (err) {
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                        _iterator3.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError3) {
+	                        throw _iteratorError3;
+	                    }
+	                }
+	            }
+	
+	            return nodes.reduce(function (a, b) {
+	                return a + b;
+	            }, 0) + 1;
+	        }
+	    }, {
+	        key: "terminals",
+	        value: function terminals(node) {
+	            if (node.children === undefined) {
+	                return 1;
+	            }
+	            var nodes = [];
+	            var _iteratorNormalCompletion4 = true;
+	            var _didIteratorError4 = false;
+	            var _iteratorError4 = undefined;
+	
+	            try {
+	                for (var _iterator4 = node.children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                    var child = _step4.value;
+	
+	                    nodes.push(this.terminals(child));
+	                }
+	            } catch (err) {
+	                _didIteratorError4 = true;
+	                _iteratorError4 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                        _iterator4.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError4) {
+	                        throw _iteratorError4;
+	                    }
+	                }
+	            }
+	
+	            return nodes.reduce(function (a, b) {
+	                return a + b;
+	            }, 0);
+	        }
+	    }, {
+	        key: "branching",
+	        value: function branching(node) {
+	            if (node.children === undefined) {
+	                return 0;
+	            }
+	            var branches = [];
+	            var _iteratorNormalCompletion5 = true;
+	            var _didIteratorError5 = false;
+	            var _iteratorError5 = undefined;
+	
+	            try {
+	                for (var _iterator5 = node.children[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var child = _step5.value;
+	
+	                    branches.push(this.branching(child));
+	                }
+	            } catch (err) {
+	                _didIteratorError5 = true;
+	                _iteratorError5 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                        _iterator5.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError5) {
+	                        throw _iteratorError5;
+	                    }
+	                }
+	            }
+	
+	            return node.children.length > 1 ? branches.reduce(function (a, b) {
+	                return a + b;
+	            }, 0) + 1 : branches.reduce(function (a, b) {
+	                return a + b;
+	            }, 0);
+	        }
+	    }]);
+	
+	    return NodeComparator;
+	}();
+	
+	exports.default = NodeComparator;
 
 /***/ })
 /******/ ])
