@@ -116,6 +116,10 @@ export default class GlycoCTWriter{
     {
         var comp = new NodeComparator();
         this.generateArray(treeData);
+        if (this.res[0].node === undefined)
+        {
+            this.res = [];
+        }
         this.res.sort(function(a,b) {
             return comp.compare(a,b);
         });
@@ -236,7 +240,7 @@ export default class GlycoCTWriter{
             pair[0] = i;
         }
 
-        if (this.sugar.graph.nodes().length > 1)
+        if (this.res.length + associatedSubs.length > 1)
         {
             formula += "LIN\n";
             this.sortEdges();

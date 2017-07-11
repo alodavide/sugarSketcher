@@ -3978,6 +3978,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function sortNodes() {
 	            var comp = new _NodeComparator2.default();
 	            this.generateArray(treeData);
+	            if (this.res[0].node === undefined) {
+	                this.res = [];
+	            }
 	            this.res.sort(function (a, b) {
 	                return comp.compare(a, b);
 	            });
@@ -4126,7 +4129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            if (this.sugar.graph.nodes().length > 1) {
+	            if (this.res.length + associatedSubs.length > 1) {
 	                formula += "LIN\n";
 	                this.sortEdges();
 	                var edges = this.edges;
