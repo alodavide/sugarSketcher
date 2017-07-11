@@ -57,7 +57,7 @@ export default class GlycoCTParser{
 
     createResidue(residue, linkedCarbon, anomerCarbon)
     {
-        if (residue[0].substring(1) === "b") { // monosaccharide
+        if (residue[0].substring(residue[0].length-1) === "b") { // monosaccharide
             var anomericity;
             for (var anom of Anomericity)
             {
@@ -117,24 +117,6 @@ export default class GlycoCTParser{
 
             }
 
-            /*var shape, color;
-            for (var type of sb.MonosaccharideType)
-            {
-                if (type.name.toLowerCase() === stemType)
-                {
-                    shape = type.shape;
-                    if (type.bisected) {
-                        shape = "bisected"+shape;
-                    }
-                    for (var colorChoice in colorDivisions)
-                    {
-                        if (colorDivisions[colorChoice].display_division === type.color) {
-                            color = colorDivisions[colorChoice].division;
-                        }
-                    }
-                }
-            }*/
-
             var nodeId = this.randomString(7);
             var node = new Monosaccharide(nodeId,stemType, anomericity, isomer, ringType);
             if (linkedCarbon === "r" && anomerCarbon === "r") // Root
@@ -171,7 +153,7 @@ export default class GlycoCTParser{
             }
             return nodeId;
         }
-        else if (residue[0].substring(1) === "s") { // substituent
+        else if (residue[0].substring(residue[0].length-1) === "s") { // substituent
             var subName = residue[1];
             var substituentType;
             for (var sub of GlycoCTSubstituents) {
@@ -256,7 +238,7 @@ export default class GlycoCTParser{
             for (var linkId in links) {
                 if (links[linkId] !== "") {
                     var link = links[linkId];
-                    var sourceId = link.substring(2,3);
+                    var sourceId = parseInt(link.split(":")[1].split("(")[0]);
                     var nodeId;
                     if (residueListById[sourceId] !== "") // Root
                     {
@@ -265,7 +247,7 @@ export default class GlycoCTParser{
                         nodesIds[sourceId] = nodeId;
 
                     }
-                    var targetId = link.split(")")[1].substring(0,1);
+                    var targetId = parseInt(link.split(")")[1]);
                     var linkages = link.split(/[\(\)]+/)[1];
                     var linkedCarbon, anomerCarbon;
                     if (linkages.substring(0, 2) === "-1") { // if linkedcarbon is undefined

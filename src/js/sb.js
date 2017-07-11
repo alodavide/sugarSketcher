@@ -3319,7 +3319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'createResidue',
 	        value: function createResidue(residue, linkedCarbon, anomerCarbon) {
-	            if (residue[0].substring(1) === "b") {
+	            if (residue[0].substring(residue[0].length - 1) === "b") {
 	                // monosaccharide
 	                var anomericity;
 	                var _iteratorNormalCompletion3 = true;
@@ -3428,24 +3428,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                /*var shape, color;
-	                for (var type of sb.MonosaccharideType)
-	                {
-	                    if (type.name.toLowerCase() === stemType)
-	                    {
-	                        shape = type.shape;
-	                        if (type.bisected) {
-	                            shape = "bisected"+shape;
-	                        }
-	                        for (var colorChoice in colorDivisions)
-	                        {
-	                            if (colorDivisions[colorChoice].display_division === type.color) {
-	                                color = colorDivisions[colorChoice].division;
-	                            }
-	                        }
-	                    }
-	                }*/
-	
 	                var nodeId = this.randomString(7);
 	                var node = new _Monosaccharide2.default(nodeId, stemType, anomericity, isomer, ringType);
 	                if (linkedCarbon === "r" && anomerCarbon === "r") // Root
@@ -3517,7 +3499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
 	                }
 	                return nodeId;
-	            } else if (residue[0].substring(1) === "s") {
+	            } else if (residue[0].substring(residue[0].length - 1) === "s") {
 	                // substituent
 	                var subName = residue[1];
 	                var substituentType;
@@ -3681,7 +3663,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (var linkId in links) {
 	                    if (links[linkId] !== "") {
 	                        var link = links[linkId];
-	                        var sourceId = link.substring(2, 3);
+	                        var sourceId = parseInt(link.split(":")[1].split("(")[0]);
 	                        var nodeId;
 	                        if (residueListById[sourceId] !== "") // Root
 	                            {
@@ -3689,7 +3671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                residueListById[sourceId] = "";
 	                                nodesIds[sourceId] = nodeId;
 	                            }
-	                        var targetId = link.split(")")[1].substring(0, 1);
+	                        var targetId = parseInt(link.split(")")[1]);
 	                        var linkages = link.split(/[\(\)]+/)[1];
 	                        var linkedCarbon, anomerCarbon;
 	                        if (linkages.substring(0, 2) === "-1") {
@@ -4001,12 +3983,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (root.children === undefined) {
 	                return;
 	            }
+	            var children = root.children;
+	            if (children.length > 1) {
+	                var comp = new _NodeComparator2.default();
+	                children.sort(function (a, b) {
+	                    return comp.compare(a, b);
+	                });
+	            }
 	            var _iteratorNormalCompletion5 = true;
 	            var _didIteratorError5 = false;
 	            var _iteratorError5 = undefined;
 	
 	            try {
-	                for (var _iterator5 = root.children[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                for (var _iterator5 = children[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
 	                    var node = _step5.value;
 	
 	                    this.generateArray(node);
