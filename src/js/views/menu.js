@@ -26,7 +26,7 @@ $(document).ready(function() {
     d3.select("#exportGlycoCT").on('click', function() {
         d3.select("#formula").style("display","block");
         d3.select("#validateFormula").style("display", "none");
-        var writer = new sb.GlycoCTWriter(sugar);
+        var writer = new sb.GlycoCTWriter(sugar, treeData);
         $('#formula').val(writer.exportGlycoCT());
         $('#formula').select();
         var formula = document.querySelector("#formula");

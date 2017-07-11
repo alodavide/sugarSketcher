@@ -3765,10 +3765,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _SubstituentLinkage = __webpack_require__(14);
-	
-	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
-	
 	var _GlycosidicLinkage = __webpack_require__(13);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
@@ -3781,19 +3777,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _NodeComparator = __webpack_require__(20);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var GlycoCTWriter = function () {
-	    function GlycoCTWriter(sugar) {
+	    function GlycoCTWriter(sugar, tree) {
 	        _classCallCheck(this, GlycoCTWriter);
 	
 	        this.sugar = sugar;
+	        this.tree = tree;
+	        this.res = [];
 	    }
 	
 	    _createClass(GlycoCTWriter, [{
@@ -3972,10 +3970,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return formula;
 	        }
 	    }, {
+	        key: "sortNodes",
+	        value: function sortNodes() {
+	            var comp = new _NodeComparator2.default();
+	            this.generateArray(treeData);
+	            return this.res.sort(function (a, b) {
+	                return comp.compare(a, b);
+	            });
+	        }
+	    }, {
+	        key: "generateArray",
+	        value: function generateArray(root) {
+	            this.res.push(root);
+	            if (root.children === undefined) {
+	                return;
+	            }
+	            var _iteratorNormalCompletion5 = true;
+	            var _didIteratorError5 = false;
+	            var _iteratorError5 = undefined;
+	
+	            try {
+	                for (var _iterator5 = root.children[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var node = _step5.value;
+	
+	                    this.generateArray(node);
+	                }
+	            } catch (err) {
+	                _didIteratorError5 = true;
+	                _iteratorError5 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                        _iterator5.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError5) {
+	                        throw _iteratorError5;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
 	        key: "exportGlycoCT",
 	        value: function exportGlycoCT() {
 	            var resId = {};
-	            var res = this.sugar.graph.nodes();
+	            var res = this.sortNodes();
+	            console.log(this.res);
+	            console.log(this.sugar.graph.nodes());
 	            var associatedSubs = [];
 	            if (res.length === 0) {
 	                return "";
@@ -3983,11 +4024,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var linkNumber = 1;
 	            var formula = "RES\n";
 	            for (var i = 0; i < res.length; i++) {
-	                if (res[i] instanceof _Substituent2.default) {
-	                    formula += this.writeSub(i, res[i]);
+	                if (res[i].node instanceof _Substituent2.default) {
+	                    formula += this.writeSub(i, res[i].node);
 	                } else {
 	                    formula += i + 1 + "b:";
-	                    switch (res[i]._anomericity.name) {
+	                    switch (res[i].node._anomericity.name) {
 	                        case "ALPHA":
 	                            formula += "a";
 	                            break;
@@ -3999,7 +4040,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            break;
 	                    }
 	                    formula += "-";
-	                    switch (res[i]._isomer.name) {
+	                    switch (res[i].node._isomer.name) {
 	                        case "L":
 	                            formula += "l";
 	                            break;
@@ -4010,25 +4051,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            formula += "x";
 	                            break;
 	                    }
-	                    if (this.getMono(res[i]._monosaccharideType.name.toLowerCase()) && res[i]._monosaccharideType.name.length > 3) {
-	                        formula += res[i]._monosaccharideType.name.toLowerCase().substring(0, 3);
+	                    if (this.getMono(res[i].node._monosaccharideType.name.toLowerCase()) && res[i].node._monosaccharideType.name.length > 3) {
+	                        formula += res[i].node._monosaccharideType.name.toLowerCase().substring(0, 3);
 	                        // Add the associated sub seperately
-	                        var assocSubType = this.getSub(res[i]._monosaccharideType.name.substring(3));
+	                        var assocSubType = this.getSub(res[i].node._monosaccharideType.name.substring(3));
 	                        var assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
 	                        associatedSubs.push([assocSub, i + 1]);
 	                    } else {
-	                        formula += res[i]._monosaccharideType.name.toLowerCase();
+	                        formula += res[i].node._monosaccharideType.name.toLowerCase();
 	                    }
 	                    formula += "-";
-	                    if (res[i]._monosaccharideType.superclass) {
-	                        formula += res[i]._monosaccharideType.superclass.toUpperCase();
+	                    if (res[i].node._monosaccharideType.superclass) {
+	                        formula += res[i].node._monosaccharideType.superclass.toUpperCase();
 	                    } else {
 	                        formula += "HEX";
 	                    }
 	
 	                    formula += "-";
 	
-	                    switch (res[i]._ringType.name) {
+	                    switch (res[i].node._ringType.name) {
 	                        case "P":
 	                            formula += "1:5";
 	                            break;
@@ -4043,15 +4084,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                formula += "\n";
 	
-	                resId[res[i].id] = i + 1;
+	                resId[res[i].node.id] = i + 1;
 	            }
-	            var _iteratorNormalCompletion5 = true;
-	            var _didIteratorError5 = false;
-	            var _iteratorError5 = undefined;
+	            var _iteratorNormalCompletion6 = true;
+	            var _didIteratorError6 = false;
+	            var _iteratorError6 = undefined;
 	
 	            try {
-	                for (var _iterator5 = associatedSubs[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                    var pair = _step5.value;
+	                for (var _iterator6 = associatedSubs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                    var pair = _step6.value;
 	
 	                    var associatedSub = pair[0];
 	                    formula += this.writeSub(i, associatedSub);
@@ -4059,16 +4100,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pair[0] = i;
 	                }
 	            } catch (err) {
-	                _didIteratorError5 = true;
-	                _iteratorError5 = err;
+	                _didIteratorError6 = true;
+	                _iteratorError6 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-	                        _iterator5.return();
+	                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                        _iterator6.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError5) {
-	                        throw _iteratorError5;
+	                    if (_didIteratorError6) {
+	                        throw _iteratorError6;
 	                    }
 	                }
 	            }
@@ -4091,28 +4132,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var _iteratorNormalCompletion6 = true;
-	                var _didIteratorError6 = false;
-	                var _iteratorError6 = undefined;
+	                var _iteratorNormalCompletion7 = true;
+	                var _didIteratorError7 = false;
+	                var _iteratorError7 = undefined;
 	
 	                try {
-	                    for (var _iterator6 = associatedSubs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                        pair = _step6.value;
+	                    for (var _iterator7 = associatedSubs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                        pair = _step7.value;
 	
 	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
 	                        i++;
 	                    }
 	                } catch (err) {
-	                    _didIteratorError6 = true;
-	                    _iteratorError6 = err;
+	                    _didIteratorError7 = true;
+	                    _iteratorError7 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                            _iterator6.return();
+	                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                            _iterator7.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError6) {
-	                            throw _iteratorError6;
+	                        if (_didIteratorError7) {
+	                            throw _iteratorError7;
 	                        }
 	                    }
 	                }
@@ -4160,32 +4201,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var childrenN1 = this.children(n1);
 	            var childrenN2 = this.children(n2);
 	            if (childrenN1 > childrenN2) {
-	                return n1;
-	            } else if (chlidrenN1 === childrenN2) {
+	                return -1;
+	            } else if (childrenN1 === childrenN2) {
 	                var longestN1 = this.longestBranch(n1) - n1.depth;
 	                var longestN2 = this.longestBranch(n2) - n2.depth;
 	                if (longestN1 > longestN2) {
-	                    return n1;
+	                    return -1;
 	                } else if (longestN1 === longestN2) {
 	                    var terminalsN1 = this.terminals(n1);
 	                    var terminalsN2 = this.terminals(n2);
 	                    if (terminalsN1 > terminalsN2) {
-	                        return n1;
+	                        return -1;
 	                    } else if (terminalsN1 === terminalsN2) {
 	                        var branchingN1 = this.branching(n1);
 	                        var branchingN2 = this.branching(n2);
 	                        if (branchingN1 > branchingN2) {
-	                            return n1;
+	                            return -1;
 	                        } else if (branchingN1 === branchingN2) {
 	                            if (n1.node.monosaccharideType.name > n2.node.monosaccharideType.name) {
-	                                return n1;
+	                                return -1;
 	                            }
 	                        }
 	                    }
 	                }
 	            }
 	
-	            return n2;
+	            return 1;
 	        }
 	    }, {
 	        key: "longestBranch",

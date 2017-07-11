@@ -4,16 +4,17 @@
 
 import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentType from "../../glycomics/dictionary/SubstituentType";
-import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
 import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
 import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
-import LinkedCarbon from "../../glycomics/dictionary/LinkedCarbon";
+import NodeComparator from "../NodeComparator";
 
 export default class GlycoCTWriter{
 
-    constructor(sugar){
+    constructor(sugar,tree){
         this.sugar = sugar;
+        this.tree = tree;
+        this.res = [];
     }
 
     randomString(length) {
@@ -110,9 +111,31 @@ export default class GlycoCTWriter{
         return formula;
     }
 
+    sortNodes()
+    {
+        var comp = new NodeComparator();
+        this.generateArray(treeData);
+        return this.res.sort(function(a,b) {
+            return comp.compare(a,b);
+        });
+    }
+
+    generateArray(root)
+    {
+        this.res.push(root);
+        if (root.children === undefined)
+        {
+            return;
+        }
+        for (var node of root.children)
+        {
+            this.generateArray(node);
+        }
+    }
+
     exportGlycoCT() {
         var resId = {};
-        var res = this.sugar.graph.nodes();
+        var res = this.sortNodes();
         var associatedSubs = [];
         if (res.length === 0)
         {
@@ -122,14 +145,14 @@ export default class GlycoCTWriter{
         var formula = "RES\n";
         for (var i = 0; i < res.length; i++)
         {
-            if (res[i] instanceof Substituent)
+            if (res[i].node instanceof Substituent)
             {
-                formula += this.writeSub(i,res[i]);
+                formula += this.writeSub(i,res[i].node);
             }
             else
             {
                 formula += i+1 + "b:";
-                switch(res[i]._anomericity.name) {
+                switch(res[i].node._anomericity.name) {
                     case "ALPHA":
                         formula += "a";
                         break;
@@ -141,7 +164,7 @@ export default class GlycoCTWriter{
                         break;
                 }
                 formula += "-";
-                switch(res[i]._isomer.name) {
+                switch(res[i].node._isomer.name) {
                     case "L":
                         formula += "l";
                         break;
@@ -152,21 +175,21 @@ export default class GlycoCTWriter{
                         formula += "x";
                         break;
                 }
-                if (this.getMono(res[i]._monosaccharideType.name.toLowerCase()) && res[i]._monosaccharideType.name.length > 3)
+                if (this.getMono(res[i].node._monosaccharideType.name.toLowerCase()) && res[i].node._monosaccharideType.name.length > 3)
                 {
-                    formula += res[i]._monosaccharideType.name.toLowerCase().substring(0,3);
+                    formula += res[i].node._monosaccharideType.name.toLowerCase().substring(0,3);
                     // Add the associated sub seperately
-                    var assocSubType = this.getSub(res[i]._monosaccharideType.name.substring(3));
+                    var assocSubType = this.getSub(res[i].node._monosaccharideType.name.substring(3));
                     var assocSub = new Substituent(this.randomString(7),assocSubType);
                     associatedSubs.push([assocSub,i+1]);
                 }
                 else
                 {
-                    formula += res[i]._monosaccharideType.name.toLowerCase();
+                    formula += res[i].node._monosaccharideType.name.toLowerCase();
                 }
                 formula += "-";
-                if (res[i]._monosaccharideType.superclass) {
-                    formula += res[i]._monosaccharideType.superclass.toUpperCase();
+                if (res[i].node._monosaccharideType.superclass) {
+                    formula += res[i].node._monosaccharideType.superclass.toUpperCase();
                 }
 
                 else
@@ -176,7 +199,7 @@ export default class GlycoCTWriter{
 
                 formula += "-";
 
-                switch (res[i]._ringType.name) {
+                switch (res[i].node._ringType.name) {
                     case "P":
                         formula += "1:5";
                         break;
@@ -191,7 +214,7 @@ export default class GlycoCTWriter{
 
             formula += "\n";
 
-            resId[res[i].id] = i+1;
+            resId[res[i].node.id] = i+1;
 
         }
         for (var pair of associatedSubs)
