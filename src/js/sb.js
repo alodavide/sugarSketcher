@@ -3781,6 +3781,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
+	var _EdgeComparator = __webpack_require__(21);
+	
+	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3974,7 +3978,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function sortNodes() {
 	            var comp = new _NodeComparator2.default();
 	            this.generateArray(treeData);
-	            return this.res.sort(function (a, b) {
+	            this.res.sort(function (a, b) {
+	                return comp.compare(a, b);
+	            });
+	        }
+	    }, {
+	        key: "sortEdges",
+	        value: function sortEdges() {
+	            var comp = new _EdgeComparator2.default();
+	            this.edges = this.sugar.graph.edges();
+	            this.edges.sort(function (a, b) {
 	                return comp.compare(a, b);
 	            });
 	        }
@@ -4014,9 +4027,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "exportGlycoCT",
 	        value: function exportGlycoCT() {
 	            var resId = {};
-	            var res = this.sortNodes();
-	            console.log(this.res);
-	            console.log(this.sugar.graph.nodes());
+	            this.sortNodes();
+	            var res = this.res;
 	            var associatedSubs = [];
 	            if (res.length === 0) {
 	                return "";
@@ -4116,7 +4128,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            if (this.sugar.graph.nodes().length > 1) {
 	                formula += "LIN\n";
-	                var edges = this.sugar.graph.edges();
+	                this.sortEdges();
+	                var edges = this.edges;
 	                for (i = 0; i < edges.length; i++) {
 	                    var source = resId[edges[i].sourceNode.getId()];
 	
@@ -4405,6 +4418,109 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = NodeComparator;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 11/07/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+	
+	/**
+	 * Created by Renaud on 10/07/2017.
+	 */
+	
+	var _NodeComparator = __webpack_require__(20);
+	
+	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
+	
+	var _GlycosidicLinkage = __webpack_require__(13);
+	
+	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var EdgeComparator = function () {
+	    function EdgeComparator() {
+	        _classCallCheck(this, EdgeComparator);
+	    }
+	
+	    _createClass(EdgeComparator, [{
+	        key: "compare",
+	        value: function compare(e1, e2) {
+	            var bondsE1 = this.bonds(e1);
+	            var bondsE2 = this.bonds(e2);
+	            if (bondsE1 > bondsE2) {
+	                return -1;
+	            } else if (bondsE1 === bondsE2) {
+	                var parentLinkPosE1 = this.parentLinkPos(e1);
+	                var parentLinkPosE2 = this.parentLinkPos(e2);
+	                if (parentLinkPosE1 > parentLinkPosE2) {
+	                    return -1;
+	                } else if (parentLinkPosE1 === parentLinkPosE2) {
+	                    var childLinkPosE1 = this.childLinkPos(e1);
+	                    var childLinkPosE2 = this.childLinkPos(e2);
+	                    if (childLinkPosE1 > childLinkPosE2) {
+	                        return -1;
+	                    } else if (childLinkPosE1 === childLinkPosE2) {
+	                        var linkageTypeE1 = this.linkageType(e1);
+	                        var linkageTypeE2 = this.linkageType(e2);
+	                        if (linkageTypeE1 > linkageTypeE2) {
+	                            return -1;
+	                        } else if (linkageTypeE1 === linkageTypeE2) {
+	                            return this.compareNodes(e1, e2);
+	                        }
+	                    }
+	                }
+	            }
+	
+	            return 1;
+	        }
+	    }, {
+	        key: "parentLinkPos",
+	        value: function parentLinkPos(edge) {
+	            return edge.linkedCarbon.value === "undefined" ? 0 : edge.linkedCarbon.value;
+	        }
+	    }, {
+	        key: "bonds",
+	        value: function bonds(edge) {
+	            return 1; // always 1 bond in our application
+	        }
+	    }, {
+	        key: "childLinkPos",
+	        value: function childLinkPos(edge) {
+	            return edge.anomerCarbon.value === "undefined" ? 0 : edge.anomerCarbon.value;
+	        }
+	    }, {
+	        key: "linkageType",
+	        value: function linkageType(edge) {
+	            if (edge instanceof _GlycosidicLinkage2.default) {
+	                return 1;
+	            } else {
+	                return 0;
+	            }
+	        }
+	    }, {
+	        key: "compareNodes",
+	        value: function compareNodes(edge1, edge2) {
+	            var comp = new _NodeComparator2.default();
+	            return comp.compare(edge1.targetNode, edge2.targetNode);
+	        }
+	    }]);
+	
+	    return EdgeComparator;
+	}();
+	
+	exports.default = EdgeComparator;
 
 /***/ })
 /******/ ])

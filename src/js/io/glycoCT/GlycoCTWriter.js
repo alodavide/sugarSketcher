@@ -8,6 +8,7 @@ import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
 import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
 import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
 import NodeComparator from "../NodeComparator";
+import EdgeComparator from "../EdgeComparator";
 
 export default class GlycoCTWriter{
 
@@ -115,7 +116,16 @@ export default class GlycoCTWriter{
     {
         var comp = new NodeComparator();
         this.generateArray(treeData);
-        return this.res.sort(function(a,b) {
+        this.res.sort(function(a,b) {
+            return comp.compare(a,b);
+        });
+    }
+
+    sortEdges()
+    {
+        var comp = new EdgeComparator();
+        this.edges = this.sugar.graph.edges();
+        this.edges.sort(function(a,b) {
             return comp.compare(a,b);
         });
     }
@@ -135,7 +145,8 @@ export default class GlycoCTWriter{
 
     exportGlycoCT() {
         var resId = {};
-        var res = this.sortNodes();
+        this.sortNodes();
+        var res = this.res;
         var associatedSubs = [];
         if (res.length === 0)
         {
@@ -228,7 +239,8 @@ export default class GlycoCTWriter{
         if (this.sugar.graph.nodes().length > 1)
         {
             formula += "LIN\n";
-            var edges = this.sugar.graph.edges();
+            this.sortEdges();
+            var edges = this.edges;
             for (i = 0; i < edges.length; i++)
             {
                 var source = resId[edges[i].sourceNode.getId()];
