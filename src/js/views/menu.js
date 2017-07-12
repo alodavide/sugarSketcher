@@ -616,7 +616,6 @@ function createNewNode() {
             var shape = calculateXandYNode(node);
             shapes[generatedNodeId] = shape;
             updateTreeVisualization(); // Update visualization in the svg
-            displayTree();
         } else {
             var generatedEdgeId = randomString(7); // If tree not empty, generate id, create linkage and update visualziation
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
@@ -625,8 +624,10 @@ function createNewNode() {
             var node = {"node":monosaccharide};
             var shape = calculateXandYNode(node);
             shapes[generatedNodeId] = shape;
-            displayTree();
         }
+        clickedNode = monosaccharide;
+        displayTree();
+        updateMenu();
         return generatedNodeId;
     }
 }
@@ -822,6 +823,7 @@ function test(n)
         createNewNode();
         clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];
     }
+    displayTree();
 }
 
 function generateShapes()
