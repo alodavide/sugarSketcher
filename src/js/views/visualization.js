@@ -52,8 +52,8 @@ function updateExistingNode() {
     var anomericity = getAnomericityWithSelection(infosTable[3]); // Anomericity
     var isomer = getIsomerWithSelection(infosTable[4]); // Isomer
     var ringType = getRingTypeWithSelection(infosTable[5]); // Ring type
-    var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
-    var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
+    //var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
+    //var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
     var monoToUpdate = sugar.getNodeById(clickedNode.id); // Get the node we want to update in the graph
     monoToUpdate.anomericity = anomericity; // Update anomericity
     monoToUpdate.ringType = ringType; // Update ring type
@@ -65,10 +65,10 @@ function updateExistingNode() {
     var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected); // Find new monosaccharide type
     monoToUpdate.monosaccharideType = newMonoType; // Update monosaccharide type
     var linkToUpdate = findLinkForMono(monoToUpdate); // Get the link to update (if exists)
-    if (linkToUpdate != null) {
+    /*if (linkToUpdate != null) {
         linkToUpdate.linkedCarbon = linkedCarbon; // Update linked carbon
         linkToUpdate.anomerCarbon = anomerCarbon; // Update anomer carbon
-    }
+    }*/
     updateNodeInTree(treeData,monoToUpdate); // Update the node in the tree
 }
 

@@ -421,7 +421,19 @@ function checkSelectedAllInfos() {
         infosTable.push(isomer);
         infosTable.push(ringType);
         reinitializeDisplayInfos(); // Reinitialize display of the infos svg
-        d3.select("#svgCarbons").transition().style("display", "block"); // Display the carbon choice svg
+        if (infosTable[0] == "updateNode")
+        {
+            updateExistingNode();
+        }
+        else if (Object.keys(treeData).length == 0) {
+            infosTable.push(-1);
+            infosTable.push(-1);
+            createNewNode();
+        }
+        else
+        {
+            d3.select("#svgCarbons").transition().style("display", "block"); // Display the carbon choice svg
+        }
     }
 }
 
