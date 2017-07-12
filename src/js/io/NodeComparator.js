@@ -3,7 +3,7 @@
  */
 
 
-
+import EdgeComparator from "./EdgeComparator";
 export default class NodeComparator {
 
     constructor() {
@@ -44,7 +44,7 @@ export default class NodeComparator {
                     }
                     else if (branchingN1 === branchingN2)
                     {
-                        if (n1.node.monosaccharideType.name > n2.node.monosaccharideType.name)
+                        if (n1.node.monosaccharideType.name >= n2.node.monosaccharideType.name)
                         {
                             return -1;
                         }

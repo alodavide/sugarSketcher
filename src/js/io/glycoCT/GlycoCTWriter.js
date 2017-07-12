@@ -7,7 +7,6 @@ import SubstituentType from "../../glycomics/dictionary/SubstituentType";
 import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
 import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
 import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
-import NodeComparator from "../NodeComparator";
 import EdgeComparator from "../EdgeComparator";
 
 export default class GlycoCTWriter{
@@ -16,6 +15,7 @@ export default class GlycoCTWriter{
         this.sugar = sugar;
         this.tree = tree;
         this.res = [];
+        this.edges = [];
     }
 
     randomString(length) {
@@ -112,44 +112,86 @@ export default class GlycoCTWriter{
         return formula;
     }
 
-    sortNodes()
-    {
-        var comp = new NodeComparator();
-        this.generateArray(treeData);
-        if (this.res[0].node === undefined)
-        {
-            this.res = [];
-        }
-        this.res.sort(function(a,b) {
-            return comp.compare(a,b);
-        });
+
+    comparatorFunction(a,b) {
+        var comp = new EdgeComparator();
+        var edge1 = this.getLink(a.parent.node.id,a.node.id);
+        var edge2 = this.getLink(b.parent.node.id, b.node.id);
+        return comp.compare(edge1,edge2);
     }
 
-    sortEdges()
+    sort(arr)
     {
-        var comp = new EdgeComparator();
-        this.edges = this.sugar.graph.edges();
-        this.edges.sort(function(a,b) {
-            return comp.compare(a,b);
-        });
+        if(arr.length <= 1) return arr;
+
+        let pivot = Math.floor((arr.length -1)/2);
+        let val = arr[pivot], less = [], more = [];
+
+        arr.splice(pivot, 1);
+        for (var e of arr) {
+            if (this.comparatorFunction(e,val))
+            {
+                less.push(e);
+            }
+            else
+            {
+                more.push(e);
+            }
+        }
+
+        return (this.sort(less)).concat([val],this.sort(more));
+    }
+
+    getLink(id1, id2)
+    {
+        for (var edge of sugar.graph.edges())
+        {
+            if ((edge.source == id1 && edge.target == id2) || (edge.source == id2 && edge.target == id1))
+            {
+                return edge;
+            }
+        }
     }
 
     generateArray(root)
     {
-        this.res.push(root);
-        if (root.children === undefined)
+        if (root === undefined)
         {
+            this.res = [];
+            this.edges = [];
             return;
         }
-        for (var node of root.children)
+        var stack = [];
+        stack.push(root);
+        while (stack.length > 0)
         {
-            this.generateArray(node);
+            var node = stack.pop();
+            this.res.push(node);
+            if (this.res.length > 1) // if we have at least 2 nodes : add link
+            {
+                this.edges.push(this.getLink(node.parent.node.id,node.node.id));
+            }
+            var children = node.children;
+            if (children !== undefined)
+            {
+                if (children.length > 1)
+                {
+                    children = this.sort(children);
+                }
+                for (var child of children) {
+                    stack.push(child);
+                }
+            }
+        }
+        if (this.res[0].node === undefined)
+        {
+            this.res = [];
         }
     }
 
     exportGlycoCT() {
         var resId = {};
-        this.sortNodes();
+        this.generateArray(treeData);
         var res = this.res;
         var associatedSubs = [];
         if (res.length === 0)
@@ -243,8 +285,8 @@ export default class GlycoCTWriter{
         if (this.res.length + associatedSubs.length > 1)
         {
             formula += "LIN\n";
-            this.sortEdges();
             var edges = this.edges;
+            //var edges = this.sugar.graph.edges();
             for (i = 0; i < edges.length; i++)
             {
                 var source = resId[edges[i].sourceNode.getId()];

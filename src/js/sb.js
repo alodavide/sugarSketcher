@@ -133,7 +133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
-	var _NodeComparator = __webpack_require__(20);
+	var _NodeComparator = __webpack_require__(21);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
@@ -3759,11 +3759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _NodeComparator = __webpack_require__(20);
-	
-	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
-	
-	var _EdgeComparator = __webpack_require__(21);
+	var _EdgeComparator = __webpack_require__(20);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -3778,6 +3774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.sugar = sugar;
 	        this.tree = tree;
 	        this.res = [];
+	        this.edges = [];
 	    }
 	
 	    _createClass(GlycoCTWriter, [{
@@ -3956,49 +3953,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return formula;
 	        }
 	    }, {
-	        key: "sortNodes",
-	        value: function sortNodes() {
-	            var comp = new _NodeComparator2.default();
-	            this.generateArray(treeData);
-	            if (this.res[0].node === undefined) {
-	                this.res = [];
-	            }
-	            this.res.sort(function (a, b) {
-	                return comp.compare(a, b);
-	            });
-	        }
-	    }, {
-	        key: "sortEdges",
-	        value: function sortEdges() {
+	        key: "comparatorFunction",
+	        value: function comparatorFunction(a, b) {
 	            var comp = new _EdgeComparator2.default();
-	            this.edges = this.sugar.graph.edges();
-	            this.edges.sort(function (a, b) {
-	                return comp.compare(a, b);
-	            });
+	            var edge1 = this.getLink(a.parent.node.id, a.node.id);
+	            var edge2 = this.getLink(b.parent.node.id, b.node.id);
+	            return comp.compare(edge1, edge2);
 	        }
 	    }, {
-	        key: "generateArray",
-	        value: function generateArray(root) {
-	            this.res.push(root);
-	            if (root.children === undefined) {
-	                return;
-	            }
-	            var children = root.children;
-	            if (children.length > 1) {
-	                var comp = new _NodeComparator2.default();
-	                children.sort(function (a, b) {
-	                    return comp.compare(a, b);
-	                });
-	            }
+	        key: "sort",
+	        value: function sort(arr) {
+	            if (arr.length <= 1) return arr;
+	
+	            var pivot = Math.floor((arr.length - 1) / 2);
+	            var val = arr[pivot],
+	                less = [],
+	                more = [];
+	
+	            arr.splice(pivot, 1);
 	            var _iteratorNormalCompletion5 = true;
 	            var _didIteratorError5 = false;
 	            var _iteratorError5 = undefined;
 	
 	            try {
-	                for (var _iterator5 = children[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                    var node = _step5.value;
+	                for (var _iterator5 = arr[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var e = _step5.value;
 	
-	                    this.generateArray(node);
+	                    if (this.comparatorFunction(e, val)) {
+	                        less.push(e);
+	                    } else {
+	                        more.push(e);
+	                    }
 	                }
 	            } catch (err) {
 	                _didIteratorError5 = true;
@@ -4014,12 +3999,96 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
+	
+	            return this.sort(less).concat([val], this.sort(more));
+	        }
+	    }, {
+	        key: "getLink",
+	        value: function getLink(id1, id2) {
+	            var _iteratorNormalCompletion6 = true;
+	            var _didIteratorError6 = false;
+	            var _iteratorError6 = undefined;
+	
+	            try {
+	                for (var _iterator6 = sugar.graph.edges()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                    var edge = _step6.value;
+	
+	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
+	                        return edge;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError6 = true;
+	                _iteratorError6 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                        _iterator6.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError6) {
+	                        throw _iteratorError6;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "generateArray",
+	        value: function generateArray(root) {
+	            if (root === undefined) {
+	                this.res = [];
+	                this.edges = [];
+	                return;
+	            }
+	            var stack = [];
+	            stack.push(root);
+	            while (stack.length > 0) {
+	                var node = stack.pop();
+	                this.res.push(node);
+	                if (this.res.length > 1) // if we have at least 2 nodes : add link
+	                    {
+	                        this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                    }
+	                var children = node.children;
+	                if (children !== undefined) {
+	                    if (children.length > 1) {
+	                        children = this.sort(children);
+	                    }
+	                    var _iteratorNormalCompletion7 = true;
+	                    var _didIteratorError7 = false;
+	                    var _iteratorError7 = undefined;
+	
+	                    try {
+	                        for (var _iterator7 = children[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                            var child = _step7.value;
+	
+	                            stack.push(child);
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError7 = true;
+	                        _iteratorError7 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                                _iterator7.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError7) {
+	                                throw _iteratorError7;
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	            if (this.res[0].node === undefined) {
+	                this.res = [];
+	            }
 	        }
 	    }, {
 	        key: "exportGlycoCT",
 	        value: function exportGlycoCT() {
 	            var resId = {};
-	            this.sortNodes();
+	            this.generateArray(treeData);
 	            var res = this.res;
 	            var associatedSubs = [];
 	            if (res.length === 0) {
@@ -4090,13 +4159,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                resId[res[i].node.id] = i + 1;
 	            }
-	            var _iteratorNormalCompletion6 = true;
-	            var _didIteratorError6 = false;
-	            var _iteratorError6 = undefined;
+	            var _iteratorNormalCompletion8 = true;
+	            var _didIteratorError8 = false;
+	            var _iteratorError8 = undefined;
 	
 	            try {
-	                for (var _iterator6 = associatedSubs[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                    var pair = _step6.value;
+	                for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                    var pair = _step8.value;
 	
 	                    var associatedSub = pair[0];
 	                    formula += this.writeSub(i, associatedSub);
@@ -4104,24 +4173,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pair[0] = i;
 	                }
 	            } catch (err) {
-	                _didIteratorError6 = true;
-	                _iteratorError6 = err;
+	                _didIteratorError8 = true;
+	                _iteratorError8 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                        _iterator6.return();
+	                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                        _iterator8.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError6) {
-	                        throw _iteratorError6;
+	                    if (_didIteratorError8) {
+	                        throw _iteratorError8;
 	                    }
 	                }
 	            }
 	
 	            if (this.res.length + associatedSubs.length > 1) {
 	                formula += "LIN\n";
-	                this.sortEdges();
 	                var edges = this.edges;
+	                //var edges = this.sugar.graph.edges();
 	                for (i = 0; i < edges.length; i++) {
 	                    var source = resId[edges[i].sourceNode.getId()];
 	
@@ -4137,28 +4206,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var _iteratorNormalCompletion7 = true;
-	                var _didIteratorError7 = false;
-	                var _iteratorError7 = undefined;
+	                var _iteratorNormalCompletion9 = true;
+	                var _didIteratorError9 = false;
+	                var _iteratorError9 = undefined;
 	
 	                try {
-	                    for (var _iterator7 = associatedSubs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                        pair = _step7.value;
+	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                        pair = _step9.value;
 	
 	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
 	                        i++;
 	                    }
 	                } catch (err) {
-	                    _didIteratorError7 = true;
-	                    _iteratorError7 = err;
+	                    _didIteratorError9 = true;
+	                    _iteratorError9 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
-	                            _iterator7.return();
+	                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                            _iterator9.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError7) {
-	                            throw _iteratorError7;
+	                        if (_didIteratorError9) {
+	                            throw _iteratorError9;
 	                        }
 	                    }
 	                }
@@ -4179,7 +4248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
@@ -4187,13 +4256,120 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 11/07/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
 	/**
 	 * Created by Renaud on 10/07/2017.
 	 */
+	
+	var _NodeComparator = __webpack_require__(21);
+	
+	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
+	
+	var _GlycosidicLinkage = __webpack_require__(13);
+	
+	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var EdgeComparator = function () {
+	    function EdgeComparator() {
+	        _classCallCheck(this, EdgeComparator);
+	    }
+	
+	    _createClass(EdgeComparator, [{
+	        key: "compare",
+	        value: function compare(e1, e2) {
+	            var bondsE1 = this.bonds(e1);
+	            var bondsE2 = this.bonds(e2);
+	            if (bondsE1 > bondsE2) {
+	                return -1;
+	            } else if (bondsE1 === bondsE2) {
+	                var parentLinkPosE1 = this.parentLinkPos(e1);
+	                var parentLinkPosE2 = this.parentLinkPos(e2);
+	                if (parentLinkPosE1 > parentLinkPosE2) {
+	                    return -1;
+	                } else if (parentLinkPosE1 === parentLinkPosE2) {
+	                    var childLinkPosE1 = this.childLinkPos(e1);
+	                    var childLinkPosE2 = this.childLinkPos(e2);
+	                    if (childLinkPosE1 > childLinkPosE2) {
+	                        return -1;
+	                    } else if (childLinkPosE1 === childLinkPosE2) {
+	                        var linkageTypeE1 = this.linkageType(e1);
+	                        var linkageTypeE2 = this.linkageType(e2);
+	                        if (linkageTypeE1 > linkageTypeE2) {
+	                            return -1;
+	                        } else if (linkageTypeE1 === linkageTypeE2) {
+	                            return this.compareNodes(e1, e2);
+	                        }
+	                    }
+	                }
+	            }
+	
+	            return 1;
+	        }
+	    }, {
+	        key: "parentLinkPos",
+	        value: function parentLinkPos(edge) {
+	            return edge.linkedCarbon.value === "undefined" ? 0 : edge.linkedCarbon.value;
+	        }
+	    }, {
+	        key: "bonds",
+	        value: function bonds(edge) {
+	            return 1; // always 1 bond in our application
+	        }
+	    }, {
+	        key: "childLinkPos",
+	        value: function childLinkPos(edge) {
+	            return edge.anomerCarbon.value === "undefined" ? 0 : edge.anomerCarbon.value;
+	        }
+	    }, {
+	        key: "linkageType",
+	        value: function linkageType(edge) {
+	            if (edge instanceof _GlycosidicLinkage2.default) {
+	                return 1;
+	            } else {
+	                return 0;
+	            }
+	        }
+	    }, {
+	        key: "compareNodes",
+	        value: function compareNodes(edge1, edge2) {
+	            var comp = new _NodeComparator2.default();
+	            return comp.compare(edge1.targetNode, edge2.targetNode);
+	        }
+	    }]);
+	
+	    return EdgeComparator;
+	}();
+	
+	exports.default = EdgeComparator;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 10/07/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+	
+	var _EdgeComparator = __webpack_require__(20);
+	
+	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var NodeComparator = function () {
 	    function NodeComparator() {
@@ -4223,7 +4399,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (branchingN1 > branchingN2) {
 	                            return -1;
 	                        } else if (branchingN1 === branchingN2) {
-	                            if (n1.node.monosaccharideType.name > n2.node.monosaccharideType.name) {
+	                            if (n1.node.monosaccharideType.name >= n2.node.monosaccharideType.name) {
 	                                return -1;
 	                            }
 	                        }
@@ -4410,109 +4586,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = NodeComparator;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 11/07/2017.
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-	
-	/**
-	 * Created by Renaud on 10/07/2017.
-	 */
-	
-	var _NodeComparator = __webpack_require__(20);
-	
-	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
-	
-	var _GlycosidicLinkage = __webpack_require__(13);
-	
-	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var EdgeComparator = function () {
-	    function EdgeComparator() {
-	        _classCallCheck(this, EdgeComparator);
-	    }
-	
-	    _createClass(EdgeComparator, [{
-	        key: "compare",
-	        value: function compare(e1, e2) {
-	            var bondsE1 = this.bonds(e1);
-	            var bondsE2 = this.bonds(e2);
-	            if (bondsE1 > bondsE2) {
-	                return -1;
-	            } else if (bondsE1 === bondsE2) {
-	                var parentLinkPosE1 = this.parentLinkPos(e1);
-	                var parentLinkPosE2 = this.parentLinkPos(e2);
-	                if (parentLinkPosE1 > parentLinkPosE2) {
-	                    return -1;
-	                } else if (parentLinkPosE1 === parentLinkPosE2) {
-	                    var childLinkPosE1 = this.childLinkPos(e1);
-	                    var childLinkPosE2 = this.childLinkPos(e2);
-	                    if (childLinkPosE1 > childLinkPosE2) {
-	                        return -1;
-	                    } else if (childLinkPosE1 === childLinkPosE2) {
-	                        var linkageTypeE1 = this.linkageType(e1);
-	                        var linkageTypeE2 = this.linkageType(e2);
-	                        if (linkageTypeE1 > linkageTypeE2) {
-	                            return -1;
-	                        } else if (linkageTypeE1 === linkageTypeE2) {
-	                            return this.compareNodes(e1, e2);
-	                        }
-	                    }
-	                }
-	            }
-	
-	            return 1;
-	        }
-	    }, {
-	        key: "parentLinkPos",
-	        value: function parentLinkPos(edge) {
-	            return edge.linkedCarbon.value === "undefined" ? 0 : edge.linkedCarbon.value;
-	        }
-	    }, {
-	        key: "bonds",
-	        value: function bonds(edge) {
-	            return 1; // always 1 bond in our application
-	        }
-	    }, {
-	        key: "childLinkPos",
-	        value: function childLinkPos(edge) {
-	            return edge.anomerCarbon.value === "undefined" ? 0 : edge.anomerCarbon.value;
-	        }
-	    }, {
-	        key: "linkageType",
-	        value: function linkageType(edge) {
-	            if (edge instanceof _GlycosidicLinkage2.default) {
-	                return 1;
-	            } else {
-	                return 0;
-	            }
-	        }
-	    }, {
-	        key: "compareNodes",
-	        value: function compareNodes(edge1, edge2) {
-	            var comp = new _NodeComparator2.default();
-	            return comp.compare(edge1.targetNode, edge2.targetNode);
-	        }
-	    }]);
-	
-	    return EdgeComparator;
-	}();
-	
-	exports.default = EdgeComparator;
 
 /***/ })
 /******/ ])
