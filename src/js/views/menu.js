@@ -63,6 +63,7 @@ $(document).ready(function() {
                     sugar.clear();
                 var parser = new sb.GlycoCTParser($('#formula').val());
                 sugar = parser.parseGlycoCT();
+                shapes = [];
                 generateShapes();
                 displayTree();
                 clickedNode = null;
@@ -825,7 +826,6 @@ function test(n)
 
 function generateShapes()
 {
-    shapes = [];
     for (var mono of sugar.graph.nodes())
     {
         var link;

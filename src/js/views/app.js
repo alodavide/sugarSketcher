@@ -19,6 +19,7 @@ var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [
  */
 var clickCircle = function(d) {
     clickedNode = d.node; // Update clickedNode
+    displayTree();
 };
 
 var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
@@ -280,7 +281,33 @@ function displayTree() {
                     }
                 }
             })
-            .style('stroke', 'black') // Stroke to see white shapes
+            .style('stroke', function(d){
+                if (d.node == clickedNode)
+                {
+                    if (d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "fuc")
+                    {
+                        return "black";
+                    }
+                    else
+                    {
+                        return "red";
+                    }
+                }
+                else
+                {
+                    return "black";
+                }
+            })
+            .style('stroke-width', function(d){
+                if (d.node == clickedNode)
+                {
+                    return "4px";
+                }
+                else
+                {
+                    return "1px";
+                }
+            })
             .on('click', clickCircle); // Select the node on click
     }
 }
@@ -305,7 +332,7 @@ function pasteNewNode(node) {
         copyOfLinkage.source = nodeToAppend.node.id; // Change the source with the id of the node to append
         copyOfLinkage.sourceNode = nodeToAppend.node; // Change the sourceNode with the node to append
     } else { // If we copied the root, then create a new linkage with undefined anomer and linked carbons
-        copyOfLinkage = new sb.GlycosidicLinkage(randomString(15), sugar.getNodeById(nodeToAppend.node.id), sugar.getNodeById(foundNodeInTree.node.id), sb.AnomerCarbon.UNDEFINED, sb.LinkedCarbon.UNDEFINED);
+        copyOfLinkage = new sb.GlycosidicLinkage(randomString(7), sugar.getNodeById(nodeToAppend.node.id), sugar.getNodeById(foundNodeInTree.node.id), sb.AnomerCarbon.UNDEFINED, sb.LinkedCarbon.UNDEFINED);
     }
     changeChildrenIds(copyOfNode); // Change all the children nodes ids (to avoid error of twice same id in tree)
     if (typeof nodeToAppend.children == 'undefined') { // Add children property if the node doesn't have children yet
