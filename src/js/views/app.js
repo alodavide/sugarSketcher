@@ -203,6 +203,7 @@ function displayTree() {
                 d3.select("#svgMenu").style("display", "block");
             })
             .on("contextmenu", function (d) {
+                clickCircle(d);
                 d3.event.preventDefault();
                 var yModification = 0;
                 const node = d.node;

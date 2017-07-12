@@ -846,9 +846,12 @@ function generateShapes()
         } else {
             if (link instanceof sb.GlycosidicLinkage) {
                 updateTreeVisualization(link);
-                var node = {"node":mono};
-                var shape = calculateXandYNode(node);
-                shapes[node.node.id] = shape;
+                if (!Object.keys(shapes).includes(mono.id))
+                {
+                    var node = {"node":mono};
+                    var shape = calculateXandYNode(node);
+                    shapes[node.node.id] = shape;
+                }
             }
             else
             {
