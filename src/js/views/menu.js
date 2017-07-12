@@ -544,15 +544,16 @@ function deleteNode(node) {
         treeData = {};
         sugar.clear();
         shapes = [];
+        clickedNode = null;
     } else {
         deleteAllShapesInGraph(node);
         deleteAllChildrenInGraph(node);
-        sugar.removeNodeById(node.id);
         searchAndRemoveNodeInTree(treeData, node);
+        var nbNodes = sugar.graph.nodes().length;
+        clickedNode = sugar.graph.nodes()[nbNodes-1];
     }
     delete shapes[node.id];
     displayTree(); // Display back the tree
-    clickedNode = null; // Reinitialize the clicked node
     // Hide all menus
     d3.select('#svgMenu').style("display", "none");
     d3.select("#svgInfos").style("display", "none");
@@ -560,9 +561,10 @@ function deleteNode(node) {
     d3.select("#svgCarbons").style("display", "none");
     d3.select("#svgSubstituents").style("display", "none");
     d3.select("#pieLinkCarbon").style("display", "none");
-    if (!sugar.rootIsSet()) { // If we deleted the root, update menu
-        updateMenu();
-    }
+
+    updateMenu();
+    console.log(shapes);
+    console.log(sugar.graph.nodes());
 }
 
 /**
@@ -572,17 +574,20 @@ function deleteNode(node) {
 function deleteAllChildrenInGraph(node) {
     for (var edge of sugar.graph.edges()) {
         if (edge.sourceNode == node) {
-            sugar.removeNodeById(edge.targetNode.id);
             deleteAllChildrenInGraph(edge.targetNode);
         }
     }
+    if (node.children === undefined) // leaf
+    {
+        sugar.removeNodeById(node.id);
+    }
 }
 
-function deleteAllShapesInGraph(node) { // has to be separate from the deleteAllChildrenInGraph because it updates the sugar on the fly
+function deleteAllShapesInGraph(node) { // has to be separate from deleteAllChildrenInGraph because it updates the sugar on the fly
     for (var edge of sugar.graph.edges()) {
         if (edge.sourceNode == node) {
             delete shapes[node.id];
-            delete shapes[edge.targetNode.id];
+            delete shapes[edge.target];
             deleteAllShapesInGraph(edge.targetNode);
         }
     }

@@ -102,6 +102,7 @@ function searchAndRemoveNodeInTree(root, node) {
         for (var i = 0; i < root.children.length; i++) { // Loop on children
             if (root.children[i].node == node) { // If one child corresponds, remove it
                 root.children.splice(i, 1);
+                return root;
             } else {
                 searchAndRemoveNodeInTree(root.children[i], node); // Recursivity call on children
             }
@@ -125,8 +126,6 @@ function findNodeInTree(root, node) {
     if (root.children != null) {
         for (var i = 0; i < root.children.length; i++)
         {
-            console.log(root.children[i].node);
-            console.log(node);
             if (root.children[i].node == node) {
                 return (root.children[i]);
             }
