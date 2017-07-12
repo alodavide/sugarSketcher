@@ -515,14 +515,7 @@ document.onkeydown = function (e) {
     // Key code of escape
     if (e.keyCode == 27) {
         // If tree is empty, don't hide menus because there would be no way to display them back
-        if (Object.keys(treeData).length !== 0) {
-            d3.select('#svgMenu').style("display", "none");
-            d3.select("#svgInfos").style("display", "none");
-            d3.select("#svgShape").style("display", "none");
-            d3.select("#svgCarbons").style("display", "none");
-            d3.select("#svgSubstituents").style("display", "none");
-            d3.select("#pieLinkCarbon").style("display", "none");
-        }
+        updateMenu();
     } else if (e.keyCode == 46) { // Delete button keycode
         if (clickedNode != null) { // If there is no clicked node, then no action
             // Else delete the node from the graph, and then from the tree
@@ -553,6 +546,7 @@ function deleteNode(node) {
         clickedNode = sugar.graph.nodes()[nbNodes-1];
     }
     delete shapes[node.id];
+    reassembleNodes();
     displayTree(); // Display back the tree
     // Hide all menus
     d3.select('#svgMenu').style("display", "none");
@@ -563,9 +557,35 @@ function deleteNode(node) {
     d3.select("#pieLinkCarbon").style("display", "none");
 
     updateMenu();
-    console.log(shapes);
-    console.log(sugar.graph.nodes());
 }
+
+/**
+ * Gathers all the scattered nodes
+ * (because after a deletion some nodes can stay far away)
+ */
+function reassembleNodes()
+{
+    for (var edge of sugar.graph.edges())
+    {
+        var source = edge.source;
+        var target = edge.target;
+        var linkedCarbon = edge.linkedCarbon.value;
+        var usualX = shapes[source][0]+XYvalues[linkedCarbon][1];
+        var usualY = shapes[source][1]+XYvalues[linkedCarbon][0];
+        if (shapes[target][0] != usualX || shapes[target][1] != usualY) // If the node is not where it should be
+        {
+            if (isAvailible(usualX, usualY) == "")
+            {
+                shapes[target] = [usualX, usualY];
+            }
+            else
+            {
+                shapes[target] = findNewSpot(usualX, usualY, linkedCarbon);
+            }
+        }
+    }
+}
+
 
 /**
  * Delete all children nodes in the graph structure

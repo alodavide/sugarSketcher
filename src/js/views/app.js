@@ -517,7 +517,7 @@ function isAvailible(x, y)
 function calculateXandYNode(node) {
     var link = findLinkForMono(node.node); // Find the link which has the node as target
     if (typeof link != 'undefined') { // If the link exists
-        var anomerCarbon = link.linkedCarbon.value; // Get anomer carbon value
+        var linkedCarbon = link.linkedCarbon.value; // Get linked carbon value
         var sourceX;
         var sourceY;
         // Calculate new coordinates for the wanted node
@@ -530,14 +530,14 @@ function calculateXandYNode(node) {
         }
 
         // Modifications we have to do on the obtained value
-        var modificationsXY = XYvalues[anomerCarbon];
+        var modificationsXY = XYvalues[linkedCarbon];
         var newX = sourceX  + modificationsXY[1]; // Apply the modification on x
         var newY = sourceY + modificationsXY[0]; // Apply the modification on y
 
         var availible = isAvailible(newX, newY);
         if (availible != "")
         {
-            var newPos = findNewSpot(newX,newY, link.linkedCarbon.value, availible);
+            var newPos = findNewSpot(newX,newY, link.linkedCarbon.value);
             newX = newPos[0];
             newY = newPos[1];
         }
@@ -670,7 +670,7 @@ function createTriangleLinearGradient(color, gradientId) {
  * Returns a new availible position for a shape to be at.
  * @param x, y, linkedCarbon
  */
-function findNewSpot(x, y, linked, occupyingNode)
+function findNewSpot(x, y, linked)
 {
     switch(linked) {
         case 1: // Right

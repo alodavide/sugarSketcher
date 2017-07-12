@@ -101,8 +101,9 @@ function searchAndRemoveNodeInTree(root, node) {
     if(root.children != null) { // If the root has children
         for (var i = 0; i < root.children.length; i++) { // Loop on children
             if (root.children[i].node == node) { // If one child corresponds, remove it
+                var removed = node;
                 root.children.splice(i, 1);
-                return root;
+                return removed;
             } else {
                 searchAndRemoveNodeInTree(root.children[i], node); // Recursivity call on children
             }
