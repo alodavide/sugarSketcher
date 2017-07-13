@@ -66,7 +66,6 @@ $(document).ready(function() {
                 shapes = [];
                 generateShapes();
                 displayTree();
-                clickedNode = null;
             });
     });
 });

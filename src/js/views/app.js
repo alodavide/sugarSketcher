@@ -19,12 +19,10 @@ var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [
  */
 var clickCircle = function(d) {
     clickedNode = d.node; // Update clickedNode
-    displayTree();
+    displayTree(); // Update view to show the selection stroke
 };
 
 var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
-var panSpeed = 200;
-var panBoundary = 20; // Within 20px from edges will pan when dragging.
 
 // Create the svgTree svg with fixed width and height
 var vis = d3.select('#viz')

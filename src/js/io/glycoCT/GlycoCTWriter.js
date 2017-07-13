@@ -120,26 +120,23 @@ export default class GlycoCTWriter{
         return comp.compare(edge1,edge2);
     }
 
-    sort(arr)
-    {
-        if(arr.length <= 1) return arr;
+    sort(arr) {
 
-        let pivot = Math.floor((arr.length -1)/2);
-        let val = arr[pivot], less = [], more = [];
+        var len = arr.len;
 
-        arr.splice(pivot, 1);
-        for (var e of arr) {
-            if (this.comparatorFunction(e,val))
-            {
-                less.push(e);
-            }
-            else
-            {
-                more.push(e);
+        for (var i = 0; i < len; i++) {
+            while (i > -1) {
+                if (comparatorFunction(arr[i],arr[i + 1]) > 0) {
+                    var temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    i--;
+                } else {
+                    break;
+                }
             }
         }
-
-        return (this.sort(less)).concat([val],this.sort(more));
+        return arr;
     }
 
     getLink(id1, id2)
@@ -191,7 +188,7 @@ export default class GlycoCTWriter{
 
     exportGlycoCT() {
         var resId = {};
-        this.generateArray(treeData);
+        this.generateArray(this.tree);
         var res = this.res;
         var associatedSubs = [];
         if (res.length === 0)

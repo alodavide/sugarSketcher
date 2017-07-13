@@ -3771,6 +3771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function GlycoCTWriter(sugar, tree) {
 	        _classCallCheck(this, GlycoCTWriter);
 	
+	        console.log(tree);
 	        this.sugar = sugar;
 	        this.tree = tree;
 	        this.res = [];
@@ -3963,26 +3964,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "sort",
 	        value: function sort(arr) {
-	            if (arr.length <= 1) return arr;
 	
-	            var pivot = Math.floor((arr.length - 1) / 2);
-	            var val = arr[pivot],
-	                less = [],
-	                more = [];
+	            var len = arr.len;
 	
-	            arr.splice(pivot, 1);
+	            for (var i = 0; i < len; i++) {
+	                while (i > -1) {
+	                    if (comparatorFunction(arr[i], arr[i + 1]) > 0) {
+	                        var temp = arr[i];
+	                        arr[i] = arr[i + 1];
+	                        arr[i + 1] = temp;
+	                        i--;
+	                    } else {
+	                        break;
+	                    }
+	                }
+	            }
+	            return arr;
+	        }
+	    }, {
+	        key: "getLink",
+	        value: function getLink(id1, id2) {
 	            var _iteratorNormalCompletion5 = true;
 	            var _didIteratorError5 = false;
 	            var _iteratorError5 = undefined;
 	
 	            try {
-	                for (var _iterator5 = arr[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                    var e = _step5.value;
+	                for (var _iterator5 = sugar.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var edge = _step5.value;
 	
-	                    if (this.comparatorFunction(e, val)) {
-	                        less.push(e);
-	                    } else {
-	                        more.push(e);
+	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
+	                        return edge;
 	                    }
 	                }
 	            } catch (err) {
@@ -3996,38 +4007,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                } finally {
 	                    if (_didIteratorError5) {
 	                        throw _iteratorError5;
-	                    }
-	                }
-	            }
-	
-	            return this.sort(less).concat([val], this.sort(more));
-	        }
-	    }, {
-	        key: "getLink",
-	        value: function getLink(id1, id2) {
-	            var _iteratorNormalCompletion6 = true;
-	            var _didIteratorError6 = false;
-	            var _iteratorError6 = undefined;
-	
-	            try {
-	                for (var _iterator6 = sugar.graph.edges()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                    var edge = _step6.value;
-	
-	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
-	                        return edge;
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError6 = true;
-	                _iteratorError6 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                        _iterator6.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError6) {
-	                        throw _iteratorError6;
 	                    }
 	                }
 	            }
@@ -4054,27 +4033,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    if (children.length > 1) {
 	                        children = this.sort(children);
 	                    }
-	                    var _iteratorNormalCompletion7 = true;
-	                    var _didIteratorError7 = false;
-	                    var _iteratorError7 = undefined;
+	                    var _iteratorNormalCompletion6 = true;
+	                    var _didIteratorError6 = false;
+	                    var _iteratorError6 = undefined;
 	
 	                    try {
-	                        for (var _iterator7 = children[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                            var child = _step7.value;
+	                        for (var _iterator6 = children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                            var child = _step6.value;
 	
 	                            stack.push(child);
 	                        }
 	                    } catch (err) {
-	                        _didIteratorError7 = true;
-	                        _iteratorError7 = err;
+	                        _didIteratorError6 = true;
+	                        _iteratorError6 = err;
 	                    } finally {
 	                        try {
-	                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-	                                _iterator7.return();
+	                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                _iterator6.return();
 	                            }
 	                        } finally {
-	                            if (_didIteratorError7) {
-	                                throw _iteratorError7;
+	                            if (_didIteratorError6) {
+	                                throw _iteratorError6;
 	                            }
 	                        }
 	                    }
@@ -4088,7 +4067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "exportGlycoCT",
 	        value: function exportGlycoCT() {
 	            var resId = {};
-	            this.generateArray(treeData);
+	            this.generateArray(this.tree);
 	            var res = this.res;
 	            var associatedSubs = [];
 	            if (res.length === 0) {
@@ -4159,13 +4138,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                resId[res[i].node.id] = i + 1;
 	            }
-	            var _iteratorNormalCompletion8 = true;
-	            var _didIteratorError8 = false;
-	            var _iteratorError8 = undefined;
+	            var _iteratorNormalCompletion7 = true;
+	            var _didIteratorError7 = false;
+	            var _iteratorError7 = undefined;
 	
 	            try {
-	                for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                    var pair = _step8.value;
+	                for (var _iterator7 = associatedSubs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                    var pair = _step7.value;
 	
 	                    var associatedSub = pair[0];
 	                    formula += this.writeSub(i, associatedSub);
@@ -4173,16 +4152,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pair[0] = i;
 	                }
 	            } catch (err) {
-	                _didIteratorError8 = true;
-	                _iteratorError8 = err;
+	                _didIteratorError7 = true;
+	                _iteratorError7 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                        _iterator8.return();
+	                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                        _iterator7.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError8) {
-	                        throw _iteratorError8;
+	                    if (_didIteratorError7) {
+	                        throw _iteratorError7;
 	                    }
 	                }
 	            }
@@ -4206,28 +4185,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var _iteratorNormalCompletion9 = true;
-	                var _didIteratorError9 = false;
-	                var _iteratorError9 = undefined;
+	                var _iteratorNormalCompletion8 = true;
+	                var _didIteratorError8 = false;
+	                var _iteratorError8 = undefined;
 	
 	                try {
-	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-	                        pair = _step9.value;
+	                    for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                        pair = _step8.value;
 	
 	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
 	                        i++;
 	                    }
 	                } catch (err) {
-	                    _didIteratorError9 = true;
-	                    _iteratorError9 = err;
+	                    _didIteratorError8 = true;
+	                    _iteratorError8 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
-	                            _iterator9.return();
+	                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                            _iterator8.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError9) {
-	                            throw _iteratorError9;
+	                        if (_didIteratorError8) {
+	                            throw _iteratorError8;
 	                        }
 	                    }
 	                }
