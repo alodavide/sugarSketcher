@@ -156,6 +156,12 @@ function displayTree() {
                     return shapes[d.target.node.id][0];
                 return 0;
             })
+            .style("stroke", function (d) {
+                var allSelectedNodes = [clickedNode].concat(selectedNodes);
+                if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
+                    return "#58ACFA";
+                }
+            })
             .attr('pointer-events', 'none');
 
 
@@ -193,6 +199,12 @@ function displayTree() {
                     finalY = findSubstituantLabelSpot(source[0], source[1], d.target.node._substituentType.label)[0];
                 }
                 return finalY; // Return the obtained value
+            })
+            .style("stroke", function (d) {
+                var allSelectedNodes = [clickedNode].concat(selectedNodes);
+                if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
+                    return "#58ACFA";
+                }
             })
             .text(function (d) {
                 if (d.target.node["anomericity"]) // Monosaccharide
