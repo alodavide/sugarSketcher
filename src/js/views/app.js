@@ -1,12 +1,13 @@
 var treeData = {};
 var shapes = {};
-var selectedNode = null;
 var clickedNode = null;
-var draggingNode = null;
+var selectedNodes = [];
 var copiedNode = null;
 
 var gap = 50;
 var origin = [200, 900];
+
+var ctrl; // Boolean if ctrl is held
 
 //Values for links X and Y
 var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 'undefined': [0,-1*gap]};
@@ -18,9 +19,61 @@ var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [
  * @param d The event of the click
  */
 var clickCircle = function(d) {
-    clickedNode = d.node; // Update clickedNode
+
+    if (!ctrl)
+    {
+        clickedNode = d.node; // Update clickedNode
+        selectedNodes = [];
+    }
+    else
+    {
+
+        if (d.node != clickedNode)
+        {
+            selectAllNodesBetween(clickedNode,d.node);
+        }
+    }
     displayTree(); // Update view to show the selection stroke
 };
+
+
+var selectAllNodesBetween = function(node1, node2, occur = 0) {
+    selectedNodes = [];
+    var root = findNodeInTree(node1);
+    var currentNode = root;
+    if (node1 != clickedNode)
+        selectedNodes.push(node1);
+    while (currentNode.parent != undefined)
+    {
+        if (currentNode.parent.node != clickedNode)
+            selectedNodes.push(currentNode.parent.node);
+        if (currentNode.parent.node == node2)
+            return;
+        currentNode = currentNode.parent;
+    }
+    selectedNodes = []; // node2 is not a parent, then we search it in the children
+    if (occur == 0)
+        selectAllNodesBetween(node2,node1,1);
+};
+
+function findNodeInTree(node1)
+{
+    var stack = [], node, i;
+    stack.push(treeData);
+
+    while (stack.length > 0) {
+        node = stack.pop();
+        if (node.node == node1) {
+            return node;
+        } else if (node.children != undefined) {
+            for (i = 0; i < node.children.length; i += 1) {
+                stack.push(node.children[i]);
+            }
+        }
+    }
+    return null;
+}
+
 
 var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
 
@@ -287,10 +340,18 @@ function displayTree() {
                     {
                         return "black";
                     }
+                    else if (selectedNodes.length != 0)
+                    {
+                        return "#58ACFA";
+                    }
                     else
                     {
                         return "red";
                     }
+                }
+                else if (selectedNodes.includes(d.node))
+                {
+                    return "#58ACFA";
                 }
                 else
                 {
@@ -298,7 +359,7 @@ function displayTree() {
                 }
             })
             .style('stroke-width', function(d){
-                if (d.node == clickedNode)
+                if (d.node == clickedNode || selectedNodes.includes(d.node))
                 {
                     return "4px";
                 }

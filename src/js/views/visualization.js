@@ -110,28 +110,3 @@ function searchAndRemoveNodeInTree(root, node) {
         }
     }
 }
-
-function deleteChildrenFromShapes(root) {
-    if (root.children != null) {
-        for (var i = 0; i < root.children.length; i++) { // Loop on children
-            delete shapes[root.children[i].node.id];
-            delete res[root.children[i].node.id];
-            deleteChildrenFromShapes(root.children[i]);
-        }
-    }
-}
-
-function findNodeInTree(root, node) {
-    if (root.node == node)
-        return root;
-    if (root.children != null) {
-        for (var i = 0; i < root.children.length; i++)
-        {
-            if (root.children[i].node == node) {
-                return (root.children[i]);
-            }
-            else
-                findNodeInTree(root.children[i], node);
-        }
-    }
-}

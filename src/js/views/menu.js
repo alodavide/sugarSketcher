@@ -9,8 +9,8 @@ var sugar;
 
 // Function called when document is ready
 
-
 $(document).ready(function() {
+    ctrl = false;
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
@@ -511,10 +511,15 @@ function getSubDivisions (divisionToCheck, searchedDivision) {
  * @param e
  */
 document.onkeydown = function (e) {
-    // Key code of escape
-    if (e.keyCode == 27) {
+    if (e.keyCode == 17 || e.keyCode == 16) // Ctrl or Shift
+    {
+        ctrl = true;
+    }
+    if (e.keyCode == 27) { //Esc
         // If tree is empty, don't hide menus because there would be no way to display them back
         updateMenu();
+        selectedNodes = [];
+        displayTree();
     } else if (e.keyCode == 46) { // Delete button keycode
         if (clickedNode != null) { // If there is no clicked node, then no action
             // Else delete the node from the graph, and then from the tree
@@ -525,6 +530,13 @@ document.onkeydown = function (e) {
         test(7);
     }
 };
+
+document.onkeyup = function(e) {
+    if (e.keyCode == 17 || e.keyCode == 16) // Ctrl or Shift
+    {
+        ctrl = false;
+    }
+}
 
 /**
  * Delete the clicked node from the graph and the tree
