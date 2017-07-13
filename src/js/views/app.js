@@ -36,25 +36,49 @@ var clickCircle = function(d) {
     displayTree(); // Update view to show the selection stroke
 };
 
+var selectAllNodesBetween = function(node1, node2)
+{
+    var root = findNodeInTree(node1);
+    var node = findNodeInTree(node2);
+    if (root.depth < node.depth)
+    {
+        selectAllChildrenBetween(node2,node1, root.depth);
+    }
+    else
+    {
+        selectedNodes = [];
+        selectAllParentsBetween(node1, node2);
+    }
+};
 
-var selectAllNodesBetween = function(node1, node2, occur = 0) {
-    selectedNodes = [];
+var selectAllParentsBetween = function(node1, node2) {
+    var selectParents = [];
     var root = findNodeInTree(node1);
     var currentNode = root;
     if (node1 != clickedNode)
-        selectedNodes.push(node1);
+        selectParents.push(node1);
     while (currentNode.parent != undefined)
     {
         if (currentNode.parent.node != clickedNode)
-            selectedNodes.push(currentNode.parent.node);
+            selectParents.push(currentNode.parent.node);
         if (currentNode.parent.node == node2)
+        {
+            selectedNodes = selectedNodes.concat(selectParents);
             return;
+        }
         currentNode = currentNode.parent;
     }
-    selectedNodes = []; // node2 is not a parent, then we search it in the children
-    if (occur == 0)
-        selectAllNodesBetween(node2,node1,1);
 };
+
+var selectAllChildrenBetween = function(node1, node2, rootDepth) {
+    if (selectedNodes.length == 0 || rootDepth > findNodeInTree(selectedNodes[0]).depth)
+    {
+        selectedNodes = [];
+    }
+    selectAllParentsBetween(node1,node2);
+};
+
+
 
 function findNodeInTree(node1)
 {
