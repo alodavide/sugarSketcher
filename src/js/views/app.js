@@ -32,6 +32,10 @@ var clickCircle = function(d) {
         {
             selectAllNodesBetween(clickedNode,d.node);
         }
+        else
+        {
+            selectedNodes = [];
+        }
     }
     displayTree(); // Update view to show the selection stroke
 };
@@ -55,11 +59,11 @@ var selectAllParentsBetween = function(node1, node2) {
     var selectParents = [];
     var root = findNodeInTree(node1);
     var currentNode = root;
-    if (node1 != clickedNode)
+    if (node1 != clickedNode && !selectedNodes.includes(node1) && !selectParents.includes(node1))
         selectParents.push(node1);
     while (currentNode.parent != undefined)
     {
-        if (currentNode.parent.node != clickedNode)
+        if (currentNode.parent.node != clickedNode && !selectedNodes.includes(currentNode.parent.node) && !selectParents.includes(currentNode.parent.node))
             selectParents.push(currentNode.parent.node);
         if (currentNode.parent.node == node2)
         {
@@ -76,6 +80,7 @@ var selectAllChildrenBetween = function(node1, node2, rootDepth) {
         selectedNodes = [];
     }
     selectAllParentsBetween(node1,node2);
+    removeChildrenFromSelection(node1);
 };
 
 
@@ -96,6 +101,34 @@ function findNodeInTree(node1)
         }
     }
     return null;
+}
+
+function removeChildrenFromSelection(node)
+{
+    var node = findNodeInTree(node);
+    if (node.children != undefined)
+    {
+        for (var child of node.children)
+        {
+            if (selectedNodes.includes(child.node))
+            {
+                selectedNodes.splice(getSelectedNodeIndex(child.node),1);
+            }
+            removeChildrenFromSelection(child.node);
+        }
+    }
+}
+
+function getSelectedNodeIndex(node)
+{
+    for (var i in selectedNodes)
+    {
+        if (selectedNodes[i].id == node.id)
+        {
+            return i;
+        }
+    }
+    return -1;
 }
 
 
