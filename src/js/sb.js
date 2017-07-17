@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -125,31 +125,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
-	var _GlycoCTParser = __webpack_require__(18);
+	var _RepeatingUnit = __webpack_require__(18);
+	
+	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
+	
+	var _GlycoCTParser = __webpack_require__(19);
 	
 	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
 	
-	var _GlycoCTWriter = __webpack_require__(19);
+	var _GlycoCTWriter = __webpack_require__(20);
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
-	var _NodeComparator = __webpack_require__(21);
+	var _NodeComparator = __webpack_require__(22);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	//Sugar
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Nodes
-	
-	
-	//Linkages
-	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -169,15 +169,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.GlycoCTWriter = _GlycoCTWriter2.default;
 	exports.GlycoCTSubstituents = _GlycoCTSubstituents2.default;
 	exports.NodeComparator = _NodeComparator2.default;
+	exports.RepeatingUnit = _RepeatingUnit2.default;
 	
 	//IO
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
 	
-	//Data Structure
+	
+	//Sugar
+	
+	
+	//Nodes
+	
+	
+	//Linkages
+	
+	
+	//Glycomics Structure
+	//Dictionary
 
 /***/ }),
 /* 1 */
@@ -3170,6 +3177,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 18 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * Created by Renaud on 17/07/2017.
+	 */
+	
+	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max) {
+	    _classCallCheck(this, RepeatingUnit);
+	
+	    this.id = id;
+	    this.nodes = nodes;
+	    this.min = min;
+	    this.max = max;
+	};
+	
+	exports.default = RepeatingUnit;
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3726,7 +3760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTParser;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3759,7 +3793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _EdgeComparator = __webpack_require__(20);
+	var _EdgeComparator = __webpack_require__(21);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -4224,7 +4258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTWriter;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4241,7 +4275,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 10/07/2017.
 	 */
 	
-	var _NodeComparator = __webpack_require__(21);
+	var _NodeComparator = __webpack_require__(22);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
@@ -4327,7 +4361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EdgeComparator;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4340,7 +4374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 10/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _EdgeComparator = __webpack_require__(20);
+	var _EdgeComparator = __webpack_require__(21);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	

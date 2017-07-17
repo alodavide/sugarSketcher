@@ -2,10 +2,12 @@ var treeData = {};
 var shapes = {};
 var clickedNode = null;
 var selectedNodes = [];
+var repeatingUnits = [];
 var copiedNode = null;
 
-var gap = 50;
-var origin = [200, 900];
+const gap = 50;
+const origin = [200, 600];
+const circleRadius = 15;
 
 var ctrl; // Boolean if ctrl is held
 
@@ -312,6 +314,14 @@ function displayTree() {
             .on('click', function () {
                 // On click, simply display menu and hide all other svg's
                 d3.event.stopPropagation();
+                if (selectedNodes.length == 0)
+                {
+                    d3.select("#svgMenu").style("display", "block");
+                }
+                else // display Multiselection Menu
+                {
+                    d3.select("#svgMultiselectMenu").style("display", "block");
+                }
                 d3.select("#deleteNode").style("display", "none");
                 d3.select("#copyNode").style("display", "none");
                 d3.select("#pasteNode").style("display", "none");
@@ -319,54 +329,48 @@ function displayTree() {
                 d3.select("#svgInfos").style("display", "none");
                 d3.select("#svgSubstituents").style("display", "none");
                 d3.select("#svgShape").style("display", "none");
+                d3.select("#svgMultiselectMenu").style("display", "none");
                 d3.select("#svgCarbons").style("display", "none");
-                if (selectedNodes.length == 0)
-                {
-                    d3.select("#svgMenu").style("display", "block");
-                }
-                else
-                {
-                    d3.select("#svgMenu").style("display", "none");
-                    console.log("BXAKSN");
-                }
             })
             .on("contextmenu", function (d) {
                 clickCircle(d);
                 d3.event.preventDefault();
-                if (!ctrl)
-                {
-                    var yModification = 0;
-                    const node = d.node;
-                    d3.selectAll("svg")
-                        .filter(function () {
-                            if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
-                                yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
-                            }
-                        });
-                    d3.select("#deleteNode").on('click', function () { // Click on delete option
-                        deleteNode(node); // Delete the node clicked
-                        $('#deleteNode').fadeOut(400); // Hide the delete option
-                        $('#copyNode').fadeOut(400); // Hide the copy option
-                        $('#pasteNode').fadeOut(400); // Hide the paste option
+                var yModification = 0;
+                const node = d.node;
+                d3.selectAll("svg")
+                    .filter(function () {
+                        if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
+                            yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
+                        }
                     });
-                    $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
-                    $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+                d3.select("#deleteNode").on('click', function () { // Click on delete option
+                    deleteNode(node); // Delete the node clicked
+                    $('#deleteNode').fadeOut(400); // Hide the delete option
+                    $('#copyNode').fadeOut(400); // Hide the copy option
+                    $('#pasteNode').fadeOut(400); // Hide the paste option
+                });
+                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+                $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
 
-                    d3.select("#copyNode").on('click', function () { // Click on copy option
-                        copiedNode = node; // Copy the node clicked
-                        $('#deleteNode').fadeOut(400); // Hide the delete option
-                        $('#copyNode').fadeOut(400); // Hide the copy option
-                        $('#pasteNode').fadeOut(400); // Hide the paste option
+                d3.select("#copyNode").on('click', function () { // Click on copy option
+                    copiedNode = node; // Copy the node clicked
+                    $('#deleteNode').fadeOut(400); // Hide the delete option
+                    $('#copyNode').fadeOut(400); // Hide the copy option
+                    $('#pasteNode').fadeOut(400); // Hide the paste option
+                });
+                if (copiedNode != null) { // If there is a copied node
+                    $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
+                    d3.select("#pasteNode").on('click', function () { // On click on paste option
+                        pasteNewNode(node);
                     });
-                    if (copiedNode != null) { // If there is a copied node
-                        $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
-                        d3.select("#pasteNode").on('click', function () { // On click on paste option
-                            pasteNewNode(node);
-                        });
-                    }
                 }
 
             });
+
+
+
+
+
 
         // For each node, append a path
         node.append("path")
@@ -440,17 +444,101 @@ function displayTree() {
                 }
             })
             .style('stroke-width', function(d){
-                if (d.node == clickedNode || selectedNodes.includes(d.node))
+                if (d.node == clickedNode) {
+                    if (selectedNodes.length != 0) {
+                        return "6px";
+                    }
+                    return "4px";
+                }
+                if (selectedNodes.includes(d.node))
                 {
                     return "4px";
                 }
-                else
-                {
-                    return "1px";
-                }
+                return "1px";
             })
             .on('click', clickCircle); // Select the node on click
+
+
+
+
+        // Repeating Units
+        var rep = vis.selectAll("g.rep")
+            .data(repeatingUnits)
+            .enter()
+            .append("path")
+            .attr("height",function(d) {
+                return (getRepMaxX(d)-getRepMinX(d))+"px";
+            })
+            .attr("width","10px")
+            .attr("x", function(d) {
+                return getRepMinX(d);
+            })
+            .attr("y", function(d) {
+                return getRepMinY(d);
+            })
+            .attr("transform", function (d) {
+                return "translate(" + getRepMinY(d) + "," + getRepMinX(d) + ")";
+            })
+            .attr("d", function(d) {
+                return "M 10 0 L 0 0 L 0 " + (getRepMaxX(d)-getRepMinX(d)) + " L 10 " + (getRepMaxX(d)-getRepMinX(d))
+                    + "M " + (getRepMaxY(d)-getRepMinY(d)) + " 0 L " + ((getRepMaxY(d)-getRepMinY(d))+10) + " 0 L " + ((getRepMaxY(d)-getRepMinY(d))+10) + " " + (getRepMaxX(d)-getRepMinX(d)) + " L " + (getRepMaxY(d)-getRepMinY(d)) + " " + (getRepMaxX(d)-getRepMinX(d));
+            })
+            .attr("fill","none")
+            .attr("stroke","gray")
+            .attr("stroke-width","2px");
     }
+}
+
+function getRepMinX(repeatingUnit)
+{
+    var minX = shapes[repeatingUnit.nodes[0].id][0];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.id][0] < minX)
+        {
+            minX = shapes[node.id][0];
+        }
+    }
+    return minX-gap+3*circleRadius/2;
+}
+
+function getRepMaxX(repeatingUnit)
+{
+    var maxX = shapes[repeatingUnit.nodes[0].id][0];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.id][0] > maxX)
+        {
+            maxX = shapes[node.id][0];
+        }
+    }
+    return maxX+gap-3*circleRadius/2;
+}
+
+function getRepMaxY(repeatingUnit)
+{
+    var maxY = shapes[repeatingUnit.nodes[0].id][1];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.id][1] > maxY)
+        {
+            maxY = shapes[node.id][1];
+        }
+    }
+    return maxY+gap/4; // 10px is the width of the base of the bracket
+}
+
+function getRepMinY(repeatingUnit)
+{
+    var minY = shapes[repeatingUnit.nodes[0].id][1];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.id][1] < minY)
+        {
+            minY = shapes[node.id][1];
+        }
+    }
+    return minY-3*circleRadius/2; // 10px is the width of the base of the bracket
 }
 
 

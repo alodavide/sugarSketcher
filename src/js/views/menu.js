@@ -108,7 +108,10 @@ for (var shape of shapeChoices) {
         infosTable.push(e.target.parentNode.id.split("Shape")[0]);
         d3.select("#svgShape").transition().style("display", "none");
         updateMenu("shape");
-        d3.select("#svgMenu").transition().style("display", "block");
+        if (!ctrl)
+        {
+            d3.select("#svgMenu").transition().style("display", "block");
+        }
     });
 }
 
@@ -276,6 +279,7 @@ cancelSubButton.on("click", function() {
     d3.select("#svgMenu").transition().style("display", "block"); // Display main menu
 });
 
+
 /**
  * Update the menu. Can be called with or without one parameter.
  * @param chosenDivision
@@ -289,8 +293,12 @@ function updateMenu(chosenDivision) {
 
     d3.select("#actions").selectAll("*").remove(); // Reinitialize the svg rectangles menu
     d3.select("#labels").selectAll("*").remove(); // Reinitialize the svg labels menu
+    d3.select("#multiActions").selectAll("*").remove();
+    d3.select("#multiLabels").selectAll("*").remove();
     var actions = d3.select("#actions"); // Rectangles
     var labels = d3.select("#labels"); // Labels
+    var multiActions = d3.select("#multiActions");
+    var multiLabels = d3.select("#multiLabels");
 
     // Set the height and width of our svg menu
     var svgMenu = d3.select("#svgMenu").attr({
@@ -301,6 +309,10 @@ function updateMenu(chosenDivision) {
         height: menuDimensions.height,
         width: menuDimensions.width
     });
+    var svgMultiselectMenu = d3.select("#svgMultiselectMenu").attr({
+        height: menuDimensions.height,
+        width: menuDimensions.width
+    })
     var newMenuAction = [];
 
     // This case happens when update is called with no parameter (first update)
@@ -309,10 +321,12 @@ function updateMenu(chosenDivision) {
         infosTable = []; // Reinitialize the list of clicks
         // Hide all other svgs
         d3.select("#svgShape").transition().style("display", "none");
+        d3.select("#svgMultiselectMenu").transition().style("display", "none");
         d3.select("#svgSubstituents").transition().style("display", "none");
         d3.select("#svgInfos").transition().style("display", "none");
         d3.select("#svgCarbons").transition().style("display", "none");
         d3.select("#svgMenu").transition().style("display", "block");
+        d3.select("#svgMultiselectMenu").transition().style("display", "block");
         d3.select("#svgMenu2").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
@@ -554,7 +568,13 @@ document.onkeydown = function (e) {
         }
     }
     else if (e.keyCode == 13) { // enter
-        test(7);
+        var min = prompt("Type minimum");
+        var max = prompt("Type maximum");
+        var nodes = [clickedNode].concat(selectedNodes);
+        var id = randomString(7);
+        var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max);
+        repeatingUnits.push(repeatingUnit);
+        displayTree();
     }
 };
 
@@ -590,6 +610,7 @@ function deleteNode(node) {
     d3.select('#svgMenu').style("display", "none");
     d3.select("#svgInfos").style("display", "none");
     d3.select("#svgShape").style("display", "none");
+    d3.select("#svgMultiselectMenu").style("display", "none");
     d3.select("#svgCarbons").style("display", "none");
     d3.select("#svgSubstituents").style("display", "none");
     d3.select("#pieLinkCarbon").style("display", "none");

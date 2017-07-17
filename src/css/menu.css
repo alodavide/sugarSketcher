@@ -105,12 +105,12 @@
     overflow: visible;
 }
 
-#svgMenu, #svgMenu2 {
+#svgMenu, #svgMenu2, #svgMultiselectMenu {
     display:none;
     overflow: visible;
 }
 
-#svgMenu, #svgMenu2, #svgShape, #svgInfos, #svgCarbons, #svgSubstituents{
+#svgMenu, #svgMenu2, #svgMultiselectMenu, #svgShape, #svgInfos, #svgCarbons, #svgSubstituents{
     margin: 0 auto 10px;
 }
 
