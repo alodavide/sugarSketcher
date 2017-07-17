@@ -3,7 +3,6 @@
  */
 
 
-import GlycoCTParser from "../../js/io/glycoCT/GlycoCTparser";
 import Anomericity from "../../js/glycomics/dictionary/Anomericity";
 import Isomer from "../../js/glycomics/dictionary/Isomer";
 import LinkedCarbon from "../../js/glycomics/dictionary/LinkedCarbon";
@@ -29,7 +28,8 @@ QUnit.test( "Test empty sugar" , function( assert ) {
 QUnit.test( "Test one node" , function( assert ) {
     var root = new Monosaccharide("n1",MonosaccharideType.Gal,Anomericity.ALPHA, Isomer.D, RingType.P);
     var sugar = new Sugar("Sugar", root);
-    var writer = new GlycoCTWriter(sugar);
+    var tree = {"depth":0,"node":root};
+    var writer = new GlycoCTWriter(sugar, tree);
     var formula = writer.exportGlycoCT();
     assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n", 'Check one node');
 });
@@ -48,7 +48,8 @@ QUnit.test( "Test two nodes" , function( assert ) {
     sugar.addMonosaccharide(n2, e1);
     sugar.addMonosaccharide(n3, e2);
 
-    var writer = new GlycoCTWriter(sugar);
+    var tree = {"depth":0,"node":root,"children":[{"depth":1,"node":n2,"parent":{"node":root},"children":[{"depth":2,"node":n3,"parent":{"node":n2}}]}]};
+    var writer = new GlycoCTWriter(sugar, tree);
     var formula = writer.exportGlycoCT();
     assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+4)2d\n2:2o(-1-1)3d", 'Check two nodes');
 });

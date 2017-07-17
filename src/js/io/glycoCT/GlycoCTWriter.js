@@ -141,7 +141,7 @@ export default class GlycoCTWriter{
 
     getLink(id1, id2)
     {
-        for (var edge of sugar.graph.edges())
+        for (var edge of this.sugar.graph.edges())
         {
             if ((edge.source == id1 && edge.target == id2) || (edge.source == id2 && edge.target == id1))
             {
@@ -283,7 +283,6 @@ export default class GlycoCTWriter{
         {
             formula += "LIN\n";
             var edges = this.edges;
-            //var edges = this.sugar.graph.edges();
             for (i = 0; i < edges.length; i++)
             {
                 var source = resId[edges[i].sourceNode.getId()];

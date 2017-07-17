@@ -4,4 +4,4 @@ node_modules
 coverage
 dest
 .babelrc
-/gulpfile.js
+gulpfile.js

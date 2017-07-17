@@ -3771,7 +3771,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function GlycoCTWriter(sugar, tree) {
 	        _classCallCheck(this, GlycoCTWriter);
 	
-	        console.log(tree);
 	        this.sugar = sugar;
 	        this.tree = tree;
 	        this.res = [];
@@ -3989,7 +3988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _iteratorError5 = undefined;
 	
 	            try {
-	                for (var _iterator5 = sugar.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                for (var _iterator5 = this.sugar.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
 	                    var edge = _step5.value;
 	
 	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
@@ -4169,7 +4168,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (this.res.length + associatedSubs.length > 1) {
 	                formula += "LIN\n";
 	                var edges = this.edges;
-	                //var edges = this.sugar.graph.edges();
 	                for (i = 0; i < edges.length; i++) {
 	                    var source = resId[edges[i].sourceNode.getId()];
 	
