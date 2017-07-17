@@ -14,6 +14,33 @@ $(document).ready(function() {
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
+    d3.select("#svgTree").on('click', function() {
+        $('#deleteNode').fadeOut(400); // Hide the delete option
+        $('#copyNode').fadeOut(400); // Hide the copy option
+        $('#pasteNode').fadeOut(400); // Hide the paste option
+    })
+        .on('contextmenu', function() {
+            d3.event.preventDefault();
+        });
+    d3.select("#svgMenu").on('click', function() {
+        $('#deleteNode').fadeOut(400); // Hide the delete option
+        $('#copyNode').fadeOut(400); // Hide the copy option
+        $('#pasteNode').fadeOut(400); // Hide the paste option
+    })
+        .on('contextmenu', function() {
+            d3.event.preventDefault();
+        });
+    d3.select("#svgMenu2").on('click', function() {
+        $('#deleteNode').fadeOut(400); // Hide the delete option
+        $('#copyNode').fadeOut(400); // Hide the copy option
+        $('#pasteNode').fadeOut(400); // Hide the paste option
+    })
+        .on('contextmenu', function() {
+            d3.event.preventDefault();
+        });
+    d3.select("html").on('contextmenu', function() {
+            d3.event.preventDefault();
+    });
     var subChoices = d3.selectAll(".subChoice"); // Substituent choices
     subChoices.on('click', function() {
         if (infosTable.length == 2) { // If one substituent has already been clicked, remove it from infosTable

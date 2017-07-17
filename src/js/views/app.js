@@ -320,40 +320,52 @@ function displayTree() {
                 d3.select("#svgSubstituents").style("display", "none");
                 d3.select("#svgShape").style("display", "none");
                 d3.select("#svgCarbons").style("display", "none");
-                d3.select("#svgMenu").style("display", "block");
+                if (selectedNodes.length == 0)
+                {
+                    d3.select("#svgMenu").style("display", "block");
+                }
+                else
+                {
+                    d3.select("#svgMenu").style("display", "none");
+                    console.log("BXAKSN");
+                }
             })
             .on("contextmenu", function (d) {
                 clickCircle(d);
                 d3.event.preventDefault();
-                var yModification = 0;
-                const node = d.node;
-                d3.selectAll("svg")
-                    .filter(function () {
-                        if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
-                            yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
-                        }
+                if (!ctrl)
+                {
+                    var yModification = 0;
+                    const node = d.node;
+                    d3.selectAll("svg")
+                        .filter(function () {
+                            if (d3.select(this).style("display") != "none" && d3.select(this).attr("id") != "svgTree") {
+                                yModification += parseInt(d3.select(this).style("height").split("px")[0]) + 10;
+                            }
+                        });
+                    d3.select("#deleteNode").on('click', function () { // Click on delete option
+                        deleteNode(node); // Delete the node clicked
+                        $('#deleteNode').fadeOut(400); // Hide the delete option
+                        $('#copyNode').fadeOut(400); // Hide the copy option
+                        $('#pasteNode').fadeOut(400); // Hide the paste option
                     });
-                d3.select("#deleteNode").on('click', function () { // Click on delete option
-                    deleteNode(node); // Delete the node clicked
-                    $('#deleteNode').fadeOut(400); // Hide the delete option
-                    $('#copyNode').fadeOut(400); // Hide the copy option
-                    $('#pasteNode').fadeOut(400); // Hide the paste option
-                });
-                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
-                $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+                    $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+                    $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
 
-                d3.select("#copyNode").on('click', function () { // Click on copy option
-                    copiedNode = node; // Copy the node clicked
-                    $('#deleteNode').fadeOut(400); // Hide the delete option
-                    $('#copyNode').fadeOut(400); // Hide the copy option
-                    $('#pasteNode').fadeOut(400); // Hide the paste option
-                });
-                if (copiedNode != null) { // If there is a copied node
-                    $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
-                    d3.select("#pasteNode").on('click', function () { // On click on paste option
-                        pasteNewNode(node);
+                    d3.select("#copyNode").on('click', function () { // Click on copy option
+                        copiedNode = node; // Copy the node clicked
+                        $('#deleteNode').fadeOut(400); // Hide the delete option
+                        $('#copyNode').fadeOut(400); // Hide the copy option
+                        $('#pasteNode').fadeOut(400); // Hide the paste option
                     });
+                    if (copiedNode != null) { // If there is a copied node
+                        $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
+                        d3.select("#pasteNode").on('click', function () { // On click on paste option
+                            pasteNewNode(node);
+                        });
+                    }
                 }
+
             });
 
         // For each node, append a path
