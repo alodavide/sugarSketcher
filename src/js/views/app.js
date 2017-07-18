@@ -172,6 +172,9 @@ function displayTree() {
     treeSvg.selectAll('.node').remove(); // Remove all the nodes
     treeSvg.selectAll('.nodelink').remove(); // Remove all the links
     treeSvg.selectAll('.linkLabel').remove(); // Remove all link labels
+    treeSvg.selectAll('.rep').remove(); // Remove all the brackets
+    treeSvg.selectAll('.repLabel').remove(); // Remove all the Repeating labels
+
 
     if (sugar.rootIsSet()) {
     var nodes = tree.nodes(treeData); // Tree nodes
@@ -464,8 +467,10 @@ function displayTree() {
         // Repeating Units
         var rep = vis.selectAll("g.rep")
             .data(repeatingUnits)
-            .enter()
-            .append("path")
+            .enter();
+
+        rep.append("path")
+            .attr("class","rep")
             .attr("height",function(d) {
                 return (getRepMaxX(d)-getRepMinX(d))+"px";
             })
@@ -481,11 +486,41 @@ function displayTree() {
             })
             .attr("d", function(d) {
                 return "M 10 0 L 0 0 L 0 " + (getRepMaxX(d)-getRepMinX(d)) + " L 10 " + (getRepMaxX(d)-getRepMinX(d))
-                    + "M " + (getRepMaxY(d)-getRepMinY(d)) + " 0 L " + ((getRepMaxY(d)-getRepMinY(d))+10) + " 0 L " + ((getRepMaxY(d)-getRepMinY(d))+10) + " " + (getRepMaxX(d)-getRepMinX(d)) + " L " + (getRepMaxY(d)-getRepMinY(d)) + " " + (getRepMaxX(d)-getRepMinX(d));
+                    + "M " + (getRepMaxY(d)-getRepMinY(d)) + " 0 L " + ((getRepMaxY(d)-getRepMinY(d))+10) + " 0 L " +
+                    ((getRepMaxY(d)-getRepMinY(d))+10) + " " + (getRepMaxX(d)-getRepMinX(d)) + " L " +
+                    (getRepMaxY(d)-getRepMinY(d)) + " " + (getRepMaxX(d)-getRepMinX(d));
             })
             .attr("fill","none")
             .attr("stroke","gray")
             .attr("stroke-width","2px");
+
+        // Display numbers of repeats
+        rep.append("text")
+            .attr("class","repLabel")
+            .attr("x",function(d) {
+                return getRepMinY(d);
+            })
+            .attr("y", function(d) {
+                return getRepMaxX(d)+15;
+            })
+            .style("stroke","gray")
+            .text(function(d) {
+                return d.min;
+            });
+
+        rep.append("text")
+            .attr("class","repLabel")
+            .attr("x",function(d) {
+                return getRepMinY(d);
+            })
+            .attr("y", function(d) {
+                return getRepMinX(d)-5;
+            })
+            .style("stroke","gray")
+            .text(function(d) {
+                return d.max;
+            });
+
     }
 }
 

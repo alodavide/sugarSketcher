@@ -86,6 +86,8 @@ $(document).ready(function() {
             .style("display", "block")
             .on('click', function(d) {
                 treeData = {};
+                repeatingUnits = [];
+                selectedNodes = [];
                 if (sugar)
                     sugar.clear();
                 var parser = new sb.GlycoCTParser($('#formula').val());
@@ -568,13 +570,17 @@ document.onkeydown = function (e) {
         }
     }
     else if (e.keyCode == 13) { // enter
-        var min = prompt("Type minimum");
-        var max = prompt("Type maximum");
         var nodes = [clickedNode].concat(selectedNodes);
-        var id = randomString(7);
-        var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max);
-        repeatingUnits.push(repeatingUnit);
-        displayTree();
+        if (!isRepeated(nodes))
+        {
+            var min = prompt("Type minimum");
+            var max = prompt("Type maximum");
+
+            var id = randomString(7);
+            var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max);
+            repeatingUnits.push(repeatingUnit);
+            displayTree();
+        }
     }
 };
 
@@ -583,6 +589,21 @@ document.onkeyup = function(e) {
     {
         ctrl = false;
     }
+};
+
+function isRepeated(arr)
+{
+    for (var node of arr)
+    {
+        for (var rep of repeatingUnits)
+        {
+            if (rep.nodes.includes(node))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
