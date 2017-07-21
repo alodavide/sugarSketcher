@@ -53,7 +53,7 @@ $(document).ready(function() {
     d3.select("#exportGlycoCT").on('click', function() {
         d3.select("#formula").style("display","block");
         d3.select("#validateFormula").style("display", "none");
-        var writer = new sb.GlycoCTWriter(sugar, treeData);
+        var writer = new sb.GlycoCTWriter(sugar, treeData, repeatingUnits);
         $('#formula').val(writer.exportGlycoCT());
         $('#formula').select();
         var formula = document.querySelector("#formula");
@@ -577,12 +577,21 @@ document.onkeydown = function (e) {
             var max = prompt("Type maximum");
 
             var id = randomString(7);
+            findNodesInTree(nodes);
             var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max);
             repeatingUnits.push(repeatingUnit);
             displayTree();
         }
     }
 };
+
+function findNodesInTree(arr)
+{
+    for (var i in arr)
+    {
+        arr[i] = findNodeInTree(arr[i]);
+    }
+}
 
 document.onkeyup = function(e) {
     if (e.keyCode == 17 || e.keyCode == 16) // Ctrl or Shift

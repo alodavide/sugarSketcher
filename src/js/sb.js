@@ -101,9 +101,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _GlycoCTSubstituents = __webpack_require__(12);
+	var _SubstituentsGlycoCT = __webpack_require__(12);
 	
-	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
+	var _SubstituentsGlycoCT2 = _interopRequireDefault(_SubstituentsGlycoCT);
 	
 	var _GlycosidicLinkage = __webpack_require__(13);
 	
@@ -167,7 +167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Sugar = _Sugar2.default;
 	exports.GlycoCTParser = _GlycoCTParser2.default;
 	exports.GlycoCTWriter = _GlycoCTWriter2.default;
-	exports.GlycoCTSubstituents = _GlycoCTSubstituents2.default;
+	exports.GlycoCTSubstituents = _SubstituentsGlycoCT2.default;
 	exports.NodeComparator = _NodeComparator2.default;
 	exports.RepeatingUnit = _RepeatingUnit2.default;
 	
@@ -2219,6 +2219,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	GlycoCTSubstituents.initEnum({
 	    NAcetyl: {
 	        glycoct: "n-acetyl"
+	    },
+	    N: {
+	        glycoct: "amino"
 	    }
 	});
 
@@ -3261,9 +3264,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
-	var _GlycoCTSubstituents = __webpack_require__(12);
+	var _SubstituentsGlycoCT = __webpack_require__(12);
 	
-	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
+	var _SubstituentsGlycoCT2 = _interopRequireDefault(_SubstituentsGlycoCT);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3542,7 +3545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var _iteratorError8 = undefined;
 	
 	                try {
-	                    for (var _iterator8 = _GlycoCTSubstituents2.default[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                    for (var _iterator8 = _SubstituentsGlycoCT2.default[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
 	                        var sub = _step8.value;
 	
 	                        if (subName === sub.glycoct) {
@@ -3785,9 +3788,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _GlycoCTSubstituents = __webpack_require__(12);
+	var _SubstituentsGlycoCT = __webpack_require__(12);
 	
-	var _GlycoCTSubstituents2 = _interopRequireDefault(_GlycoCTSubstituents);
+	var _SubstituentsGlycoCT2 = _interopRequireDefault(_SubstituentsGlycoCT);
 	
 	var _MonosaccharideType = __webpack_require__(9);
 	
@@ -3797,21 +3800,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
+	var _RepeatingUnit = __webpack_require__(18);
+	
+	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
+	
+	var _MonosaccharideGlycoCT = __webpack_require__(23);
+	
+	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var GlycoCTWriter = function () {
 	    function GlycoCTWriter(sugar, tree) {
+	        var rep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+	
 	        _classCallCheck(this, GlycoCTWriter);
 	
 	        this.sugar = sugar;
 	        this.tree = tree;
+	        this.rep = rep;
 	        this.res = [];
 	        this.edges = [];
 	    }
 	
 	    _createClass(GlycoCTWriter, [{
+	        key: "getNodeRepUnit",
+	        value: function getNodeRepUnit(node) {
+	            node = node.node;
+	            if (node === undefined) {
+	                return undefined;
+	            }
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = this.rep[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var rep = _step.value;
+	                    var _iteratorNormalCompletion2 = true;
+	                    var _didIteratorError2 = false;
+	                    var _iteratorError2 = undefined;
+	
+	                    try {
+	                        for (var _iterator2 = rep.nodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                            var n = _step2.value;
+	
+	                            if (n.node.id === node.id) {
+	                                return rep;
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError2 = true;
+	                        _iteratorError2 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                                _iterator2.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError2) {
+	                                throw _iteratorError2;
+	                            }
+	                        }
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	
+	            return undefined;
+	        }
+	    }, {
 	        key: "randomString",
 	        value: function randomString(length) {
 	            // Possible chars in the generated string
@@ -3832,77 +3904,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "getSub",
 	        value: function getSub(label) {
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-	
-	            try {
-	                for (var _iterator = _SubstituentType2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var sub = _step.value;
-	
-	                    if (sub.label.toLowerCase() === label.toLowerCase()) return sub;
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: "getMono",
-	        value: function getMono(name) {
-	            var _iteratorNormalCompletion2 = true;
-	            var _didIteratorError2 = false;
-	            var _iteratorError2 = undefined;
-	
-	            try {
-	                for (var _iterator2 = _MonosaccharideType2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                    var mono = _step2.value;
-	
-	                    if (mono.name.toLowerCase() === name.toLowerCase()) return mono;
-	                }
-	            } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                        _iterator2.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError2) {
-	                        throw _iteratorError2;
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: "writeSub",
-	        value: function writeSub(i, substituent) {
-	            var formula = "";
-	            formula += i + 1 + "s:";
-	            var subName = substituent.substituentType.name;
-	            var substituentType = "";
 	            var _iteratorNormalCompletion3 = true;
 	            var _didIteratorError3 = false;
 	            var _iteratorError3 = undefined;
 	
 	            try {
-	                for (var _iterator3 = _GlycoCTSubstituents2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                for (var _iterator3 = _SubstituentType2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 	                    var sub = _step3.value;
 	
-	                    if (subName.toLowerCase() === sub.name.toLowerCase()) {
-	                        substituentType = sub.glycoct;
-	                    }
+	                    if (sub.label.toLowerCase() === label.toLowerCase()) return sub;
 	                }
 	            } catch (err) {
 	                _didIteratorError3 = true;
@@ -3918,31 +3928,93 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
+	        }
+	    }, {
+	        key: "getMono",
+	        value: function getMono(name) {
+	            var _iteratorNormalCompletion4 = true;
+	            var _didIteratorError4 = false;
+	            var _iteratorError4 = undefined;
+	
+	            try {
+	                for (var _iterator4 = _MonosaccharideType2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                    var mono = _step4.value;
+	
+	                    if (mono.name.toLowerCase() === name.toLowerCase()) return mono;
+	                }
+	            } catch (err) {
+	                _didIteratorError4 = true;
+	                _iteratorError4 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                        _iterator4.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError4) {
+	                        throw _iteratorError4;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "writeSub",
+	        value: function writeSub(i, substituent) {
+	            var formula = "";
+	            formula += i + 1 + "s:";
+	            var subName = substituent.substituentType.name;
+	            var substituentType = "";
+	            var _iteratorNormalCompletion5 = true;
+	            var _didIteratorError5 = false;
+	            var _iteratorError5 = undefined;
+	
+	            try {
+	                for (var _iterator5 = _SubstituentsGlycoCT2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var sub = _step5.value;
+	
+	                    if (subName.toLowerCase() === sub.name.toLowerCase()) {
+	                        substituentType = sub.glycoct;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError5 = true;
+	                _iteratorError5 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                        _iterator5.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError5) {
+	                        throw _iteratorError5;
+	                    }
+	                }
+	            }
 	
 	            if (substituentType === "") {
-	                var _iteratorNormalCompletion4 = true;
-	                var _didIteratorError4 = false;
-	                var _iteratorError4 = undefined;
+	                var _iteratorNormalCompletion6 = true;
+	                var _didIteratorError6 = false;
+	                var _iteratorError6 = undefined;
 	
 	                try {
-	                    for (var _iterator4 = _SubstituentType2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                        sub = _step4.value;
+	                    for (var _iterator6 = _SubstituentType2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                        sub = _step6.value;
 	
 	                        if (subName.toLowerCase() === sub.name.toLowerCase()) {
 	                            substituentType = sub.name.toLowerCase();
 	                        }
 	                    }
 	                } catch (err) {
-	                    _didIteratorError4 = true;
-	                    _iteratorError4 = err;
+	                    _didIteratorError6 = true;
+	                    _iteratorError6 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	                            _iterator4.return();
+	                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                            _iterator6.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError4) {
-	                            throw _iteratorError4;
+	                        if (_didIteratorError6) {
+	                            throw _iteratorError6;
 	                        }
 	                    }
 	                }
@@ -4017,172 +4089,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "getLink",
 	        value: function getLink(id1, id2) {
-	            var _iteratorNormalCompletion5 = true;
-	            var _didIteratorError5 = false;
-	            var _iteratorError5 = undefined;
-	
-	            try {
-	                for (var _iterator5 = this.sugar.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                    var edge = _step5.value;
-	
-	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
-	                        return edge;
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError5 = true;
-	                _iteratorError5 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-	                        _iterator5.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError5) {
-	                        throw _iteratorError5;
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: "generateArray",
-	        value: function generateArray(root) {
-	            if (root === undefined) {
-	                this.res = [];
-	                this.edges = [];
-	                return;
-	            }
-	            var stack = [];
-	            stack.push(root);
-	            while (stack.length > 0) {
-	                var node = stack.pop();
-	                this.res.push(node);
-	                if (this.res.length > 1) // if we have at least 2 nodes : add link
-	                    {
-	                        this.edges.push(this.getLink(node.parent.node.id, node.node.id));
-	                    }
-	                var children = node.children;
-	                if (children !== undefined) {
-	                    if (children.length > 1) {
-	                        children = this.sort(children);
-	                    }
-	                    var _iteratorNormalCompletion6 = true;
-	                    var _didIteratorError6 = false;
-	                    var _iteratorError6 = undefined;
-	
-	                    try {
-	                        for (var _iterator6 = children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                            var child = _step6.value;
-	
-	                            stack.push(child);
-	                        }
-	                    } catch (err) {
-	                        _didIteratorError6 = true;
-	                        _iteratorError6 = err;
-	                    } finally {
-	                        try {
-	                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                                _iterator6.return();
-	                            }
-	                        } finally {
-	                            if (_didIteratorError6) {
-	                                throw _iteratorError6;
-	                            }
-	                        }
-	                    }
-	                }
-	            }
-	            if (this.res[0].node === undefined) {
-	                this.res = [];
-	            }
-	        }
-	    }, {
-	        key: "exportGlycoCT",
-	        value: function exportGlycoCT() {
-	            var resId = {};
-	            this.generateArray(this.tree);
-	            var res = this.res;
-	            var associatedSubs = [];
-	            if (res.length === 0) {
-	                return "";
-	            }
-	            var linkNumber = 1;
-	            var formula = "RES\n";
-	            for (var i = 0; i < res.length; i++) {
-	                if (res[i].node instanceof _Substituent2.default) {
-	                    formula += this.writeSub(i, res[i].node);
-	                } else {
-	                    formula += i + 1 + "b:";
-	                    switch (res[i].node._anomericity.name) {
-	                        case "ALPHA":
-	                            formula += "a";
-	                            break;
-	                        case "BETA":
-	                            formula += "b";
-	                            break;
-	                        default:
-	                            formula += "x";
-	                            break;
-	                    }
-	                    formula += "-";
-	                    switch (res[i].node._isomer.name) {
-	                        case "L":
-	                            formula += "l";
-	                            break;
-	                        case "D":
-	                            formula += "d";
-	                            break;
-	                        default:
-	                            formula += "x";
-	                            break;
-	                    }
-	                    if (this.getMono(res[i].node._monosaccharideType.name.toLowerCase()) && res[i].node._monosaccharideType.name.length > 3) {
-	                        formula += res[i].node._monosaccharideType.name.toLowerCase().substring(0, 3);
-	                        // Add the associated sub seperately
-	                        var assocSubType = this.getSub(res[i].node._monosaccharideType.name.substring(3));
-	                        var assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
-	                        associatedSubs.push([assocSub, i + 1]);
-	                    } else {
-	                        formula += res[i].node._monosaccharideType.name.toLowerCase();
-	                    }
-	                    formula += "-";
-	                    if (res[i].node._monosaccharideType.superclass) {
-	                        formula += res[i].node._monosaccharideType.superclass.toUpperCase();
-	                    } else {
-	                        formula += "HEX";
-	                    }
-	
-	                    formula += "-";
-	
-	                    switch (res[i].node._ringType.name) {
-	                        case "P":
-	                            formula += "1:5";
-	                            break;
-	                        case "F":
-	                            formula += "1:4";
-	                            break;
-	                        default:
-	                            formula += "x:x";
-	                            break;
-	                    }
-	                }
-	
-	                formula += "\n";
-	
-	                resId[res[i].node.id] = i + 1;
-	            }
 	            var _iteratorNormalCompletion7 = true;
 	            var _didIteratorError7 = false;
 	            var _iteratorError7 = undefined;
 	
 	            try {
-	                for (var _iterator7 = associatedSubs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                    var pair = _step7.value;
+	                for (var _iterator7 = this.sugar.graph.edges()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                    var edge = _step7.value;
 	
-	                    var associatedSub = pair[0];
-	                    formula += this.writeSub(i, associatedSub);
-	                    i++;
-	                    pair[0] = i;
+	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
+	                        return edge;
+	                    }
 	                }
 	            } catch (err) {
 	                _didIteratorError7 = true;
@@ -4198,11 +4115,222 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
+	        }
+	    }, {
+	        key: "generateArrays",
+	        value: function generateArrays(root) {
+	            if (root === undefined) {
+	                this.res = [];
+	                this.edges = [];
+	                this.rep = [];
+	                return;
+	            }
+	            var stack = [];
+	            stack.push(root);
+	            while (stack.length > 0) {
+	                var node = stack.pop();
+	                var nodeUnit = this.getNodeRepUnit(node);
+	                if (nodeUnit === undefined) {
+	                    this.res.push(node);
+	                    if (this.res.length > 1) // if we have at least 2 nodes : add link
+	                        {
+	                            this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                        }
+	                }
+	                var children = node.children;
+	                var childrenUnit;
+	                if (children !== undefined) {
+	                    childrenUnit = this.getNodeRepUnit(children[0]);
+	                    if (children.length > 1) {
+	                        children = this.sort(children);
+	                    }
+	                    var _iteratorNormalCompletion8 = true;
+	                    var _didIteratorError8 = false;
+	                    var _iteratorError8 = undefined;
 	
+	                    try {
+	                        for (var _iterator8 = children[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                            var child = _step8.value;
+	
+	                            stack.push(child);
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError8 = true;
+	                        _iteratorError8 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                                _iterator8.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError8) {
+	                                throw _iteratorError8;
+	                            }
+	                        }
+	                    }
+	                }
+	                if (childrenUnit !== undefined) {
+	                    if (!this.res.includes(nodeUnit)) {
+	                        this.res.push(nodeUnit);
+	                    }
+	                }
+	            }
+	            if (this.res[0].node === undefined) {
+	                this.res = [];
+	            }
+	        }
+	    }, {
+	        key: "generateRES",
+	        value: function generateRES(resId, repId, res, associatedSubs, repNumber) {
+	            var offset = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+	
+	            var formula = "RES\n";
+	            var i;
+	            for (i = 0; i < res.length; i++) {
+	                if (res[i] instanceof _RepeatingUnit2.default) {
+	                    formula += i + 1 + offset + "r:r" + repNumber;
+	                    repId[res[i].id] = [i + 1 + offset, repNumber];
+	                    repNumber++;
+	                } else if (res[i].node instanceof _Substituent2.default) {
+	                    formula += this.writeSub(i + offset, res[i].node);
+	                    resId[res[i].node.id] = i + 1 + offset;
+	                } else {
+	                    resId[res[i].node.id] = i + 1 + offset;
+	                    formula += i + 1 + offset + "b:";
+	                    switch (res[i].node._anomericity.name) {
+	                        case "ALPHA":
+	                            formula += "a";
+	                            break;
+	                        case "BETA":
+	                            formula += "b";
+	                            break;
+	                        default:
+	                            formula += "x";
+	                            break;
+	                    }
+	                    formula += "-";
+	
+	                    var resName = res[i].node._monosaccharideType.name;
+	                    var transform;
+	
+	                    if (resName !== "Hex" && resName !== "dHex" && resName !== "HexA" && resName !== "DeoxyHex") // Exceptions
+	                        {
+	                            switch (res[i].node._isomer.name) {
+	                                case "L":
+	                                    formula += "l";
+	                                    break;
+	                                case "D":
+	                                    formula += "d";
+	                                    break;
+	                                default:
+	                                    formula += "x";
+	                                    break;
+	                            }
+	                        }
+	
+	                    if (_MonosaccharideGlycoCT2.default[resName] !== undefined) // if the residue has a defined name
+	                        {
+	                            formula += _MonosaccharideGlycoCT2.default[resName].glycoct;
+	                            transform = _MonosaccharideGlycoCT2.default[resName].transform;
+	                        } else {
+	                        var monoName, subName, assocSubType, assocSub;
+	                        if (_MonosaccharideGlycoCT2.default[resName.substring(0, 3)] !== undefined) {
+	                            monoName = resName.substring(0, 3);
+	                            subName = resName.substring(3);
+	                            formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
+	                            transform = _MonosaccharideGlycoCT2.default[monoName].transform;
+	                            assocSubType = this.getSub(subName);
+	                            assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
+	                            associatedSubs.push([assocSub, i + 1 + offset]);
+	                        } else if (_MonosaccharideGlycoCT2.default[resName.substring(0, 4)] !== undefined) {
+	                            monoName = resName.substring(0, 4);
+	                            subName = resName.substring(4);
+	                            formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
+	                            transform = _MonosaccharideGlycoCT2.default[monoName].transform;
+	                            assocSubType = this.getSub(subName);
+	                            assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
+	                            associatedSubs.push([assocSub, i + 1 + offset]);
+	                        }
+	                    }
+	
+	                    formula += "-";
+	
+	                    if (resName !== "Kdn") // Ring exceptions
+	                        {
+	                            switch (res[i].node._ringType.name) {
+	                                case "P":
+	                                    formula += "1:5";
+	                                    break;
+	                                case "F":
+	                                    formula += "1:4";
+	                                    break;
+	                                default:
+	                                    formula += "x:x";
+	                                    break;
+	                            }
+	                        }
+	
+	                    formula += transform;
+	                }
+	
+	                formula += "\n";
+	            }
+	            var _iteratorNormalCompletion9 = true;
+	            var _didIteratorError9 = false;
+	            var _iteratorError9 = undefined;
+	
+	            try {
+	                for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                    var pair = _step9.value;
+	
+	                    var associatedSub = pair[0];
+	                    formula += this.writeSub(i, associatedSub);
+	                    i++;
+	                    pair[0] = i;
+	                }
+	            } catch (err) {
+	                _didIteratorError9 = true;
+	                _iteratorError9 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                        _iterator9.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError9) {
+	                        throw _iteratorError9;
+	                    }
+	                }
+	            }
+	
+	            return [i, formula];
+	        }
+	    }, {
+	        key: "exportGlycoCT",
+	        value: function exportGlycoCT() {
+	            var resId = {};
+	            var repId = {};
+	            this.generateArrays(this.tree);
+	            var res = this.res;
+	            var associatedSubs = [];
+	            if (res.length === 0) {
+	                return "";
+	            }
+	            var repNumber = 1;
+	
+	            // RES
+	            var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
+	            var formula = resInfo[1];
+	            var lastResId = resInfo[0];
+	
+	            // LIN
+	            /*var linInfo = this.generateLIN(resId, repId, res, associatedSubs, repNumber);
+	            formula += linInfo[1];
+	            var lastLinId = resInfo[0];*/
 	            if (this.res.length + associatedSubs.length > 1) {
 	                formula += "LIN\n";
 	                var edges = this.edges;
-	                for (i = 0; i < edges.length; i++) {
+	                for (var i = 0; i < edges.length; i++) {
 	                    var source = resId[edges[i].sourceNode.getId()];
 	
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
@@ -4217,28 +4345,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var _iteratorNormalCompletion8 = true;
-	                var _didIteratorError8 = false;
-	                var _iteratorError8 = undefined;
+	                var _iteratorNormalCompletion10 = true;
+	                var _didIteratorError10 = false;
+	                var _iteratorError10 = undefined;
 	
 	                try {
-	                    for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                        pair = _step8.value;
+	                    for (var _iterator10 = associatedSubs[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                        var pair = _step10.value;
 	
 	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
 	                        i++;
 	                    }
 	                } catch (err) {
-	                    _didIteratorError8 = true;
-	                    _iteratorError8 = err;
+	                    _didIteratorError10 = true;
+	                    _iteratorError10 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                            _iterator8.return();
+	                        if (!_iteratorNormalCompletion10 && _iterator10.return) {
+	                            _iterator10.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError8) {
-	                            throw _iteratorError8;
+	                        if (_didIteratorError10) {
+	                            throw _iteratorError10;
 	                        }
 	                    }
 	                }
@@ -4248,6 +4376,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        formula = formula.substring(0, formula.length - 1);
 	                    }
 	            }
+	
+	            // REP
+	
+	            if (this.rep.length !== 0) {
+	                formula += "\nREP\n";
+	                var _iteratorNormalCompletion11 = true;
+	                var _didIteratorError11 = false;
+	                var _iteratorError11 = undefined;
+	
+	                try {
+	                    for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                        var rep = _step11.value;
+	
+	                        formula += "REP" + repId[rep.id][1] + "\n";
+	                        resInfo = this.generateRES(resId, repId, rep.nodes, associatedSubs, repNumber, lastResId);
+	                        formula += resInfo[1];
+	                        lastResId = resInfo[0];
+	                    }
+	                } catch (err) {
+	                    _didIteratorError11 = true;
+	                    _iteratorError11 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                            _iterator11.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError11) {
+	                            throw _iteratorError11;
+	                        }
+	                    }
+	                }
+	            }
+	
 	            return formula;
 	        }
 	    }]);
@@ -4597,6 +4759,191 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = NodeComparator;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _MonosaccharideGlycoC;
+	
+	var _enumify = __webpack_require__(5);
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 21/07/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var MonosaccharideGlycoCT = function (_Enum) {
+	    _inherits(MonosaccharideGlycoCT, _Enum);
+	
+	    function MonosaccharideGlycoCT() {
+	        _classCallCheck(this, MonosaccharideGlycoCT);
+	
+	        return _possibleConstructorReturn(this, (MonosaccharideGlycoCT.__proto__ || Object.getPrototypeOf(MonosaccharideGlycoCT)).apply(this, arguments));
+	    }
+	
+	    return MonosaccharideGlycoCT;
+	}(_enumify.Enum);
+	
+	exports.default = MonosaccharideGlycoCT;
+	
+	
+	MonosaccharideGlycoCT.initEnum((_MonosaccharideGlycoC = {
+	    Hex: {
+	        glycoct: "HEX",
+	        transform: ""
+	    },
+	
+	    Glc: {
+	        glycoct: "glc-HEX",
+	        transform: ""
+	    },
+	
+	    Man: {
+	        glycoct: "man-HEX",
+	        transform: ""
+	    },
+	
+	    Gal: {
+	        glycoct: "gal-HEX",
+	        transform: ""
+	    },
+	
+	    Gul: {
+	        glycoct: "gul-HEX",
+	        transform: ""
+	    },
+	
+	    Alt: {
+	        glycoct: "alt-HEX",
+	        transform: ""
+	    },
+	
+	    All: {
+	        glycoct: "all-HEX",
+	        transform: ""
+	    },
+	
+	    Tal: {
+	        glycoct: "tal-HEX",
+	        transform: ""
+	    },
+	
+	    Ido: {
+	        glycoct: "ido-HEX",
+	        transform: ""
+	    },
+	
+	    Ara: {
+	        glycoct: "ara-PEN",
+	        transform: ""
+	    },
+	
+	    Bac: {
+	        glycoct: "glc-HEX",
+	        transform: "|2:d|4:d|6:d"
+	    },
+	
+	    dAlt: {
+	        glycoct: "alt-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    DeoxyHex: {
+	        glycoct: "HEX",
+	        transform: "|0:d"
+	    },
+	
+	    Fru: {
+	        glycoct: "ara-PEN",
+	        transform: "|2:keto"
+	    },
+	
+	    Fuc: {
+	        glycoct: "gal-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    HexA: {
+	        glycoct: "HEX",
+	        transform: "|6:a"
+	    },
+	
+	    GlcA: {
+	        glycoct: "glc-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    ManA: {
+	        glycoct: "man-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    GalA: {
+	        glycoct: "gal-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    GulA: {
+	        glycoct: "gul-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    AltA: {
+	        glycoct: "alt-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    AllA: {
+	        glycoct: "all-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    TalA: {
+	        glycoct: "tal-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    Qui: {
+	        glycoct: "glc-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    dHex: {
+	        glycoct: "HEX",
+	        transform: "|6:d"
+	    }
+	
+	}, _defineProperty(_MonosaccharideGlycoC, "Ido", {
+	    glycoct: "ido-HEX",
+	    transform: ""
+	}), _defineProperty(_MonosaccharideGlycoC, "IdoA", {
+	    glycoct: "ido-HEX",
+	    transform: "|6:a"
+	}), _defineProperty(_MonosaccharideGlycoC, "Kdn", {
+	    glycoct: "gro-dgal-NON-2:6",
+	    transform: "|1:a|2:keto|3:d"
+	}), _defineProperty(_MonosaccharideGlycoC, "Pent", {
+	    glycoct: "PEN-1:4",
+	    transform: ""
+	}), _defineProperty(_MonosaccharideGlycoC, "Rha", {
+	    glycoct: "man-HEX",
+	    transform: "|6:d"
+	}), _defineProperty(_MonosaccharideGlycoC, "Xyl", {
+	    glycoct: "xyl-PEN",
+	    transform: ""
+	}), _MonosaccharideGlycoC));
 
 /***/ })
 /******/ ])

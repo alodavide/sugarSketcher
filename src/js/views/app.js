@@ -158,10 +158,6 @@ var width = 460,
 
 var color = d3.scale.category20();
 
-var arc = d3.svg.arc()
-    .innerRadius(radius - 100)
-    .outerRadius(radius - 50);
-
 var tree = d3.layout.tree().size([150,150]); // Create the tree layout
 
 /**
@@ -472,38 +468,42 @@ function displayTree() {
         rep.append("path")
             .attr("class","rep")
             .attr("height",function(d) {
-                return (getRepMaxX(d)-getRepMinX(d))+"px";
+                var repInfo = getRepCoord(d);
+                return (repInfo[1]-repInfo[0])+"px";
             })
             .attr("width","10px")
             .attr("x", function(d) {
-                return getRepMinX(d);
+                return getRepCoord(d)[0];
             })
             .attr("y", function(d) {
-                return getRepMinY(d);
+                return getRepCoord(d)[2];
             })
             .attr("transform", function (d) {
-                return "translate(" + getRepMinY(d) + "," + getRepMinX(d) + ")";
+                var repInfo = getRepCoord(d);
+                return "translate(" + repInfo[2] + "," + repInfo[0] + ")";
             })
             .attr("d", function(d) {
-                return "M 10 0 L 0 0 L 0 " + (getRepMaxX(d)-getRepMinX(d)) + " L 10 " + (getRepMaxX(d)-getRepMinX(d))
-                    + "M " + (getRepMaxY(d)-getRepMinY(d)) + " 0 L " + ((getRepMaxY(d)-getRepMinY(d))+10) + " 0 L " +
-                    ((getRepMaxY(d)-getRepMinY(d))+10) + " " + (getRepMaxX(d)-getRepMinX(d)) + " L " +
-                    (getRepMaxY(d)-getRepMinY(d)) + " " + (getRepMaxX(d)-getRepMinX(d));
+                var repInfo = getRepCoord(d);
+                return "M 10 0 L 0 0 L 0 " + (repInfo[1]-repInfo[0]) + " L 10 " + (repInfo[1]-repInfo[0])
+                    + "M " + (repInfo[3]-repInfo[2]) + " 0 L " + ((repInfo[3]-repInfo[2])+10) + " 0 L " +
+                    ((repInfo[3]-repInfo[2])+10) + " " + (repInfo[1]-repInfo[0]) + " L " +
+                    (repInfo[3]-repInfo[2]) + " " + (repInfo[1]-repInfo[0]);
             })
             .attr("fill","none")
             .attr("stroke","gray")
-            .attr("stroke-width","2px");
+            .attr("stroke-width","1px");
 
         // Display numbers of repeats
         rep.append("text")
             .attr("class","repLabel")
             .attr("x",function(d) {
-                return getRepMinY(d);
+                return getRepCoord(d)[2];
             })
             .attr("y", function(d) {
-                return getRepMaxX(d)+15;
+                return getRepCoord(d)[1]+15;
             })
             .style("stroke","gray")
+            .style("font-family","Lato light")
             .text(function(d) {
                 return d.min;
             });
@@ -511,12 +511,13 @@ function displayTree() {
         rep.append("text")
             .attr("class","repLabel")
             .attr("x",function(d) {
-                return getRepMinY(d);
+                return getRepCoord(d)[2];
             })
             .attr("y", function(d) {
-                return getRepMinX(d)-5;
+                return getRepCoord(d)[0]-5;
             })
             .style("stroke","gray")
+            .style("font-family","Lato light")
             .text(function(d) {
                 return d.max;
             });
@@ -524,57 +525,48 @@ function displayTree() {
     }
 }
 
-function getRepMinX(repeatingUnit)
+function getRepCoord(repeatingUnit)
 {
-    var minX = shapes[repeatingUnit.nodes[0].id][0];
+    var output = [];
+    var minX = shapes[repeatingUnit.nodes[0].node.id][0];
     for (var node of repeatingUnit.nodes)
     {
-        if (shapes[node.id][0] < minX)
+        if (shapes[node.node.id][0] < minX)
         {
-            minX = shapes[node.id][0];
+            minX = shapes[node.node.id][0];
         }
     }
-    return minX-gap+3*circleRadius/2;
+    output.push(minX-gap+3*circleRadius/2);
+    var maxX = shapes[repeatingUnit.nodes[0].node.id][0];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.node.id][0] > maxX)
+        {
+            maxX = shapes[node.node.id][0];
+        }
+    }
+    output.push(maxX+gap-3*circleRadius/2);
+    var minY = shapes[repeatingUnit.nodes[0].node.id][1];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.node.id][1] < minY)
+        {
+            minY = shapes[node.node.id][1];
+        }
+    }
+    output.push(minY-3*circleRadius/2); // 10px is the width of the base of the bracket
+    var maxY = shapes[repeatingUnit.nodes[0].node.id][1];
+    for (var node of repeatingUnit.nodes)
+    {
+        if (shapes[node.node.id][1] > maxY)
+        {
+            maxY = shapes[node.node.id][1];
+        }
+    }
+    output.push(maxY+gap/4); // 10px is the width of the base of the bracket
+    return output;
 }
 
-function getRepMaxX(repeatingUnit)
-{
-    var maxX = shapes[repeatingUnit.nodes[0].id][0];
-    for (var node of repeatingUnit.nodes)
-    {
-        if (shapes[node.id][0] > maxX)
-        {
-            maxX = shapes[node.id][0];
-        }
-    }
-    return maxX+gap-3*circleRadius/2;
-}
-
-function getRepMaxY(repeatingUnit)
-{
-    var maxY = shapes[repeatingUnit.nodes[0].id][1];
-    for (var node of repeatingUnit.nodes)
-    {
-        if (shapes[node.id][1] > maxY)
-        {
-            maxY = shapes[node.id][1];
-        }
-    }
-    return maxY+gap/4; // 10px is the width of the base of the bracket
-}
-
-function getRepMinY(repeatingUnit)
-{
-    var minY = shapes[repeatingUnit.nodes[0].id][1];
-    for (var node of repeatingUnit.nodes)
-    {
-        if (shapes[node.id][1] < minY)
-        {
-            minY = shapes[node.id][1];
-        }
-    }
-    return minY-3*circleRadius/2; // 10px is the width of the base of the bracket
-}
 
 
 /**

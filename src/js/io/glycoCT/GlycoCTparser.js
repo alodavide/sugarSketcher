@@ -14,7 +14,7 @@ import AnomerCarbon from "../../glycomics/dictionary/AnomerCarbon";
 import LinkedCarbon from "../../glycomics/dictionary/LinkedCarbon";
 import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
-import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
+import GlycoCTSubstituents from "./SubstituentsGlycoCT";
 
 export default class GlycoCTParser{
 

@@ -10,5 +10,8 @@ export default class GlycoCTSubstituents extends Enum {}
 GlycoCTSubstituents.initEnum({
     NAcetyl: {
         glycoct: "n-acetyl"
+    },
+    N: {
+        glycoct: "amino"
     }
 });

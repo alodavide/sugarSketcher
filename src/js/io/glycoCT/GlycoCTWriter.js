@@ -5,17 +5,40 @@
 import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentType from "../../glycomics/dictionary/SubstituentType";
 import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
-import GlycoCTSubstituents from "../../glycomics/dictionary/GlycoCTSubstituents";
+import GlycoCTSubstituents from "./SubstituentsGlycoCT";
 import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
 import EdgeComparator from "../EdgeComparator";
+import RepeatingUnit from "../../glycomics/RepeatingUnit";
+import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
 
 export default class GlycoCTWriter{
 
-    constructor(sugar,tree){
+    constructor(sugar,tree,rep=[]){
         this.sugar = sugar;
         this.tree = tree;
+        this.rep = rep;
         this.res = [];
         this.edges = [];
+    }
+
+    getNodeRepUnit(node)
+    {
+        node = node.node;
+        if (node === undefined)
+        {
+            return undefined;
+        }
+        for (var rep of this.rep)
+        {
+            for (var n of rep.nodes)
+            {
+                if (n.node.id === node.id)
+                {
+                    return rep;
+                }
+            }
+        }
+        return undefined;
     }
 
     randomString(length) {
@@ -150,12 +173,13 @@ export default class GlycoCTWriter{
         }
     }
 
-    generateArray(root)
+    generateArrays(root)
     {
         if (root === undefined)
         {
             this.res = [];
             this.edges = [];
+            this.rep = [];
             return;
         }
         var stack = [];
@@ -163,14 +187,20 @@ export default class GlycoCTWriter{
         while (stack.length > 0)
         {
             var node = stack.pop();
-            this.res.push(node);
-            if (this.res.length > 1) // if we have at least 2 nodes : add link
+            var nodeUnit = this.getNodeRepUnit(node);
+            if (nodeUnit === undefined)
             {
-                this.edges.push(this.getLink(node.parent.node.id,node.node.id));
+                this.res.push(node);
+                if (this.res.length > 1) // if we have at least 2 nodes : add link
+                {
+                    this.edges.push(this.getLink(node.parent.node.id,node.node.id));
+                }
             }
             var children = node.children;
+            var childrenUnit;
             if (children !== undefined)
             {
+                childrenUnit = this.getNodeRepUnit(children[0]);
                 if (children.length > 1)
                 {
                     children = this.sort(children);
@@ -179,6 +209,14 @@ export default class GlycoCTWriter{
                     stack.push(child);
                 }
             }
+            if (childrenUnit !== undefined)
+            {
+                if (!this.res.includes(nodeUnit))
+                {
+                    this.res.push(nodeUnit);
+                }
+            }
+
         }
         if (this.res[0].node === undefined)
         {
@@ -186,26 +224,26 @@ export default class GlycoCTWriter{
         }
     }
 
-    exportGlycoCT() {
-        var resId = {};
-        this.generateArray(this.tree);
-        var res = this.res;
-        var associatedSubs = [];
-        if (res.length === 0)
-        {
-            return "";
-        }
-        var linkNumber = 1;
+    generateRES(resId, repId, res, associatedSubs, repNumber, offset = 0) {
         var formula = "RES\n";
-        for (var i = 0; i < res.length; i++)
+        var i;
+        for (i = 0; i < res.length; i++)
         {
-            if (res[i].node instanceof Substituent)
+            if (res[i] instanceof RepeatingUnit)
             {
-                formula += this.writeSub(i,res[i].node);
+                formula += i+1+offset + "r:r" + repNumber;
+                repId[res[i].id] = [i+1+offset,repNumber];
+                repNumber++;
+            }
+            else if (res[i].node instanceof Substituent)
+            {
+                formula += this.writeSub(i+offset,res[i].node);
+                resId[res[i].node.id] = i+1+offset;
             }
             else
             {
-                formula += i+1 + "b:";
+                resId[res[i].node.id] = i+1+offset;
+                formula += i+1+offset + "b:";
                 switch(res[i].node._anomericity.name) {
                     case "ALPHA":
                         formula += "a";
@@ -218,57 +256,79 @@ export default class GlycoCTWriter{
                         break;
                 }
                 formula += "-";
-                switch(res[i].node._isomer.name) {
-                    case "L":
-                        formula += "l";
-                        break;
-                    case "D":
-                        formula += "d";
-                        break;
-                    default:
-                        formula += "x";
-                        break;
-                }
-                if (this.getMono(res[i].node._monosaccharideType.name.toLowerCase()) && res[i].node._monosaccharideType.name.length > 3)
+
+                var resName = res[i].node._monosaccharideType.name;
+                var transform;
+
+                if (resName !== "Hex" && resName !== "dHex" && resName !== "HexA" && resName !== "DeoxyHex") // Exceptions
                 {
-                    formula += res[i].node._monosaccharideType.name.toLowerCase().substring(0,3);
-                    // Add the associated sub seperately
-                    var assocSubType = this.getSub(res[i].node._monosaccharideType.name.substring(3));
-                    var assocSub = new Substituent(this.randomString(7),assocSubType);
-                    associatedSubs.push([assocSub,i+1]);
+                    switch(res[i].node._isomer.name) {
+                        case "L":
+                            formula += "l";
+                            break;
+                        case "D":
+                            formula += "d";
+                            break;
+                        default:
+                            formula += "x";
+                            break;
+                    }
+                }
+
+                if (MonosaccharideGlycoCT[resName] !== undefined) // if the residue has a defined name
+                {
+                    formula += MonosaccharideGlycoCT[resName].glycoct;
+                    transform = MonosaccharideGlycoCT[resName].transform;
                 }
                 else
                 {
-                    formula += res[i].node._monosaccharideType.name.toLowerCase();
-                }
-                formula += "-";
-                if (res[i].node._monosaccharideType.superclass) {
-                    formula += res[i].node._monosaccharideType.superclass.toUpperCase();
+                    var monoName, subName, assocSubType, assocSub;
+                    if (MonosaccharideGlycoCT[resName.substring(0,3)] !== undefined)
+                    {
+                        monoName = resName.substring(0,3);
+                        subName = resName.substring(3);
+                        formula += MonosaccharideGlycoCT[monoName].glycoct;
+                        transform = MonosaccharideGlycoCT[monoName].transform;
+                        assocSubType = this.getSub(subName);
+                        assocSub = new Substituent(this.randomString(7),assocSubType);
+                        associatedSubs.push([assocSub,i+1+offset]);
+                    }
+                    else if (MonosaccharideGlycoCT[resName.substring(0,4)] !== undefined)
+                    {
+                        monoName = resName.substring(0,4);
+                        subName = resName.substring(4);
+                        formula += MonosaccharideGlycoCT[monoName].glycoct;
+                        transform = MonosaccharideGlycoCT[monoName].transform;
+                        assocSubType = this.getSub(subName);
+                        assocSub = new Substituent(this.randomString(7),assocSubType);
+                        associatedSubs.push([assocSub,i+1+offset]);
+                    }
                 }
 
-                else
+                formula += "-";
+
+                if (resName !== "Kdn") // Ring exceptions
                 {
-                    formula += "HEX";
+                    switch (res[i].node._ringType.name) {
+                        case "P":
+                            formula += "1:5";
+                            break;
+                        case "F":
+                            formula += "1:4";
+                            break;
+                        default:
+                            formula += "x:x";
+                            break;
+                    }
                 }
 
-                formula += "-";
+                formula += transform;
 
-                switch (res[i].node._ringType.name) {
-                    case "P":
-                        formula += "1:5";
-                        break;
-                    case "F":
-                        formula += "1:4";
-                        break;
-                    default:
-                        formula += "x:x";
-                        break;
-                }
+
+
             }
 
             formula += "\n";
-
-            resId[res[i].node.id] = i+1;
 
         }
         for (var pair of associatedSubs)
@@ -279,11 +339,36 @@ export default class GlycoCTWriter{
             pair[0] = i;
         }
 
+        return [i,formula];
+    }
+
+    exportGlycoCT() {
+        var resId = {};
+        var repId = {};
+        this.generateArrays(this.tree);
+        var res = this.res;
+        var associatedSubs = [];
+        if (res.length === 0)
+        {
+            return "";
+        }
+        var repNumber = 1;
+
+
+        // RES
+        var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
+        var formula = resInfo[1];
+        var lastResId = resInfo[0];
+
+        // LIN
+        /*var linInfo = this.generateLIN(resId, repId, res, associatedSubs, repNumber);
+        formula += linInfo[1];
+        var lastLinId = resInfo[0];*/
         if (this.res.length + associatedSubs.length > 1)
         {
             formula += "LIN\n";
             var edges = this.edges;
-            for (i = 0; i < edges.length; i++)
+            for (var i = 0; i < edges.length; i++)
             {
                 var source = resId[edges[i].sourceNode.getId()];
 
@@ -302,7 +387,7 @@ export default class GlycoCTWriter{
                 }
             }
 
-            for (pair of associatedSubs)
+            for (var pair of associatedSubs)
             {
                 formula += this.writeSubLink(i, pair[1],pair[0], -1, -1);
                 i++;
@@ -314,6 +399,22 @@ export default class GlycoCTWriter{
             }
 
         }
+
+        // REP
+
+        if (this.rep.length !== 0)
+        {
+            formula += "\nREP\n";
+            for (var rep of this.rep)
+            {
+                formula += "REP" + repId[rep.id][1] + "\n";
+                resInfo = this.generateRES(resId,repId,rep.nodes,associatedSubs,repNumber,lastResId);
+                formula += resInfo[1];
+                lastResId = resInfo[0];
+            }
+        }
+
+
         return formula;
     }
 

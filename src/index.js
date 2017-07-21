@@ -18,7 +18,7 @@ import LinkedCarbon from './js/glycomics/dictionary/LinkedCarbon';
 import MonosaccharideType from './js/glycomics/dictionary/MonosaccharideType';
 import RingType from './js/glycomics/dictionary/RingType';
 import SubstituentType from './js/glycomics/dictionary/SubstituentType';
-import GlycoCTSubstituents from './js/glycomics/dictionary/GlycoCTSubstituents';
+import GlycoCTSubstituents from './js/io/glycoCT/SubstituentsGlycoCT';
 
 //Linkages
 import GlycosidicLinkage from './js/glycomics/linkages/GlycosidicLinkage';
