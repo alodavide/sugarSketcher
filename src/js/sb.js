@@ -133,11 +133,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
 	
-	var _GlycoCTWriter = __webpack_require__(20);
+	var _GlycoCTWriter = __webpack_require__(21);
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
-	var _NodeComparator = __webpack_require__(22);
+	var _NodeComparator = __webpack_require__(23);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
@@ -3268,6 +3268,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentsGlycoCT2 = _interopRequireDefault(_SubstituentsGlycoCT);
 	
+	var _MonosaccharideGlycoCT = __webpack_require__(20);
+	
+	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3354,18 +3358,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	    }, {
+	        key: 'getMonoType',
+	        value: function getMonoType(stemType, transform) {
+	            var _iteratorNormalCompletion3 = true;
+	            var _didIteratorError3 = false;
+	            var _iteratorError3 = undefined;
+	
+	            try {
+	                for (var _iterator3 = _MonosaccharideGlycoCT2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var mono = _step3.value;
+	
+	                    if (mono.glycoct === stemType && mono.transform === transform) {
+	                        return mono;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                        _iterator3.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError3) {
+	                        throw _iteratorError3;
+	                    }
+	                }
+	            }
+	
+	            return undefined;
+	        }
+	    }, {
 	        key: 'createResidue',
 	        value: function createResidue(residue, linkedCarbon, anomerCarbon) {
 	            if (residue[0].substring(residue[0].length - 1) === "b") {
 	                // monosaccharide
 	                var anomericity;
-	                var _iteratorNormalCompletion3 = true;
-	                var _didIteratorError3 = false;
-	                var _iteratorError3 = undefined;
+	                var _iteratorNormalCompletion4 = true;
+	                var _didIteratorError4 = false;
+	                var _iteratorError4 = undefined;
 	
 	                try {
-	                    for (var _iterator3 = _Anomericity2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                        var anom = _step3.value;
+	                    for (var _iterator4 = _Anomericity2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                        var anom = _step4.value;
 	
 	                        if (residue[1].substring(0, 1) === "a") {
 	                            anomericity = _Anomericity2.default.ALPHA;
@@ -3373,39 +3409,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            anomericity = _Anomericity2.default.BETA;
 	                        } else {
 	                            anomericity = _Anomericity2.default.UNDEFINED;
-	                        }
-	                    }
-	                } catch (err) {
-	                    _didIteratorError3 = true;
-	                    _iteratorError3 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                            _iterator3.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError3) {
-	                            throw _iteratorError3;
-	                        }
-	                    }
-	                }
-	
-	                var dashSplit = residue[1].split("-");
-	                var stemType = dashSplit[1];
-	                var isomer;
-	                var _iteratorNormalCompletion4 = true;
-	                var _didIteratorError4 = false;
-	                var _iteratorError4 = undefined;
-	
-	                try {
-	                    for (var _iterator4 = _Isomer2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                        var isom = _step4.value;
-	
-	                        if (stemType.substring(0, 1) === "x") {
-	                            isomer = _Isomer2.default.UNDEFINED;
-	                        }
-	                        if (stemType.substring(0, 1) === isom.name.toLowerCase()) {
-	                            isomer = isom;
 	                        }
 	                    }
 	                } catch (err) {
@@ -3423,17 +3426,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                stemType = stemType.substring(1);
+	                var dashSplit = residue[1].split("-");
+	                var stemType = dashSplit[1];
+	                var isomer;
 	                var _iteratorNormalCompletion5 = true;
 	                var _didIteratorError5 = false;
 	                var _iteratorError5 = undefined;
 	
 	                try {
-	                    for (var _iterator5 = _MonosaccharideType2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                        var mono = _step5.value;
+	                    for (var _iterator5 = _Isomer2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                        var isom = _step5.value;
 	
-	                        if (mono.name.toLowerCase() === stemType) {
-	                            stemType = mono;
+	                        if (stemType.substring(0, 1) === "x") {
+	                            isomer = _Isomer2.default.UNDEFINED;
+	                        }
+	                        if (stemType.substring(0, 1) === isom.name.toLowerCase()) {
+	                            isomer = isom;
 	                        }
 	                    }
 	                } catch (err) {
@@ -3451,7 +3459,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var superclass = dashSplit[2];
+	                stemType = stemType.substring(1);
+	                var glycoct = residue[1].substring(3, residue[1].length - 2);
+	                var firstTransform = residue[2].split("|");
+	                var transform = "";
+	                if (firstTransform.length > 1) // at least one transformation
+	                    {
+	                        transform = "|" + firstTransform[1];
+	                        for (var k = 3; k < residue.length; k++) {
+	                            transform += ":" + residue[k];
+	                        }
+	                    }
+	                var monoType = this.getMonoType(glycoct, transform);
+	                if (monoType === undefined) {
+	                    // if monosaccharide is amond the simple HEX cases
+	                    glycoct = residue[1].substring(2, residue[1].length - 2);
+	                    monoType = this.getMonoType(glycoct, transform);
+	                    if (monoType === undefined) {
+	                        // if monosaccharide is among the exceptions for the ring type
+	                        glycoct = residue[1].substring(3) + ":" + firstTransform[0];
+	                        monoType = this.getMonoType(glycoct, transform);
+	                        if (monoType === undefined) {
+	                            monoType = _MonosaccharideGlycoCT2.default.Unknown;
+	                        }
+	                    }
+	                }
+	                monoType = _MonosaccharideType2.default[monoType.name];
 	                var ringStart = dashSplit[3];
 	                var ringStop = residue[2].substring(0, 1);
 	                var ringType;
@@ -3466,7 +3499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	
 	                var nodeId = this.randomString(7);
-	                var node = new _Monosaccharide2.default(nodeId, stemType, anomericity, isomer, ringType);
+	                var node = new _Monosaccharide2.default(nodeId, monoType, anomericity, isomer, ringType);
 	                if (linkedCarbon === "r" && anomerCarbon === "r") // Root
 	                    {
 	                        this.sugar = new _Sugar2.default("Sugar", node);
@@ -3772,6 +3805,209 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
+	var _enumify = __webpack_require__(5);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 21/07/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var MonosaccharideGlycoCT = function (_Enum) {
+	    _inherits(MonosaccharideGlycoCT, _Enum);
+	
+	    function MonosaccharideGlycoCT() {
+	        _classCallCheck(this, MonosaccharideGlycoCT);
+	
+	        return _possibleConstructorReturn(this, (MonosaccharideGlycoCT.__proto__ || Object.getPrototypeOf(MonosaccharideGlycoCT)).apply(this, arguments));
+	    }
+	
+	    return MonosaccharideGlycoCT;
+	}(_enumify.Enum);
+	
+	exports.default = MonosaccharideGlycoCT;
+	
+	
+	MonosaccharideGlycoCT.initEnum({
+	    Hex: {
+	        glycoct: "HEX",
+	        transform: ""
+	    },
+	
+	    Glc: {
+	        glycoct: "glc-HEX",
+	        transform: ""
+	    },
+	
+	    Man: {
+	        glycoct: "man-HEX",
+	        transform: ""
+	    },
+	
+	    Gal: {
+	        glycoct: "gal-HEX",
+	        transform: ""
+	    },
+	
+	    Gul: {
+	        glycoct: "gul-HEX",
+	        transform: ""
+	    },
+	
+	    Alt: {
+	        glycoct: "alt-HEX",
+	        transform: ""
+	    },
+	
+	    All: {
+	        glycoct: "all-HEX",
+	        transform: ""
+	    },
+	
+	    Tal: {
+	        glycoct: "tal-HEX",
+	        transform: ""
+	    },
+	
+	    Ara: {
+	        glycoct: "ara-PEN",
+	        transform: ""
+	    },
+	
+	    Bac: {
+	        glycoct: "glc-HEX",
+	        transform: "|2:d|4:d|6:d"
+	    },
+	
+	    dAlt: {
+	        glycoct: "alt-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    DeoxyHex: {
+	        glycoct: "HEX",
+	        transform: "|0:d"
+	    },
+	
+	    Fru: {
+	        glycoct: "ara-PEN",
+	        transform: "|2:keto"
+	    },
+	
+	    Fuc: {
+	        glycoct: "gal-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    HexA: {
+	        glycoct: "HEX",
+	        transform: "|6:a"
+	    },
+	
+	    GlcA: {
+	        glycoct: "glc-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    ManA: {
+	        glycoct: "man-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    GalA: {
+	        glycoct: "gal-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    GulA: {
+	        glycoct: "gul-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    AltA: {
+	        glycoct: "alt-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    AllA: {
+	        glycoct: "all-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    TalA: {
+	        glycoct: "tal-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    Qui: {
+	        glycoct: "glc-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    dHex: {
+	        glycoct: "HEX",
+	        transform: "|6:d"
+	    },
+	
+	    Ido: {
+	        glycoct: "ido-HEX",
+	        transform: ""
+	    },
+	
+	    IdoA: {
+	        glycoct: "ido-HEX",
+	        transform: "|6:a"
+	    },
+	
+	    Kdn: {
+	        glycoct: "gro-dgal-NON-2:6",
+	        transform: "|1:a|2:keto|3:d"
+	    },
+	
+	    Pent: {
+	        glycoct: "PEN-1:4",
+	        transform: ""
+	    },
+	
+	    Rha: {
+	        glycoct: "man-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    SixdAlt: {
+	        glycoct: "alt-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    SixdTal: {
+	        glycoct: "tal-HEX",
+	        transform: "|6:d"
+	    },
+	
+	    Xyl: {
+	        glycoct: "xyl-PEN",
+	        transform: ""
+	    },
+	
+	    Unknown: {
+	        glycoct: "unknown",
+	        transform: ""
+	    }
+	
+	});
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 05/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
@@ -3796,7 +4032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _EdgeComparator = __webpack_require__(21);
+	var _EdgeComparator = __webpack_require__(22);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -3804,7 +4040,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
-	var _MonosaccharideGlycoCT = __webpack_require__(23);
+	var _MonosaccharideGlycoCT = __webpack_require__(20);
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
@@ -4253,10 +4489,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
-	                    formula += "-";
-	
 	                    if (resName !== "Kdn") // Ring exceptions
 	                        {
+	                            formula += "-";
 	                            switch (res[i].node._ringType.name) {
 	                                case "P":
 	                                    formula += "1:5";
@@ -4420,7 +4655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTWriter;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4437,7 +4672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 10/07/2017.
 	 */
 	
-	var _NodeComparator = __webpack_require__(22);
+	var _NodeComparator = __webpack_require__(23);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
@@ -4523,7 +4758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EdgeComparator;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4536,7 +4771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 10/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _EdgeComparator = __webpack_require__(21);
+	var _EdgeComparator = __webpack_require__(22);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -4759,191 +4994,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = NodeComparator;
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _MonosaccharideGlycoC;
-	
-	var _enumify = __webpack_require__(5);
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 21/07/2017.
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-	
-	var MonosaccharideGlycoCT = function (_Enum) {
-	    _inherits(MonosaccharideGlycoCT, _Enum);
-	
-	    function MonosaccharideGlycoCT() {
-	        _classCallCheck(this, MonosaccharideGlycoCT);
-	
-	        return _possibleConstructorReturn(this, (MonosaccharideGlycoCT.__proto__ || Object.getPrototypeOf(MonosaccharideGlycoCT)).apply(this, arguments));
-	    }
-	
-	    return MonosaccharideGlycoCT;
-	}(_enumify.Enum);
-	
-	exports.default = MonosaccharideGlycoCT;
-	
-	
-	MonosaccharideGlycoCT.initEnum((_MonosaccharideGlycoC = {
-	    Hex: {
-	        glycoct: "HEX",
-	        transform: ""
-	    },
-	
-	    Glc: {
-	        glycoct: "glc-HEX",
-	        transform: ""
-	    },
-	
-	    Man: {
-	        glycoct: "man-HEX",
-	        transform: ""
-	    },
-	
-	    Gal: {
-	        glycoct: "gal-HEX",
-	        transform: ""
-	    },
-	
-	    Gul: {
-	        glycoct: "gul-HEX",
-	        transform: ""
-	    },
-	
-	    Alt: {
-	        glycoct: "alt-HEX",
-	        transform: ""
-	    },
-	
-	    All: {
-	        glycoct: "all-HEX",
-	        transform: ""
-	    },
-	
-	    Tal: {
-	        glycoct: "tal-HEX",
-	        transform: ""
-	    },
-	
-	    Ido: {
-	        glycoct: "ido-HEX",
-	        transform: ""
-	    },
-	
-	    Ara: {
-	        glycoct: "ara-PEN",
-	        transform: ""
-	    },
-	
-	    Bac: {
-	        glycoct: "glc-HEX",
-	        transform: "|2:d|4:d|6:d"
-	    },
-	
-	    dAlt: {
-	        glycoct: "alt-HEX",
-	        transform: "|6:d"
-	    },
-	
-	    DeoxyHex: {
-	        glycoct: "HEX",
-	        transform: "|0:d"
-	    },
-	
-	    Fru: {
-	        glycoct: "ara-PEN",
-	        transform: "|2:keto"
-	    },
-	
-	    Fuc: {
-	        glycoct: "gal-HEX",
-	        transform: "|6:d"
-	    },
-	
-	    HexA: {
-	        glycoct: "HEX",
-	        transform: "|6:a"
-	    },
-	
-	    GlcA: {
-	        glycoct: "glc-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    ManA: {
-	        glycoct: "man-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    GalA: {
-	        glycoct: "gal-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    GulA: {
-	        glycoct: "gul-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    AltA: {
-	        glycoct: "alt-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    AllA: {
-	        glycoct: "all-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    TalA: {
-	        glycoct: "tal-HEX",
-	        transform: "|6:a"
-	    },
-	
-	    Qui: {
-	        glycoct: "glc-HEX",
-	        transform: "|6:d"
-	    },
-	
-	    dHex: {
-	        glycoct: "HEX",
-	        transform: "|6:d"
-	    }
-	
-	}, _defineProperty(_MonosaccharideGlycoC, "Ido", {
-	    glycoct: "ido-HEX",
-	    transform: ""
-	}), _defineProperty(_MonosaccharideGlycoC, "IdoA", {
-	    glycoct: "ido-HEX",
-	    transform: "|6:a"
-	}), _defineProperty(_MonosaccharideGlycoC, "Kdn", {
-	    glycoct: "gro-dgal-NON-2:6",
-	    transform: "|1:a|2:keto|3:d"
-	}), _defineProperty(_MonosaccharideGlycoC, "Pent", {
-	    glycoct: "PEN-1:4",
-	    transform: ""
-	}), _defineProperty(_MonosaccharideGlycoC, "Rha", {
-	    glycoct: "man-HEX",
-	    transform: "|6:d"
-	}), _defineProperty(_MonosaccharideGlycoC, "Xyl", {
-	    glycoct: "xyl-PEN",
-	    transform: ""
-	}), _MonosaccharideGlycoC));
 
 /***/ })
 /******/ ])

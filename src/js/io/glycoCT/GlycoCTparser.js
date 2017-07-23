@@ -15,6 +15,7 @@ import LinkedCarbon from "../../glycomics/dictionary/LinkedCarbon";
 import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import GlycoCTSubstituents from "./SubstituentsGlycoCT";
+import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
 
 export default class GlycoCTParser{
 
@@ -55,6 +56,18 @@ export default class GlycoCTParser{
         }
     }
 
+    getMonoType(stemType, transform)
+    {
+        for (var mono of MonosaccharideGlycoCT)
+        {
+            if (mono.glycoct === stemType && mono.transform === transform)
+            {
+                return mono;
+            }
+        }
+        return undefined;
+    }
+
     createResidue(residue, linkedCarbon, anomerCarbon)
     {
         if (residue[0].substring(residue[0].length-1) === "b") { // monosaccharide
@@ -89,14 +102,35 @@ export default class GlycoCTParser{
                 }
             }
             stemType = stemType.substring(1);
-            for (var mono of MonosaccharideType)
+            var glycoct = residue[1].substring(3,residue[1].length-2);
+            var firstTransform = residue[2].split("|");
+            var transform = "";
+            if (firstTransform.length > 1) // at least one transformation
             {
-                if (mono.name.toLowerCase() === stemType)
+                transform = "|" + firstTransform[1];
+                for (var k = 3; k < residue.length; k++)
                 {
-                    stemType = mono;
+                    transform += ":"+residue[k];
                 }
             }
-            var superclass = dashSplit[2];
+            var monoType = this.getMonoType(glycoct, transform);
+            if (monoType === undefined)
+            {
+                // if monosaccharide is amond the simple HEX cases
+                glycoct = residue[1].substring(2,residue[1].length-2);
+                monoType = this.getMonoType(glycoct, transform);
+                if (monoType === undefined)
+                {
+                    // if monosaccharide is among the exceptions for the ring type
+                    glycoct = residue[1].substring(3) + ":" + firstTransform[0];
+                    monoType = this.getMonoType(glycoct, transform);
+                    if (monoType === undefined)
+                    {
+                        monoType = MonosaccharideGlycoCT.Unknown;
+                    }
+                }
+            }
+            monoType = MonosaccharideType[monoType.name];
             var ringStart = dashSplit[3];
             var ringStop = residue[2].substring(0, 1);
             var ringType;
@@ -118,7 +152,7 @@ export default class GlycoCTParser{
             }
 
             var nodeId = this.randomString(7);
-            var node = new Monosaccharide(nodeId,stemType, anomericity, isomer, ringType);
+            var node = new Monosaccharide(nodeId,monoType, anomericity, isomer, ringType);
             if (linkedCarbon === "r" && anomerCarbon === "r") // Root
             {
                 this.sugar = new Sugar("Sugar", node);

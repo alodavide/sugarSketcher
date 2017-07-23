@@ -305,10 +305,11 @@ export default class GlycoCTWriter{
                     }
                 }
 
-                formula += "-";
+
 
                 if (resName !== "Kdn") // Ring exceptions
                 {
+                    formula += "-";
                     switch (res[i].node._ringType.name) {
                         case "P":
                             formula += "1:5";

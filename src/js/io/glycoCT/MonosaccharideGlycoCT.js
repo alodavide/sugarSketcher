@@ -166,6 +166,11 @@ MonosaccharideGlycoCT.initEnum({
     Xyl: {
         glycoct: "xyl-PEN",
         transform: ""
+    },
+
+    Unknown: {
+        glycoct: "unknown",
+        transform: ""
     }
 
 });
