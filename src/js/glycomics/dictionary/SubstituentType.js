@@ -57,7 +57,7 @@ SubstituentType.initEnum({
         label: 'NFormyl'
     },
     NGlycolyl: {
-        label: 'NGlycolyl'
+        label: 'Gc'
     },
     NMethyl: {
         label: 'NMethyl'

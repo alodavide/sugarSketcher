@@ -258,9 +258,29 @@ export default class GlycoCTWriter{
                 formula += "-";
 
                 var resName = res[i].node._monosaccharideType.name;
+
+                // Nonulosonates exceptions:
+                switch (resName)
+                {
+                    case "Neu5Ac":
+                        resName = "KdnNAc";
+                        break;
+                    case "Neu5Gc":
+                        resName = "KdnGc";
+                        break;
+                    case "Neu":
+                        resName = "KdnN";
+                        break;
+                    case "MurNGc":
+                        resName = "MurGc";
+                        break;
+                }
+
                 var transform;
 
-                if (resName !== "Hex" && resName !== "dHex" && resName !== "HexA" && resName !== "DeoxyHex") // Exceptions
+                const isoExceptions = ["Hex","dHex","HexA","ddHex","HexNAc","Oli","Abe","Col","Nonu","LDManHep","DDManHep"];
+
+                if (!isoExceptions.includes(resName)) // Exceptions
                 {
                     switch(res[i].node._isomer.name) {
                         case "L":
@@ -306,8 +326,8 @@ export default class GlycoCTWriter{
                 }
 
 
-
-                if (resName !== "Kdn") // Ring exceptions
+                const ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
+                if (!ringExceptions.includes(resName)) // Ring exceptions
                 {
                     formula += "-";
                     switch (res[i].node._ringType.name) {

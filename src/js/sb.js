@@ -1837,7 +1837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        color: '#FF0000',
 	        bisected: true
 	    },
-	    Di_dHex: {
+	    ddHex: {
 	        shape: 'rectangle',
 	        color: '#FFFFFF',
 	        bisected: false
@@ -2135,7 +2135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'NFormyl'
 	    },
 	    NGlycolyl: {
-	        label: 'NGlycolyl'
+	        label: 'Gc'
 	    },
 	    NMethyl: {
 	        label: 'NMethyl'
@@ -2222,6 +2222,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    N: {
 	        glycoct: "amino"
+	    },
+	    NGlycolyl: {
+	        glycoct: "n-glycolyl"
 	    }
 	});
 
@@ -3332,6 +3335,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getMono',
 	        value: function getMono(name) {
+	            switch (name) {
+	                case "KdnNAc":
+	                    return _MonosaccharideType2.default.Neu5Ac;
+	                case "KdnGc":
+	                    return _MonosaccharideType2.default.Neu5Gc;
+	                case "KdnN":
+	                    return _MonosaccharideType2.default.Neu;
+	            }
 	            var _iteratorNormalCompletion2 = true;
 	            var _didIteratorError2 = false;
 	            var _iteratorError2 = undefined;
@@ -3485,7 +3496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	                monoType = _MonosaccharideType2.default[monoType.name];
-	                var ringStart = dashSplit[3];
+	                var ringStart = dashSplit[2];
 	                var ringStop = residue[2].substring(0, 1);
 	                var ringType;
 	                if (ringStart === "1") {
@@ -3658,7 +3669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
-	                var subId = this.randomString(7);
+	                var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
 	                var substituent = new _Substituent2.default(subId, substituentType);
 	                var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
 	                if (newType) {
@@ -3876,6 +3887,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        transform: ""
 	    },
 	
+	    Lyx: {
+	        glycoct: "lyx-PEN",
+	        transform: ""
+	    },
+	
+	    Rib: {
+	        glycoct: "rib-PEN",
+	        transform: ""
+	    },
+	
 	    Bac: {
 	        glycoct: "glc-HEX",
 	        transform: "|2:d|4:d|6:d"
@@ -3884,16 +3905,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    dAlt: {
 	        glycoct: "alt-HEX",
 	        transform: "|6:d"
-	    },
-	
-	    DeoxyHex: {
-	        glycoct: "HEX",
-	        transform: "|0:d"
-	    },
-	
-	    Fru: {
-	        glycoct: "ara-PEN",
-	        transform: "|2:keto"
 	    },
 	
 	    Fuc: {
@@ -3961,12 +3972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        transform: "|6:a"
 	    },
 	
-	    Kdn: {
-	        glycoct: "gro-dgal-NON-2:6",
-	        transform: "|1:a|2:keto|3:d"
-	    },
-	
-	    Pent: {
+	    Pen: {
 	        glycoct: "PEN-1:4",
 	        transform: ""
 	    },
@@ -3991,8 +3997,109 @@ return /******/ (function(modules) { // webpackBootstrap
 	        transform: ""
 	    },
 	
+	    ddHex: {
+	        glycoct: "HEX",
+	        transform: "|2:d|6:d"
+	    },
+	
 	    Unknown: {
 	        glycoct: "unknown",
+	        transform: ""
+	    },
+	
+	    Oli: {
+	        glycoct: "PEN",
+	        transform: "|3:d|6:d"
+	    },
+	
+	    Tyv: {
+	        glycoct: "ara-HEX",
+	        transform: "|3:d|6:d"
+	    },
+	
+	    Abe: {
+	        glycoct: "dxyl-HEX",
+	        transform: "|3:d|6:d"
+	    },
+	
+	    Par: {
+	        glycoct: "rib-HEX",
+	        transform: "|3:d|6:d"
+	    },
+	
+	    Col: {
+	        glycoct: "lxyl-HEX",
+	        transform: "|3:d|6:d"
+	    },
+	
+	    Dig: {
+	        glycoct: "rib-HEX",
+	        transform: "|2:d|6:d"
+	    },
+	
+	    Nonu: {
+	        glycoct: "NON",
+	        transform: ""
+	    },
+	
+	    Kdn: {
+	        glycoct: "gro-dgal-NON-2:6",
+	        transform: "|1:a|2:keto|3:d"
+	    },
+	
+	    Kdo: {
+	        glycoct: "man-OCT-2:6",
+	        transform: "|1:a|2:keto|3:d"
+	    },
+	
+	    Fru: {
+	        glycoct: "ara-HEX-2:5",
+	        transform: "|2:keto"
+	    },
+	
+	    // GlycoCT not found
+	    LDManHep: {
+	        glycoct: "ldmanhep-HEX",
+	        transform: ""
+	    },
+	
+	    DDManHep: {
+	        glycoct: "ddmanhep-HEX",
+	        transform: ""
+	    },
+	
+	    Dha: {
+	        glycoct: "dha-HEX",
+	        transform: ""
+	    },
+	
+	    Mur: {
+	        glycoct: "mur-HEX",
+	        transform: ""
+	    },
+	
+	    Sia: {
+	        glycoct: "sia-HEX",
+	        transform: ""
+	    },
+	
+	    Api: {
+	        glycoct: "api-PEN",
+	        transform: ""
+	    },
+	
+	    Tag: {
+	        glycoct: "tag-PEN",
+	        transform: ""
+	    },
+	
+	    Sor: {
+	        glycoct: "sor-PEN",
+	        transform: ""
+	    },
+	
+	    Psi: {
+	        glycoct: "psi-PEN",
 	        transform: ""
 	    }
 	
@@ -4447,9 +4554,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    formula += "-";
 	
 	                    var resName = res[i].node._monosaccharideType.name;
+	
+	                    // Nonulosonates exceptions:
+	                    switch (resName) {
+	                        case "Neu5Ac":
+	                            resName = "KdnNAc";
+	                            break;
+	                        case "Neu5Gc":
+	                            resName = "KdnGc";
+	                            break;
+	                        case "Neu":
+	                            resName = "KdnN";
+	                            break;
+	                        case "MurNGc":
+	                            resName = "MurGc";
+	                            break;
+	                    }
+	
 	                    var transform;
 	
-	                    if (resName !== "Hex" && resName !== "dHex" && resName !== "HexA" && resName !== "DeoxyHex") // Exceptions
+	                    var isoExceptions = ["Hex", "dHex", "HexA", "ddHex", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
+	
+	                    if (!isoExceptions.includes(resName)) // Exceptions
 	                        {
 	                            switch (res[i].node._isomer.name) {
 	                                case "L":
@@ -4489,7 +4615,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
-	                    if (resName !== "Kdn") // Ring exceptions
+	                    var ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
+	                    if (!ringExceptions.includes(resName)) // Ring exceptions
 	                        {
 	                            formula += "-";
 	                            switch (res[i].node._ringType.name) {

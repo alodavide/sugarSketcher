@@ -828,8 +828,6 @@ test('Builtin indexes', function() {
     var g = new Graph.graph();
     g.read(graph);
     var children = g.getChildren('n0');
-    console.log(children[0]);
-    console.log(children[1]);
     deepEqual(
         children.length,
         2,

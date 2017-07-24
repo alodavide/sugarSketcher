@@ -49,6 +49,15 @@ export default class GlycoCTParser{
 
     getMono(name)
     {
+        switch (name)
+        {
+            case "KdnNAc":
+                return MonosaccharideType.Neu5Ac;
+            case "KdnGc":
+                return MonosaccharideType.Neu5Gc;
+            case "KdnN":
+                return MonosaccharideType.Neu;
+        }
         for (var mono of MonosaccharideType)
         {
             if (mono.name === name)
@@ -131,7 +140,7 @@ export default class GlycoCTParser{
                 }
             }
             monoType = MonosaccharideType[monoType.name];
-            var ringStart = dashSplit[3];
+            var ringStart = dashSplit[2];
             var ringStop = residue[2].substring(0, 1);
             var ringType;
             if (ringStart === "1")
@@ -212,7 +221,7 @@ export default class GlycoCTParser{
                     lcs = linkedCS;
                 }
             }
-            var subId = this.randomString(7);
+            var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
             var substituent = new Substituent(subId,substituentType);
             var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
             if (newType) {

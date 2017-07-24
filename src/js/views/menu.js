@@ -569,7 +569,7 @@ document.onkeydown = function (e) {
             deleteNode(clickedNode);
         }
     }
-    else if (e.keyCode == 13) { // enter
+    else if (e.keyCode == 82) { // r key
         var nodes = [clickedNode].concat(selectedNodes);
         if (!isRepeated(nodes))
         {

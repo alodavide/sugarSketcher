@@ -247,7 +247,7 @@ MonosaccharideType.initEnum({
         color: '#FF0000',
         bisected: true
     },
-    Di_dHex: {
+    ddHex: {
         shape: 'rectangle',
         color: '#FFFFFF',
         bisected: false
@@ -416,11 +416,6 @@ MonosaccharideType.initEnum({
     Psi: {
         shape: 'Pentagon',
         color: '#FF87C2',
-        bisected: false
-    },
-    UNDEFINED: {
-        shape: 'undefined',
-        color: 'undefined',
         bisected: false
     }
 });

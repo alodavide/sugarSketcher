@@ -53,6 +53,16 @@ MonosaccharideGlycoCT.initEnum({
         transform: ""
     },
 
+    Lyx: {
+        glycoct: "lyx-PEN",
+        transform: ""
+    },
+
+    Rib: {
+        glycoct: "rib-PEN",
+        transform: ""
+    },
+
     Bac: {
         glycoct: "glc-HEX",
         transform: "|2:d|4:d|6:d"
@@ -61,16 +71,6 @@ MonosaccharideGlycoCT.initEnum({
     dAlt: {
         glycoct: "alt-HEX",
         transform: "|6:d"
-    },
-
-    DeoxyHex: {
-        glycoct: "HEX",
-        transform: "|0:d"
-    },
-
-    Fru: {
-        glycoct: "ara-PEN",
-        transform: "|2:keto"
     },
 
     Fuc: {
@@ -138,12 +138,7 @@ MonosaccharideGlycoCT.initEnum({
         transform: "|6:a"
     },
 
-    Kdn: {
-        glycoct: "gro-dgal-NON-2:6",
-        transform: "|1:a|2:keto|3:d"
-    },
-
-    Pent: {
+    Pen: {
         glycoct: "PEN-1:4",
         transform: ""
     },
@@ -168,8 +163,113 @@ MonosaccharideGlycoCT.initEnum({
         transform: ""
     },
 
+    ddHex: {
+        glycoct: "HEX",
+        transform: "|2:d|6:d"
+    },
+
     Unknown: {
         glycoct: "unknown",
+        transform: ""
+    },
+
+    Oli: {
+        glycoct: "PEN",
+        transform: "|3:d|6:d"
+    },
+
+    Tyv: {
+        glycoct: "ara-HEX",
+        transform: "|3:d|6:d"
+    },
+
+    Abe: {
+        glycoct: "dxyl-HEX",
+        transform: "|3:d|6:d"
+    },
+
+    Par: {
+        glycoct: "rib-HEX",
+        transform: "|3:d|6:d"
+    },
+
+    Col: {
+        glycoct: "lxyl-HEX",
+        transform: "|3:d|6:d"
+    },
+
+    Dig: {
+        glycoct: "rib-HEX",
+        transform: "|2:d|6:d"
+    },
+
+    Nonu: {
+        glycoct: "NON",
+        transform: ""
+    },
+
+    Kdn: {
+        glycoct: "gro-dgal-NON-2:6",
+        transform: "|1:a|2:keto|3:d"
+    },
+
+    Kdo: {
+        glycoct: "man-OCT-2:6",
+        transform: "|1:a|2:keto|3:d"
+    },
+
+    Fru: {
+        glycoct: "ara-HEX-2:5",
+        transform: "|2:keto"
+    },
+
+    // GlycoCT not found
+    Assigned: {
+        glycoct: "assigned-PEN",
+        transform: ""
+    },
+    LDManHep: {
+        glycoct: "ldmanhep-HEX",
+        transform: ""
+    },
+
+    DDManHep: {
+        glycoct: "ddmanhep-HEX",
+        transform: ""
+    },
+
+    Dha: {
+        glycoct: "dha-HEX",
+        transform: ""
+    },
+
+    Mur: {
+        glycoct: "mur-HEX",
+        transform: ""
+    },
+
+    Sia: {
+        glycoct: "sia-HEX",
+        transform: ""
+    },
+
+    Api: {
+        glycoct: "api-PEN",
+        transform: ""
+    },
+
+    Tag: {
+        glycoct: "tag-PEN",
+        transform: ""
+    },
+
+    Sor: {
+        glycoct: "sor-PEN",
+        transform: ""
+    },
+
+    Psi: {
+        glycoct: "psi-PEN",
         transform: ""
     }
 

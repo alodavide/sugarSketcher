@@ -13,5 +13,8 @@ GlycoCTSubstituents.initEnum({
     },
     N: {
         glycoct: "amino"
+    },
+    NGlycolyl: {
+        glycoct: "n-glycolyl"
     }
 });
