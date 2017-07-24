@@ -53,7 +53,7 @@ export default class GlycoCTParser{
         {
             case "KdnNAc":
                 return MonosaccharideType.Neu5Ac;
-            case "KdnGc":
+            case "KdnNGc":
                 return MonosaccharideType.Neu5Gc;
             case "KdnN":
                 return MonosaccharideType.Neu;

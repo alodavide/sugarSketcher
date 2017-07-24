@@ -485,9 +485,14 @@ function updateMenu(chosenDivision) {
                 }
                 var color = d.display_division;
                 var monoType = getMonoTypeWithColorAndShape(color, shape, isBisected);
-                var labelMono = monoType.toString().split(".")[1];
-                if (labelMono == "UNDEFINED") {
+                var labelMono;
+                if (monoType == undefined)
+                {
                     labelMono = "";
+                }
+                else
+                {
+                    labelMono = monoType.name;
                 }
                 return labelMono;
             });

@@ -1927,6 +1927,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        color: '#977335',
 	        bisected: false
 	    },
+	    Sia: {
+	        shape: 'diamond',
+	        color: '#FF0000',
+	        bisected: false
+	    },
 	
 	    Unknown: {
 	        shape: 'Hexagon',
@@ -2002,11 +2007,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Psi: {
 	        shape: 'Pentagon',
 	        color: '#FF87C2',
-	        bisected: false
-	    },
-	    UNDEFINED: {
-	        shape: 'undefined',
-	        color: 'undefined',
 	        bisected: false
 	    }
 	});
@@ -2135,7 +2135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'NFormyl'
 	    },
 	    NGlycolyl: {
-	        label: 'Gc'
+	        label: 'NGc'
 	    },
 	    NMethyl: {
 	        label: 'NMethyl'
@@ -3335,10 +3335,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getMono',
 	        value: function getMono(name) {
+	            console.log(name);
 	            switch (name) {
 	                case "KdnNAc":
 	                    return _MonosaccharideType2.default.Neu5Ac;
-	                case "KdnGc":
+	                case "KdnNGc":
 	                    return _MonosaccharideType2.default.Neu5Gc;
 	                case "KdnN":
 	                    return _MonosaccharideType2.default.Neu;
@@ -3902,11 +3903,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        transform: "|2:d|4:d|6:d"
 	    },
 	
-	    dAlt: {
-	        glycoct: "alt-HEX",
-	        transform: "|6:d"
-	    },
-	
 	    Fuc: {
 	        glycoct: "gal-HEX",
 	        transform: "|6:d"
@@ -4058,6 +4054,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	
 	    // GlycoCT not found
+	    Assigned: {
+	        glycoct: "assigned-PEN",
+	        transform: ""
+	    },
 	    LDManHep: {
 	        glycoct: "ldmanhep-HEX",
 	        transform: ""
@@ -4150,6 +4150,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _MonosaccharideGlycoCT = __webpack_require__(20);
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
+	
+	var _SubstituentLinkage = __webpack_require__(14);
+	
+	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -4247,6 +4251,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "getSub",
 	        value: function getSub(label) {
+	            if (label === "Gc") {
+	                return _SubstituentType2.default.NGlycolyl;
+	            }
 	            var _iteratorNormalCompletion3 = true;
 	            var _didIteratorError3 = false;
 	            var _iteratorError3 = undefined;
@@ -4534,6 +4541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    formula += i + 1 + offset + "r:r" + repNumber;
 	                    repId[res[i].id] = [i + 1 + offset, repNumber];
 	                    repNumber++;
+	                    formula += "\n";
 	                } else if (res[i].node instanceof _Substituent2.default) {
 	                    formula += this.writeSub(i + offset, res[i].node);
 	                    resId[res[i].node.id] = i + 1 + offset;
@@ -4573,7 +4581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    var transform;
 	
-	                    var isoExceptions = ["Hex", "dHex", "HexA", "ddHex", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
+	                    var isoExceptions = ["Hex", "dHex", "HexA", "ddHex", "HexNAc", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
 	
 	                    if (!isoExceptions.includes(resName)) // Exceptions
 	                        {
@@ -4633,9 +4641,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	
 	                    formula += transform;
-	                }
 	
-	                formula += "\n";
+	                    formula += "\n";
+	                }
 	            }
 	            var _iteratorNormalCompletion9 = true;
 	            var _didIteratorError9 = false;
@@ -4696,14 +4704,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var source = resId[edges[i].sourceNode.getId()];
 	
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-	                    var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+	                    var anomerCarbon = edges[i] instanceof _SubstituentLinkage2.default || edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
 	
 	                    var target = resId[edges[i].targetNode.getId()];
 	
 	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
 	                        formula += this.writeMonoLink(i + 1, source, target, linkedCarbon, anomerCarbon);
 	                    } else {
-	                        formula += this.writeSubLink(i + 1, source, target, linkedCarbon, anomerCarbon);
+	                        formula += this.writeSubLink(i, source, target, linkedCarbon, anomerCarbon);
 	                    }
 	                }
 	
@@ -4732,17 +4740,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	                }
-	
-	                if (formula.substring(formula.length - 1) == '\n') // Remove final \n
-	                    {
-	                        formula = formula.substring(0, formula.length - 1);
-	                    }
 	            }
 	
 	            // REP
 	
 	            if (this.rep.length !== 0) {
-	                formula += "\nREP\n";
+	                formula += "REP\n";
 	                var _iteratorNormalCompletion11 = true;
 	                var _didIteratorError11 = false;
 	                var _iteratorError11 = undefined;
@@ -4771,6 +4774,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
+	
+	            if (formula.substring(formula.length - 1) == '\n') // Remove final \n
+	                {
+	                    formula = formula.substring(0, formula.length - 1);
+	                }
 	
 	            return formula;
 	        }

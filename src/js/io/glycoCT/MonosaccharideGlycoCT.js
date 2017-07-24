@@ -68,11 +68,6 @@ MonosaccharideGlycoCT.initEnum({
         transform: "|2:d|4:d|6:d"
     },
 
-    dAlt: {
-        glycoct: "alt-HEX",
-        transform: "|6:d"
-    },
-
     Fuc: {
         glycoct: "gal-HEX",
         transform: "|6:d"

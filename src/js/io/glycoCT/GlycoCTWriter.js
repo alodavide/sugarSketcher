@@ -10,6 +10,7 @@ import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
 import EdgeComparator from "../EdgeComparator";
 import RepeatingUnit from "../../glycomics/RepeatingUnit";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
+import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 
 export default class GlycoCTWriter{
 
@@ -58,6 +59,10 @@ export default class GlycoCTWriter{
 
     getSub(label)
     {
+        if (label === "Gc")
+        {
+            return SubstituentType.NGlycolyl;
+        }
         for (var sub of SubstituentType)
         {
             if (sub.label.toLowerCase() === label.toLowerCase())
@@ -234,6 +239,7 @@ export default class GlycoCTWriter{
                 formula += i+1+offset + "r:r" + repNumber;
                 repId[res[i].id] = [i+1+offset,repNumber];
                 repNumber++;
+                formula += "\n";
             }
             else if (res[i].node instanceof Substituent)
             {
@@ -346,10 +352,8 @@ export default class GlycoCTWriter{
                 formula += transform;
 
 
-
+                formula += "\n";
             }
-
-            formula += "\n";
 
         }
         for (var pair of associatedSubs)
@@ -394,7 +398,7 @@ export default class GlycoCTWriter{
                 var source = resId[edges[i].sourceNode.getId()];
 
                 var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-                var anomerCarbon = edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+                var anomerCarbon = (edges[i] instanceof SubstituentLinkage || edges[i].anomerCarbon.value === "undefined") ? -1 : edges[i].anomerCarbon.value;
 
                 var target = resId[edges[i].targetNode.getId()];
 
@@ -404,7 +408,7 @@ export default class GlycoCTWriter{
                 }
                 else
                 {
-                    formula += this.writeSubLink(i+1, source, target, linkedCarbon, anomerCarbon);
+                    formula += this.writeSubLink(i, source, target, linkedCarbon, anomerCarbon);
                 }
             }
 
@@ -414,18 +418,13 @@ export default class GlycoCTWriter{
                 i++;
             }
 
-            if (formula.substring(formula.length-1) == '\n') // Remove final \n
-            {
-                formula = formula.substring(0,formula.length-1);
-            }
-
         }
 
         // REP
 
         if (this.rep.length !== 0)
         {
-            formula += "\nREP\n";
+            formula += "REP\n";
             for (var rep of this.rep)
             {
                 formula += "REP" + repId[rep.id][1] + "\n";
@@ -433,6 +432,11 @@ export default class GlycoCTWriter{
                 formula += resInfo[1];
                 lastResId = resInfo[0];
             }
+        }
+
+        if (formula.substring(formula.length-1) == '\n') // Remove final \n
+        {
+            formula = formula.substring(0,formula.length-1);
         }
 
 

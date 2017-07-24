@@ -32,7 +32,7 @@ QUnit.test( "Test one node" , function( assert ) {
     var tree = {"depth":0,"node":root};
     var writer = new GlycoCTWriter(sugar, tree);
     var formula = writer.exportGlycoCT();
-    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n", 'Check one node');
+    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5", 'Check one node');
 });
 
 
@@ -74,10 +74,10 @@ QUnit.test("Single monosaccharide kind", function(assert) {
             monoType.name.substring(monoType.name.length - 3) !== "NGc" &&
             monoType.name.substring(monoType.name.length - 2) !== "Ac" &&
             monoType.name !== "Neu") {
-            assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n" ||
-                formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n" ||
-                formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n" ||
-                formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n");
+            assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform ||
+                formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform ||
+                formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform ||
+                formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform);
         }
     }
 });

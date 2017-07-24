@@ -337,6 +337,11 @@ MonosaccharideType.initEnum({
         color: '#977335',
         bisected: false
     },
+    Sia: {
+        shape: 'diamond',
+        color: '#FF0000',
+        bisected: false
+    },
 
 
 
