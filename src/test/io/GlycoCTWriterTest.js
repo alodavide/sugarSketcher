@@ -15,6 +15,10 @@ import Monosaccharide from "../../js/models/glycomics/nodes/Monosaccharide";
 import GlycosidicLinkage from "../../js/models/glycomics/linkages/GlycosidicLinkage";
 import MonosaccharideGlycoCT from "../../js/models/io/glycoCT/MonosaccharideGlycoCT";
 
+
+const isoExceptions = ["Hex","dHex","HexA","HexN","ddHex","HexNAc","dHexNAc","Pen","Oli","Abe","Col","Nonu","LDManHep","DDManHep"];
+const ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
+
 QUnit.module("Test GlycoCTWriterobject", {
 });
 
@@ -74,10 +78,20 @@ QUnit.test("Single monosaccharide kind", function(assert) {
             monoType.name.substring(monoType.name.length - 3) !== "NGc" &&
             monoType.name.substring(monoType.name.length - 2) !== "Ac" &&
             monoType.name !== "Neu") {
-            assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform ||
-                formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform ||
-                formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform ||
-                formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform);
+
+            var checkFormula = "RES\n1b:a-";
+
+            if (!isoExceptions.includes(monoType.name))
+            {
+                checkFormula += "d";
+            }
+            checkFormula += MonosaccharideGlycoCT[monoType.name].glycoct;
+            if (!ringExceptions.includes(monoType.name))
+            {
+                checkFormula += "-1:4";
+            }
+            checkFormula += MonosaccharideGlycoCT[monoType.name].transform;
+            assert.ok(formula === checkFormula);
         }
     }
 });
@@ -90,6 +104,8 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
         var writer = new GlycoCTWriter(sugar, tree);
         var formula = writer.exportGlycoCT();
 
+        var checkFormula;
+
         if (!(monoType.name.substring(monoType.name.length - 3) !== "NAc" &&
             monoType.name.substring(monoType.name.length - 1) !== "N" &&
             monoType.name.substring(monoType.name.length - 2) !== "Gc" &&
@@ -98,50 +114,72 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
             monoType.name !== "Neu")) {
             if (monoType.name.substring(monoType.name.length - 3) === "NAc") {
                 monoType.name = monoType.name.substring(0,monoType.name.length-3);
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n");
+                checkFormula = "RES\n1b:a-";
+
+                if (!isoExceptions.includes(monoType.name))
+                {
+                    checkFormula += "d";
+                }
+                checkFormula += MonosaccharideGlycoCT[monoType.name].glycoct;
+                if (!ringExceptions.includes(monoType.name))
+                {
+                    checkFormula += "-1:4";
+                }
+                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n";
+                assert.ok(formula === checkFormula);
             }
             else if (monoType.name === "Neu5Ac") {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + "-1:4" + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT.Kdn.glycoct + "-1:4" + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n");
             }
             else if (monoType.name.substring(monoType.name.length - 2) === "Ac") {
                 monoType.name = monoType.name.substring(0,monoType.name.length-2);
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n");
+                checkFormula = "RES\n1b:a-";
+
+                if (!isoExceptions.includes(monoType.name))
+                {
+                    checkFormula += "d";
+                }
+                checkFormula += MonosaccharideGlycoCT[monoType.name].glycoct;
+                if (!ringExceptions.includes(monoType.name))
+                {
+                    checkFormula += "-1:4";
+                }
+                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:acetyl\nLIN\n1:1d(-1-1)2n";
+                assert.ok(formula === checkFormula);
             }
             else if (monoType.name.substring(monoType.name.length - 1) === "N") {
                 monoType.name = monoType.name.substring(0,monoType.name.length-1);
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n");
+                checkFormula = "RES\n1b:a-";
+
+                if (!isoExceptions.includes(monoType.name))
+                {
+                    checkFormula += "d";
+                }
+                checkFormula += MonosaccharideGlycoCT[monoType.name].glycoct;
+                if (!ringExceptions.includes(monoType.name))
+                {
+                    checkFormula += "-1:4";
+                }
+                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n";
+                assert.ok(formula === checkFormula);
             }
             else if (monoType.name === "Neu")
             {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + "-1:4" + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT.Kdn.glycoct + "-1:4" + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n");
             }
-            else if (monoType.name === "5Gc") {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + "-1:4" + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT.Kdn.glycoct + "-1:4" + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+            else if (monoType.name === "Neu5Gc") {
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
             }
-            else if (monoType.name.substring(monoType.name.length - 3) === "NGc") {
-                monoType.name = monoType.name.substring(0,monoType.name.length-3);
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + "-1:4" + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n" ||
-                    formula === "RES\n1b:a-d" + MonosaccharideGlycoCT[monoType.name].glycoct + MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+            else if (monoType.name === "NeuNGc") {
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+            }
+            else if (monoType.name === "MurNGc") {
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + "-1:4" + MonosaccharideGlycoCT.Mur.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+            }
+            else
+            {
+                console.log(monoType.name);
+                assert.ok(false,"Forgotten residue");
             }
         }
     }

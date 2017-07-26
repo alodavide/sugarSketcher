@@ -284,7 +284,7 @@ export default class GlycoCTWriter{
 
                 var transform;
 
-                const isoExceptions = ["Hex","dHex","HexA","ddHex","HexNAc","Oli","Abe","Col","Nonu","LDManHep","DDManHep"];
+                const isoExceptions = ["Hex","dHex","HexA","HexN","ddHex","HexNAc","dHexNAc","Pen","Oli","Abe","Col","Nonu","LDManHep","DDManHep"];
 
                 if (!isoExceptions.includes(resName)) // Exceptions
                 {
