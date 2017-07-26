@@ -14,32 +14,12 @@ import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 
 export default class GlycoCTWriter{
 
-    constructor(sugar,tree,rep=[]){
+    constructor(sugar,tree){
         this.sugar = sugar;
         this.tree = tree;
-        this.rep = rep;
         this.res = [];
+        this.rep = [];
         this.edges = [];
-    }
-
-    getNodeRepUnit(node)
-    {
-        node = node.node;
-        if (node === undefined)
-        {
-            return undefined;
-        }
-        for (var rep of this.rep)
-        {
-            for (var n of rep.nodes)
-            {
-                if (n.node.id === node.id)
-                {
-                    return rep;
-                }
-            }
-        }
-        return undefined;
     }
 
     randomString(length) {
@@ -192,7 +172,7 @@ export default class GlycoCTWriter{
         while (stack.length > 0)
         {
             var node = stack.pop();
-            var nodeUnit = this.getNodeRepUnit(node);
+            var nodeUnit = node.node.repeatingUnit;
             if (nodeUnit === undefined)
             {
                 this.res.push(node);
@@ -201,11 +181,23 @@ export default class GlycoCTWriter{
                     this.edges.push(this.getLink(node.parent.node.id,node.node.id));
                 }
             }
+            else
+            {
+                if (node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
+                {
+                    this.edges.push(this.getLink(node.parent.node.id,node.node.id));
+                }
+                if (!this.res.includes(nodeUnit))
+                {
+                    this.res.push(nodeUnit);
+                }
+            }
+
             var children = node.children;
             var childrenUnit;
             if (children !== undefined)
             {
-                childrenUnit = this.getNodeRepUnit(children[0]);
+                childrenUnit = children[0].node.repeatingUnit;
                 if (children.length > 1)
                 {
                     children = this.sort(children);
@@ -214,14 +206,6 @@ export default class GlycoCTWriter{
                     stack.push(child);
                 }
             }
-            if (childrenUnit !== undefined)
-            {
-                if (!this.res.includes(nodeUnit))
-                {
-                    this.res.push(nodeUnit);
-                }
-            }
-
         }
         if (this.res[0].node === undefined)
         {
@@ -237,7 +221,8 @@ export default class GlycoCTWriter{
             if (res[i] instanceof RepeatingUnit)
             {
                 formula += i+1+offset + "r:r" + repNumber;
-                repId[res[i].id] = [i+1+offset,repNumber];
+                resId[res[i].id] = i+1+offset;
+                repId[res[i].id] = repNumber;
                 repNumber++;
                 formula += "\n";
             }
@@ -364,7 +349,7 @@ export default class GlycoCTWriter{
             pair[0] = i;
         }
 
-        return [i,formula];
+        return [i+offset,formula];
     }
 
     exportGlycoCT() {
@@ -395,12 +380,11 @@ export default class GlycoCTWriter{
             var edges = this.edges;
             for (var i = 0; i < edges.length; i++)
             {
-                var source = resId[edges[i].sourceNode.getId()];
-
+                var source = (edges[i].sourceNode.repeatingUnit === undefined) ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
                 var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
                 var anomerCarbon = (edges[i] instanceof SubstituentLinkage || edges[i].anomerCarbon.value === "undefined") ? -1 : edges[i].anomerCarbon.value;
 
-                var target = resId[edges[i].targetNode.getId()];
+                var target = (edges[i].targetNode.repeatingUnit === undefined) ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 
                 if (edges[i] instanceof GlycosidicLinkage)
                 {
@@ -422,12 +406,19 @@ export default class GlycoCTWriter{
 
         // REP
 
+        for (var residue of this.res)
+        {
+            if (residue instanceof RepeatingUnit)
+            {
+                this.rep.push(residue);
+            }
+        }
         if (this.rep.length !== 0)
         {
             formula += "REP\n";
             for (var rep of this.rep)
             {
-                formula += "REP" + repId[rep.id][1] + "\n";
+                formula += "REP" + repId[rep.id] + ":" +"\n";
                 resInfo = this.generateRES(resId,repId,rep.nodes,associatedSubs,repNumber,lastResId);
                 formula += resInfo[1];
                 lastResId = resInfo[0];

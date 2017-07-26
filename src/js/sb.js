@@ -1607,56 +1607,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Hex: {
 	        shape: 'circle',
 	        color: '#FFFFFF',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Glc: {
 	        shape: 'circle',
 	        color: '#0080FF',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Man: {
 	        shape: 'circle',
 	        color: '#00FF00',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Gal: {
 	        shape: 'circle',
 	        color: '#FFD900',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Gul: {
 	        shape: 'circle',
 	        color: '#FF8000',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Alt: {
 	        shape: 'circle',
 	        color: '#FF87C2',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    All: {
 	        shape: 'circle',
 	        color: '#9E1FFF',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Tal: {
 	        shape: 'circle',
 	        color: '#96F2F7',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    Ido: {
 	        shape: 'circle',
 	        color: '#977335',
-	        bisected: false,
-	        superclass: "HEX"
+	        bisected: false
 	    },
 	    HexNAc: {
 	        shape: 'square',
@@ -1881,32 +1872,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Pen: {
 	        shape: 'star',
 	        color: '#FFFFFF',
-	        bisected: false,
-	        superclass: "PEN"
+	        bisected: false
 	    },
 	    Ara: {
 	        shape: 'star',
 	        color: '#00FF00',
-	        bisected: false,
-	        superclass: "PEN"
+	        bisected: false
 	    },
 	    Lyx: {
 	        shape: 'star',
 	        color: '#FFD900',
-	        bisected: false,
-	        superclass: "PEN"
+	        bisected: false
 	    },
 	    Xyl: {
 	        shape: 'star',
 	        color: '#FF8000',
-	        bisected: false,
-	        superclass: "PEN"
+	        bisected: false
 	    },
 	    Rib: {
 	        shape: 'star',
 	        color: '#FF87C2',
-	        bisected: false,
-	        superclass: "PEN"
+	        bisected: false
 	    },
 	    Nonu: {
 	        shape: 'diamond',
@@ -3284,13 +3270,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 17/07/2017.
 	 */
 	
-	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max) {
+	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max, entry, exit) {
 	    _classCallCheck(this, RepeatingUnit);
 	
 	    this.id = id;
 	    this.nodes = nodes;
 	    this.min = min;
 	    this.max = max;
+	    this.entryNode = entry;
+	    this.exitNode = exit;
 	};
 	
 	exports.default = RepeatingUnit;
@@ -4247,76 +4235,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var GlycoCTWriter = function () {
 	    function GlycoCTWriter(sugar, tree) {
-	        var rep = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-	
 	        _classCallCheck(this, GlycoCTWriter);
 	
 	        this.sugar = sugar;
 	        this.tree = tree;
-	        this.rep = rep;
 	        this.res = [];
+	        this.rep = [];
 	        this.edges = [];
 	    }
 	
 	    _createClass(GlycoCTWriter, [{
-	        key: "getNodeRepUnit",
-	        value: function getNodeRepUnit(node) {
-	            node = node.node;
-	            if (node === undefined) {
-	                return undefined;
-	            }
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-	
-	            try {
-	                for (var _iterator = this.rep[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var rep = _step.value;
-	                    var _iteratorNormalCompletion2 = true;
-	                    var _didIteratorError2 = false;
-	                    var _iteratorError2 = undefined;
-	
-	                    try {
-	                        for (var _iterator2 = rep.nodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                            var n = _step2.value;
-	
-	                            if (n.node.id === node.id) {
-	                                return rep;
-	                            }
-	                        }
-	                    } catch (err) {
-	                        _didIteratorError2 = true;
-	                        _iteratorError2 = err;
-	                    } finally {
-	                        try {
-	                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                                _iterator2.return();
-	                            }
-	                        } finally {
-	                            if (_didIteratorError2) {
-	                                throw _iteratorError2;
-	                            }
-	                        }
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-	
-	            return undefined;
-	        }
-	    }, {
 	        key: "randomString",
 	        value: function randomString(length) {
 	            // Possible chars in the generated string
@@ -4340,15 +4268,77 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (label === "Gc") {
 	                return _SubstituentType2.default.NGlycolyl;
 	            }
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+	
+	            try {
+	                for (var _iterator = _SubstituentType2.default[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var sub = _step.value;
+	
+	                    if (sub.label.toLowerCase() === label.toLowerCase()) return sub;
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "getMono",
+	        value: function getMono(name) {
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+	
+	            try {
+	                for (var _iterator2 = _MonosaccharideType2.default[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var mono = _step2.value;
+	
+	                    if (mono.name.toLowerCase() === name.toLowerCase()) return mono;
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "writeSub",
+	        value: function writeSub(i, substituent) {
+	            var formula = "";
+	            formula += i + 1 + "s:";
+	            var subName = substituent.substituentType.name;
+	            var substituentType = "";
 	            var _iteratorNormalCompletion3 = true;
 	            var _didIteratorError3 = false;
 	            var _iteratorError3 = undefined;
 	
 	            try {
-	                for (var _iterator3 = _SubstituentType2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                for (var _iterator3 = _SubstituentsGlycoCT2.default[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 	                    var sub = _step3.value;
 	
-	                    if (sub.label.toLowerCase() === label.toLowerCase()) return sub;
+	                    if (subName.toLowerCase() === sub.name.toLowerCase()) {
+	                        substituentType = sub.glycoct;
+	                    }
 	                }
 	            } catch (err) {
 	                _didIteratorError3 = true;
@@ -4364,93 +4354,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
-	        }
-	    }, {
-	        key: "getMono",
-	        value: function getMono(name) {
-	            var _iteratorNormalCompletion4 = true;
-	            var _didIteratorError4 = false;
-	            var _iteratorError4 = undefined;
-	
-	            try {
-	                for (var _iterator4 = _MonosaccharideType2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                    var mono = _step4.value;
-	
-	                    if (mono.name.toLowerCase() === name.toLowerCase()) return mono;
-	                }
-	            } catch (err) {
-	                _didIteratorError4 = true;
-	                _iteratorError4 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	                        _iterator4.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError4) {
-	                        throw _iteratorError4;
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: "writeSub",
-	        value: function writeSub(i, substituent) {
-	            var formula = "";
-	            formula += i + 1 + "s:";
-	            var subName = substituent.substituentType.name;
-	            var substituentType = "";
-	            var _iteratorNormalCompletion5 = true;
-	            var _didIteratorError5 = false;
-	            var _iteratorError5 = undefined;
-	
-	            try {
-	                for (var _iterator5 = _SubstituentsGlycoCT2.default[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-	                    var sub = _step5.value;
-	
-	                    if (subName.toLowerCase() === sub.name.toLowerCase()) {
-	                        substituentType = sub.glycoct;
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError5 = true;
-	                _iteratorError5 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-	                        _iterator5.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError5) {
-	                        throw _iteratorError5;
-	                    }
-	                }
-	            }
 	
 	            if (substituentType === "") {
-	                var _iteratorNormalCompletion6 = true;
-	                var _didIteratorError6 = false;
-	                var _iteratorError6 = undefined;
+	                var _iteratorNormalCompletion4 = true;
+	                var _didIteratorError4 = false;
+	                var _iteratorError4 = undefined;
 	
 	                try {
-	                    for (var _iterator6 = _SubstituentType2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                        sub = _step6.value;
+	                    for (var _iterator4 = _SubstituentType2.default[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                        sub = _step4.value;
 	
 	                        if (subName.toLowerCase() === sub.name.toLowerCase()) {
 	                            substituentType = sub.name.toLowerCase();
 	                        }
 	                    }
 	                } catch (err) {
-	                    _didIteratorError6 = true;
-	                    _iteratorError6 = err;
+	                    _didIteratorError4 = true;
+	                    _iteratorError4 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                            _iterator6.return();
+	                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                            _iterator4.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError6) {
-	                            throw _iteratorError6;
+	                        if (_didIteratorError4) {
+	                            throw _iteratorError4;
 	                        }
 	                    }
 	                }
@@ -4525,29 +4453,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "getLink",
 	        value: function getLink(id1, id2) {
-	            var _iteratorNormalCompletion7 = true;
-	            var _didIteratorError7 = false;
-	            var _iteratorError7 = undefined;
+	            var _iteratorNormalCompletion5 = true;
+	            var _didIteratorError5 = false;
+	            var _iteratorError5 = undefined;
 	
 	            try {
-	                for (var _iterator7 = this.sugar.graph.edges()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                    var edge = _step7.value;
+	                for (var _iterator5 = this.sugar.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var edge = _step5.value;
 	
 	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
 	                        return edge;
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError7 = true;
-	                _iteratorError7 = err;
+	                _didIteratorError5 = true;
+	                _iteratorError5 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-	                        _iterator7.return();
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                        _iterator5.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError7) {
-	                        throw _iteratorError7;
+	                    if (_didIteratorError5) {
+	                        throw _iteratorError5;
 	                    }
 	                }
 	            }
@@ -4565,49 +4493,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	            stack.push(root);
 	            while (stack.length > 0) {
 	                var node = stack.pop();
-	                var nodeUnit = this.getNodeRepUnit(node);
+	                var nodeUnit = node.node.repeatingUnit;
 	                if (nodeUnit === undefined) {
 	                    this.res.push(node);
 	                    if (this.res.length > 1) // if we have at least 2 nodes : add link
 	                        {
 	                            this.edges.push(this.getLink(node.parent.node.id, node.node.id));
 	                        }
+	                } else {
+	                    if (node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
+	                        {
+	                            this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                        }
+	                    if (!this.res.includes(nodeUnit)) {
+	                        this.res.push(nodeUnit);
+	                    }
 	                }
+	
 	                var children = node.children;
 	                var childrenUnit;
 	                if (children !== undefined) {
-	                    childrenUnit = this.getNodeRepUnit(children[0]);
+	                    childrenUnit = children[0].node.repeatingUnit;
 	                    if (children.length > 1) {
 	                        children = this.sort(children);
 	                    }
-	                    var _iteratorNormalCompletion8 = true;
-	                    var _didIteratorError8 = false;
-	                    var _iteratorError8 = undefined;
+	                    var _iteratorNormalCompletion6 = true;
+	                    var _didIteratorError6 = false;
+	                    var _iteratorError6 = undefined;
 	
 	                    try {
-	                        for (var _iterator8 = children[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                            var child = _step8.value;
+	                        for (var _iterator6 = children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                            var child = _step6.value;
 	
 	                            stack.push(child);
 	                        }
 	                    } catch (err) {
-	                        _didIteratorError8 = true;
-	                        _iteratorError8 = err;
+	                        _didIteratorError6 = true;
+	                        _iteratorError6 = err;
 	                    } finally {
 	                        try {
-	                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                                _iterator8.return();
+	                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                _iterator6.return();
 	                            }
 	                        } finally {
-	                            if (_didIteratorError8) {
-	                                throw _iteratorError8;
+	                            if (_didIteratorError6) {
+	                                throw _iteratorError6;
 	                            }
 	                        }
-	                    }
-	                }
-	                if (childrenUnit !== undefined) {
-	                    if (!this.res.includes(nodeUnit)) {
-	                        this.res.push(nodeUnit);
 	                    }
 	                }
 	            }
@@ -4625,7 +4557,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            for (i = 0; i < res.length; i++) {
 	                if (res[i] instanceof _RepeatingUnit2.default) {
 	                    formula += i + 1 + offset + "r:r" + repNumber;
-	                    repId[res[i].id] = [i + 1 + offset, repNumber];
+	                    resId[res[i].id] = i + 1 + offset;
+	                    repId[res[i].id] = repNumber;
 	                    repNumber++;
 	                    formula += "\n";
 	                } else if (res[i].node instanceof _Substituent2.default) {
@@ -4667,7 +4600,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    var transform;
 	
-	                    var isoExceptions = ["Hex", "dHex", "HexA", "ddHex", "HexNAc", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
+	                    var isoExceptions = ["Hex", "dHex", "HexA", "HexN", "ddHex", "HexNAc", "dHexNAc", "Pen", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
 	
 	                    if (!isoExceptions.includes(resName)) // Exceptions
 	                        {
@@ -4731,13 +4664,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    formula += "\n";
 	                }
 	            }
-	            var _iteratorNormalCompletion9 = true;
-	            var _didIteratorError9 = false;
-	            var _iteratorError9 = undefined;
+	            var _iteratorNormalCompletion7 = true;
+	            var _didIteratorError7 = false;
+	            var _iteratorError7 = undefined;
 	
 	            try {
-	                for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-	                    var pair = _step9.value;
+	                for (var _iterator7 = associatedSubs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                    var pair = _step7.value;
 	
 	                    var associatedSub = pair[0];
 	                    formula += this.writeSub(i, associatedSub);
@@ -4745,21 +4678,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pair[0] = i;
 	                }
 	            } catch (err) {
-	                _didIteratorError9 = true;
-	                _iteratorError9 = err;
+	                _didIteratorError7 = true;
+	                _iteratorError7 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
-	                        _iterator9.return();
+	                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                        _iterator7.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError9) {
-	                        throw _iteratorError9;
+	                    if (_didIteratorError7) {
+	                        throw _iteratorError7;
 	                    }
 	                }
 	            }
 	
-	            return [i, formula];
+	            return [i + offset, formula];
 	        }
 	    }, {
 	        key: "exportGlycoCT",
@@ -4787,12 +4720,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                formula += "LIN\n";
 	                var edges = this.edges;
 	                for (var i = 0; i < edges.length; i++) {
-	                    var source = resId[edges[i].sourceNode.getId()];
-	
+	                    var source = edges[i].sourceNode.repeatingUnit === undefined ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
 	                    var anomerCarbon = edges[i] instanceof _SubstituentLinkage2.default || edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
 	
-	                    var target = resId[edges[i].targetNode.getId()];
+	                    var target = edges[i].targetNode.repeatingUnit === undefined ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	
 	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
 	                        formula += this.writeMonoLink(i + 1, source, target, linkedCarbon, anomerCarbon);
@@ -4801,16 +4733,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	
+	                var _iteratorNormalCompletion8 = true;
+	                var _didIteratorError8 = false;
+	                var _iteratorError8 = undefined;
+	
+	                try {
+	                    for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                        var pair = _step8.value;
+	
+	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
+	                        i++;
+	                    }
+	                } catch (err) {
+	                    _didIteratorError8 = true;
+	                    _iteratorError8 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                            _iterator8.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError8) {
+	                            throw _iteratorError8;
+	                        }
+	                    }
+	                }
+	            }
+	
+	            // REP
+	
+	            var _iteratorNormalCompletion9 = true;
+	            var _didIteratorError9 = false;
+	            var _iteratorError9 = undefined;
+	
+	            try {
+	                for (var _iterator9 = this.res[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                    var residue = _step9.value;
+	
+	                    if (residue instanceof _RepeatingUnit2.default) {
+	                        this.rep.push(residue);
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError9 = true;
+	                _iteratorError9 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                        _iterator9.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError9) {
+	                        throw _iteratorError9;
+	                    }
+	                }
+	            }
+	
+	            if (this.rep.length !== 0) {
+	                formula += "REP\n";
 	                var _iteratorNormalCompletion10 = true;
 	                var _didIteratorError10 = false;
 	                var _iteratorError10 = undefined;
 	
 	                try {
-	                    for (var _iterator10 = associatedSubs[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-	                        var pair = _step10.value;
+	                    for (var _iterator10 = this.rep[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                        var rep = _step10.value;
 	
-	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
-	                        i++;
+	                        formula += "REP" + repId[rep.id] + ":" + "\n";
+	                        resInfo = this.generateRES(resId, repId, rep.nodes, associatedSubs, repNumber, lastResId);
+	                        formula += resInfo[1];
+	                        lastResId = resInfo[0];
 	                    }
 	                } catch (err) {
 	                    _didIteratorError10 = true;
@@ -4823,39 +4815,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    } finally {
 	                        if (_didIteratorError10) {
 	                            throw _iteratorError10;
-	                        }
-	                    }
-	                }
-	            }
-	
-	            // REP
-	
-	            if (this.rep.length !== 0) {
-	                formula += "REP\n";
-	                var _iteratorNormalCompletion11 = true;
-	                var _didIteratorError11 = false;
-	                var _iteratorError11 = undefined;
-	
-	                try {
-	                    for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-	                        var rep = _step11.value;
-	
-	                        formula += "REP" + repId[rep.id][1] + "\n";
-	                        resInfo = this.generateRES(resId, repId, rep.nodes, associatedSubs, repNumber, lastResId);
-	                        formula += resInfo[1];
-	                        lastResId = resInfo[0];
-	                    }
-	                } catch (err) {
-	                    _didIteratorError11 = true;
-	                    _iteratorError11 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
-	                            _iterator11.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError11) {
-	                            throw _iteratorError11;
 	                        }
 	                    }
 	                }

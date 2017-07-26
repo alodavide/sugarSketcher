@@ -2,7 +2,6 @@ var treeData = {};
 var shapes = {};
 var clickedNode = null;
 var selectedNodes = [];
-var repeatingUnits = [];
 var copiedNode = null;
 
 const gap = 50;
@@ -40,6 +39,35 @@ var clickCircle = function(d) {
         }
     }
     displayTree(); // Update view to show the selection stroke
+};
+
+var generateRepeatingUnits = function(nodes)
+{
+    var output = [];
+    for (var node of nodes)
+    {
+        if (node.node.repeatingUnit != undefined) // the node is in a repeating unit
+        {
+            if (output.includes(node.node.repeatingUnit))
+            {
+                for (var repUnit of output)
+                {
+                    if (repUnit == node.node.repeatingUnit)
+                    {
+                        if (!repUnit.nodes.includes(node))
+                        {
+                            repUnit.nodes.push(node);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                output.push(node.node.repeatingUnit);
+            }
+        }
+    }
+    return output;
 };
 
 var selectAllNodesBetween = function(node1, node2)
@@ -370,7 +398,6 @@ function displayTree() {
 
 
 
-
         // For each node, append a path
         node.append("path")
             .attr('class', 'node')
@@ -459,6 +486,7 @@ function displayTree() {
 
 
 
+        var repeatingUnits = generateRepeatingUnits(nodes);
 
         // Repeating Units
         var rep = vis.selectAll("g.rep")

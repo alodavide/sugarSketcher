@@ -53,7 +53,7 @@ $(document).ready(function() {
     d3.select("#exportGlycoCT").on('click', function() {
         d3.select("#formula").style("display","block");
         d3.select("#validateFormula").style("display", "none");
-        var writer = new sb.GlycoCTWriter(sugar, treeData, repeatingUnits);
+        var writer = new sb.GlycoCTWriter(sugar, treeData);
         $('#formula').val(writer.exportGlycoCT());
         $('#formula').select();
         var formula = document.querySelector("#formula");
@@ -86,7 +86,6 @@ $(document).ready(function() {
             .style("display", "block")
             .on('click', function(d) {
                 treeData = {};
-                repeatingUnits = [];
                 selectedNodes = [];
                 if (sugar)
                     sugar.clear();
@@ -583,12 +582,109 @@ document.onkeydown = function (e) {
 
             var id = randomString(7);
             findNodesInTree(nodes);
-            var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max);
-            repeatingUnits.push(repeatingUnit);
-            displayTree();
+            var repEntry, repExit;
+            if (nodes[0].children != undefined && isBranchSelected(nodes)) // if root of selection has at least 2 branches
+            {
+                repEntry = nodes[0].node;
+                repExit = findRepExit(nodes[0]);
+                if (repExit.length != 1) // If the rep unit has 2 exits
+                {
+                    return;
+                }
+                repExit = repExit[0];
+            }
+            else
+            {
+                var entryExit = findEntryAndExit(nodes);
+                repEntry = entryExit[0];
+                repExit = entryExit[1];
+            }
+
+            if (repExit != undefined) // Doesn't finish by a fork
+            {
+                var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max,repEntry,repExit);
+                for  (var node of nodes)
+                {
+                    node.node.repeatingUnit = repeatingUnit;
+                }
+                displayTree();
+            }
+
         }
     }
 };
+
+function isBranchSelected(nodes)
+{
+    for (var node of nodes)
+    {
+        if (node.children != undefined)
+        {
+            var selectedChildren = 0;
+            for (var child of node.children)
+            {
+                if (nodes.includes(child))
+                {
+                    selectedChildren++;
+                }
+            }
+            if (selectedChildren > 1)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function findEntryAndExit(nodes)
+{
+    var maxDepth = nodes[0].depth;
+    var minDepth = nodes[0].depth;
+    var maxId = nodes[0].node;
+    var minId = nodes[0].node;
+    for (var node of nodes)
+    {
+        if (node.depth > maxDepth)
+        {
+            maxDepth = node.depth;
+            maxId = node.node;
+        }
+        if (node.depth < minDepth)
+        {
+            minDepth = node.depth;
+            minId = node.node;
+        }
+    }
+    return [minId,maxId];
+}
+
+
+function findRepExit(root)
+{
+    var exits = [];
+    var stack = [root];
+
+    while (stack.length > 0)
+    {
+        var node = stack.pop();
+        if (node.children != undefined)
+        {
+            for (var child of node.children)
+            {
+                if (!selectedNodes.includes(child.node))
+                {
+                    if (!exits.includes(node.node))
+                    {
+                        exits.push(node.node);
+                    }
+                }
+                stack.push(child);
+            }
+        }
+    }
+    return exits;
+}
 
 function findNodesInTree(arr)
 {
@@ -609,12 +705,9 @@ function isRepeated(arr)
 {
     for (var node of arr)
     {
-        for (var rep of repeatingUnits)
+        if (node.repeatingUnit !== undefined)
         {
-            if (rep.nodes.includes(node))
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;
