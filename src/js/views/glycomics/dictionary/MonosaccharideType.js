@@ -5,62 +5,54 @@
 
 import {Enum} from 'enumify';
 
-export default class MonosaccharideType extends Enum {}
+export default class MonosaccharideType extends Enum {
+}
 
 MonosaccharideType.initEnum({
     Hex: {
         shape: 'circle',
         color: '#FFFFFF',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false        
     },
     Glc: {
         shape: 'circle',
         color: '#0080FF',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     Man: {
         shape: 'circle',
         color: '#00FF00',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     Gal: {
         shape: 'circle',
         color: '#FFD900',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     Gul: {
         shape: 'circle',
         color: '#FF8000',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     Alt: {
         shape: 'circle',
         color: '#FF87C2',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     All: {
         shape: 'circle',
         color: '#9E1FFF',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     Tal: {
         shape: 'circle',
         color: '#96F2F7',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     Ido: {
         shape: 'circle',
         color: '#977335',
-        bisected: false,
-        superclass: "HEX"
+        bisected: false
     },
     HexNAc: {
         shape: 'square',
@@ -285,32 +277,27 @@ MonosaccharideType.initEnum({
     Pen: {
         shape: 'star',
         color: '#FFFFFF',
-        bisected: false,
-        superclass: "PEN"
+        bisected: false
     },
     Ara: {
         shape: 'star',
         color: '#00FF00',
-        bisected: false,
-        superclass: "PEN"
+        bisected: false
     },
     Lyx: {
         shape: 'star',
         color: '#FFD900',
-        bisected: false,
-        superclass: "PEN"
+        bisected: false
     },
     Xyl: {
         shape: 'star',
         color: '#FF8000',
-        bisected: false,
-        superclass: "PEN"
+        bisected: false
     },
     Rib: {
         shape: 'star',
         color: '#FF87C2',
-        bisected: false,
-        superclass: "PEN"
+        bisected: false
     },
     Nonu: {
         shape: 'diamond',
@@ -342,7 +329,6 @@ MonosaccharideType.initEnum({
         color: '#FF0000',
         bisected: false
     },
-
 
 
     Unknown: {
@@ -390,7 +376,6 @@ MonosaccharideType.initEnum({
         color: '#977335',
         bisected: false
     },
-
 
 
     Assigned: {

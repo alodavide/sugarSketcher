@@ -11,6 +11,8 @@ import AnomerCarbon from "../../js/models/glycomics/dictionary/AnomerCarbon";
 import GlycoCTWriter from "../../js/models/io/glycoCT/GlycoCTWriter";
 import MonosaccharideGlycoCT from "../../js/models/io/glycoCT/MonosaccharideGlycoCT";
 import MonosaccharideType from "../../js/views/glycomics/dictionary/MonosaccharideType";
+import SubstituentType from "../../js/models/glycomics/dictionary/SubstituentType";
+import SubstituentsGlycoCT from "../../js/models/io/glycoCT/SubstituentsGlycoCT";
 
 QUnit.module("Test GlycoCTParser object", {
 });
@@ -146,4 +148,20 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
     sugar = parser.parseGlycoCT();
     assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.MurNGc);
 
+});
+
+QUnit.test("Substituents", function(assert) {
+    const exclude = [SubstituentType.NAcetyl,SubstituentType.Amino,SubstituentType.NGlycolyl];
+    for (var subType of SubstituentType)
+    {
+        if (!exclude.includes(subType))
+        {
+            var formula = "RES\n1b:a-HEX-1:4\n2s:"+SubstituentsGlycoCT[subType.name].glycoct+"\nLIN\n1:1d(1-1)2n";
+            var parser = new GlycoCTParser(formula);
+            var sugar = parser.parseGlycoCT();
+            assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.Hex);
+            assert.ok(sugar.graph.nodes()[1].substituentType === subType);
+            assert.ok(sugar.graph.edges()[0].linkedCarbon === LinkedCarbon.ONE);
+        }
+    }
 });

@@ -14,6 +14,10 @@ import GlycoCTWriter from "../../js/models/io/glycoCT/GlycoCTWriter";
 import Monosaccharide from "../../js/models/glycomics/nodes/Monosaccharide";
 import GlycosidicLinkage from "../../js/models/glycomics/linkages/GlycosidicLinkage";
 import MonosaccharideGlycoCT from "../../js/models/io/glycoCT/MonosaccharideGlycoCT";
+import SubstituentType from "../../js/models/glycomics/dictionary/SubstituentType";
+import Substituent from "../../js/models/glycomics/nodes/Substituent";
+import SubstituentLinkage from "../../js/models/glycomics/linkages/SubstituentLinkage";
+import SubstituentsGlycoCT from "../../js/models/io/glycoCT/SubstituentsGlycoCT";
 
 
 const isoExceptions = ["Hex","dHex","HexA","HexN","ddHex","HexNAc","dHexNAc","Pen","Oli","Abe","Col","Nonu","LDManHep","DDManHep"];
@@ -40,7 +44,7 @@ QUnit.test( "Test one node" , function( assert ) {
 });
 
 
-QUnit.test( "Test two nodes" , function( assert ) {
+QUnit.test( "Test three nodes" , function( assert ) {
     var root = new Monosaccharide("n1",MonosaccharideType.Gal,Anomericity.ALPHA, Isomer.D, RingType.P);
     var sugar = new Sugar("Sugar", root);
 
@@ -182,5 +186,24 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
                 assert.ok(false,"Forgotten residue");
             }
         }
+    }
+});
+
+QUnit.test("Substituents", function(assert) {
+    for (var subType of SubstituentType)
+    {
+        var node = new Monosaccharide("id", MonosaccharideType.Hex, Anomericity.ALPHA, Isomer.D, RingType.F);
+        var sub = new Substituent("id1", subType);
+        var link = new SubstituentLinkage("id2", node, sub, LinkedCarbon.ONE);
+        var sugar = new Sugar("Sugar", node);
+        sugar.addSubstituent(sub, link);
+        var tree = {"depth": 0, "node": node, "children": [{"depth":1, "node":sub, "parent":{"node":node}}]};
+        var writer = new GlycoCTWriter(sugar, tree);
+        var formula = writer.exportGlycoCT();
+
+        var checkFormula = "RES\n1b:a-HEX-1:4\n2s:"+SubstituentsGlycoCT[subType.name].glycoct+"\nLIN\n1:1d(1-1)2n";
+
+        assert.ok(formula === checkFormula);
+
     }
 });
