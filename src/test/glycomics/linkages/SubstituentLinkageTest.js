@@ -3,9 +3,9 @@
  * Version: 0.0.1
  */
 
-import SubstituentLinkage from "../../../js/glycomics/linkages/SubstituentLinkage";
-import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
-import Node from "../../../js/dataStructure/GraphNode";
+import SubstituentLinkage from "../../../js/models/glycomics/linkages/SubstituentLinkage";
+import LinkedCarbon from "../../../js/models/glycomics/dictionary/LinkedCarbon";
+import Node from "../../../js/models/dataStructure/GraphNode";
 
 QUnit.module("Test SubstituentLinkage object", {
 });

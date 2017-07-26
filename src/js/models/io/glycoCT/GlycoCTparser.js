@@ -5,7 +5,7 @@
 
 import Sugar from '../../glycomics/Sugar';
 import Anomericity from '../../glycomics/dictionary/Anomericity';
-import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
+import MonosaccharideType from "../../../views/glycomics/dictionary/MonosaccharideType";
 import Isomer from "../../glycomics/dictionary/Isomer";
 import RingType from "../../glycomics/dictionary/RingType";
 import SubstituentType from "../../glycomics/dictionary/SubstituentType";

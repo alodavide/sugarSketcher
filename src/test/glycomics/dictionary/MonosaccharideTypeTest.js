@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import MonosaccharideType from "../../../js/glycomics/dictionary/MonosaccharideType";
+import MonosaccharideType from "../../../js/views/glycomics/dictionary/MonosaccharideType";
 
 QUnit.module("Test MonosaccharideType enum", {
 });

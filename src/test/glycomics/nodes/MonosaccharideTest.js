@@ -3,11 +3,11 @@
  * Version: 0.0.1
  */
 
-import Monosaccharide from '../../../js/glycomics/nodes/Monosaccharide';
-import Anomericity from '../../../js/glycomics/dictionary/Anomericity';
-import Isomer from '../../../js/glycomics/dictionary/Isomer';
-import RingType from '../../../js/glycomics/dictionary/RingType';
-import MonosaccharideType from '../../../js/glycomics/dictionary/MonosaccharideType';
+import Monosaccharide from '../../../js/models/glycomics/nodes/Monosaccharide';
+import Anomericity from '../../../js/models/glycomics/dictionary/Anomericity';
+import Isomer from '../../../js/models/glycomics/dictionary/Isomer';
+import RingType from '../../../js/models/glycomics/dictionary/RingType';
+import MonosaccharideType from '../../../js/views/glycomics/dictionary/MonosaccharideType';
 
 QUnit.module("Test Monosaccharide object", {
 });

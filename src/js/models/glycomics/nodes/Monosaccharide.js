@@ -4,10 +4,10 @@
  */
 
 import Node from '../../dataStructure/GraphNode';
-import Anomericity from '../../glycomics/dictionary/Anomericity';
-import Isomer from '../../glycomics/dictionary/Isomer';
-import RingType from '../../glycomics/dictionary/RingType';
-import MonosaccharideType from '../../glycomics/dictionary/MonosaccharideType';
+import Anomericity from '../dictionary/Anomericity';
+import Isomer from '../dictionary/Isomer';
+import RingType from '../dictionary/RingType';
+import MonosaccharideType from '../../../views/glycomics/dictionary/MonosaccharideType';
 
 export default class Monosaccharide extends Node{
 

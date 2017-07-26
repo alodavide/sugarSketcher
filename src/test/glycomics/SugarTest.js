@@ -3,21 +3,21 @@
 * Version: 0.0.1
 */
 //Dictionary
-import Anomericity from '../../js/glycomics/dictionary/Anomericity';
-import Isomer from '../../js/glycomics/dictionary/Isomer';
-import RingType from '../../js/glycomics/dictionary/RingType';
-import MonosaccharideType from '../../js/glycomics/dictionary/MonosaccharideType';
-import SubstituentType from '../../js/glycomics/dictionary/SubstituentType';
-import AnomerCarbon from '../../js/glycomics/dictionary/AnomerCarbon';
-import LinkedCarbon from '../../js/glycomics/dictionary/LinkedCarbon';
+import Anomericity from '../../js/models/glycomics/dictionary/Anomericity';
+import Isomer from '../../js/models/glycomics/dictionary/Isomer';
+import RingType from '../../js/models/glycomics/dictionary/RingType';
+import MonosaccharideType from '../../js/views/glycomics/dictionary/MonosaccharideType';
+import SubstituentType from '../../js/models/glycomics/dictionary/SubstituentType';
+import AnomerCarbon from '../../js/models/glycomics/dictionary/AnomerCarbon';
+import LinkedCarbon from '../../js/models/glycomics/dictionary/LinkedCarbon';
 //Nodes
-import Monosaccharide from '../../js/glycomics/nodes/Monosaccharide';
-import Substituent from '../../js/glycomics/nodes/Substituent';
+import Monosaccharide from '../../js/models/glycomics/nodes/Monosaccharide';
+import Substituent from '../../js/models/glycomics/nodes/Substituent';
 //Linkages
-import GlycosidicLinkage from '../../js/glycomics/linkages/GlycosidicLinkage';
-import SubstituentLinkage from '../../js/glycomics/linkages/SubstituentLinkage';
+import GlycosidicLinkage from '../../js/models/glycomics/linkages/GlycosidicLinkage';
+import SubstituentLinkage from '../../js/models/glycomics/linkages/SubstituentLinkage';
 //Sugar
-import Sugar from '../../js/glycomics/Sugar';
+import Sugar from '../../js/models/glycomics/Sugar';
 
 
 QUnit.module("Test Sugar object", {

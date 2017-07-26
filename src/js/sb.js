@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -141,15 +141,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
+	var _Controller = __webpack_require__(24);
+	
+	var _Controller2 = _interopRequireDefault(_Controller);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
+	//IO
 	
-	//Data Structure
+	
+	//Sugar
+	
+	
+	//Nodes
+	
+	
+	//Linkages
+	
+	
+	//Glycomics Structure
+	//Dictionary
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -170,21 +181,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.GlycoCTSubstituents = _SubstituentsGlycoCT2.default;
 	exports.NodeComparator = _NodeComparator2.default;
 	exports.RepeatingUnit = _RepeatingUnit2.default;
+	exports.Controller = _Controller2.default;
 	
-	//IO
+	//Controller
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Sugar
-	
-	
-	//Nodes
-	
-	
-	//Linkages
-	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 
 /***/ }),
 /* 1 */
@@ -2108,28 +2114,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'Formyl'
 	    },
 	    Hydroxymethyl: {
-	        label: 'HM'
+	        label: 'HMe'
 	    },
 	    Imino: {
 	        label: 'Imino'
 	    },
 	    RLactate1: {
-	        label: 'RLactate1'
+	        label: 'RLac1'
 	    },
 	    SLactate1: {
-	        label: 'SLactate1'
+	        label: 'SLac1'
+	    },
+	    Amino: {
+	        label: 'N'
 	    },
 	    Methyl: {
-	        label: 'Methyl'
-	    },
-	    N: {
-	        label: 'N'
+	        label: 'Me'
 	    },
 	    NAcetyl: {
 	        label: 'NAc'
 	    },
 	    NAlanine: {
-	        label: 'NAlanine'
+	        label: 'NAla'
 	    },
 	    NFormyl: {
 	        label: 'NFormyl'
@@ -2138,25 +2144,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'NGc'
 	    },
 	    NMethyl: {
-	        label: 'NMethyl'
+	        label: 'NMe'
 	    },
 	    NSuccinate: {
-	        label: 'NSuccinate'
+	        label: 'NSuc'
 	    },
 	    NSulfate: {
-	        label: 'NSulfate'
+	        label: 'NS'
 	    },
 	    NTrifluoroacetyl: {
-	        label: 'NTrifluoroacetyl'
+	        label: 'NTFA'
 	    },
-	    Nitrat: {
-	        label: 'Nitrat'
+	    Nitrate: {
+	        label: 'NO3'
 	    },
 	    Phosphate: {
 	        label: 'P'
 	    },
 	    Pyruvate: {
-	        label: 'Pyruvate'
+	        label: 'Pyr'
 	    },
 	    Sulfate: {
 	        label: 'S'
@@ -2165,19 +2171,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        label: 'Thio'
 	    },
 	    RPyruvate: {
-	        label: 'RPyruvate'
+	        label: 'RPyr'
 	    },
 	    SPyruvate: {
-	        label: 'SPyruvate'
+	        label: 'SPyr'
 	    },
 	    RLactate2: {
-	        label: 'RLactate2'
+	        label: 'RLac2'
 	    },
 	    SLactate2: {
-	        label: 'SLactate2'
-	    },
-	    UNDEFINED: {
-	        label: 'undefined'
+	        label: 'SLac2'
 	    }
 	});
 
@@ -2220,11 +2223,95 @@ return /******/ (function(modules) { // webpackBootstrap
 	    NAcetyl: {
 	        glycoct: "n-acetyl"
 	    },
-	    N: {
+	    Amino: {
 	        glycoct: "amino"
 	    },
 	    NGlycolyl: {
 	        glycoct: "n-glycolyl"
+	    },
+	    Methyl: {
+	        glycoct: "methyl"
+	    },
+	    Acetyl: {
+	        glycoct: "acetyl"
+	    },
+	    Sulfate: {
+	        glycoct: "sulfate"
+	    },
+	    Phosphate: {
+	        glycoct: "phosphate"
+	    },
+	    Bromo: {
+	        glycoct: 'bromo'
+	    },
+	    Chloro: {
+	        glycoct: 'chloro'
+	    },
+	    Ethyl: {
+	        glycoct: 'ethyl'
+	    },
+	    Ethanolamine: {
+	        glycoct: 'ethanolamine'
+	    },
+	    Fluoro: {
+	        glycoct: 'fluoro'
+	    },
+	    Formyl: {
+	        glycoct: 'formyl'
+	    },
+	    Hydroxymethyl: {
+	        glycoct: 'hydroxymethyl'
+	    },
+	    Imino: {
+	        glycoct: 'imino'
+	    },
+	    RLactate1: {
+	        glycoct: '(r)-lactate'
+	    },
+	    SLactate1: {
+	        glycoct: '(s)-lactate'
+	    },
+	    NAlanine: {
+	        glycoct: 'n-alanine'
+	    },
+	    NFormyl: {
+	        glycoct: 'n-formyl'
+	    },
+	    NMethyl: {
+	        glycoct: 'n-methyl'
+	    },
+	    NSuccinate: {
+	        glycoct: 'n-succinate'
+	    },
+	    NSulfate: {
+	        glycoct: 'n-sulfate'
+	    },
+	    NTrifluoroacetyl: {
+	        glycoct: 'n-trifluoroacetyl'
+	    },
+	    Nitrate: {
+	        glycoct: 'nitrate'
+	    },
+	    Pyruvate: {
+	        glycoct: 'pyruvate'
+	    },
+	    Thio: {
+	        glycoct: 'thio'
+	    },
+	    RPyruvate: {
+	        glycoct: '(r)-pyruvate'
+	    },
+	    SPyruvate: {
+	        glycoct: '(s)-pyruvate'
+	    },
+	    RLactate2: {
+	        glycoct: '(r)-lactate2'
+	    },
+	    SLactate2: {
+	        glycoct: '(s)-lactate2'
+	    },
+	    Unknown: {
+	        glycoct: 'unknown'
 	    }
 	});
 
@@ -3335,7 +3422,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'getMono',
 	        value: function getMono(name) {
-	            console.log(name);
 	            switch (name) {
 	                case "KdnNAc":
 	                    return _MonosaccharideType2.default.Neu5Ac;
@@ -5129,6 +5215,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = NodeComparator;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * Created by Renaud on 26/07/2017.
+	 */
+	
+	var Controller = function Controller() {
+	    _classCallCheck(this, Controller);
+	};
+	
+	exports.default = Controller;
 
 /***/ })
 /******/ ])

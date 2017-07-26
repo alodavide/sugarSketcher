@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
+import LinkedCarbon from "../../../js/models/glycomics/dictionary/LinkedCarbon";
 
 QUnit.module("Test LinkedCarbon enum", {
 });

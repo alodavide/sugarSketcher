@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import SubstituentType from "../../../js/glycomics/dictionary/SubstituentType";
+import SubstituentType from "../../../js/models/glycomics/dictionary/SubstituentType";
 
 QUnit.module("Test SubstituentType enum", {
 });

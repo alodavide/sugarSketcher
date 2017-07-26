@@ -30,28 +30,28 @@ SubstituentType.initEnum({
         label: 'Formyl'
     },
     Hydroxymethyl: {
-        label: 'HM'
+        label: 'HMe'
     },
     Imino: {
         label: 'Imino'
     },
     RLactate1: {
-        label: 'RLactate1'
+        label: 'RLac1'
     },
     SLactate1: {
-        label: 'SLactate1'
+        label: 'SLac1'
+    },
+    Amino: {
+        label: 'N'
     },
     Methyl: {
-        label: 'Methyl'
-    },
-    N: {
-        label: 'N'
+        label: 'Me'
     },
     NAcetyl: {
         label: 'NAc'
     },
     NAlanine: {
-        label: 'NAlanine'
+        label: 'NAla'
     },
     NFormyl: {
         label: 'NFormyl'
@@ -60,25 +60,25 @@ SubstituentType.initEnum({
         label: 'NGc'
     },
     NMethyl: {
-        label: 'NMethyl'
+        label: 'NMe'
     },
     NSuccinate: {
-        label: 'NSuccinate'
+        label: 'NSuc'
     },
     NSulfate: {
-        label: 'NSulfate'
+        label: 'NS'
     },
     NTrifluoroacetyl: {
-        label: 'NTrifluoroacetyl'
+        label: 'NTFA'
     },
-    Nitrat: {
-        label: 'Nitrat'
+    Nitrate: {
+        label: 'NO3'
     },
     Phosphate: {
         label: 'P'
     },
     Pyruvate: {
-        label: 'Pyruvate'
+        label: 'Pyr'
     },
     Sulfate: {
         label: 'S'
@@ -87,18 +87,15 @@ SubstituentType.initEnum({
         label: 'Thio'
     },
     RPyruvate: {
-        label: 'RPyruvate'
+        label: 'RPyr'
     },
     SPyruvate: {
-        label: 'SPyruvate'
+        label: 'SPyr'
     },
     RLactate2: {
-        label: 'RLactate2'
+        label: 'RLac2'
     },
     SLactate2: {
-        label: 'SLactate2'
+        label: 'SLac2'
     },
-    UNDEFINED: {
-        label: 'undefined'
-    }
 });

@@ -6,7 +6,7 @@ import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentType from "../../glycomics/dictionary/SubstituentType";
 import GlycosidicLinkage from "../../glycomics/linkages/GlycosidicLinkage";
 import GlycoCTSubstituents from "./SubstituentsGlycoCT";
-import MonosaccharideType from "../../glycomics/dictionary/MonosaccharideType";
+import MonosaccharideType from "../../../views/glycomics/dictionary/MonosaccharideType";
 import EdgeComparator from "../EdgeComparator";
 import RepeatingUnit from "../../glycomics/RepeatingUnit";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";

@@ -5,7 +5,7 @@
 
 
 // The sugar we use as data structure, to be visualized using d3 tree
-var sugar;
+var sugar, controller;
 
 // Function called when document is ready
 
@@ -213,11 +213,11 @@ substituentDisplayMore.on("click", function() {
     var subsRects = d3.select("#actionsSubs"); // Rects for substituents
     var subsLabels = d3.select("#labelsSubs"); // Labels for substituents
     var subTypes = [];
-    var mostUsedTypes = ["S", "P", "NAc", "Ac", "Methyl"]; // Most used substituent types
+    var mostUsedTypes = ["S", "P", "NAc", "Ac", "Me"]; // Most used substituent types
     // Add all substituent in an array, except the most used ones and the undefined one
     for (var type of sb.SubstituentType) {
         if (type.label != 'undefined' && mostUsedTypes.indexOf(type.label) == -1) {
-            subTypes.push(type.label);
+            subTypes.push(type.name);
         }
     }
 
@@ -757,10 +757,10 @@ function createNewNode() {
  */
 function createNewSubstituent (linkCarbon) {
     if (infosTable[1] == "Substituent")
-        var subLabel = infosTable[2];
+        var subName = infosTable[2];
     else
-        var subLabel = infosTable[1]; // Get the label of the substituent
-    var subType = getSubstituentTypeFromLabel(subLabel); // Get the SubstituentType
+        var subName = infosTable[1]; // Get the label of the substituent
+    var subType = sb.SubstituentType[subName]; // Get the SubstituentType
     var generatedSubId = randomString(7); // Random id for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
     var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon); // Get the linkedCarbon value

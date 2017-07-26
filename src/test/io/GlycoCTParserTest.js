@@ -3,14 +3,14 @@
  */
 
 
-import GlycoCTParser from "../../js/io/glycoCT/GlycoCTparser";
-import Anomericity from "../../js/glycomics/dictionary/Anomericity";
-import Isomer from "../../js/glycomics/dictionary/Isomer";
-import LinkedCarbon from "../../js/glycomics/dictionary/LinkedCarbon";
-import AnomerCarbon from "../../js/glycomics/dictionary/AnomerCarbon";
-import GlycoCTWriter from "../../js/io/glycoCT/GlycoCTWriter";
-import MonosaccharideGlycoCT from "../../js/io/glycoCT/MonosaccharideGlycoCT";
-import MonosaccharideType from "../../js/glycomics/dictionary/MonosaccharideType";
+import GlycoCTParser from "../../js/models/io/glycoCT/GlycoCTparser";
+import Anomericity from "../../js/models/glycomics/dictionary/Anomericity";
+import Isomer from "../../js/models/glycomics/dictionary/Isomer";
+import LinkedCarbon from "../../js/models/glycomics/dictionary/LinkedCarbon";
+import AnomerCarbon from "../../js/models/glycomics/dictionary/AnomerCarbon";
+import GlycoCTWriter from "../../js/models/io/glycoCT/GlycoCTWriter";
+import MonosaccharideGlycoCT from "../../js/models/io/glycoCT/MonosaccharideGlycoCT";
+import MonosaccharideType from "../../js/views/glycomics/dictionary/MonosaccharideType";
 
 QUnit.module("Test GlycoCTParser object", {
 });

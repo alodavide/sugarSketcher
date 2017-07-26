@@ -3,10 +3,10 @@
  * Version: 0.0.1
  */
 
-import GlycosidicLinkage from "../../../js/glycomics/linkages/GlycosidicLinkage";
-import AnomerCarbon from "../../../js/glycomics/dictionary/AnomerCarbon";
-import LinkedCarbon from "../../../js/glycomics/dictionary/LinkedCarbon";
-import Node from "../../../js/dataStructure/GraphNode";
+import GlycosidicLinkage from "../../../js/models/glycomics/linkages/GlycosidicLinkage";
+import AnomerCarbon from "../../../js/models/glycomics/dictionary/AnomerCarbon";
+import LinkedCarbon from "../../../js/models/glycomics/dictionary/LinkedCarbon";
+import Node from "../../../js/models/dataStructure/GraphNode";
 
 QUnit.module("Test GlycosidicLinkage object", {
 });

@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import AnomerCarbon from "../../../js/glycomics/dictionary/AnomerCarbon";
+import AnomerCarbon from "../../../js/models/glycomics/dictionary/AnomerCarbon";
 
 QUnit.module("Test AnomerCarbon enum", {
 });

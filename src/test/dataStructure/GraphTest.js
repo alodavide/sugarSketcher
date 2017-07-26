@@ -1,4 +1,4 @@
-import Graph from '../../js/dataStructure/Graph';
+import Graph from '../../js/models/dataStructure/Graph';
 import Configurable from '../../js/utils/Configurable';
 
 test('Basic manipulation', function() {

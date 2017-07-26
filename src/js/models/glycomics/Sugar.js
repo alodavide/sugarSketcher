@@ -11,7 +11,7 @@ import Monosaccharide from './nodes/Monosaccharide';
 import Substituent from './nodes/Substituent';
 import GlycosidicLinkage from './linkages/GlycosidicLinkage';
 import SubstituentLinkage from './linkages/SubstituentLinkage';
-import Graph from './../dataStructure/Graph';
+import Graph from '../dataStructure/Graph';
 
 export default class Sugar{
 

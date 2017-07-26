@@ -3,7 +3,7 @@
  * Version: 0.0.1
  */
 
-import Node from "../../js/dataStructure/GraphNode";
+import Node from "../../js/models/dataStructure/GraphNode";
 
 QUnit.module("Test Node object", {});
 

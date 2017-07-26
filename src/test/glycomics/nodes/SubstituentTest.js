@@ -3,8 +3,8 @@
  * Version: 0.0.1
  */
 
-import Substituent from '../../../js/glycomics/nodes/Substituent';
-import SubstituentType from '../../../js/glycomics/dictionary/SubstituentType';
+import Substituent from '../../../js/models/glycomics/nodes/Substituent';
+import SubstituentType from '../../../js/models/glycomics/dictionary/SubstituentType';
 
 QUnit.module("Test Substituent object", {
 });
