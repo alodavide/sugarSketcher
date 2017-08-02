@@ -4511,29 +4511,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                {
 	                                    this.edges.push(this.getLink(node.parent.node.id, node.node.id));
 	                                } else if (nodeUnit !== undefined) {
-	                                var _iteratorNormalCompletion6 = true;
-	                                var _didIteratorError6 = false;
-	                                var _iteratorError6 = undefined;
+	                                if (node.children !== undefined) {
+	                                    var _iteratorNormalCompletion6 = true;
+	                                    var _didIteratorError6 = false;
+	                                    var _iteratorError6 = undefined;
 	
-	                                try {
-	                                    for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                                        var rootChild = _step6.value;
-	
-	                                        if (rootChild.node.repeatingUnit !== nodeUnit) {
-	                                            this.edges.push(this.getLink(rootChild.node.id, node.node.id));
-	                                        }
-	                                    }
-	                                } catch (err) {
-	                                    _didIteratorError6 = true;
-	                                    _iteratorError6 = err;
-	                                } finally {
 	                                    try {
-	                                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                                            _iterator6.return();
+	                                        for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                                            var rootChild = _step6.value;
+	
+	                                            if (rootChild.node.repeatingUnit !== nodeUnit) {
+	                                                this.edges.push(this.getLink(rootChild.node.id, node.node.id));
+	                                            }
 	                                        }
+	                                    } catch (err) {
+	                                        _didIteratorError6 = true;
+	                                        _iteratorError6 = err;
 	                                    } finally {
-	                                        if (_didIteratorError6) {
-	                                            throw _iteratorError6;
+	                                        try {
+	                                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                                _iterator6.return();
+	                                            }
+	                                        } finally {
+	                                            if (_didIteratorError6) {
+	                                                throw _iteratorError6;
+	                                            }
 	                                        }
 	                                    }
 	                                }
@@ -4706,7 +4708,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var pair = _step8.value;
 	
 	                    var associatedSub = pair[0];
-	                    formula += this.writeSub(i, associatedSub);
+	                    formula += this.writeSub(i + offset, associatedSub);
 	                    i++;
 	                    pair[0] = i;
 	                }
@@ -4738,6 +4740,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (this.res.length + associatedSubs.length > 1) {
 	                formula += "LIN\n";
 	                var edges = this.edges;
+	                var prevSource = 0,
+	                    prevTarget = 0;
 	                for (i = 0; i < edges.length; i++) {
 	                    var source = edges[i].sourceNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
@@ -4745,11 +4749,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    var target = edges[i].targetNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	
-	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
-	                        formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon);
-	                    } else {
-	                        formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
-	                    }
+	                    if (prevSource !== source || prevTarget !== target) // When operating with repeating units, some links are duplicated
+	                        {
+	                            prevSource = source;
+	                            prevTarget = target;
+	
+	                            if (edges[i] instanceof _GlycosidicLinkage2.default) {
+	                                formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon);
+	                            } else {
+	                                formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
+	                            }
+	                        }
 	                }
 	
 	                var _iteratorNormalCompletion9 = true;
@@ -4760,7 +4770,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
 	                        var pair = _step9.value;
 	
-	                        formula += this.writeSubLink(i + offset, pair[1], pair[0], -1, -1);
+	                        formula += this.writeSubLink(i + offset, pair[1], pair[0] + offset, -1, -1);
 	                        i++;
 	                    }
 	                } catch (err) {

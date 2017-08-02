@@ -195,11 +195,14 @@ export default class GlycoCTWriter{
                         }
                         else if (nodeUnit !== undefined)
                         {
-                            for (var rootChild of node.children)
+                            if (node.children !== undefined)
                             {
-                                if (rootChild.node.repeatingUnit !== nodeUnit)
+                                for (var rootChild of node.children)
                                 {
-                                    this.edges.push(this.getLink(rootChild.node.id,node.node.id));
+                                    if (rootChild.node.repeatingUnit !== nodeUnit)
+                                    {
+                                        this.edges.push(this.getLink(rootChild.node.id,node.node.id));
+                                    }
                                 }
                             }
                         }
@@ -362,7 +365,7 @@ export default class GlycoCTWriter{
         for (var pair of associatedSubs)
         {
             var associatedSub = pair[0];
-            formula += this.writeSub(i, associatedSub);
+            formula += this.writeSub(i+offset, associatedSub);
             i++;
             pair[0] = i;
         }
@@ -378,6 +381,7 @@ export default class GlycoCTWriter{
         {
             formula += "LIN\n";
             var edges = this.edges;
+            var prevSource = 0, prevTarget = 0;
             for (i = 0; i < edges.length; i++)
             {
                 var source = (edges[i].sourceNode.repeatingUnit === undefined || unit !== "") ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
@@ -386,19 +390,26 @@ export default class GlycoCTWriter{
 
                 var target = (edges[i].targetNode.repeatingUnit === undefined || unit !== "") ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 
-                if (edges[i] instanceof GlycosidicLinkage)
+                if (prevSource !== source || prevTarget !== target) // When operating with repeating units, some links are duplicated
                 {
-                    formula += this.writeMonoLink(i+1+offset, source, target, linkedCarbon, anomerCarbon);
+                    prevSource = source;
+                    prevTarget = target;
+
+                    if (edges[i] instanceof GlycosidicLinkage)
+                    {
+                        formula += this.writeMonoLink(i+1+offset, source, target, linkedCarbon, anomerCarbon);
+                    }
+                    else
+                    {
+                        formula += this.writeSubLink(i+offset, source, target, linkedCarbon, anomerCarbon);
+                    }
                 }
-                else
-                {
-                    formula += this.writeSubLink(i+offset, source, target, linkedCarbon, anomerCarbon);
-                }
+
             }
 
             for (var pair of associatedSubs)
             {
-                formula += this.writeSubLink(i+offset, pair[1],pair[0], -1, -1);
+                formula += this.writeSubLink(i+offset, pair[1], pair[0]+offset, -1, -1);
                 i++;
             }
         }
