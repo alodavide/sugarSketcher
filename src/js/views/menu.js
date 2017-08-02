@@ -603,12 +603,12 @@ document.onkeydown = function (e) {
             if (repExit != undefined) // Doesn't finish by a fork
             {
                 var min = prompt("Type minimum");
-                if (min == null)
+                if (min == null || min == "")
                 {
                     return;
                 }
                 var max = prompt("Type maximum");
-                if (max == null)
+                if (max == null || max == "")
                 {
                     return;
                 }
@@ -705,7 +705,7 @@ function findNodesInTree(arr)
 {
     for (var i in arr)
     {
-        arr[i] = findNodeInTree(arr[i]);
+        arr[i] = findNodeInTree(treeData,arr[i]);
     }
 }
 

@@ -72,8 +72,8 @@ var generateRepeatingUnits = function(nodes)
 
 var selectAllNodesBetween = function(node1, node2)
 {
-    var root = findNodeInTree(node1);
-    var node = findNodeInTree(node2);
+    var root = findNodeInTree(treeData,node1);
+    var node = findNodeInTree(treeData,node2);
     if (root.depth < node.depth)
     {
         selectAllChildrenBetween(node2,node1, root.depth);
@@ -87,7 +87,7 @@ var selectAllNodesBetween = function(node1, node2)
 
 var selectAllParentsBetween = function(node1, node2) {
     var selectParents = [];
-    var root = findNodeInTree(node1);
+    var root = findNodeInTree(treeData,node1);
     var currentNode = root;
     if (node1 != clickedNode && !selectedNodes.includes(node1) && !selectParents.includes(node1))
         selectParents.push(node1);
@@ -105,7 +105,7 @@ var selectAllParentsBetween = function(node1, node2) {
 };
 
 var selectAllChildrenBetween = function(node1, node2, rootDepth) {
-    if (selectedNodes.length == 0 || rootDepth > findNodeInTree(selectedNodes[0]).depth)
+    if (selectedNodes.length == 0 || rootDepth > findNodeInTree(treeData,selectedNodes[0]).depth)
     {
         selectedNodes = [];
     }
@@ -115,10 +115,10 @@ var selectAllChildrenBetween = function(node1, node2, rootDepth) {
 
 
 
-function findNodeInTree(node1)
+function findNodeInTree(tree,node1)
 {
     var stack = [], node, i;
-    stack.push(treeData);
+    stack.push(tree);
 
     while (stack.length > 0) {
         node = stack.pop();
@@ -135,7 +135,7 @@ function findNodeInTree(node1)
 
 function removeChildrenFromSelection(node)
 {
-    var node = findNodeInTree(node);
+    var node = findNodeInTree(treeData,node);
     if (node.children != undefined)
     {
         for (var child of node.children)

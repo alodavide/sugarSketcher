@@ -169,3 +169,7 @@
     text-align:center;
     border-radius: 10px;
 }
+
+textarea {
+    height: 20vh;
+}

@@ -4483,6 +4483,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "generateArrays",
 	        value: function generateArrays(root) {
+	            var unit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+	
+	            this.res = [];
+	            this.edges = [];
 	            if (root === undefined) {
 	                this.res = [];
 	                this.edges = [];
@@ -4495,46 +4499,48 @@ return /******/ (function(modules) { // webpackBootstrap
 	                while (stack.length > 0) {
 	                    var node = stack.pop();
 	                    var nodeUnit = node.node.repeatingUnit;
-	                    if (nodeUnit === undefined) {
+	                    if (unit === "" && nodeUnit === undefined || unit !== "" && nodeUnit !== undefined && nodeUnit.id === unit) {
 	                        this.res.push(node);
 	                        if (this.res.length > 1) // if we have at least 2 nodes : add link
 	                            {
 	                                this.edges.push(this.getLink(node.parent.node.id, node.node.id));
 	                            }
 	                    } else {
-	                        if (node.parent !== undefined && node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
-	                            {
-	                                this.edges.push(this.getLink(node.parent.node.id, node.node.id));
-	                            } else if (nodeUnit !== undefined) {
-	                            var _iteratorNormalCompletion6 = true;
-	                            var _didIteratorError6 = false;
-	                            var _iteratorError6 = undefined;
+	                        if (unit === "") {
+	                            if (node.parent !== undefined && node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
+	                                {
+	                                    this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                                } else if (nodeUnit !== undefined) {
+	                                var _iteratorNormalCompletion6 = true;
+	                                var _didIteratorError6 = false;
+	                                var _iteratorError6 = undefined;
 	
-	                            try {
-	                                for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                                    var rootChild = _step6.value;
-	
-	                                    if (rootChild.node.repeatingUnit !== nodeUnit) {
-	                                        this.edges.push(this.getLink(rootChild.node.id, node.node.id));
-	                                    }
-	                                }
-	                            } catch (err) {
-	                                _didIteratorError6 = true;
-	                                _iteratorError6 = err;
-	                            } finally {
 	                                try {
-	                                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                                        _iterator6.return();
+	                                    for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                                        var rootChild = _step6.value;
+	
+	                                        if (rootChild.node.repeatingUnit !== nodeUnit) {
+	                                            this.edges.push(this.getLink(rootChild.node.id, node.node.id));
+	                                        }
 	                                    }
+	                                } catch (err) {
+	                                    _didIteratorError6 = true;
+	                                    _iteratorError6 = err;
 	                                } finally {
-	                                    if (_didIteratorError6) {
-	                                        throw _iteratorError6;
+	                                    try {
+	                                        if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                            _iterator6.return();
+	                                        }
+	                                    } finally {
+	                                        if (_didIteratorError6) {
+	                                            throw _iteratorError6;
+	                                        }
 	                                    }
 	                                }
 	                            }
-	                        }
-	                        if (!this.res.includes(nodeUnit)) {
-	                            this.res.push(nodeUnit);
+	                            if (!this.res.includes(nodeUnit)) {
+	                                this.res.push(nodeUnit);
+	                            }
 	                        }
 	                    }
 	
@@ -4725,6 +4731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "generateLIN",
 	        value: function generateLIN(resId, associatedSubs) {
 	            var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+	            var unit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
 	
 	            var formula = "";
 	            var i;
@@ -4732,11 +4739,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                formula += "LIN\n";
 	                var edges = this.edges;
 	                for (i = 0; i < edges.length; i++) {
-	                    var source = edges[i].sourceNode.repeatingUnit === undefined ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
+	                    var source = edges[i].sourceNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
 	                    var anomerCarbon = edges[i] instanceof _SubstituentLinkage2.default || edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
 	
-	                    var target = edges[i].targetNode.repeatingUnit === undefined ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
+	                    var target = edges[i].targetNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	
 	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
 	                        formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon);
@@ -4835,12 +4842,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
 	                        var rep = _step11.value;
 	
+	                        this.generateArrays(findNodeInTree(treeData, rep.entryNode), rep.id);
 	                        var entryId = lastResId + 1;
-	                        resInfo = this.generateRES(resId, repId, rep.nodes, associatedSubs, repNumber, lastResId);
+	                        associatedSubs = [];
+	                        resInfo = this.generateRES(resId, repId, this.res, associatedSubs, repNumber, lastResId);
 	                        lastResId = resInfo[0];
 	                        var exitId = lastResId;
 	                        formula += "REP" + repId[rep.id] + ":" + exitId + "o(-1-1)" + entryId + "d=" + rep.min + "-" + rep.max + "\n";
 	                        formula += resInfo[1];
+	                        linInfo = this.generateLIN(resId, associatedSubs, lastLinId, rep.id);
+	                        lastLinId = linInfo[0];
+	                        formula += linInfo[1];
 	                    }
 	                } catch (err) {
 	                    _didIteratorError11 = true;
