@@ -577,13 +577,9 @@ document.onkeydown = function (e) {
         var nodes = [clickedNode].concat(selectedNodes);
         if (!isRepeated(nodes))
         {
-            var min = prompt("Type minimum");
-            var max = prompt("Type maximum");
-
-            var id = randomString(7);
             findNodesInTree(nodes);
             var repEntry, repExit;
-            if (nodes[0].children != undefined && isBranchSelected(nodes)) // if root of selection has at least 2 branches
+            if (isBranchSelected(nodes) && nodes[0].children != undefined) // if root of selection has at least 2 branches
             {
                 repEntry = nodes[0].node;
                 repExit = findRepExit(nodes[0]);
@@ -596,12 +592,27 @@ document.onkeydown = function (e) {
             else
             {
                 var entryExit = findEntryAndExit(nodes);
+                if (!entryExit)
+                {
+                    return;
+                }
                 repEntry = entryExit[0];
                 repExit = entryExit[1];
             }
 
             if (repExit != undefined) // Doesn't finish by a fork
             {
+                var min = prompt("Type minimum");
+                if (min == null)
+                {
+                    return;
+                }
+                var max = prompt("Type maximum");
+                if (max == null)
+                {
+                    return;
+                }
+                var id = randomString(7);
                 var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max,repEntry,repExit);
                 for  (var node of nodes)
                 {
@@ -609,7 +620,6 @@ document.onkeydown = function (e) {
                 }
                 displayTree();
             }
-
         }
     }
 };
@@ -645,6 +655,10 @@ function findEntryAndExit(nodes)
     var minId = nodes[0].node;
     for (var node of nodes)
     {
+        if (node.children != undefined && node.children.length > 1)
+        {
+            return false;
+        }
         if (node.depth > maxDepth)
         {
             maxDepth = node.depth;
@@ -662,6 +676,7 @@ function findEntryAndExit(nodes)
 
 function findRepExit(root)
 {
+    var wholeSelection = [clickedNode].concat(selectedNodes);
     var exits = [];
     var stack = [root];
 
@@ -672,7 +687,7 @@ function findRepExit(root)
         {
             for (var child of node.children)
             {
-                if (!selectedNodes.includes(child.node))
+                if (!wholeSelection.includes(child.node))
                 {
                     if (!exits.includes(node.node))
                     {

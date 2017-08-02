@@ -140,7 +140,7 @@ export default class GlycoCTParser{
                 }
             }
             monoType = MonosaccharideType[monoType.name];
-            var ringStart = dashSplit[2];
+            var ringStart = dashSplit[3];
             var ringStop = residue[2].substring(0, 1);
             var ringType;
             if (ringStart === "1")

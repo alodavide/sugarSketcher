@@ -424,6 +424,7 @@ function checkSelectedAllInfos() {
         if (infosTable[0] == "updateNode")
         {
             updateExistingNode();
+            updateMenu();
         }
         else if (Object.keys(treeData).length == 0) {
             infosTable.push(-1);

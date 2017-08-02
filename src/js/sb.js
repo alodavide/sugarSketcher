@@ -3571,7 +3571,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	                monoType = _MonosaccharideType2.default[monoType.name];
-	                var ringStart = dashSplit[2];
+	                var ringStart = dashSplit[3];
 	                var ringStop = residue[2].substring(0, 1);
 	                var ringType;
 	                if (ringStart === "1") {
@@ -4491,59 +4491,85 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var stack = [];
 	            stack.push(root);
-	            while (stack.length > 0) {
-	                var node = stack.pop();
-	                var nodeUnit = node.node.repeatingUnit;
-	                if (nodeUnit === undefined) {
-	                    this.res.push(node);
-	                    if (this.res.length > 1) // if we have at least 2 nodes : add link
-	                        {
-	                            this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	            if (root.node !== undefined) {
+	                while (stack.length > 0) {
+	                    var node = stack.pop();
+	                    var nodeUnit = node.node.repeatingUnit;
+	                    if (nodeUnit === undefined) {
+	                        this.res.push(node);
+	                        if (this.res.length > 1) // if we have at least 2 nodes : add link
+	                            {
+	                                this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                            }
+	                    } else {
+	                        if (node.parent !== undefined && node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
+	                            {
+	                                this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                            } else if (nodeUnit !== undefined) {
+	                            var _iteratorNormalCompletion6 = true;
+	                            var _didIteratorError6 = false;
+	                            var _iteratorError6 = undefined;
+	
+	                            try {
+	                                for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                                    var rootChild = _step6.value;
+	
+	                                    if (rootChild.node.repeatingUnit !== nodeUnit) {
+	                                        this.edges.push(this.getLink(rootChild.node.id, node.node.id));
+	                                    }
+	                                }
+	                            } catch (err) {
+	                                _didIteratorError6 = true;
+	                                _iteratorError6 = err;
+	                            } finally {
+	                                try {
+	                                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                        _iterator6.return();
+	                                    }
+	                                } finally {
+	                                    if (_didIteratorError6) {
+	                                        throw _iteratorError6;
+	                                    }
+	                                }
+	                            }
 	                        }
-	                } else {
-	                    if (node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
-	                        {
-	                            this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                        if (!this.res.includes(nodeUnit)) {
+	                            this.res.push(nodeUnit);
 	                        }
-	                    if (!this.res.includes(nodeUnit)) {
-	                        this.res.push(nodeUnit);
 	                    }
-	                }
 	
-	                var children = node.children;
-	                var childrenUnit;
-	                if (children !== undefined) {
-	                    childrenUnit = children[0].node.repeatingUnit;
-	                    if (children.length > 1) {
-	                        children = this.sort(children);
-	                    }
-	                    var _iteratorNormalCompletion6 = true;
-	                    var _didIteratorError6 = false;
-	                    var _iteratorError6 = undefined;
-	
-	                    try {
-	                        for (var _iterator6 = children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                            var child = _step6.value;
-	
-	                            stack.push(child);
+	                    var children = node.children;
+	                    if (children !== undefined) {
+	                        if (children.length > 1) {
+	                            children = this.sort(children);
 	                        }
-	                    } catch (err) {
-	                        _didIteratorError6 = true;
-	                        _iteratorError6 = err;
-	                    } finally {
+	                        var _iteratorNormalCompletion7 = true;
+	                        var _didIteratorError7 = false;
+	                        var _iteratorError7 = undefined;
+	
 	                        try {
-	                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                                _iterator6.return();
+	                            for (var _iterator7 = children[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                                var child = _step7.value;
+	
+	                                stack.push(child);
 	                            }
+	                        } catch (err) {
+	                            _didIteratorError7 = true;
+	                            _iteratorError7 = err;
 	                        } finally {
-	                            if (_didIteratorError6) {
-	                                throw _iteratorError6;
+	                            try {
+	                                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                                    _iterator7.return();
+	                                }
+	                            } finally {
+	                                if (_didIteratorError7) {
+	                                    throw _iteratorError7;
+	                                }
 	                            }
 	                        }
 	                    }
 	                }
-	            }
-	            if (this.res[0].node === undefined) {
+	            } else {
 	                this.res = [];
 	            }
 	        }
@@ -4551,7 +4577,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "generateRES",
 	        value: function generateRES(resId, repId, res, associatedSubs, repNumber) {
 	            var offset = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
-	
+	            // Offset: if we have some Repeating Units, we generate the RES section within the REP
+	            // with this function, but the offset will create a continuity with the previous indexes
 	            var formula = "RES\n";
 	            var i;
 	            for (i = 0; i < res.length; i++) {
@@ -4664,13 +4691,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    formula += "\n";
 	                }
 	            }
-	            var _iteratorNormalCompletion7 = true;
-	            var _didIteratorError7 = false;
-	            var _iteratorError7 = undefined;
+	            var _iteratorNormalCompletion8 = true;
+	            var _didIteratorError8 = false;
+	            var _iteratorError8 = undefined;
 	
 	            try {
-	                for (var _iterator7 = associatedSubs[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-	                    var pair = _step7.value;
+	                for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+	                    var pair = _step8.value;
 	
 	                    var associatedSub = pair[0];
 	                    formula += this.writeSub(i, associatedSub);
@@ -4678,20 +4705,72 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    pair[0] = i;
 	                }
 	            } catch (err) {
-	                _didIteratorError7 = true;
-	                _iteratorError7 = err;
+	                _didIteratorError8 = true;
+	                _iteratorError8 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
-	                        _iterator7.return();
+	                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+	                        _iterator8.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError7) {
-	                        throw _iteratorError7;
+	                    if (_didIteratorError8) {
+	                        throw _iteratorError8;
 	                    }
 	                }
 	            }
 	
+	            return [i + offset, formula];
+	        }
+	    }, {
+	        key: "generateLIN",
+	        value: function generateLIN(resId, associatedSubs) {
+	            var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+	
+	            var formula = "";
+	            var i;
+	            if (this.res.length + associatedSubs.length > 1) {
+	                formula += "LIN\n";
+	                var edges = this.edges;
+	                for (i = 0; i < edges.length; i++) {
+	                    var source = edges[i].sourceNode.repeatingUnit === undefined ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
+	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
+	                    var anomerCarbon = edges[i] instanceof _SubstituentLinkage2.default || edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+	
+	                    var target = edges[i].targetNode.repeatingUnit === undefined ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
+	
+	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
+	                        formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon);
+	                    } else {
+	                        formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
+	                    }
+	                }
+	
+	                var _iteratorNormalCompletion9 = true;
+	                var _didIteratorError9 = false;
+	                var _iteratorError9 = undefined;
+	
+	                try {
+	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+	                        var pair = _step9.value;
+	
+	                        formula += this.writeSubLink(i + offset, pair[1], pair[0], -1, -1);
+	                        i++;
+	                    }
+	                } catch (err) {
+	                    _didIteratorError9 = true;
+	                    _iteratorError9 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
+	                            _iterator9.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError9) {
+	                            throw _iteratorError9;
+	                        }
+	                    }
+	                }
+	            }
 	            return [i + offset, formula];
 	        }
 	    }, {
@@ -4713,108 +4792,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var lastResId = resInfo[0];
 	
 	            // LIN
-	            /*var linInfo = this.generateLIN(resId, repId, res, associatedSubs, repNumber);
+	            var linInfo = this.generateLIN(resId, associatedSubs);
 	            formula += linInfo[1];
-	            var lastLinId = resInfo[0];*/
-	            if (this.res.length + associatedSubs.length > 1) {
-	                formula += "LIN\n";
-	                var edges = this.edges;
-	                for (var i = 0; i < edges.length; i++) {
-	                    var source = edges[i].sourceNode.repeatingUnit === undefined ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
-	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-	                    var anomerCarbon = edges[i] instanceof _SubstituentLinkage2.default || edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
-	
-	                    var target = edges[i].targetNode.repeatingUnit === undefined ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
-	
-	                    if (edges[i] instanceof _GlycosidicLinkage2.default) {
-	                        formula += this.writeMonoLink(i + 1, source, target, linkedCarbon, anomerCarbon);
-	                    } else {
-	                        formula += this.writeSubLink(i, source, target, linkedCarbon, anomerCarbon);
-	                    }
-	                }
-	
-	                var _iteratorNormalCompletion8 = true;
-	                var _didIteratorError8 = false;
-	                var _iteratorError8 = undefined;
-	
-	                try {
-	                    for (var _iterator8 = associatedSubs[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-	                        var pair = _step8.value;
-	
-	                        formula += this.writeSubLink(i, pair[1], pair[0], -1, -1);
-	                        i++;
-	                    }
-	                } catch (err) {
-	                    _didIteratorError8 = true;
-	                    _iteratorError8 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
-	                            _iterator8.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError8) {
-	                            throw _iteratorError8;
-	                        }
-	                    }
-	                }
-	            }
+	            var lastLinId = resInfo[0];
 	
 	            // REP
 	
-	            var _iteratorNormalCompletion9 = true;
-	            var _didIteratorError9 = false;
-	            var _iteratorError9 = undefined;
+	            var _iteratorNormalCompletion10 = true;
+	            var _didIteratorError10 = false;
+	            var _iteratorError10 = undefined;
 	
 	            try {
-	                for (var _iterator9 = this.res[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-	                    var residue = _step9.value;
+	                for (var _iterator10 = this.res[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                    var residue = _step10.value;
 	
 	                    if (residue instanceof _RepeatingUnit2.default) {
 	                        this.rep.push(residue);
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError9 = true;
-	                _iteratorError9 = err;
+	                _didIteratorError10 = true;
+	                _iteratorError10 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
-	                        _iterator9.return();
+	                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+	                        _iterator10.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError9) {
-	                        throw _iteratorError9;
+	                    if (_didIteratorError10) {
+	                        throw _iteratorError10;
 	                    }
 	                }
 	            }
 	
 	            if (this.rep.length !== 0) {
 	                formula += "REP\n";
-	                var _iteratorNormalCompletion10 = true;
-	                var _didIteratorError10 = false;
-	                var _iteratorError10 = undefined;
+	                var _iteratorNormalCompletion11 = true;
+	                var _didIteratorError11 = false;
+	                var _iteratorError11 = undefined;
 	
 	                try {
-	                    for (var _iterator10 = this.rep[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-	                        var rep = _step10.value;
+	                    for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                        var rep = _step11.value;
 	
-	                        formula += "REP" + repId[rep.id] + ":" + "\n";
+	                        var entryId = lastResId + 1;
 	                        resInfo = this.generateRES(resId, repId, rep.nodes, associatedSubs, repNumber, lastResId);
-	                        formula += resInfo[1];
 	                        lastResId = resInfo[0];
+	                        var exitId = lastResId;
+	                        formula += "REP" + repId[rep.id] + ":" + exitId + "o(-1-1)" + entryId + "d=" + rep.min + "-" + rep.max + "\n";
+	                        formula += resInfo[1];
 	                    }
 	                } catch (err) {
-	                    _didIteratorError10 = true;
-	                    _iteratorError10 = err;
+	                    _didIteratorError11 = true;
+	                    _iteratorError11 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion10 && _iterator10.return) {
-	                            _iterator10.return();
+	                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                            _iterator11.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError10) {
-	                            throw _iteratorError10;
+	                        if (_didIteratorError11) {
+	                            throw _iteratorError11;
 	                        }
 	                    }
 	                }
