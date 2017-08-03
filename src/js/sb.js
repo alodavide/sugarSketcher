@@ -3485,6 +3485,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
+	var _SubstituentsPositions = __webpack_require__(13);
+	
+	var _SubstituentsPositions2 = _interopRequireDefault(_SubstituentsPositions);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3882,7 +3886,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
 	                var substituent = new _Substituent2.default(subId, substituentType);
 	                var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
-	                if (newType) {
+	                console.log(linkedCarbon, " ", _SubstituentsPositions2.default[newType.name].position);
+	                if (newType && _SubstituentsPositions2.default[newType.name].position == linkedCarbon) {
 	                    this.updateNodeType(this.clickedNode, newType);
 	                } else {
 	                    var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, lcs);
@@ -5018,7 +5023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var source = edges[i].sourceNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
 	                    var anomerCarbon;
-	                    if (edges[i] instanceof _SubstituentLinkage2.default) anomerCarbon = -1;else if (edges[i].anomerCarbon.value === "undefined") anomerCarbon = 1;else anomerCarbon = edges[i].anomerCarbon.value;
+	                    if (edges[i] instanceof _SubstituentLinkage2.default) anomerCarbon = 1;else if (edges[i].anomerCarbon.value === "undefined") anomerCarbon = 1;else anomerCarbon = edges[i].anomerCarbon.value;
 	
 	                    var target = edges[i].targetNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	

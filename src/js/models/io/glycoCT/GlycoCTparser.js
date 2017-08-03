@@ -16,6 +16,7 @@ import Substituent from "../../glycomics/nodes/Substituent";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import GlycoCTSubstituents from "./SubstituentsGlycoCT";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
+import SubstituentsPositions from "./SubstituentsPositions";
 
 export default class GlycoCTParser{
 
@@ -224,7 +225,7 @@ export default class GlycoCTParser{
             var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
             var substituent = new Substituent(subId,substituentType);
             var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
-            if (newType) {
+            if (newType && SubstituentsPositions[newType.name].position == linkedCarbon) {
                 this.updateNodeType(this.clickedNode, newType);
             }
             else
