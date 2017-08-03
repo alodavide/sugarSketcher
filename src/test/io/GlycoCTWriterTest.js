@@ -18,6 +18,8 @@ import SubstituentType from "../../js/models/glycomics/dictionary/SubstituentTyp
 import Substituent from "../../js/models/glycomics/nodes/Substituent";
 import SubstituentLinkage from "../../js/models/glycomics/linkages/SubstituentLinkage";
 import SubstituentsGlycoCT from "../../js/models/io/glycoCT/SubstituentsGlycoCT";
+import GlycoCTParser from "../../js/models/io/glycoCT/GlycoCTparser";
+import RepeatingUnit from "../../js/models/glycomics/RepeatingUnit";
 
 
 const isoExceptions = ["Hex","dHex","HexA","HexN","ddHex","HexNAc","dHexNAc","Pen","Oli","Abe","Col","Nonu","LDManHep","DDManHep"];
@@ -207,3 +209,14 @@ QUnit.test("Substituents", function(assert) {
 
     }
 });
+
+/*QUnit.test("Repeating Units", function(assert) {
+    var root = new Monosaccharide("root",MonosaccharideType.Hex, Anomericity.ALPHA, Isomer.D, RingType.F);
+    root.node.repeatingUnit = new RepeatingUnit("rep1",[root],0,5,root,root);
+    var sugar = new Sugar("Sugar",root);
+    var tree = {"depth": 0, "node": root};
+    var writer = new GlycoCTWriter(sugar, tree);
+    var formula = writer.exportGlycoCT();
+    var checkFormula = "RES\n1r:r1\nREP\nREP1:2o(-1-1)2d=0-5\nRES\n2b:a-HEX-1:4";
+    assert.ok(formula === checkFormula, "Only one node repeated");
+});*/

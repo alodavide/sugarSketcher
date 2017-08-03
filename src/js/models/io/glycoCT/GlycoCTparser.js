@@ -251,7 +251,7 @@ export default class GlycoCTParser{
         if (this.formula === "") {
             return new Sugar("Sugar");
         }
-        var res = this.formula.split("LIN")[0].split("\n");
+        var res = this.getSection("RES",this.formula);
         var links;
         if (! this.formula.split("LIN")[1]) // Only one node without links
         {
@@ -264,58 +264,153 @@ export default class GlycoCTParser{
         }
         else
         {
-            links = this.formula.split("LIN")[1].split("\n");
+            links = this.getSection("LIN",this.formula);
         }
+        var repSection = this.getSection("REP",this.formula);
+        var reps = this.getRepeatingUnit(repSection);
+
         var residueListById = [""];
         var nodesIds = {};
-        if (res[0] === "RES") {
-            res[0] = "";
-            for (var residueId in res) {
-                if (res[residueId] !== "") {
-                    var residue = res[residueId].split(':');
-                    residueListById.push(residue);
-                }
+
+        // Repeating Units
+        /*if (Object.keys(reps).length > 0) {
+            for (var key in reps) {
+                var minMax = key.split("=")[1].split("-");
+                var rep = reps[key];
+                res.push(this.getSection("RES", rep));
+                links.push(this.getSection("LIN", rep));
             }
+        }*/
 
-            // Get link
-            for (var linkId in links) {
-                if (links[linkId] !== "") {
-                    var link = links[linkId];
-                    var sourceId = parseInt(link.split(":")[1].split("(")[0]);
-                    var nodeId;
-                    if (residueListById[sourceId] !== "") // Root
-                    {
-                        nodeId = this.createResidue(residueListById[sourceId], "r", "r");
-                        residueListById[sourceId] = "";
-                        nodesIds[sourceId] = nodeId;
-
-                    }
-                    var targetId = parseInt(link.split(")")[1]);
-                    var linkages = link.split(/[\(\)]+/)[1];
-                    var linkedCarbon, anomerCarbon;
-                    if (linkages.substring(0, 2) === "-1") { // if linkedcarbon is undefined
-                        linkedCarbon = "?";
-                        anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
-                    }
-                    else {
-
-                        linkedCarbon = linkages.substring(0, 1);
-                        anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
-                    }
-                    for (var node of this.sugar.graph.nodes()) { // clickedNode = sourceNode
-                        if (node.id === nodesIds[sourceId]) {
-                            this.clickedNode = node;
-                        }
-                    }
-                    nodeId = this.createResidue(residueListById[targetId],linkedCarbon, anomerCarbon);
-                    residueListById[targetId] = "";
-                    nodesIds[targetId] = nodeId;
+        for (var residueId in res) {
+            if (res[residueId] !== "") {
+                var residue = res[residueId].split(':');
+                if (residue[0].substring(residue[0].length-1) === "r")
+                {
+                    var repId = residue[1].substring(1)-1; // Corresponding id for the "reps" array
+                    residue = reps[repId][1][1];
                 }
+                residueListById.push(residue);
             }
         }
+
+        residueListById = this.generateNodes(links,nodesIds,residueListById);
+
         return this.sugar;
     }
 
+    generateNodes(links,nodesIds,residueListById)
+    {
+        var residueListCopy = Object.assign({},residueListById);
+        for (var linkId in links) {
+            if (links[linkId] !== "") {
+                var link = links[linkId];
+                var sourceId = parseInt(link.split(":")[1].split("(")[0]);
+                var nodeId;
+                if (residueListById[sourceId] !== "") // Root
+                {
+                    nodeId = this.createResidue(residueListById[sourceId], "r", "r");
+                    residueListById[sourceId] = "";
+                    nodesIds[sourceId] = nodeId;
 
+                }
+                var targetId = parseInt(link.split(")")[1]);
+                var linkages = link.split(/[\(\)]+/)[1];
+                var linkedCarbon, anomerCarbon;
+                if (linkages.substring(0, 2) === "-1") { // if linkedcarbon is undefined
+                    linkedCarbon = "?";
+                    anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
+                }
+                else {
+
+                    linkedCarbon = linkages.substring(0, 1);
+                    anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
+                }
+                for (var node of this.sugar.graph.nodes()) { // clickedNode = sourceNode
+                    if (node.id === nodesIds[sourceId]) {
+                        this.clickedNode = node;
+                    }
+                }
+                nodeId = this.createResidue(residueListById[targetId],linkedCarbon, anomerCarbon);
+                residueListById[targetId] = "";
+                nodesIds[targetId] = nodeId;
+            }
+        }
+        return residueListCopy;
+    }
+
+
+    getSection(section,formula) {
+        const sections = ["RES","LIN","REP","UND","ALT"];
+        sections.splice(sections.indexOf(section),1);
+        if (section === "REP")
+        {
+            sections.splice(0,2); // Remove RES and LIN because in REP we want to keep them
+        }
+        var formulaArray;
+        if (!(formula instanceof Array))
+        {
+            formulaArray = formula.split("\n");
+        }
+        else
+        {
+            formulaArray = formula;
+        }
+        var output = [];
+        var flag = false;
+        for (var line of formulaArray)
+        {
+            if (flag && sections.includes(line)) // If other section encountered
+            {
+                return output;
+            }
+            if (line === section) // If the right section is encountered...
+            {
+                if (flag) // Second section word encountered
+                {
+                    return output;
+                }
+                else // .. Only once
+                {
+                    flag = true;
+                }
+            }
+            else
+            {
+                if (flag)
+                {
+                    output.push(line);
+                }
+            }
+        }
+        return output;
+    }
+
+    getRepeatingUnit(array)
+    {
+        var output = [], value = [], key = "";
+        for (var line of array)
+        {
+            var split = line.split(/REP\d+:/);
+            if (split[1])
+            {
+                if (value !== [] && key !== "")
+                {
+                    output.push([key,value]);
+                }
+                value = [];
+                key = split[1];
+            }
+            else
+            {
+                value.push(line);
+            }
+        }
+        if (value.length !== 0)
+        {
+            output.push([key,value]);
+        }
+        return output;
+    }
 
 }

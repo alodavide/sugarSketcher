@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -105,43 +105,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentsGlycoCT2 = _interopRequireDefault(_SubstituentsGlycoCT);
 	
-	var _GlycosidicLinkage = __webpack_require__(13);
+	var _SubstituentsPositions = __webpack_require__(13);
+	
+	var _SubstituentsPositions2 = _interopRequireDefault(_SubstituentsPositions);
+	
+	var _GlycosidicLinkage = __webpack_require__(14);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(14);
+	var _SubstituentLinkage = __webpack_require__(15);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
-	var _Monosaccharide = __webpack_require__(15);
+	var _Monosaccharide = __webpack_require__(16);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(16);
+	var _Substituent = __webpack_require__(17);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _Sugar = __webpack_require__(17);
+	var _Sugar = __webpack_require__(18);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
-	var _RepeatingUnit = __webpack_require__(18);
+	var _RepeatingUnit = __webpack_require__(19);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
-	var _GlycoCTParser = __webpack_require__(19);
+	var _GlycoCTParser = __webpack_require__(20);
 	
 	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
 	
-	var _GlycoCTWriter = __webpack_require__(21);
+	var _GlycoCTWriter = __webpack_require__(22);
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
-	var _NodeComparator = __webpack_require__(23);
+	var _NodeComparator = __webpack_require__(24);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _Controller = __webpack_require__(24);
+	var _Controller = __webpack_require__(25);
 	
 	var _Controller2 = _interopRequireDefault(_Controller);
 	
@@ -157,10 +161,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	//Linkages
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -182,15 +189,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NodeComparator = _NodeComparator2.default;
 	exports.RepeatingUnit = _RepeatingUnit2.default;
 	exports.Controller = _Controller2.default;
+	exports.SubstituentsPositions = _SubstituentsPositions2.default;
 	
 	//Controller
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
 	
-	//Data Structure
+	
+	//Glycomics Structure
+	//Dictionary
 
 /***/ }),
 /* 1 */
@@ -2311,6 +2316,136 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
+	var _enumify = __webpack_require__(5);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 03/08/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var SubstituentsPositions = function (_Enum) {
+	    _inherits(SubstituentsPositions, _Enum);
+	
+	    function SubstituentsPositions() {
+	        _classCallCheck(this, SubstituentsPositions);
+	
+	        return _possibleConstructorReturn(this, (SubstituentsPositions.__proto__ || Object.getPrototypeOf(SubstituentsPositions)).apply(this, arguments));
+	    }
+	
+	    return SubstituentsPositions;
+	}(_enumify.Enum);
+	
+	exports.default = SubstituentsPositions;
+	
+	
+	SubstituentsPositions.initEnum({
+	    HexNAc: {
+	        position: 2
+	    },
+	
+	    GlcNAc: {
+	        position: 2
+	    },
+	
+	    ManNAc: {
+	        position: 2
+	    },
+	
+	    GalNAc: {
+	        position: 2
+	    },
+	
+	    GulNAc: {
+	        position: 2
+	    },
+	
+	    AltNAc: {
+	        position: 2
+	    },
+	
+	    AllNAc: {
+	        position: 2
+	    },
+	
+	    TalNAc: {
+	        position: 2
+	    },
+	
+	    HexN: {
+	        position: 2
+	    },
+	
+	    GlcN: {
+	        position: 2
+	    },
+	
+	    ManN: {
+	        position: 2
+	    },
+	
+	    GalN: {
+	        position: 2
+	    },
+	
+	    GulN: {
+	        position: 2
+	    },
+	
+	    AltN: {
+	        position: 2
+	    },
+	
+	    AllN: {
+	        position: 2
+	    },
+	
+	    TalN: {
+	        position: 2
+	    },
+	
+	    KdnNAc: {
+	        position: 5
+	    },
+	
+	    KdnGc: {
+	        position: 5
+	    },
+	
+	    KdnNGc: {
+	        position: 5
+	    },
+	
+	    KdnN: {
+	        position: 5
+	    },
+	
+	    Neu5Ac: {
+	        position: 5
+	    },
+	
+	    Neu5Gc: {
+	        position: 5
+	    },
+	
+	    Neu: {
+	        position: 5
+	    }
+	
+	});
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _GraphEdge = __webpack_require__(2);
@@ -2397,7 +2532,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycosidicLinkage;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2467,7 +2602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SubstituentLinkage;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2608,7 +2743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Monosaccharide;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2676,7 +2811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Substituent;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2696,19 +2831,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
 	
-	var _Monosaccharide = __webpack_require__(15);
+	var _Monosaccharide = __webpack_require__(16);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(16);
+	var _Substituent = __webpack_require__(17);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _GlycosidicLinkage = __webpack_require__(13);
+	var _GlycosidicLinkage = __webpack_require__(14);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(14);
+	var _SubstituentLinkage = __webpack_require__(15);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -3255,7 +3390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Sugar;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3284,7 +3419,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = RepeatingUnit;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3298,7 +3433,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Sugar = __webpack_require__(17);
+	var _Sugar = __webpack_require__(18);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
@@ -3322,7 +3457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _Monosaccharide = __webpack_require__(15);
+	var _Monosaccharide = __webpack_require__(16);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
@@ -3334,11 +3469,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
 	
-	var _Substituent = __webpack_require__(16);
+	var _Substituent = __webpack_require__(17);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _SubstituentLinkage = __webpack_require__(14);
+	var _SubstituentLinkage = __webpack_require__(15);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -3346,7 +3481,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentsGlycoCT2 = _interopRequireDefault(_SubstituentsGlycoCT);
 	
-	var _MonosaccharideGlycoCT = __webpack_require__(20);
+	var _MonosaccharideGlycoCT = __webpack_require__(21);
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
@@ -3791,7 +3926,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (this.formula === "") {
 	                return new _Sugar2.default("Sugar");
 	            }
-	            var res = this.formula.split("LIN")[0].split("\n");
+	            var res = this.getSection("RES", this.formula);
 	            var links;
 	            if (!this.formula.split("LIN")[1]) // Only one node without links
 	                {
@@ -3802,77 +3937,204 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.createResidue(res[1].split(":"), "r", "r");
 	                    return this.sugar;
 	                } else {
-	                links = this.formula.split("LIN")[1].split("\n");
+	                links = this.getSection("LIN", this.formula);
 	            }
+	            var repSection = this.getSection("REP", this.formula);
+	            var reps = this.getRepeatingUnit(repSection);
+	
 	            var residueListById = [""];
 	            var nodesIds = {};
-	            if (res[0] === "RES") {
-	                res[0] = "";
-	                for (var residueId in res) {
-	                    if (res[residueId] !== "") {
-	                        var residue = res[residueId].split(':');
-	                        residueListById.push(residue);
+	
+	            // Repeating Units
+	            /*if (Object.keys(reps).length > 0) {
+	                for (var key in reps) {
+	                    var minMax = key.split("=")[1].split("-");
+	                    var rep = reps[key];
+	                    res.push(this.getSection("RES", rep));
+	                    links.push(this.getSection("LIN", rep));
+	                }
+	            }*/
+	
+	            for (var residueId in res) {
+	                if (res[residueId] !== "") {
+	                    var residue = res[residueId].split(':');
+	                    if (residue[0].substring(residue[0].length - 1) === "r") {
+	                        var repId = residue[1].substring(1) - 1; // Corresponding id for the "reps" array
+	                        residue = reps[repId][1][1];
+	                    }
+	                    residueListById.push(residue);
+	                }
+	            }
+	
+	            residueListById = this.generateNodes(links, nodesIds, residueListById);
+	
+	            return this.sugar;
+	        }
+	    }, {
+	        key: 'generateNodes',
+	        value: function generateNodes(links, nodesIds, residueListById) {
+	            var residueListCopy = Object.assign({}, residueListById);
+	            for (var linkId in links) {
+	                if (links[linkId] !== "") {
+	                    var link = links[linkId];
+	                    var sourceId = parseInt(link.split(":")[1].split("(")[0]);
+	                    var nodeId;
+	                    if (residueListById[sourceId] !== "") // Root
+	                        {
+	                            nodeId = this.createResidue(residueListById[sourceId], "r", "r");
+	                            residueListById[sourceId] = "";
+	                            nodesIds[sourceId] = nodeId;
+	                        }
+	                    var targetId = parseInt(link.split(")")[1]);
+	                    var linkages = link.split(/[\(\)]+/)[1];
+	                    var linkedCarbon, anomerCarbon;
+	                    if (linkages.substring(0, 2) === "-1") {
+	                        // if linkedcarbon is undefined
+	                        linkedCarbon = "?";
+	                        anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
+	                    } else {
+	
+	                        linkedCarbon = linkages.substring(0, 1);
+	                        anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
+	                    }
+	                    var _iteratorNormalCompletion12 = true;
+	                    var _didIteratorError12 = false;
+	                    var _iteratorError12 = undefined;
+	
+	                    try {
+	                        for (var _iterator12 = this.sugar.graph.nodes()[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                            var node = _step12.value;
+	                            // clickedNode = sourceNode
+	                            if (node.id === nodesIds[sourceId]) {
+	                                this.clickedNode = node;
+	                            }
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError12 = true;
+	                        _iteratorError12 = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                                _iterator12.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError12) {
+	                                throw _iteratorError12;
+	                            }
+	                        }
+	                    }
+	
+	                    nodeId = this.createResidue(residueListById[targetId], linkedCarbon, anomerCarbon);
+	                    residueListById[targetId] = "";
+	                    nodesIds[targetId] = nodeId;
+	                }
+	            }
+	            return residueListCopy;
+	        }
+	    }, {
+	        key: 'getSection',
+	        value: function getSection(section, formula) {
+	            var sections = ["RES", "LIN", "REP", "UND", "ALT"];
+	            sections.splice(sections.indexOf(section), 1);
+	            if (section === "REP") {
+	                sections.splice(0, 2); // Remove RES and LIN because in REP we want to keep them
+	            }
+	            var formulaArray;
+	            if (!(formula instanceof Array)) {
+	                formulaArray = formula.split("\n");
+	            } else {
+	                formulaArray = formula;
+	            }
+	            var output = [];
+	            var flag = false;
+	            var _iteratorNormalCompletion13 = true;
+	            var _didIteratorError13 = false;
+	            var _iteratorError13 = undefined;
+	
+	            try {
+	                for (var _iterator13 = formulaArray[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+	                    var line = _step13.value;
+	
+	                    if (flag && sections.includes(line)) // If other section encountered
+	                        {
+	                            return output;
+	                        }
+	                    if (line === section) // If the right section is encountered...
+	                        {
+	                            if (flag) // Second section word encountered
+	                                {
+	                                    return output;
+	                                } else // .. Only once
+	                                {
+	                                    flag = true;
+	                                }
+	                        } else {
+	                        if (flag) {
+	                            output.push(line);
+	                        }
 	                    }
 	                }
-	
-	                // Get link
-	                for (var linkId in links) {
-	                    if (links[linkId] !== "") {
-	                        var link = links[linkId];
-	                        var sourceId = parseInt(link.split(":")[1].split("(")[0]);
-	                        var nodeId;
-	                        if (residueListById[sourceId] !== "") // Root
-	                            {
-	                                nodeId = this.createResidue(residueListById[sourceId], "r", "r");
-	                                residueListById[sourceId] = "";
-	                                nodesIds[sourceId] = nodeId;
-	                            }
-	                        var targetId = parseInt(link.split(")")[1]);
-	                        var linkages = link.split(/[\(\)]+/)[1];
-	                        var linkedCarbon, anomerCarbon;
-	                        if (linkages.substring(0, 2) === "-1") {
-	                            // if linkedcarbon is undefined
-	                            linkedCarbon = "?";
-	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
-	                        } else {
-	
-	                            linkedCarbon = linkages.substring(0, 1);
-	                            anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
-	                        }
-	                        var _iteratorNormalCompletion12 = true;
-	                        var _didIteratorError12 = false;
-	                        var _iteratorError12 = undefined;
-	
-	                        try {
-	                            for (var _iterator12 = this.sugar.graph.nodes()[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-	                                var node = _step12.value;
-	                                // clickedNode = sourceNode
-	                                if (node.id === nodesIds[sourceId]) {
-	                                    this.clickedNode = node;
-	                                }
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError12 = true;
-	                            _iteratorError12 = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion12 && _iterator12.return) {
-	                                    _iterator12.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError12) {
-	                                    throw _iteratorError12;
-	                                }
-	                            }
-	                        }
-	
-	                        nodeId = this.createResidue(residueListById[targetId], linkedCarbon, anomerCarbon);
-	                        residueListById[targetId] = "";
-	                        nodesIds[targetId] = nodeId;
+	            } catch (err) {
+	                _didIteratorError13 = true;
+	                _iteratorError13 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
+	                        _iterator13.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError13) {
+	                        throw _iteratorError13;
 	                    }
 	                }
 	            }
-	            return this.sugar;
+	
+	            return output;
+	        }
+	    }, {
+	        key: 'getRepeatingUnit',
+	        value: function getRepeatingUnit(array) {
+	            var output = [],
+	                value = [],
+	                key = "";
+	            var _iteratorNormalCompletion14 = true;
+	            var _didIteratorError14 = false;
+	            var _iteratorError14 = undefined;
+	
+	            try {
+	                for (var _iterator14 = array[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+	                    var line = _step14.value;
+	
+	                    var split = line.split(/REP\d+:/);
+	                    if (split[1]) {
+	                        if (value !== [] && key !== "") {
+	                            output.push([key, value]);
+	                        }
+	                        value = [];
+	                        key = split[1];
+	                    } else {
+	                        value.push(line);
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError14 = true;
+	                _iteratorError14 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion14 && _iterator14.return) {
+	                        _iterator14.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError14) {
+	                        throw _iteratorError14;
+	                    }
+	                }
+	            }
+	
+	            if (value.length !== 0) {
+	                output.push([key, value]);
+	            }
+	            return output;
 	        }
 	    }]);
 	
@@ -3882,7 +4144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTParser;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4180,7 +4442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4193,7 +4455,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 05/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Substituent = __webpack_require__(16);
+	var _Substituent = __webpack_require__(17);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
@@ -4201,7 +4463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _GlycosidicLinkage = __webpack_require__(13);
+	var _GlycosidicLinkage = __webpack_require__(14);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
@@ -4213,21 +4475,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _EdgeComparator = __webpack_require__(22);
+	var _EdgeComparator = __webpack_require__(23);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
-	var _RepeatingUnit = __webpack_require__(18);
+	var _RepeatingUnit = __webpack_require__(19);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
-	var _MonosaccharideGlycoCT = __webpack_require__(20);
+	var _MonosaccharideGlycoCT = __webpack_require__(21);
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
-	var _SubstituentLinkage = __webpack_require__(14);
+	var _SubstituentLinkage = __webpack_require__(15);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
+	
+	var _SubstituentsPositions = __webpack_require__(13);
+	
+	var _SubstituentsPositions2 = _interopRequireDefault(_SubstituentsPositions);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -4393,9 +4659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            formula += i + 1 + ":" + source + "d";
 	
 	            formula += "(" + linkedCarbon;
-	            if (anomerCarbon != -1) {
-	                formula += "+";
-	            }
+	            formula += "+";
 	            formula += anomerCarbon + ")";
 	
 	            formula += target + "n";
@@ -4411,9 +4675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            formula += i + ":" + source + "o";
 	
 	            formula += "(" + linkedCarbon;
-	            if (anomerCarbon != -1) {
-	                formula += "+";
-	            }
+	            formula += "+";
 	            formula += anomerCarbon + ")";
 	
 	            formula += target + "d";
@@ -4657,24 +4919,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            formula += _MonosaccharideGlycoCT2.default[resName].glycoct;
 	                            transform = _MonosaccharideGlycoCT2.default[resName].transform;
 	                        } else {
-	                        var monoName, subName, assocSubType, assocSub;
-	                        if (_MonosaccharideGlycoCT2.default[resName.substring(0, 3)] !== undefined) {
-	                            monoName = resName.substring(0, 3);
-	                            subName = resName.substring(3);
-	                            formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
-	                            transform = _MonosaccharideGlycoCT2.default[monoName].transform;
-	                            assocSubType = this.getSub(subName);
-	                            assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
-	                            associatedSubs.push([assocSub, i + 1 + offset]);
-	                        } else if (_MonosaccharideGlycoCT2.default[resName.substring(0, 4)] !== undefined) {
-	                            monoName = resName.substring(0, 4);
-	                            subName = resName.substring(4);
-	                            formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
-	                            transform = _MonosaccharideGlycoCT2.default[monoName].transform;
-	                            assocSubType = this.getSub(subName);
-	                            assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
-	                            associatedSubs.push([assocSub, i + 1 + offset]);
-	                        }
+	                        var monoName, subName, assocSubType, assocSub, linkedCarbon;
+	                        if (_MonosaccharideGlycoCT2.default[resName.substring(0, 3)] !== undefined) // If the 3 first letters make a monosaccharide
+	                            {
+	                                monoName = resName.substring(0, 3);
+	                                subName = resName.substring(3);
+	                                formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
+	                                transform = _MonosaccharideGlycoCT2.default[monoName].transform;
+	                                assocSubType = this.getSub(subName);
+	                                assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
+	                                if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
+	                                    {
+	                                        linkedCarbon = _SubstituentsPositions2.default[resName].position;
+	                                    }
+	                                associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                            } else if (_MonosaccharideGlycoCT2.default[resName.substring(0, 4)] !== undefined) // If the 4 first letters make a monosaccharide. e.g Nonu
+	                            {
+	                                monoName = resName.substring(0, 4);
+	                                subName = resName.substring(4);
+	                                formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
+	                                transform = _MonosaccharideGlycoCT2.default[monoName].transform;
+	                                assocSubType = this.getSub(subName);
+	                                assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
+	                                if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
+	                                    {
+	                                        linkedCarbon = _SubstituentsPositions2.default[resName].position;
+	                                    }
+	                                associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                            }
 	                    }
 	
 	                    var ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
@@ -4745,7 +5017,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (i = 0; i < edges.length; i++) {
 	                    var source = edges[i].sourceNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-	                    var anomerCarbon = edges[i] instanceof _SubstituentLinkage2.default || edges[i].anomerCarbon.value === "undefined" ? -1 : edges[i].anomerCarbon.value;
+	                    var anomerCarbon;
+	                    if (edges[i] instanceof _SubstituentLinkage2.default) anomerCarbon = -1;else if (edges[i].anomerCarbon.value === "undefined") anomerCarbon = 1;else anomerCarbon = edges[i].anomerCarbon.value;
 	
 	                    var target = edges[i].targetNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	
@@ -4770,7 +5043,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
 	                        var pair = _step9.value;
 	
-	                        formula += this.writeSubLink(i + offset, pair[1], pair[0] + offset, -1, -1);
+	                        formula += this.writeSubLink(i + offset, pair[1], pair[0] + offset, pair[2], 1);
 	                        i++;
 	                    }
 	                } catch (err) {
@@ -4895,7 +5168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTWriter;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4912,11 +5185,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 10/07/2017.
 	 */
 	
-	var _NodeComparator = __webpack_require__(23);
+	var _NodeComparator = __webpack_require__(24);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _GlycosidicLinkage = __webpack_require__(13);
+	var _GlycosidicLinkage = __webpack_require__(14);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
@@ -4998,7 +5271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EdgeComparator;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5011,7 +5284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 10/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _EdgeComparator = __webpack_require__(22);
+	var _EdgeComparator = __webpack_require__(23);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -5236,7 +5509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = NodeComparator;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 	"use strict";

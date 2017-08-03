@@ -84,7 +84,7 @@ $(document).ready(function() {
             .text("");
         d3.select("#validateFormula")
             .style("display", "block")
-            .on('click', function(d) {
+            .on('click', function() {
                 treeData = {};
                 selectedNodes = [];
                 if (sugar)
@@ -93,6 +93,12 @@ $(document).ready(function() {
                 sugar = parser.parseGlycoCT();
                 shapes = [];
                 generateShapes();
+                var i = 1;
+                while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
+                {
+                    i++;
+                }
+                clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-i];
                 displayTree();
             });
     });
@@ -871,14 +877,49 @@ function createNewSubstituent (linkCarbon) {
     var subType = sb.SubstituentType[subName]; // Get the SubstituentType
     var generatedSubId = randomString(7); // Random id for Substituent
     var newSubstituent = new sb.Substituent(generatedSubId, subType); // Create a new substituent
-    var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon); // Get the linkedCarbon value
-    var generatedEdgeSubId = randomString(7); // Random id for edge
-    // Create the linkage
-    var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
-    sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkag;
-    updateTreeVisualization(subLinkage);
+
+    // Try if we can bind them together
+    var newType = getMono(this.clickedNode.monosaccharideType.name + sb.SubstituentType[subName].label);
+    if (newType && sb.SubstituentsPositions[newType.name].position == linkCarbon) {
+        updateNodeType(this.clickedNode, newType);
+    }
+    else
+    {
+        var linkedCarbon = getLinkedCarbonWithSelection(linkCarbon); // Get the linkedCarbon value
+        var generatedEdgeSubId = randomString(7); // Random id for edge
+        // Create the linkage
+        var subLinkage = new sb.SubstituentLinkage(generatedEdgeSubId, clickedNode, newSubstituent, linkedCarbon);
+        sugar.addSubstituent(newSubstituent, subLinkage); // Add the substituent to the sugar, with the linkag;
+        updateTreeVisualization(subLinkage);
+    }
     displayTree();
+    updateMenu();
     return generatedSubId;
+}
+
+function getMono(name)
+{
+    switch (name)
+    {
+        case "KdnNAc":
+            return sb.MonosaccharideType.Neu5Ac;
+        case "KdnNGc":
+            return sb.MonosaccharideType.Neu5Gc;
+        case "KdnN":
+            return sb.MonosaccharideType.Neu;
+    }
+    return sb.MonosaccharideType[name];
+}
+
+function updateNodeType(node, type)
+{
+    for (var sugarNode of this.sugar.graph.nodes())
+    {
+        if (node === sugarNode)
+        {
+            sugarNode.monosaccharideType = type;
+        }
+    }
 }
 
 /**
@@ -1086,5 +1127,4 @@ function generateShapes()
             }
         }
     }
-    clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-1];
 }

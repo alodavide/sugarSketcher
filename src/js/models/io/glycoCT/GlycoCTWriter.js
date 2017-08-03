@@ -11,6 +11,7 @@ import EdgeComparator from "../EdgeComparator";
 import RepeatingUnit from "../../glycomics/RepeatingUnit";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
+import SubstituentsPositions from "./SubstituentsPositions";
 
 export default class GlycoCTWriter{
 
@@ -88,10 +89,7 @@ export default class GlycoCTWriter{
         formula += i+1 + ":" + source + "d";
 
         formula += "(" + linkedCarbon;
-        if (anomerCarbon != -1)
-        {
-            formula += "+";
-        }
+        formula += "+";
         formula += anomerCarbon + ")";
 
         formula += target + "n";
@@ -107,10 +105,7 @@ export default class GlycoCTWriter{
         formula += i + ":" + source + "o";
 
         formula += "(" + linkedCarbon;
-        if (anomerCarbon != -1)
-        {
-            formula += "+";
-        }
+        formula += "+";
         formula += anomerCarbon + ")";
 
         formula += target + "d";
@@ -314,8 +309,8 @@ export default class GlycoCTWriter{
                 }
                 else
                 {
-                    var monoName, subName, assocSubType, assocSub;
-                    if (MonosaccharideGlycoCT[resName.substring(0,3)] !== undefined)
+                    var monoName, subName, assocSubType, assocSub, linkedCarbon;
+                    if (MonosaccharideGlycoCT[resName.substring(0,3)] !== undefined) // If the 3 first letters make a monosaccharide
                     {
                         monoName = resName.substring(0,3);
                         subName = resName.substring(3);
@@ -323,9 +318,13 @@ export default class GlycoCTWriter{
                         transform = MonosaccharideGlycoCT[monoName].transform;
                         assocSubType = this.getSub(subName);
                         assocSub = new Substituent(this.randomString(7),assocSubType);
-                        associatedSubs.push([assocSub,i+1+offset]);
+                        if (SubstituentsPositions[resName] !== undefined) // Should always be defined
+                        {
+                            linkedCarbon = SubstituentsPositions[resName].position;
+                        }
+                        associatedSubs.push([assocSub,i+1+offset,linkedCarbon]);
                     }
-                    else if (MonosaccharideGlycoCT[resName.substring(0,4)] !== undefined)
+                    else if (MonosaccharideGlycoCT[resName.substring(0,4)] !== undefined) // If the 4 first letters make a monosaccharide. e.g Nonu
                     {
                         monoName = resName.substring(0,4);
                         subName = resName.substring(4);
@@ -333,7 +332,11 @@ export default class GlycoCTWriter{
                         transform = MonosaccharideGlycoCT[monoName].transform;
                         assocSubType = this.getSub(subName);
                         assocSub = new Substituent(this.randomString(7),assocSubType);
-                        associatedSubs.push([assocSub,i+1+offset]);
+                        if (SubstituentsPositions[resName] !== undefined) // Should always be defined
+                        {
+                            linkedCarbon = SubstituentsPositions[resName].position;
+                        }
+                        associatedSubs.push([assocSub,i+1+offset, linkedCarbon]);
                     }
                 }
 
@@ -386,7 +389,14 @@ export default class GlycoCTWriter{
             {
                 var source = (edges[i].sourceNode.repeatingUnit === undefined || unit !== "") ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
                 var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-                var anomerCarbon = (edges[i] instanceof SubstituentLinkage || edges[i].anomerCarbon.value === "undefined") ? -1 : edges[i].anomerCarbon.value;
+                var anomerCarbon;
+                if (edges[i] instanceof SubstituentLinkage)
+                    anomerCarbon = 1;
+                else if (edges[i].anomerCarbon.value === "undefined")
+                    anomerCarbon = 1;
+                else
+                    anomerCarbon = edges[i].anomerCarbon.value;
+
 
                 var target = (edges[i].targetNode.repeatingUnit === undefined || unit !== "") ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 
@@ -409,7 +419,7 @@ export default class GlycoCTWriter{
 
             for (var pair of associatedSubs)
             {
-                formula += this.writeSubLink(i+offset, pair[1], pair[0]+offset, -1, -1);
+                formula += this.writeSubLink(i+offset, pair[1], pair[0]+offset, pair[2], 1);
                 i++;
             }
         }
