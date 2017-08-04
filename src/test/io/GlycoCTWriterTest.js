@@ -62,7 +62,7 @@ QUnit.test( "Test three nodes" , function( assert ) {
     var tree = {"depth":0,"node":root,"children":[{"depth":1,"node":n2,"parent":{"node":root},"children":[{"depth":2,"node":n3,"parent":{"node":n2}}]}]};
     var writer = new GlycoCTWriter(sugar, tree);
     var formula = writer.exportGlycoCT();
-    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+4)2d\n2:2o(-1-1)3d", 'Check two nodes');
+    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+4)2d\n2:2o(-1+1)3d", 'Check two nodes');
 });
 
 
@@ -112,13 +112,16 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
 
         var checkFormula;
 
-        if (!(monoType.name.substring(monoType.name.length - 3) !== "NAc" &&
-            monoType.name.substring(monoType.name.length - 1) !== "N" &&
-            monoType.name.substring(monoType.name.length - 2) !== "Gc" &&
-            monoType.name.substring(monoType.name.length - 3) !== "NGc" &&
-            monoType.name.substring(monoType.name.length - 2) !== "Ac" &&
-            monoType.name !== "Neu")) {
-            if (monoType.name.substring(monoType.name.length - 3) === "NAc") {
+        if (monoType.name.substring(monoType.name.length - 3) === "NAc" ||
+            monoType.name.substring(monoType.name.length - 1) === "N" ||
+            monoType.name.substring(monoType.name.length - 2) === "Gc" ||
+            monoType.name.substring(monoType.name.length - 3) === "NGc" ||
+            monoType.name.substring(monoType.name.length - 2) === "Ac" ||
+            monoType.name === "Neu") {
+            if (monoType.name === "MurNAc") {
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + "-1:4" + MonosaccharideGlycoCT.Mur.transform + "\n2s:n-acetyl\nLIN\n1:1d(5+1)2n");
+            }
+            else if (monoType.name.substring(monoType.name.length - 3) === "NAc") {
                 monoType.name = monoType.name.substring(0,monoType.name.length-3);
                 checkFormula = "RES\n1b:a-";
 
@@ -131,11 +134,11 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
                 {
                     checkFormula += "-1:4";
                 }
-                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n";
+                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:n-acetyl\nLIN\n1:1d(2+1)2n";
                 assert.ok(formula === checkFormula);
             }
             else if (monoType.name === "Neu5Ac") {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(5+1)2n");
             }
             else if (monoType.name.substring(monoType.name.length - 2) === "Ac") {
                 monoType.name = monoType.name.substring(0,monoType.name.length-2);
@@ -150,7 +153,7 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
                 {
                     checkFormula += "-1:4";
                 }
-                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:acetyl\nLIN\n1:1d(-1-1)2n";
+                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:acetyl\nLIN\n1:1d(2+1)2n";
                 assert.ok(formula === checkFormula);
             }
             else if (monoType.name.substring(monoType.name.length - 1) === "N") {
@@ -166,26 +169,25 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
                 {
                     checkFormula += "-1:4";
                 }
-                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n";
+                checkFormula += MonosaccharideGlycoCT[monoType.name].transform + "\n2s:amino\nLIN\n1:1d(2+1)2n";
                 assert.ok(formula === checkFormula);
             }
             else if (monoType.name === "Neu")
             {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(5+1)2n");
             }
             else if (monoType.name === "Neu5Gc") {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(5+1)2n");
             }
             else if (monoType.name === "NeuNGc") {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(5+1)2n");
             }
             else if (monoType.name === "MurNGc") {
-                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + "-1:4" + MonosaccharideGlycoCT.Mur.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n");
+                assert.ok(formula === "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + "-1:4" + MonosaccharideGlycoCT.Mur.transform + "\n2s:n-glycolyl\nLIN\n1:1d(5+1)2n");
             }
             else
             {
-                console.log(monoType.name);
-                assert.ok(false,"Forgotten residue");
+                assert.ok(false,"Forgotten residue:"+monoType.name);
             }
         }
     }
@@ -203,7 +205,7 @@ QUnit.test("Substituents", function(assert) {
         var writer = new GlycoCTWriter(sugar, tree);
         var formula = writer.exportGlycoCT();
 
-        var checkFormula = "RES\n1b:a-HEX-1:4\n2s:"+SubstituentsGlycoCT[subType.name].glycoct+"\nLIN\n1:1d(1-1)2n";
+        var checkFormula = "RES\n1b:a-HEX-1:4\n2s:"+SubstituentsGlycoCT[subType.name].glycoct+"\nLIN\n1:1d(1+1)2n";
 
         assert.ok(formula === checkFormula);
 
@@ -217,6 +219,6 @@ QUnit.test("Substituents", function(assert) {
     var tree = {"depth": 0, "node": root};
     var writer = new GlycoCTWriter(sugar, tree);
     var formula = writer.exportGlycoCT();
-    var checkFormula = "RES\n1r:r1\nREP\nREP1:2o(-1-1)2d=0-5\nRES\n2b:a-HEX-1:4";
+    var checkFormula = "RES\n1r:r1\nREP\nREP1:2o(-1+1)2d=0-5\nRES\n2b:a-HEX-1:4";
     assert.ok(formula === checkFormula, "Only one node repeated");
 });*/

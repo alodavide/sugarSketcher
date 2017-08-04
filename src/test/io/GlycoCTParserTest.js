@@ -87,7 +87,7 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
         }
         formula += MonosaccharideGlycoCT[hexose].glycoct + "-1:4" + MonosaccharideGlycoCT[hexose].transform;
         formula += "\n2s:n-acetyl\n";
-        formula += "LIN\n1:1d(-1-1)2n";
+        formula += "LIN\n1:1d(2+1)2n";
         parser = new GlycoCTParser(formula);
         sugar = parser.parseGlycoCT();
         assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType[hexose + "NAc"]);
@@ -99,7 +99,7 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
         }
         formula += MonosaccharideGlycoCT[hexose].glycoct + "-1:4" + MonosaccharideGlycoCT[hexose].transform;
         formula += "\n2s:amino\n";
-        formula += "LIN\n1:1d(-1-1)2n";
+        formula += "LIN\n1:1d(2+1)2n";
         parser = new GlycoCTParser(formula);
         sugar = parser.parseGlycoCT();
         assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType[hexose + "N"]);
@@ -111,7 +111,7 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
         }
         formula += MonosaccharideGlycoCT[dhexose].glycoct + "-1:4" + MonosaccharideGlycoCT[dhexose].transform;
         formula += "\n2s:n-acetyl\n";
-        formula += "LIN\n1:1d(-1-1)2n";
+        formula += "LIN\n1:1d(2+1)2n";
         parser = new GlycoCTParser(formula);
         sugar = parser.parseGlycoCT();
         if (dhexose === "SixdAlt" || dhexose === "SixdTal") {
@@ -124,26 +124,26 @@ QUnit.test("Monosaccharide + Substituant", function(assert) {
 
     // Special cases
     // Neu
-    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n";
+    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-acetyl\nLIN\n1:1d(5+1)2n";
     parser = new GlycoCTParser(formula);
     sugar = parser.parseGlycoCT();
     assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.Neu5Ac);
-    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(-1-1)2n";
+    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:amino\nLIN\n1:1d(5+1)2n";
     parser = new GlycoCTParser(formula);
     sugar = parser.parseGlycoCT();
     assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.Neu);
-    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n";
+    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Kdn.glycoct + MonosaccharideGlycoCT.Kdn.transform + "\n2s:n-glycolyl\nLIN\n1:1d(5+1)2n";
     parser = new GlycoCTParser(formula);
     sugar = parser.parseGlycoCT();
     assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.Neu5Gc);
 
     // Mur
-    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + MonosaccharideGlycoCT.Mur.transform + "-1:4\n2s:n-acetyl\nLIN\n1:1d(-1-1)2n";
+    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + MonosaccharideGlycoCT.Mur.transform + "-1:4\n2s:n-acetyl\nLIN\n1:1d(5+1)2n";
     parser = new GlycoCTParser(formula);
     sugar = parser.parseGlycoCT();
     assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.MurNAc);
 
-    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + MonosaccharideGlycoCT.Mur.transform + "-1:4\n2s:n-glycolyl\nLIN\n1:1d(-1-1)2n";
+    formula = "RES\n1b:a-d" + MonosaccharideGlycoCT.Mur.glycoct + MonosaccharideGlycoCT.Mur.transform + "-1:4\n2s:n-glycolyl\nLIN\n1:1d(5+1)2n";
     parser = new GlycoCTParser(formula);
     sugar = parser.parseGlycoCT();
     assert.ok(sugar.graph.nodes()[0].monosaccharideType === MonosaccharideType.MurNGc);

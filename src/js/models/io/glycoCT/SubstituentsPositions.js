@@ -40,6 +40,10 @@ export default class SubstituentsPositions extends Enum {}
             position:2
         },
 
+        IdoNAc: {
+            position: 2
+        },
+
         HexN: {
             position:2
         },
@@ -56,7 +60,6 @@ export default class SubstituentsPositions extends Enum {}
             position:2
         },
 
-
         GulN: {
             position:2
         },
@@ -70,6 +73,10 @@ export default class SubstituentsPositions extends Enum {}
         },
 
         TalN: {
+            position:2
+        },
+
+        IdoN: {
             position:2
         },
 
@@ -99,6 +106,42 @@ export default class SubstituentsPositions extends Enum {}
 
         Neu: {
             position:5
+        },
+
+        dHexNAc: {
+            position: 2
+        },
+
+        QuiNAc: {
+            position: 2
+        },
+
+        RhaNAc: {
+            position: 2
+        },
+
+        SixdAltNAc: {
+            position: 2
+        },
+
+        SixdTalNAc: {
+            position: 2
+        },
+
+        FucNAc: {
+            position: 2
+        },
+
+        MurNAc: {
+            position: 5
+        },
+
+        MurNGc: {
+            position: 5
+        },
+
+        MurGc: {
+            position: 5
         }
 
 });

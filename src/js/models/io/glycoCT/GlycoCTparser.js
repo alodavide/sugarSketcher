@@ -256,11 +256,11 @@ export default class GlycoCTParser{
         var links;
         if (! this.formula.split("LIN")[1]) // Only one node without links
         {
-            if (!res[1]) // wrong formula
+            if (!res[0]) // wrong formula
             {
                 return new Sugar("Sugar");
             }
-            this.createResidue(res[1].split(":"), "r", "r");
+            this.createResidue(res[0].split(":"), "r", "r");
             return this.sugar;
         }
         else

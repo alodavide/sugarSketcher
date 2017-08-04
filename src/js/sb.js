@@ -2432,6 +2432,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    Neu: {
 	        position: 5
+	    },
+	
+	    dHex: {
+	        position: 2
+	    },
+	
+	    Qui: {
+	        position: 2
+	    },
+	
+	    Rha: {
+	        position: 2
+	    },
+	
+	    SixdAlt: {
+	        position: 2
+	    },
+	
+	    SixdTal: {
+	        position: 2
+	    },
+	
+	    Fuc: {
+	        position: 2
 	    }
 	
 	});
@@ -3886,7 +3910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
 	                var substituent = new _Substituent2.default(subId, substituentType);
 	                var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
-	                console.log(linkedCarbon, " ", _SubstituentsPositions2.default[newType.name].position);
+	                if (!_SubstituentsPositions2.default[newType.name].position) console.log(newType.name);
 	                if (newType && _SubstituentsPositions2.default[newType.name].position == linkedCarbon) {
 	                    this.updateNodeType(this.clickedNode, newType);
 	                } else {
@@ -3935,11 +3959,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var links;
 	            if (!this.formula.split("LIN")[1]) // Only one node without links
 	                {
-	                    if (!res[1]) // wrong formula
+	                    if (!res[0]) // wrong formula
 	                        {
 	                            return new _Sugar2.default("Sugar");
 	                        }
-	                    this.createResidue(res[1].split(":"), "r", "r");
+	                    this.createResidue(res[0].split(":"), "r", "r");
 	                    return this.sugar;
 	                } else {
 	                links = this.getSection("LIN", this.formula);
