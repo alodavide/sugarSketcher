@@ -744,10 +744,16 @@ function deleteNode(node) {
         deleteAllChildrenInGraph(node);
         searchAndRemoveNodeInTree(treeData, node);
         var nbNodes = sugar.graph.nodes().length;
-        clickedNode = sugar.graph.nodes()[nbNodes-1];
+        var i = 1;
+        while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
+        {
+            i++;
+        }
+        clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-i];
     }
     delete shapes[node.id];
-    reassembleNodes();
+    if (node instanceof sb.Monosaccharide)
+        reassembleNodes();
     displayTree(); // Display back the tree
     // Hide all menus
     d3.select('#svgMenu').style("display", "none");
