@@ -244,7 +244,7 @@ MonosaccharideGlycoCT.initEnum({
     },
 
     Sia: {
-        glycoct: "sia-HEX",
+        glycoct: "sia-NON",
         transform: ""
     },
 

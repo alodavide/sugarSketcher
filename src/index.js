@@ -20,6 +20,7 @@ import RingType from './js/models/glycomics/dictionary/RingType';
 import SubstituentType from './js/models/glycomics/dictionary/SubstituentType';
 import GlycoCTSubstituents from './js/models/io/glycoCT/SubstituentsGlycoCT';
 import SubstituentsPositions from './js/models/io/glycoCT/SubstituentsPositions';
+import MonosaccharideGlycoCT from './js/models/io/glycoCT/MonosaccharideGlycoCT';
 
 //Linkages
 import GlycosidicLinkage from './js/models/glycomics/linkages/GlycosidicLinkage';
@@ -38,6 +39,7 @@ import GlycoCTParser from './js/models/io/glycoCT/GlycoCTParser';
 import GlycoCTWriter from './js/models/io/glycoCT/GlycoCTWriter';
 import NodeComparator from './js/models/io/NodeComparator';
 
+
 //Controller
 import Controller from './js/controllers/Controller';
 
@@ -45,4 +47,5 @@ import Controller from './js/controllers/Controller';
 export { Graph, GraphEdge, GraphNode, AnomerCarbon, Anomericity, Isomer, 
     LinkedCarbon, MonosaccharideType, RingType, Monosaccharide, SubstituentType, 
     GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser,
-    GlycoCTWriter, GlycoCTSubstituents, NodeComparator, RepeatingUnit, Controller, SubstituentsPositions};
+    GlycoCTWriter, GlycoCTSubstituents, NodeComparator, RepeatingUnit, Controller,
+    SubstituentsPositions, MonosaccharideGlycoCT};

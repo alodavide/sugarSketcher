@@ -30,15 +30,6 @@ AnomerCarbon.initEnum({
     THREE: {
         value: 3
     },
-    FOUR:{
-        value: 4
-    },
-    FIVE: {
-        value: 5
-    },
-    SIX: {
-        value: 6
-    },
     UNDEFINED: {
         value: 'undefined'
     }

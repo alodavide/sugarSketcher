@@ -66,7 +66,7 @@ function displayPie() {
         })
         .attr("opacity", function(d) {
             // Change the opacity of the linked carbons which are already used by the node
-            var usedCarbons = checkUsedLinkedCarbons();
+            var usedCarbons = checkUsedCarbons();
             if (usedCarbons.indexOf(parseInt(d.data.name)) != -1) {
                 return 0.2;
             } else {
@@ -75,7 +75,7 @@ function displayPie() {
         })
         .on("click", function (d) {
             // For each possible linked carbon, manage click
-            var usedCarbons = checkUsedLinkedCarbons();
+            var usedCarbons = checkUsedCarbons();
             if (usedCarbons.indexOf(parseInt(d.data.name)) == -1) {
                 // Hide the piechart and the substituents menu
                 $('#pieLinkCarbon').css("display", "none");

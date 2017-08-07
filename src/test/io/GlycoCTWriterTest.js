@@ -53,7 +53,7 @@ QUnit.test( "Test three nodes" , function( assert ) {
     var n2 = new Monosaccharide("n2",MonosaccharideType.Man, Anomericity.BETA, Isomer.L, RingType.F);
     var n3 = new Monosaccharide("n3",MonosaccharideType.Glc, Anomericity.UNDEFINED, Isomer.UNDEFINED, RingType.UNDEFINED);
 
-    var e1 = new GlycosidicLinkage("e1", root, n2, AnomerCarbon.FOUR, LinkedCarbon.FOUR);
+    var e1 = new GlycosidicLinkage("e1", root, n2, AnomerCarbon.ONE, LinkedCarbon.FOUR);
     var e2 = new GlycosidicLinkage("e2", n2, n3, AnomerCarbon.UNDEFINED, LinkedCarbon.UNDEFINED);
 
     sugar.addMonosaccharide(n2, e1);
@@ -62,7 +62,7 @@ QUnit.test( "Test three nodes" , function( assert ) {
     var tree = {"depth":0,"node":root,"children":[{"depth":1,"node":n2,"parent":{"node":root},"children":[{"depth":2,"node":n3,"parent":{"node":n2}}]}]};
     var writer = new GlycoCTWriter(sugar, tree);
     var formula = writer.exportGlycoCT();
-    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+4)2d\n2:2o(-1+1)3d", 'Check two nodes');
+    assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+1)2d\n2:2o(-1+1)3d", 'Check two nodes');
 });
 
 

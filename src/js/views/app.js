@@ -11,9 +11,9 @@ const circleRadius = 15;
 var ctrl; // Boolean if ctrl is held
 
 //Values for links X and Y
-var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 'undefined': [0,-1*gap]};
+var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 7: [0,-1*gap], 8: [0,-1*gap], 9: [0,-1*gap], 'undefined': [0,-1*gap]};
 // Values for links labels X and Y
-var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 'undefined': [0,0]};
+var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 7: [0,0], 8: [0,0], 9: [0,0], 'undefined': [0,0]};
 
 /**
  * Update clickedNode on click on a node

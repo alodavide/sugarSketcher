@@ -52,15 +52,15 @@ QUnit.test( "Create new glycosidic linkage" , function( assert ) {
     assert.notOk(edgeUndefined.linkedCarbon.value === 3,"Uncorrect value ok");
     assert.notOk(edgeUndefined.anomerCarbon.value === 5,"Uncorrect value ok");
 
-    edgeUndefined.anomerCarbon = AnomerCarbon.FIVE;
+    edgeUndefined.anomerCarbon = AnomerCarbon.TWO;
     edgeUndefined.linkedCarbon = LinkedCarbon.SIX;
 
-    assert.ok(edgeUndefined.anomerCarbon === AnomerCarbon.FIVE,"Correct AnomerCarbon");
+    assert.ok(edgeUndefined.anomerCarbon === AnomerCarbon.TWO,"Correct AnomerCarbon");
     assert.ok(edgeUndefined.linkedCarbon === LinkedCarbon.SIX,"Correct LinkedCarbon");
-    assert.ok(edgeUndefined.anomerCarbon.value === 5,"Correct value");
+    assert.ok(edgeUndefined.anomerCarbon.value === 2,"Correct value");
     assert.ok(edgeUndefined.linkedCarbon.value === 6,"Correct value");
     assert.notOk(edgeUndefined.linkedCarbon.value === 1,"Uncorrect value ok");
-    assert.notOk(edgeUndefined.anomerCarbon.value === 2,"Uncorrect value ok");
+    assert.notOk(edgeUndefined.anomerCarbon.value === 5,"Uncorrect value ok");
     assert.notOk(edgeUndefined.anomerCarbon === AnomerCarbon.THREE,"Correct AnomerCarbon");
     assert.notOk(edgeUndefined.linkedCarbon === LinkedCarbon.ONE,"Correct LinkedCarbon");
 });

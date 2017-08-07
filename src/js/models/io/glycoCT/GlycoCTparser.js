@@ -141,24 +141,19 @@ export default class GlycoCTParser{
                 }
             }
             monoType = MonosaccharideType[monoType.name];
-            var ringStart = dashSplit[3];
             var ringStop = residue[2].substring(0, 1);
             var ringType;
-            if (ringStart === "1")
+            if (ringStop === "4")
             {
-                if (ringStop === "4")
-                {
-                    ringType = RingType.F;
-                }
-                else if (ringStop === "5")
-                {
-                    ringType = RingType.P;
-                }
-                else
-                {
-                    ringType = RingType.UNDEFINED;
-                }
-
+                ringType = RingType.F;
+            }
+            else if (ringStop === "5")
+            {
+                ringType = RingType.P;
+            }
+            else
+            {
+                ringType = RingType.UNDEFINED;
             }
 
             var nodeId = this.randomString(7);
@@ -318,15 +313,8 @@ export default class GlycoCTParser{
                 var targetId = parseInt(link.split(")")[1]);
                 var linkages = link.split(/[\(\)]+/)[1];
                 var linkedCarbon, anomerCarbon;
-                if (linkages.substring(0, 2) === "-1") { // if linkedcarbon is undefined
-                    linkedCarbon = "?";
-                    anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(3, 4);
-                }
-                else {
-
-                    linkedCarbon = linkages.substring(0, 1);
-                    anomerCarbon = linkages.substring(2, 4) === "-1" ? "?" : linkages.substring(2, 3);
-                }
+                linkedCarbon = linkages.split("+")[0] === "-1" ? "?" : linkages.split("+")[0];
+                anomerCarbon = linkages.split("+")[1] === "-1" ? "?" : linkages.split("+")[1];
                 for (var node of this.sugar.graph.nodes()) { // clickedNode = sourceNode
                     if (node.id === nodesIds[sourceId]) {
                         this.clickedNode = node;

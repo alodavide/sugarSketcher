@@ -426,11 +426,6 @@ function checkSelectedAllInfos() {
             updateExistingNode();
             updateMenu();
         }
-        else if (Object.keys(treeData).length == 0) {
-            infosTable.push(-1);
-            infosTable.push(-1);
-            createNewNode();
-        }
         else
         {
             d3.select("#svgCarbons").transition().style("display", "block"); // Display the carbon choice svg
@@ -466,27 +461,28 @@ function reinitializeDisplayInfos() {
 function addHoverManagerLinkedCarbon() {
     var linkedCarbonTitle = d3.select("#linkedCarbonTitleChoice"); // Linked carbon title
     linkedCarbonTitle.on("mouseover", function () { // Mouseover event
+        var maxCarbons = getNumberCarbons(infosTable[2],infosTable[3]);
         var x = parseInt(d3.select("#linkedCarbonTitleChoice").attr("x")); // Get the x of the linked carbon title
         var width = d3.select("#linkedCarbonTitleChoice").attr("width"); // Get the width of the linked carbon title
-        var idActions = ["linkedCarbon1Choice", "linkedCarbon2Choice", "linkedCarbon3Choice", "linkedCarbon4Choice", "linkedCarbon5Choice", "linkedCarbon6Choice", "linkedCarbonUnknownChoice"];
-        var associatedValues = ["1", "2", "3", "4", "5", "6", "?"]; // Values for each choice
+        var idActions = ["linkedCarbonUnknownChoice", "linkedCarbon1Choice", "linkedCarbon2Choice", "linkedCarbon3Choice", "linkedCarbon4Choice", "linkedCarbon5Choice", "linkedCarbon6Choice", "linkedCarbon7Choice", "linkedCarbon8Choice", "linkedCarbon9Choice"];
+        var associatedValues = ["?", "1", "2", "3", "4", "5", "6", "7", "8", "9"]; // Values for each choice
         d3.select("#linkedCarbonTitleChoice").style("display", "none"); // Hide the linked carbon title
         var linkedCarbonLabels = d3.select("#labelsCarbons"); // Linked carbons labels
         var linkedCarbonActions = d3.select("#actionsCarbons"); // Linked carbons actions
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < maxCarbons+1; i++) {
             const k = i;
             linkedCarbonActions.append("rect")
                 .attr("class", "bar choice choiceLinkedCarbon")
                 .attr("id", idActions[k])
-                .attr("width", width / 7) // 1/7 of the width of the title
+                .attr("width", width / (maxCarbons+1)) // 1/maxCarbons+1 the width of the title (number of carbons + "?")
                 .attr("height", 40)
-                .attr("x", x + i*width/7) // Calculate the x for each choice
+                .attr("x", x + i*width/ (maxCarbons+1)) // Calculate the x for each choice
                 .attr("rx", 15) // Corners of the rect
                 .attr("value", associatedValues[k]) // Get the value associated to the choice
                 .attr("opacity", function() {
                     // Lower opacity of already used linked carbon values
-                    var usedCarbons = checkUsedLinkedCarbons();
-                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) != -1) {
+                    var usedCarbons = checkUsedCarbons();
+                    if (usedCarbons.indexOf(parseInt(k)) != -1) {
                         return 0.2;
                     } else {
                         return 1;
@@ -502,7 +498,7 @@ function addHoverManagerLinkedCarbon() {
                 })
                 .on("click", function () {
                     // If we are not selecting an already used linked carbon value, manage the selection
-                    var usedCarbons = checkUsedLinkedCarbons();
+                    var usedCarbons = checkUsedCarbons();
                     if (usedCarbons.indexOf(parseInt(associatedValues[k])) == -1) {
                         selectLinkedCarbon(this.id);
                     }
@@ -510,13 +506,13 @@ function addHoverManagerLinkedCarbon() {
         }
         // Hide the label of the title, and append all the labels for the choices (x in absolute)
         d3.select("#labelLinkedCarbonTitle").style("display", "none");
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("1").attr("x", x + 490 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("2").attr("x", x + 1470 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("3").attr("x", x + 2450 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("4").attr("x", x + 3430 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("5").attr("x", x + 4410 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("6").attr("x", x + 5390 / 14).attr("y", 8);
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("?").attr("x", x + 6370/14).attr("y", 8);
+        var i = 1;
+        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("?").attr("x", x + (980 * i - 490) / (2*(maxCarbons+1))).attr("y", 8);
+        while (i <= maxCarbons)
+        {
+            i++;
+            linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text(i-1).attr("x", x + (980 * i - 490) / (2*(maxCarbons+1))).attr("y", 8);
+        }
     });
 }
 
@@ -567,6 +563,39 @@ function selectLinkedCarbon(target) {
 
 
 /**
+ * Returns the number of carbons the residue can be linked by
+ */
+function getNumberCarbons()
+{
+    if (clickedNode == undefined)
+    {
+        return 6;
+    }
+    var monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name];
+    if (monoType == undefined)
+    {
+        monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name.substring(0,3)];
+        if (monoType == undefined)
+        {
+            monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name.substring(0,4)];
+        }
+    }
+    var glycoct = monoType.glycoct;
+    if (glycoct.indexOf("PEN") != -1)
+    {
+        return 5;
+    }
+    else if (glycoct.indexOf("NON") != -1)
+    {
+        return 9;
+    }
+    else
+    {
+        return 6;
+    }
+}
+
+/**
  * Manage the hover on the anomer carbon choice
  * */
 function addHoverManagerAnomerCarbon() {
@@ -575,21 +604,30 @@ function addHoverManagerAnomerCarbon() {
         var x = parseInt(d3.select("#anomerCarbonTitleChoice").attr("x")); // Get the x of the title
         var width = d3.select("#anomerCarbonTitleChoice").attr("width"); // Get the width of the title
         var idActions = ["anomerCarbon1Choice", "anomerCarbon2Choice", "anomerCarbon3Choice", "anomerCarbon4Choice", "anomerCarbon5Choice", "anomerCarbon6Choice", "anomerCarbonUnknownChoice"];
-        var associatedValues = ["1", "2", "3", "4", "5", "6", "?"]; // Values for each choice
+        var associatedValues = ["1", "2", "3", "?"]; // Values for each choice
         d3.select("#anomerCarbonTitleChoice").style("display", "none"); // Hide the anomer carbon title
         var anomerCarbonLabels = d3.select("#labelsCarbons"); // Labels for anomer carbons choices
         var anomerCarbonActions = d3.select("#actionsCarbons"); // Rects for anomer carbons choices
         // Loop for each value
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < 4; i++) {
             const k = i;
             anomerCarbonActions.append("rect")
                 .attr("class", "bar choice choiceAnomerCarbon")
                 .attr("id", idActions[k])
-                .attr("width", width / 7)
+                .attr("width", width / 4)
                 .attr("height", 40)
-                .attr("x", x + i*width/7)
+                .attr("x", x + i*width/4)
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
+                /*.attr("opacity", function() {
+                    // Lower opacity of already used linked carbon values
+                    var usedCarbons = checkUsedCarbons();
+                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) != -1) {
+                        return 0.2;
+                    } else {
+                        return 1;
+                    }
+                })*/
                 .on("mouseout", function() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
@@ -599,18 +637,18 @@ function addHoverManagerAnomerCarbon() {
                     }
                 })
                 .on("click", function () {
-                    selectAnomerCarbon(this.id);
+                    /*var usedCarbons = checkUsedCarbons();
+                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) == -1) {*/
+                        selectAnomerCarbon(this.id);
+                    //}
                 });
         }
         // Hide the label of the title, and append all the labels for the choices (x in absolute)
         d3.select("#labelAnomerCarbonTitle").style("display", "none");
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("1").attr("x", x + 490 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("2").attr("x", x + 1470 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("3").attr("x", x + 2450 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("4").attr("x", x + 3430 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("5").attr("x", x + 4410 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("6").attr("x", x + 5390 / 14).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("?").attr("x", x + 6370/14).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("1").attr("x", x + 490 / 8).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("2").attr("x", x + 1470 / 8).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("3").attr("x", x + 2450 / 8).attr("y", 8);
+        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("?").attr("x", x + 3430 / 8).attr("y", 8);
     });
 }
 
@@ -702,7 +740,7 @@ function reinitializeDisplayCarbons() {
 /**
  * Checks the used linked carbon values of a node
  */
-function checkUsedLinkedCarbons() {
+function checkUsedCarbons() {
     // If sugar not created yet, return empty array
     if (Object.keys(treeData).length === 0) {
         return [];
@@ -713,6 +751,25 @@ function checkUsedLinkedCarbons() {
         for (var edge of edges) {
             if (edge.sourceNode == clickedNode) {
                 usedCarbons.push(edge.linkedCarbon.value);
+            }
+            else if (edge.targetNode == clickedNode) {
+                usedCarbons.push(edge.anomerCarbon.value);
+            }
+        }
+        return usedCarbons; // Return the final array
+    }
+}
+
+function checkLinkedCarbon() {
+    if (Object.keys(treeData).length === 0) {
+        return [];
+    } else {
+        var usedCarbons = [];
+        var edges = sugar.graph.edges();
+        // For each edge, if the source is the clickedNode, we add the linked carbon value to the array
+        for (var edge of edges) {
+            if (edge.targetNode == clickedNode) {
+                usedCarbons.push(edge.anomerCarbon.value);
             }
         }
         return usedCarbons; // Return the final array
