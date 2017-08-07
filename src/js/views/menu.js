@@ -15,25 +15,19 @@ $(document).ready(function() {
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
     d3.select("#svgTree").on('click', function() {
-        $('#deleteNode').fadeOut(400); // Hide the delete option
-        $('#copyNode').fadeOut(400); // Hide the copy option
-        $('#pasteNode').fadeOut(400); // Hide the paste option
+        fadeOutContextMenu();
     })
         .on('contextmenu', function() {
             d3.event.preventDefault();
         });
     d3.select("#svgMenu").on('click', function() {
-        $('#deleteNode').fadeOut(400); // Hide the delete option
-        $('#copyNode').fadeOut(400); // Hide the copy option
-        $('#pasteNode').fadeOut(400); // Hide the paste option
+        fadeOutContextMenu();
     })
         .on('contextmenu', function() {
             d3.event.preventDefault();
         });
     d3.select("#svgMenu2").on('click', function() {
-        $('#deleteNode').fadeOut(400); // Hide the delete option
-        $('#copyNode').fadeOut(400); // Hide the copy option
-        $('#pasteNode').fadeOut(400); // Hide the paste option
+        fadeOutContextMenu();
     })
         .on('contextmenu', function() {
             d3.event.preventDefault();
@@ -764,6 +758,42 @@ function deleteNode(node) {
     d3.select("#svgSubstituents").style("display", "none");
     d3.select("#pieLinkCarbon").style("display", "none");
 
+    updateMenu();
+}
+
+
+function deleteSubs(node)
+{
+    var name = node.monosaccharideType.name;
+    var deleted = 0;
+    for (var edge of sugar.graph.edges())
+    {
+        if (edge.sourceNode == node)
+        {
+            if (edge.targetNode instanceof sb.Substituent)
+            {
+                deleteNode(edge.targetNode);
+                deleted++;
+            }
+        }
+    }
+    if (deleted == 0 && sb.SubstituentsPositions[name])
+    { // Has an embedded sub to be deleted
+        if (name.substring(0,3) == "Neu")
+        {
+            updateNodeType(node, sb.MonosaccharideType.Kdn);
+        }
+        else
+        {
+            var i = 1;
+            while ((!sb.MonosaccharideType[name.substring(0,name.length-i)] || sb.SubstituentsPositions[name.substring(0,name.length-i)])&& i < 10)
+            {
+                i++;
+            }
+            updateNodeType(node, sb.MonosaccharideType[name.substring(0,name.length-i)]);
+        }
+    }
+    displayTree();
     updateMenu();
 }
 

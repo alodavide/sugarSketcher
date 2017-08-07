@@ -372,9 +372,7 @@ function displayTree() {
                 {
                     d3.select("#svgMultiselectMenu").style("display", "block");
                 }
-                d3.select("#deleteNode").style("display", "none");
-                d3.select("#copyNode").style("display", "none");
-                d3.select("#pasteNode").style("display", "none");
+                fadeOutContextMenu();
                 updateMenu();
                 d3.select("#svgInfos").style("display", "none");
                 d3.select("#svgSubstituents").style("display", "none");
@@ -395,23 +393,29 @@ function displayTree() {
                     });
                 d3.select("#deleteNode").on('click', function () { // Click on delete option
                     deleteNode(node); // Delete the node clicked
-                    $('#deleteNode').fadeOut(400); // Hide the delete option
-                    $('#copyNode').fadeOut(400); // Hide the copy option
-                    $('#pasteNode').fadeOut(400); // Hide the paste option
+                    fadeOutContextMenu();
                 });
-                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
-                $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 70}).fadeIn(400); // Display the copy option
+                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 110}).fadeIn(400); // Display the copy option
+                $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 110}).fadeIn(400); // Display the copy option
 
                 d3.select("#copyNode").on('click', function () { // Click on copy option
                     copiedNode = node; // Copy the node clicked
-                    $('#deleteNode').fadeOut(400); // Hide the delete option
-                    $('#copyNode').fadeOut(400); // Hide the copy option
-                    $('#pasteNode').fadeOut(400); // Hide the paste option
+                    fadeOutContextMenu();
                 });
                 if (copiedNode != null) { // If there is a copied node
-                    $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 70}).fadeIn(400); // Display the paste option
+                    $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
                     d3.select("#pasteNode").on('click', function () { // On click on paste option
                         pasteNewNode(node);
+                        fadeOutContextMenu();
+                    });
+                }
+                if (clickedNodeHasSubs())
+                {
+                    var yPos = copiedNode == null ? 44 : 66;
+                    $('#deleteSubs').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                    d3.select("#deleteSubs").on('click', function () { // On click on paste option
+                        deleteSubs(node);
+                        fadeOutContextMenu();
                     });
                 }
 
@@ -667,9 +671,7 @@ function pasteNewNode(node) {
     for (var link of copyOfLinks) { // Add all links to the graph
         sugar.graph.addEdge(link);
     }
-    $('#deleteNode').fadeOut(400); // Hide the delete option
-    $('#copyNode').fadeOut(400); // Hide the copy option
-    $('#pasteNode').fadeOut(400); // Hide the paste option
+    fadeOutContextMenu();
 
     generateShapes();
 
@@ -1070,4 +1072,25 @@ function moveShape(id, addX, addY)
     shapes[id][1] += addY;
 }
 
+function fadeOutContextMenu()
+{
+    $('#deleteNode').fadeOut(400); // Hide the delete option
+    $('#deleteSubs').fadeOut(400); // Hide the remove subs option
+    $('#copyNode').fadeOut(400); // Hide the copy option
+    $('#pasteNode').fadeOut(400); // Hide the paste option
+}
 
+function clickedNodeHasSubs()
+{
+    var name = clickedNode.monosaccharideType.name;
+    if (sb.SubstituentsPositions[name])
+        return true;
+    for (var edge of sugar.graph.edges())
+    {
+        if (edge.sourceNode == clickedNode && edge.targetNode instanceof sb.Substituent)
+        {
+            return true;
+        }
+    }
+    return false;
+}
