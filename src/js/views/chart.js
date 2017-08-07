@@ -5,7 +5,6 @@
 // The possible values for the linked carbon
 
 
-var carbons = getNumberCarbons(clickedNode);
 var datasetLinkCarbon = [
         {name: '1', percent: 1},
         {name: '2', percent: 1},
@@ -24,6 +23,7 @@ var datasetLinkCarbon = [
  * Display the piechart for linked carbon for substituent
  */
 function displayPie() {
+    var carbons = getNumberCarbons(clickedNode);
     var width = 230, // Fixed width
         height = 150, // Fixed height
         radius = Math.min(width, height) /1.5;
