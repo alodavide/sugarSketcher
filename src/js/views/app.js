@@ -381,7 +381,8 @@ function displayTree() {
                 d3.select("#svgCarbons").style("display", "none");
             })
             .on("contextmenu", function (d) {
-                clickCircle(d);
+                if (ctrl || ![clickedNode].concat(selectedNodes).includes(d.node))
+                    clickCircle(d);
                 d3.event.preventDefault();
                 var yModification = 0;
                 const node = d.node;
@@ -395,29 +396,43 @@ function displayTree() {
                     deleteNode(node); // Delete the node clicked
                     fadeOutContextMenu();
                 });
-                $('#deleteNode').css({'top': mouseY - yModification, 'left': mouseX - 110}).fadeIn(400); // Display the copy option
-                $('#copyNode').css({'top': mouseY - yModification + 22, 'left': mouseX - 110}).fadeIn(400); // Display the copy option
+
+                var yPos = 0;
+
+                $('#deleteNode').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the copy option
+                yPos += 22;
+                $('#copyNode').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the copy option
+                yPos += 22;
 
                 d3.select("#copyNode").on('click', function () { // Click on copy option
                     copiedNode = node; // Copy the node clicked
                     fadeOutContextMenu();
                 });
                 if (copiedNode != null) { // If there is a copied node
-                    $('#pasteNode').css({'top': mouseY - yModification + 44, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                    $('#pasteNode').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
                     d3.select("#pasteNode").on('click', function () { // On click on paste option
                         pasteNewNode(node);
                         fadeOutContextMenu();
                     });
+                    yPos += 22;
                 }
                 if (clickedNodeHasSubs())
                 {
-                    var yPos = copiedNode == null ? 44 : 66;
                     $('#deleteSubs').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
                     d3.select("#deleteSubs").on('click', function () { // On click on paste option
                         deleteSubs(node);
                         fadeOutContextMenu();
                     });
+                    yPos += 22;
                 }
+
+
+                $('#repeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                d3.select("#repeat").on('click', function () { // On click on paste option
+                    handleRepetition();
+                    fadeOutContextMenu();
+                });
+                yPos += 22;
 
             });
 
@@ -1078,6 +1093,7 @@ function fadeOutContextMenu()
     $('#deleteSubs').fadeOut(400); // Hide the remove subs option
     $('#copyNode').fadeOut(400); // Hide the copy option
     $('#pasteNode').fadeOut(400); // Hide the paste option
+    $('#repeat').fadeOut(400); // Hide the repeat option
 }
 
 function clickedNodeHasSubs()

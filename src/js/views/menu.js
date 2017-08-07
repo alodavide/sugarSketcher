@@ -574,53 +574,7 @@ document.onkeydown = function (e) {
         }
     }
     else if (e.keyCode == 82) { // r key
-        var nodes = [clickedNode].concat(selectedNodes);
-        if (!isRepeated(nodes))
-        {
-            findNodesInTree(nodes);
-            var repEntry, repExit;
-            if (isBranchSelected(nodes) && nodes[0].children != undefined) // if root of selection has at least 2 branches
-            {
-                repEntry = nodes[0].node;
-                repExit = findRepExit(nodes[0]);
-                if (repExit.length != 1) // If the rep unit has 2 exits
-                {
-                    return;
-                }
-                repExit = repExit[0];
-            }
-            else
-            {
-                var entryExit = findEntryAndExit(nodes);
-                if (!entryExit)
-                {
-                    return;
-                }
-                repEntry = entryExit[0];
-                repExit = entryExit[1];
-            }
-
-            if (repExit != undefined) // Doesn't finish by a fork
-            {
-                var min = prompt("Type minimum");
-                if (min == null || min == "")
-                {
-                    return;
-                }
-                var max = prompt("Type maximum");
-                if (max == null || max == "")
-                {
-                    return;
-                }
-                var id = randomString(7);
-                var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max,repEntry,repExit);
-                for  (var node of nodes)
-                {
-                    node.node.repeatingUnit = repeatingUnit;
-                }
-                displayTree();
-            }
-        }
+        handleRepetition();
     }
 };
 
@@ -645,6 +599,63 @@ function isBranchSelected(nodes)
         }
     }
     return false;
+}
+
+function handleRepetition()
+{
+    var nodes = [clickedNode].concat(selectedNodes);
+    if (!isRepeated(nodes))
+    {
+        findNodesInTree(nodes);
+        var repEntry, repExit;
+        if (isBranchSelected(nodes) && nodes[0].children != undefined) // if root of selection has at least 2 branches
+        {
+            repEntry = nodes[0].node;
+            repExit = findRepExit(nodes[0]);
+            if (repExit.length != 1) // If the rep unit has 2 exits
+            {
+                return;
+            }
+            repExit = repExit[0];
+        }
+        else
+        {
+            var entryExit = findEntryAndExit(nodes);
+            if (!entryExit)
+            {
+                return;
+            }
+            repEntry = entryExit[0];
+            repExit = entryExit[1];
+        }
+
+        if (repExit != undefined) // Doesn't finish by a fork
+        {
+            var min = prompt("Minimum number of repetitions");
+            if (min == null || min == "")
+            {
+                return;
+            }
+            var max = prompt("Maximum number of repetitions");
+            if (max == null || max == "")
+            {
+                return;
+            }
+            var linked = prompt("Linked Carbon on the "+repExit.monosaccharideType.name + " (\"?\" for unknown linkage)");
+            if (linked != "?" && (linked > getNumberCarbons(repExit) || linked < 1))
+                return;
+            var anomer = prompt("Anomer Carbon on the "+repEntry.monosaccharideType.name + " (\"?\" for unknown linkage)");
+            if (anomer != "?" && (anomer > 3 || anomer < 1))
+                return;
+            var id = randomString(7);
+            var repeatingUnit = new sb.RepeatingUnit(id,nodes,min,max,repEntry,repExit,linked,anomer);
+            for  (var node of nodes)
+            {
+                node.node.repeatingUnit = repeatingUnit;
+            }
+            displayTree();
+        }
+    }
 }
 
 function findEntryAndExit(nodes)

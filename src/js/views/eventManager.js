@@ -461,7 +461,7 @@ function reinitializeDisplayInfos() {
 function addHoverManagerLinkedCarbon() {
     var linkedCarbonTitle = d3.select("#linkedCarbonTitleChoice"); // Linked carbon title
     linkedCarbonTitle.on("mouseover", function () { // Mouseover event
-        var maxCarbons = getNumberCarbons(infosTable[2],infosTable[3]);
+        var maxCarbons = getNumberCarbons(clickedNode);
         var x = parseInt(d3.select("#linkedCarbonTitleChoice").attr("x")); // Get the x of the linked carbon title
         var width = d3.select("#linkedCarbonTitleChoice").attr("width"); // Get the width of the linked carbon title
         var idActions = ["linkedCarbonUnknownChoice", "linkedCarbon1Choice", "linkedCarbon2Choice", "linkedCarbon3Choice", "linkedCarbon4Choice", "linkedCarbon5Choice", "linkedCarbon6Choice", "linkedCarbon7Choice", "linkedCarbon8Choice", "linkedCarbon9Choice"];
@@ -565,20 +565,20 @@ function selectLinkedCarbon(target) {
 /**
  * Returns the number of carbons the residue can be linked by
  */
-function getNumberCarbons()
+function getNumberCarbons(node)
 {
-    if (clickedNode == undefined)
+    if (node == undefined)
     {
         return 6;
     }
-    var monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name];
+    var monoType = sb.MonosaccharideGlycoCT[node.monosaccharideType.name];
     if (monoType == undefined)
     {
-        monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name.substring(0,3)];
+        monoType = sb.MonosaccharideGlycoCT[node.monosaccharideType.name.substring(0,3)];
         if (monoType == undefined)
         {
-            monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name.substring(0,4)];
-            if (monoType == undefined && clickedNode.monosaccharideType.name.substring(0,3) == "Neu")
+            monoType = sb.MonosaccharideGlycoCT[node.monosaccharideType.name.substring(0,4)];
+            if (monoType == undefined && node.monosaccharideType.name.substring(0,3) == "Neu")
             {
                 monoType = sb.MonosaccharideGlycoCT.Kdn;
             }

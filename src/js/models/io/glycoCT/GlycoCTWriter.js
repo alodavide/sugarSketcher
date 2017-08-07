@@ -471,7 +471,11 @@ export default class GlycoCTWriter{
                 resInfo = this.generateRES(resId,repId,this.res,associatedSubs,repNumber,lastResId);
                 lastResId = resInfo[0];
                 var exitId = lastResId;
-                formula += "REP" + repId[rep.id] + ":" + exitId + "o(-1+-1)" + entryId + "d=" + rep.min + "-" + rep.max +"\n";
+                formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
+                formula += rep.linkedCarbon === "?" ? "-1" : rep.linkedCarbon;
+                formula += "+";
+                formula += rep.anomerCarbon === "?" ? "-1" : rep.anomerCarbon;
+                formula += ")" + entryId + "d=" + rep.min + "-" + rep.max +"\n";
                 formula += resInfo[1];
                 linInfo = this.generateLIN(resId,associatedSubs,lastLinId,rep.id);
                 lastLinId = linInfo[0];

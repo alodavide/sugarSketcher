@@ -3729,7 +3729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
@@ -3737,21 +3737,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _LinkedCarbon = __webpack_require__(8);
 	
-	/**
-	 * Created by Renaud on 17/07/2017.
-	 */
+	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
 	
-	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max, entry, exit) {
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } /**
+	                                                                                                                                                           * Created by Renaud on 17/07/2017.
+	                                                                                                                                                           */
+	
+	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max, entry, exit, linkedCarbon, anomerCarbon) {
 	    _classCallCheck(this, RepeatingUnit);
 	
 	    this.id = id;
 	    this.nodes = nodes;
-	    this.min = min;
-	    this.max = max;
+	    if (min === "?") {
+	        this.min = min;
+	    } else {
+	        this.min = parseInt(min);
+	    }
+	    if (max === "?") {
+	        this.max = max;
+	    } else {
+	        this.max = parseInt(max);
+	    }
 	    this.entryNode = entry;
 	    this.exitNode = exit;
+	    if (linkedCarbon === "?") {
+	        this.linkedCarbon = _LinkedCarbon2.default.UNDEFINED;
+	    } else {
+	        this.linkedCarbon = linkedCarbon;
+	    }
+	    if (anomerCarbon === "?") {
+	        this.anomerCarbon = _LinkedCarbon2.default.UNDEFINED;
+	    } else {
+	        this.anomerCarbon = anomerCarbon;
+	    }
 	};
 	
 	exports.default = RepeatingUnit;
@@ -5165,7 +5187,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        resInfo = this.generateRES(resId, repId, this.res, associatedSubs, repNumber, lastResId);
 	                        lastResId = resInfo[0];
 	                        var exitId = lastResId;
-	                        formula += "REP" + repId[rep.id] + ":" + exitId + "o(-1+-1)" + entryId + "d=" + rep.min + "-" + rep.max + "\n";
+	                        formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
+	                        formula += rep.linkedCarbon === "?" ? "-1" : rep.linkedCarbon;
+	                        formula += "+";
+	                        formula += rep.anomerCarbon === "?" ? "-1" : rep.anomerCarbon;
+	                        formula += ")" + entryId + "d=" + rep.min + "-" + rep.max + "\n";
 	                        formula += resInfo[1];
 	                        linInfo = this.generateLIN(resId, associatedSubs, lastLinId, rep.id);
 	                        lastLinId = linInfo[0];

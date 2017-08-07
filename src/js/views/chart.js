@@ -5,7 +5,7 @@
 // The possible values for the linked carbon
 
 
-var carbons = getNumberCarbons();
+var carbons = getNumberCarbons(clickedNode);
 var datasetLinkCarbon = [
         {name: '1', percent: 1},
         {name: '2', percent: 1},

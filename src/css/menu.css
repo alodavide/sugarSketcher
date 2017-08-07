@@ -166,7 +166,7 @@
     fill:#ff4d4d; !important;
 }
 
-#copyNode, #pasteNode, #deleteNode, #deleteSubs {
+#copyNode, #pasteNode, #deleteNode, #deleteSubs, #repeat {
     position:absolute;
     cursor:pointer;
     display:none;
