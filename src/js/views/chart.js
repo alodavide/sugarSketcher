@@ -3,15 +3,22 @@
  */
 
 // The possible values for the linked carbon
+
+
+var carbons = getNumberCarbons();
 var datasetLinkCarbon = [
-    {name: '1', percent: 1},
-    {name: '2', percent: 1},
-    {name: '3', percent: 1},
-    {name: '4', percent: 1},
-    {name: '5', percent: 1},
-    {name: '6', percent: 1},
-    {name: '?', percent: 1}
-];
+        {name: '1', percent: 1},
+        {name: '2', percent: 1},
+        {name: '3', percent: 1},
+        {name: '4', percent: 1},
+        {name: '5', percent: 1},
+        {name: '6', percent: 1},
+        {name: '7', percent: 1},
+        {name: '8', percent: 1},
+        {name: '9', percent: 1},
+        {name: '?', percent: 1}
+    ];
+
 
 /**
  * Display the piechart for linked carbon for substituent
@@ -67,7 +74,7 @@ function displayPie() {
         .attr("opacity", function(d) {
             // Change the opacity of the linked carbons which are already used by the node
             var usedCarbons = checkUsedCarbons();
-            if (usedCarbons.indexOf(parseInt(d.data.name)) != -1) {
+            if (usedCarbons.indexOf(parseInt(d.data.name)) != -1 || parseInt(d.data.name) > carbons) {
                 return 0.2;
             } else {
                 return 1;
@@ -76,7 +83,7 @@ function displayPie() {
         .on("click", function (d) {
             // For each possible linked carbon, manage click
             var usedCarbons = checkUsedCarbons();
-            if (usedCarbons.indexOf(parseInt(d.data.name)) == -1) {
+            if (d.data.name == '?' || (usedCarbons.indexOf(parseInt(d.data.name)) == -1 && parseInt(d.data.name) <= carbons)) {
                 // Hide the piechart and the substituents menu
                 $('#pieLinkCarbon').css("display", "none");
                 d3.select("#svgSubstituents").style("display", "none");

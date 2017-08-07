@@ -254,7 +254,30 @@ function displayTree() {
         var linkLabel = vis.selectAll(".linkLabel") // Link labels
             .data(links)
             .enter().append("text")
-            .attr("class", "linkLabel")
+            .attr("class", function(d) {
+                if (d.target.node["anomericity"]) // Monosaccharide
+                {
+                    return "linkLabel middleAnchor";
+                }
+                else
+                {
+                    var css = "linkLabel ";
+                    var linked = findLinkForMono(d.target.node).linkedCarbon.value;
+                    if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
+                    {
+                        css += "middleAnchor";
+                    }
+                    else if (linked == 1)
+                    {
+                        css += "leftAnchor";
+                    }
+                    else if (linked == 4 || linked == 5)
+                    {
+                        css += "rightAnchor";
+                    }
+                    return css;
+                }
+            })
             .attr("x", function (d) {
                 var finalX; // Final x of the label
                 var source = shapes[d.source.node.id]; // Calculate source coordinates
@@ -266,7 +289,7 @@ function displayTree() {
                 }
                 else // Substituant
                 {
-                    finalX = findSubstituantLabelSpot(source[0], source[1], "")[1];
+                    finalX = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[1];
                 }
 
                 return finalX; // Return the obtained value
@@ -282,7 +305,7 @@ function displayTree() {
                 }
                 else // Substituant
                 {
-                    finalY = findSubstituantLabelSpot(source[0], source[1], d.target.node._substituentType.label)[0];
+                    finalY = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[0];
                 }
                 return finalY; // Return the obtained value
             })
@@ -1031,33 +1054,10 @@ function findNewSpot(x, y, linked)
  * @param x, y : Coordinates of the source
  * @param label: label, to calculate offset to node
  */
-function findSubstituantLabelSpot(x, y, label)
+function findSubstituantLabelSpot(x, y, linkedCarbon)
 {
-    var labelSize = label.length;
-    if (isAvailible(x+gap, y) != "")
-    {
-        if (isAvailible(x, y+gap) != "")
-        {
-            if (isAvailible(x-gap, y) != "")
-            {
-                if (isAvailible(x, y-gap) != "")
-                {
-                    return [x-18, y+18];
-                }
-                else
-                    return [x-7, y-18];
-            }
-            else
-                return [x-24, y];
-        }
-        else
-        {
-            return [x-7, y - 0.5 * labelSize * labelSize + 8 * labelSize + 20];
-        }
-
-    }
-    else
-        return [x+16, y];
+    var subsXY = {1: [x-7, y+20], 2: [x+16, y], 3: [x+16,y-16], 4: [x-7, y-28], 5: [x+16, y+8], 6: [x-28, y-16], 7: [x-28, y+8], 8: [x-28, y+16], 9: [x+16, y+16], "undefined": [x-28, y]};
+    return subsXY[linkedCarbon];
 }
 
 /**

@@ -39,9 +39,20 @@
     fill:black;
     font-family: arial,helvetica,'sans-serif';
     font-size: 10px;
-    text-anchor: middle;
     alignment-baseline: text-before-edge;
     dominant-baseline: text-before-edge;
+}
+
+.middleAnchor {
+    text-anchor: middle;
+}
+
+.rightAnchor {
+    text-anchor: right;
+}
+
+.leftAnchor {
+    text-anchor: left;
 }
 
 .choice {

@@ -578,6 +578,10 @@ function getNumberCarbons()
         if (monoType == undefined)
         {
             monoType = sb.MonosaccharideGlycoCT[clickedNode.monosaccharideType.name.substring(0,4)];
+            if (monoType == undefined && clickedNode.monosaccharideType.name.substring(0,3) == "Neu")
+            {
+                monoType = sb.MonosaccharideGlycoCT.Kdn;
+            }
         }
     }
     var glycoct = monoType.glycoct;
@@ -619,15 +623,6 @@ function addHoverManagerAnomerCarbon() {
                 .attr("x", x + i*width/4)
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
-                /*.attr("opacity", function() {
-                    // Lower opacity of already used linked carbon values
-                    var usedCarbons = checkUsedCarbons();
-                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) != -1) {
-                        return 0.2;
-                    } else {
-                        return 1;
-                    }
-                })*/
                 .on("mouseout", function() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
@@ -637,10 +632,7 @@ function addHoverManagerAnomerCarbon() {
                     }
                 })
                 .on("click", function () {
-                    /*var usedCarbons = checkUsedCarbons();
-                    if (usedCarbons.indexOf(parseInt(associatedValues[k])) == -1) {*/
-                        selectAnomerCarbon(this.id);
-                    //}
+                    selectAnomerCarbon(this.id);
                 });
         }
         // Hide the label of the title, and append all the labels for the choices (x in absolute)
@@ -746,6 +738,10 @@ function checkUsedCarbons() {
         return [];
     } else {
         var usedCarbons = [];
+        if (sb.SubstituentsPositions[clickedNode.monosaccharideType.name])
+        {
+            usedCarbons.push(sb.SubstituentsPositions[clickedNode.monosaccharideType.name].position);
+        }
         var edges = sugar.graph.edges();
         // For each edge, if the source is the clickedNode, we add the linked carbon value to the array
         for (var edge of edges) {
