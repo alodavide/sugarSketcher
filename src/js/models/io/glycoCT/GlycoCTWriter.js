@@ -12,6 +12,7 @@ import RepeatingUnit from "../../glycomics/RepeatingUnit";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import SubstituentsPositions from "./SubstituentsPositions";
+import LinkedCarbon from "../../glycomics/dictionary/LinkedCarbon";
 
 export default class GlycoCTWriter{
 
@@ -472,9 +473,9 @@ export default class GlycoCTWriter{
                 lastResId = resInfo[0];
                 var exitId = lastResId;
                 formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
-                formula += rep.linkedCarbon === "?" ? "-1" : rep.linkedCarbon;
+                formula += rep.linkedCarbon === LinkedCarbon.UNDEFINED ? "-1" : rep.linkedCarbon;
                 formula += "+";
-                formula += rep.anomerCarbon === "?" ? "-1" : rep.anomerCarbon;
+                formula += rep.anomerCarbon === LinkedCarbon.UNDEFINED ? "-1" : rep.anomerCarbon;
                 formula += ")" + entryId + "d=" + rep.min + "-" + rep.max +"\n";
                 formula += resInfo[1];
                 linInfo = this.generateLIN(resId,associatedSubs,lastLinId,rep.id);

@@ -4551,6 +4551,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentsPositions2 = _interopRequireDefault(_SubstituentsPositions);
 	
+	var _LinkedCarbon = __webpack_require__(8);
+	
+	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5188,9 +5192,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        lastResId = resInfo[0];
 	                        var exitId = lastResId;
 	                        formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
-	                        formula += rep.linkedCarbon === "?" ? "-1" : rep.linkedCarbon;
+	                        formula += rep.linkedCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.linkedCarbon;
 	                        formula += "+";
-	                        formula += rep.anomerCarbon === "?" ? "-1" : rep.anomerCarbon;
+	                        formula += rep.anomerCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.anomerCarbon;
 	                        formula += ")" + entryId + "d=" + rep.min + "-" + rep.max + "\n";
 	                        formula += resInfo[1];
 	                        linInfo = this.generateLIN(resId, associatedSubs, lastLinId, rep.id);
