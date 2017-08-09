@@ -1094,6 +1094,8 @@ function fadeOutContextMenu()
     $('#copyNode').fadeOut(400); // Hide the copy option
     $('#pasteNode').fadeOut(400); // Hide the paste option
     $('#repeat').fadeOut(400); // Hide the repeat option
+
+    $('#pieLinkCarbon').css("display", "none"); // Hide chart
 }
 
 function clickedNodeHasSubs()
