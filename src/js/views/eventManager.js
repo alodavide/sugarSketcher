@@ -142,7 +142,7 @@ function manageMouseOutAnomericity() {
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x"); // Get the x attribute of the add Node rect
     d3.select("#svgMenu").select("#addNode").remove(); // Remove the add Node rect
-    d3.select("#addStructure").style("opacity", "0.2"); // Lower opacity of add Structure
+    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false'); // Lower opacity of add Structure
     d3.select("#updateNode").style("opacity", "0.2"); // Lower opacity of update Node
 
     // Add Monosaccharide rect and label
@@ -160,7 +160,7 @@ function manageHoverAddNode(menuItem,actions) {
             var mouseTarget = d3.select(newHovered[newHovered.length -1]);
             if (mouseTarget.attr("id") != "substituentNode") {
                 updateMenu();
-                d3.select("#addStructure").style("opacity", "1");
+                d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
                 d3.select("#updateNode").style("opacity", "1");
             }
         }).on("click", function () { // On click, simply update menu and push information to infosTable
@@ -183,7 +183,7 @@ function manageHoverAddNode(menuItem,actions) {
                 var mouseTarget = d3.select(newHovered[newHovered.length - 1]);
                 if (mouseTarget.attr("id") != "monosaccharideNode") {
                     updateMenu();
-                    d3.select("#addStructure").style("opacity", "1");
+                    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
                     d3.select("#updateNode").style("opacity", "1");
                 }
             }

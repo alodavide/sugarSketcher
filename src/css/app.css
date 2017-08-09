@@ -96,3 +96,13 @@ div.tooltip {
 #hiddenMsg {
     opacity:0;
 }
+
+#footer {
+    background-color: #eeeeee;
+    font-family: Tahoma, Arial;
+    position: fixed;
+    left:0;
+    width:100%;
+    bottom: 0;
+    height: 1.5em;
+}

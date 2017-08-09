@@ -96,6 +96,7 @@ $(document).ready(function() {
                 displayTree();
             });
     });
+    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
 });
 
 var menuChosenPath; // Path taken by user in the menu
@@ -501,6 +502,9 @@ function updateMenu(chosenDivision) {
     if (typeof chosenDivision != 'undefined') {
         addCancelOperation(actions, labels);
     }
+
+    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
+
 }
 
 /**
