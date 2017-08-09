@@ -154,11 +154,8 @@
     stroke:black; !important;
 }
 
-#linkedCarbonTitleChoice, .choiceLinkedCarbon {
-    fill:#ff1a1a; !important;
-}
 
-#anomericityTitleChoice, .choiceAnomericity, #isomerTitleChoice, .choiceIsomer {
+#anomericityTitleChoice, .choiceAnomericity, #isomerTitleChoice, .choiceIsomer, #linkedCarbonTitleChoice, .choiceLinkedCarbon {
     fill:#cc0000; !important;
 }
 
