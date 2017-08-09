@@ -1,6 +1,6 @@
 {
-  "name": "sugar-builder",
-  "version": "0.0.1",
+  "name": "sugar-sketcher",
+  "version": "0.0.2",
   "description": "A tiny library to build sugars in javascript",
   "main": "",
   "directories": {
