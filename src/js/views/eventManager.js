@@ -39,8 +39,8 @@ function addHoverManagersInfos() {
  * Add hover manager for the carbon selections: linked and anomer
  */
 function addHoverManagersCarbons() {
-    addHoverManagerLinkedCarbon(); // Manager for the linked carbon
     addHoverManagerAnomerCarbon(); // Manager for the anomer carbon
+    addHoverManagerLinkedCarbon(); // Manager for the linked carbon
 }
 
 /**
@@ -225,8 +225,8 @@ function manageHoverAddNode(menuItem,actions) {
  * Manage the hover on the isomer choice
  */
 function addHoverManagerIsomer() {
-    var isomerTitle = d3.select("#isomerTitleChoice"); // Get the title rect
-    isomerTitle.on("mouseover", function () { // Mouseover event
+    /*var isomerTitle = d3.select("#isomerTitleChoice"); // Get the title rect
+    isomerTitle.on("mouseover", function () { // Mouseover event*/
         var x = parseInt(d3.select("#isomerTitleChoice").attr("x")); // Get the x of the title rect
         var width = d3.select("#isomerTitleChoice").attr("width"); // Get the width of the title rect
         var idActions = ["isomerDChoice", "isomerLChoice", "isomerUnknownChoice"]; // Id's for choices
@@ -243,7 +243,15 @@ function addHoverManagerIsomer() {
                 .attr("width", width / 3) // 1/3 of the title width
                 .attr("height", 40) // Fixed height
                 .attr("x", x + i*width/3) // Calculate the current x
-                .attr("rx", 15) // Corners of the rect
+                .attr("rx", function() {
+                    if (i == 1)
+                    {
+                        return 15; //
+                    }
+                    else {
+                        return 15;
+                    }
+                }) // Corners of the rect
                 .attr("value", associatedValues[k])
                 .on("mouseout", function() {
                     var newHovered = document.querySelectorAll(":hover");
@@ -262,7 +270,7 @@ function addHoverManagerIsomer() {
         isomerLabels.append("text").attr("class", "label labelChoiceIsomer").text("D").attr("x", x + 1000 / 18).attr("y", 8);
         isomerLabels.append("text").attr("class", "label labelChoiceIsomer").text("L").attr("x", x + 1000 / 6).attr("y", 8);
         isomerLabels.append("text").attr("class", "label labelChoiceIsomer").text("?").attr("x", x + 5000/18).attr("y", 8);
-    });
+    //});
 }
 
 /**
@@ -293,10 +301,10 @@ function manageMouseOutIsomer() {
 function selectIsomer(target) {
     var clicked = d3.select("#"+target); // Get the selected isomer choice
     // If it was already selected, unselect and change color
-    if (clicked.classed("selectedIsomer")) {
+    /*if (clicked.classed("selectedIsomer")) {
         clicked.classed("selectedIsomer", false);
         clicked.style("fill", "#cc0000");
-    } else {
+    } else {*/
         // If was not selected, unselect all the other isomer choices, and adapt color
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
         for (var choice of isomerChoices) {
@@ -308,15 +316,15 @@ function selectIsomer(target) {
         }
         d3.select("#" + target).style("fill", "#000592").classed("selectedIsomer", true); // Add class and change color
         checkSelectedAllInfos(); // Check if the three infos have been selected
-    }
+    //}
 }
 
 /**
  * Manage the hover on the isomer choice
  */
 function addHoverManagerRingType() {
-    var ringTypeTitle = d3.select("#ringTypeTitleChoice"); // Get the ring type title
-    ringTypeTitle.on("mouseover", function () { // Mouseover event
+    /*var ringTypeTitle = d3.select("#ringTypeTitleChoice"); // Get the ring type title
+    ringTypeTitle.on("mouseover", function () { // Mouseover event*/
         var x = parseInt(d3.select("#ringTypeTitleChoice").attr("x")); // Get the x of the ring type title rect
         var width = d3.select("#ringTypeTitleChoice").attr("width"); // Get the width of the ring type title rect
         var idActions = ["ringTypePChoice", "ringTypeFChoice", "ringTypeUnknownChoice"]; // Id's for the choices
@@ -353,7 +361,7 @@ function addHoverManagerRingType() {
         ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("P").attr("x", x + 1000 / 18).attr("y", 8);
         ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("F").attr("x", x + 1000 / 6).attr("y", 8);
         ringTypeLabels.append("text").attr("class", "label labelChoiceRingType").text("?").attr("x", x + 5000/18).attr("y", 8);
-    });
+   // });
 }
 
 /**
@@ -385,10 +393,10 @@ function manageMouseOutRingType() {
 function selectRingType(target) {
     var clicked = d3.select("#"+target); // Get the selected choice
     // If already selected, unselect and change color
-    if (clicked.classed("selectedRingType")) {
+    /*if (clicked.classed("selectedRingType")) {
         clicked.classed("selectedRingType", false);
         clicked.style("fill", "#cc0000");
-    } else {
+    } else {*/
         // If not selected, unselect all the other ring type choices, and adapt colors
         var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
         for (var choice of ringTypeChoices) {
@@ -400,7 +408,7 @@ function selectRingType(target) {
         }
         d3.select("#" + target).style("fill", "#000592").classed("selectedRingType", true); // Add selected class and change color
         checkSelectedAllInfos(); // Check if the three informations have been selected
-    }
+    //}
 }
 
 /**
@@ -441,18 +449,18 @@ function reinitializeDisplayInfos() {
     // Display titles rects and labels for anomericity, isomer and ring type
     d3.select("#anomericityTitleChoice").style("display", "block");
     d3.select("#labelAnomericityTitle").style("display", "block");
-    d3.select("#isomerTitleChoice").style("display", "block");
-    d3.select("#labelIsomerTitle").style("display", "block");
-    d3.select("#ringTypeTitleChoice").style("display", "block");
-    d3.select("#labelRingTypeTitle").style("display", "block");
+    //d3.select("#isomerTitleChoice").style("display", "block");
+    //d3.select("#labelIsomerTitle").style("display", "block");
+    //d3.select("#ringTypeTitleChoice").style("display", "block");
+    //d3.select("#labelRingTypeTitle").style("display", "block");
 
     // Remove all the choices rects and labels
     d3.selectAll(".choiceAnomericity").remove();
     d3.selectAll(".labelChoiceAnomericity").remove();
-    d3.selectAll(".choiceIsomer").remove();
+    /*d3.selectAll(".choiceIsomer").remove();
     d3.selectAll(".labelChoiceIsomer").remove();
     d3.selectAll(".choiceRingType").remove();
-    d3.selectAll(".labelChoiceRingType").remove();
+    d3.selectAll(".labelChoiceRingType").remove();*/
 }
 
 /**
@@ -770,4 +778,15 @@ function checkLinkedCarbon() {
         }
         return usedCarbons; // Return the final array
     }
+}
+
+
+function rightRoundedRect(x, y, width, height, radius) {
+    return "M" + x + "," + y
+        + "h" + (width - radius)
+        + "a" + radius + "," + radius + " 0 0 1 " + radius + "," + radius
+        + "v" + (height - 2 * radius)
+        + "a" + radius + "," + radius + " 0 0 1 " + -radius + "," + radius
+        + "h" + (radius - width)
+        + "z";
 }

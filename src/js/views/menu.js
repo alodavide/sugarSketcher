@@ -337,6 +337,10 @@ function updateMenu(chosenDivision) {
         if (chosenDivision.indexOf("Color") > -1) {
             d3.select("#svgInfos").transition().duration(200).style("display", "block");
             d3.select("#svgMenu").transition().duration(200).style("display", "none");
+
+            // TODO: SELECT DEFAULT CHOICES
+            selectIsomer("isomerDChoice");
+            selectRingType("ringTypePChoice");
             return;
         } else {
             // Get the subdivisions of chosen menu
