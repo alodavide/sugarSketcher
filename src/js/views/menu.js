@@ -117,6 +117,14 @@ for (var shape of shapeChoices) {
     });
 }
 
+// Exit button
+var shapeExitButton = d3.selectAll(".cancelResidue");
+shapeExitButton.on("click", function() {
+    menuChosenPath = []; // Remove all information from menuChosenPath
+    updateMenu(); // Update menu
+    infosTable = []; // Remove all added information in infosTable
+});
+
 // Cancel button in shape menu, coming back to main menu
 var shapeCancelButton = d3.select("#cancelChoiceShape");
 shapeCancelButton.on("click", function() {
@@ -519,7 +527,7 @@ function updateMenu(chosenDivision) {
 function addCancelOperation (actions, labels) {
     // We add the rect and the label to cancel last click
     actions.append("rect")
-        .attr("width", 80)
+        .attr("width", 40)
         .attr("class", "bar")
         .attr("height", 40)
         .attr("id", "cancelChoice")
@@ -531,11 +539,30 @@ function addCancelOperation (actions, labels) {
             infosTable.pop(); // Remove the last added information in infosTable
         });
 
+    actions.append("rect")
+        .attr("width", 40)
+        .attr("class", "bar")
+        .attr("height", 40)
+        .attr("id", "cancelChoice")
+        .attr("x", 1050).attr("y", 0)
+        .style("fill", "#505656")
+        .on("click", function () {
+            menuChosenPath = []; // Remove all information from menuChosenPath
+            updateMenu(); // Update menu
+            infosTable = []; // Remove all added information in infosTable
+        });
+
     labels.append("text")
         .attr("class", "label cancelLabel")
-        .attr("x", 1050)
+        .attr("x", 1030)
         .attr("y", 8)
-        .text("<<")
+        .text("<<");
+
+    labels.append("text")
+        .attr("class", "label cancelLabel")
+        .attr("x", 1070)
+        .attr("y", 8)
+        .text("X");
 }
 /**
  * Get SubDivisions of a searched division, using recursive calls
