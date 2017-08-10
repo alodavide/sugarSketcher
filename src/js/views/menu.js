@@ -36,9 +36,6 @@ $(document).ready(function() {
         .on('contextmenu', function() {
             d3.event.preventDefault();
         });
-    d3.select("html").on('contextmenu', function() {
-            d3.event.preventDefault();
-    });
     var subChoices = d3.selectAll(".subChoice"); // Substituent choices
     subChoices.on('click', function() {
         if (infosTable.length == 2) { // If one substituent has already been clicked, remove it from infosTable
@@ -276,8 +273,11 @@ function updateMenu(chosenDivision) {
 
     d3.select("#actions").selectAll("*").remove(); // Reinitialize the svg rectangles menu
     d3.select("#labels").selectAll("*").remove(); // Reinitialize the svg labels menu
-    d3.select("#actions2").selectAll("*").remove();
-    d3.select("#labels2").selectAll("*").remove();
+    if (infosTable.length == 0)
+    {
+        d3.select("#actions2").selectAll("*").remove();
+        d3.select("#labels2").selectAll("*").remove();
+    }
 
     var actions = d3.select("#actions"); // Rectangles
     var actions2 = d3.select("#actions2");
@@ -437,7 +437,7 @@ function updateMenu(chosenDivision) {
                             handleRepetition();
                             repeatUnitConfirm = 0;
                         }
-                        if (selectedNodes.length == 0)
+                        else if (selectedNodes.length == 0)
                         {
                             svgMenu.style("height", "65px");
                             svgMenu.select("#actions").append("rect")
@@ -459,7 +459,7 @@ function updateMenu(chosenDivision) {
                                 svgMenu.select("#menuSubError").remove();
                                 svgMenu.select("#menuSubErrorRect").remove();
                             });
-                            repeatUnitConfirm++;
+                            repeatUnitConfirm = 1;
                         }
                     }
                 }
