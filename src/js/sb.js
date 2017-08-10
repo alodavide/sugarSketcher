@@ -4397,7 +4397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'generateNodes',
 	        value: function generateNodes(links, nodesIds, residueListById, changes, exitChanges) {
-	            this.orderLinks(links);
+	            //this.orderLinks(links);
 	            var residueListCopy = Object.assign({}, residueListById);
 	            for (var linkId in links) {
 	                if (links[linkId] !== "") {
@@ -4821,10 +4821,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "comparatorFunction",
 	        value: function comparatorFunction(a, b) {
-	            var comp = new _EdgeComparator2.default();
-	            var edge1 = this.getLink(a.parent.node.id, a.node.id);
+	            return -1;
+	            /*var comp = new EdgeComparator();
+	            var edge1 = this.getLink(a.parent.node.id,a.node.id);
 	            var edge2 = this.getLink(b.parent.node.id, b.node.id);
-	            return comp.compare(edge1, edge2);
+	            return comp.compare(edge1,edge2);*/
 	        }
 	    }, {
 	        key: "sort",
@@ -4834,7 +4835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            for (var i = 0; i < len; i++) {
 	                while (i > -1) {
-	                    if (comparatorFunction(arr[i], arr[i + 1]) > 0) {
+	                    if (this.comparatorFunction(arr[i], arr[i + 1]) > 0) {
 	                        var temp = arr[i];
 	                        arr[i] = arr[i + 1];
 	                        arr[i + 1] = temp;

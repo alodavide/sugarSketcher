@@ -13,7 +13,7 @@ var ctrl; // Boolean if ctrl is held
 //Values for links X and Y
 var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 7: [0,-1*gap], 8: [0,-1*gap], 9: [0,-1*gap], 'undefined': [0,-1*gap]};
 // Values for links labels X and Y
-var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 7: [0,0], 8: [0,0], 9: [0,0], 'undefined': [0,0]};
+var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 7: [0,14], 8: [0,14], 9: [0,14], 'undefined': [0,14]};
 
 /**
  * Update clickedNode on click on a node
@@ -251,95 +251,10 @@ function displayTree() {
             .attr('pointer-events', 'none');
 
 
-        var linkLabel = vis.selectAll(".linkLabel") // Link labels
-            .data(links)
-            .enter().append("text")
-            .attr("class", function(d) {
-                if (d.target.node["anomericity"]) // Monosaccharide
-                {
-                    return "linkLabel middleAnchor";
-                }
-                else
-                {
-                    var css = "linkLabel ";
-                    var linked = findLinkForMono(d.target.node).linkedCarbon.value;
-                    if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
-                    {
-                        css += "middleAnchor";
-                    }
-                    else if (linked == 1)
-                    {
-                        css += "leftAnchor";
-                    }
-                    else if (linked == 4 || linked == 5)
-                    {
-                        css += "rightAnchor";
-                    }
-                    return css;
-                }
-            })
-            .attr("x", function (d) {
-                var finalX; // Final x of the label
-                var source = shapes[d.source.node.id]; // Calculate source coordinates
-                if (d.target.node["anomericity"]) // Monosaccharide
-                {
-                    var target = shapes[d.target.node.id]; // Calculate target coordinates
-                    var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
-                    finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
-                }
-                else // Substituant
-                {
-                    finalX = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[1];
-                }
+        var linkLabel = vis.selectAll(".linkLabel"); // Link labels
+        displayLabels(linkLabel,links,true); // First display anomericity
+        displayLabels(linkLabel,links,false); // Then linkages (to change font-family)
 
-                return finalX; // Return the obtained value
-            })
-            .attr("y", function (d) {
-                var finalY; // Final y of the label
-                var source = shapes[d.source.node.id]; // Get source coordinates
-                if (d.target.node["anomericity"]) // Monosaccharide
-                {
-                    var target = shapes[d.target.node.id]; // Calculate target coordinates
-                    var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
-                    finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
-                }
-                else // Substituant
-                {
-                    finalY = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[0];
-                }
-                return finalY; // Return the obtained value
-            })
-            .style("stroke", function (d) {
-                var allSelectedNodes = [clickedNode].concat(selectedNodes);
-                if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
-                    return "#58ACFA";
-                }
-            })
-            .text(function (d) {
-                if (d.target.node["anomericity"]) // Monosaccharide
-                {
-                    var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
-                    var anomericity; // Anomericity of the target node
-                    if (d.target.node.anomericity.name == "ALPHA") {
-                        anomericity = "α"
-                    } else if (d.target.node.anomericity.name == "BETA") {
-                        anomericity = "β";
-                    } else {
-                        anomericity = "?"
-                    }
-                    var linkedCarbonLabel;
-                    if (link.linkedCarbon.value == 'undefined') {
-                        linkedCarbonLabel = "?";
-                    } else {
-                        linkedCarbonLabel = link.linkedCarbon.value;
-                    }
-                    return anomericity + " / " + linkedCarbonLabel; // Text of the label
-                }
-                else
-                {
-                    return d.target.node._substituentType.label;
-                }
-            });
 
         // Create nodes
         var node = vis.selectAll("g.node")
@@ -594,6 +509,135 @@ function displayTree() {
 
     }
 }
+
+
+function displayLabels(linkLabel, links, anom)
+{
+    linkLabel.data(links)
+    .enter().append("text")
+    .attr("class", function(d) {
+        if (d.target.node["anomericity"]) // Monosaccharide
+        {
+            var css = "linkLabel middleAnchor";
+            if (anom)
+                css += " anomericityLabel";
+            return  css;
+        }
+        else
+        {
+            var css = "linkLabel ";
+            var linked = findLinkForMono(d.target.node).linkedCarbon.value;
+            if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
+            {
+                css += "middleAnchor";
+            }
+            else if (linked == 1)
+            {
+                css += "leftAnchor";
+            }
+            else if (linked == 4 || linked == 5)
+            {
+                css += "rightAnchor";
+            }
+            return css;
+        }
+    })
+    .attr("x", function (d) {
+        var finalX; // Final x of the label
+        var source = shapes[d.source.node.id]; // Calculate source coordinates
+        if (d.target.node["anomericity"]) // Monosaccharide
+        {
+            var target = shapes[d.target.node.id]; // Calculate target coordinates
+            var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
+            finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+        }
+        else // Substituant
+        {
+            finalX = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[1];
+        }
+
+        return finalX; // Return the obtained value
+    })
+    .attr("y", function (d) {
+        var finalY; // Final y of the label
+        var source = shapes[d.source.node.id]; // Get source coordinates
+        if (d.target.node["anomericity"]) // Monosaccharide
+        {
+            var target = shapes[d.target.node.id]; // Calculate target coordinates
+            var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
+            finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
+        }
+        else // Substituant
+        {
+            finalY = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[0];
+        }
+        return finalY; // Return the obtained value
+    })
+    .style("stroke", function (d) {
+        var allSelectedNodes = [clickedNode].concat(selectedNodes);
+        if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
+            return "#58ACFA";
+        }
+        else if (anom)
+        {
+            return "#4b4b4b";
+        }
+    })
+    .text(function (d) {
+        if (d.target.node["anomericity"]) // Monosaccharide
+        {
+            var link = findLinkForMono(d.target.node); // Get the link to which we want to add a label
+            var anomericity; // Anomericity of the target node
+            if (!anom)
+                anomericity = "\u00A0";
+            else
+            {
+                if (d.target.node.anomericity.name == "ALPHA") {
+                    anomericity = "α"
+                } else if (d.target.node.anomericity.name == "BETA") {
+                    anomericity = "β";
+                } else {
+                    anomericity = "?"
+                }
+            }
+            var anomerCarbonLabel;
+            if (anom)
+                anomerCarbonLabel = "\u00A0";
+            else
+            {
+
+                if (link.anomerCarbon.value == "undefined") {
+                    anomerCarbonLabel = "?";
+                }
+                else {
+                    anomerCarbonLabel = link.anomerCarbon.value;
+                }
+            }
+
+            var linkedCarbonLabel;
+            if (anom)
+                linkedCarbonLabel = "\u00A0";
+            else {
+                if (link.linkedCarbon.value == 'undefined') {
+                    linkedCarbonLabel = "?";
+                } else {
+                    linkedCarbonLabel = link.linkedCarbon.value;
+                }
+            }
+            var coma;
+            if (anom)
+                coma = "\u00A0";
+            else
+                coma = ",";
+            return anomericity + anomerCarbonLabel + coma + linkedCarbonLabel; // Text of the label
+        }
+        else
+        {
+            return d.target.node._substituentType.label;
+        }
+    });
+}
+
 
 function getRepCoord(repeatingUnit)
 {
