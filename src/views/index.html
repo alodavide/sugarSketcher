@@ -11,30 +11,16 @@
 
 <body>
 <div class="canvas">
-    <!--<svg id="svgMultiselectMenu">
-        <g id="chart">
-            <g id="multiActions">
-                <rect rx="15" ry="15" width="333.3333333333333" height="40" y="0" x="0" id="repSequence" class="bar choice"></rect>
-                <rect rx="15" ry="15" width="333.3333333333333" height="40" y="0" x="333.3333333333333" id="altUnit" class="bar choice"></rect>
-                <rect rx="15" ry="15" width="333.3333333333333" height="40" y="0" x="666.6666666666666" id="undSequence" class="bar choice"></rect>
-            </g>
-            <g id="multiLabels">
-                <text class="label" x="150" y="8">Repeat Sequence</text>
-                <text class="label" x="500" y="8">Alternate Unit</text>
-                <text class="label" x="833.3333333333333" y="8">Undefined Sequence</text>
-            </g>
-        </g>
-    </svg>-->
     <svg id="svgMenu">
         <g id="chart">
             <g id="actions">
                 <rect width="333.3333333333333" height="40" y="0" x="0" id="addNode" class="bar choice"></rect>
-                <rect width="333.3333333333333" height="40" y="0" x="333.3333333333333" id="addStructure" class="bar choice"></rect>
+                <rect width="333.3333333333333" height="40" y="0" x="333.3333333333333" id="repeatUnit" class="bar choice"></rect>
                 <rect width="333.3333333333333" height="40" y="0" x="666.6666666666666" id="changeMono" class="bar choice"></rect>
             </g>
             <g id="labels">
                 <text class="label" x="166.66666666666666" y="8">Add Node</text>
-                <text class="label" x="500" y="8">Add Structure</text>
+                <text class="label" x="500" y="8">Repeat Unit</text>
                 <text class="label" x="833.3333333333333" y="8">Change Mono</text>
             </g>
         </g>
@@ -191,13 +177,15 @@
 
 <svg id="svgMenu2">
     <g id="chart">
-        <g id="actions">
-            <rect width="500" height="40" rx="15" ry="15" y="0" x="0" id="exportGlycoCT" class="bar choice"></rect>
-            <rect width="500" height="40" rx="15" ry="15" y="0" x="500" id="typeFormula" class="bar choice"></rect>
+        <g id="actions2">
+            <rect width="333.3333333333333" rx="15" ry="15" height="40" y="0" x="0" id="addStructure" class="bar choice"></rect>
+            <rect width="333.3333333333333" rx="15" ry="15" height="40" y="0" x="333.3333333333333" id="quickMode" class="bar choice"></rect>
+            <rect width="333.3333333333333" rx="15" ry="15" height="40" y="0" x="666.6666666666666" id="io" class="bar choice"></rect>
         </g>
-        <g id="labels">
-            <text class="label" x="250" y="8">Export formula</text>
-            <text class="label" x="750" y="8">Type formula</text>
+        <g id="labels2">
+            <text class="label" x="166.66666666666666" y="8">Add Structure</text>
+            <text class="label" x="500" y="8">Quick Mode</text>
+            <text class="label" x="833.3333333333333" y="8">GlycoCT</text>
         </g>
     </g>
 </svg>

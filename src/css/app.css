@@ -91,6 +91,7 @@ div.tooltip {
     display:block;
     text-align:center;
     opacity:1;
+    margin-bottom:2em;
 }
 
 #hiddenMsg {

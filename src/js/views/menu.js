@@ -7,13 +7,17 @@
 // The sugar we use as data structure, to be visualized using d3 tree
 var sugar, controller;
 
+var repeatUnitConfirm = 0;
+
 // Function called when document is ready
 
 $(document).ready(function() {
     ctrl = false;
+    quickMode = false;
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
+    //manageHoverIO();
     d3.select("#svgTree").on('click', function() {
         fadeOutContextMenu();
     })
@@ -44,59 +48,6 @@ $(document).ready(function() {
         infosTable.push(d3.select(d3.event.target).attr("value"));
         displayPie(); // Dispaly the piechart to choose linked carbon
     });
-    d3.select("#exportGlycoCT").on('click', function() {
-        d3.select("#formula").style("display","block");
-        d3.select("#validateFormula").style("display", "none");
-        var writer = new sb.GlycoCTWriter(sugar, treeData);
-        $('#formula').val(writer.exportGlycoCT());
-        $('#formula').select();
-        var formula = document.querySelector("#formula");
-
-        try {
-            var successful = document.execCommand('copy');
-            d3.select("#copyMsg")
-                .transition(1000)
-                .style("color", "green")
-                .style("opacity", 1)
-                .text("The formula has been copied to the Clipboard.");
-        } catch (err) {
-            d3.select("#copyMsg")
-                .transition(1000)
-                .style("color", "black")
-                .style("opacity", 1)
-                .text("Please use Ctrl+C.");
-        }
-        d3.select("#validateFormula").style("display", "none");
-    });
-
-    d3.select("#typeFormula").on('click', function() {
-        d3.select("#formula").style("display","block");
-        d3.select("#validateFormula").style("display", "block");
-        $('#formula').val("");
-        $('#formula').focus();
-        d3.select("#copyMsg")
-            .text("");
-        d3.select("#validateFormula")
-            .style("display", "block")
-            .on('click', function() {
-                treeData = {};
-                selectedNodes = [];
-                if (sugar)
-                    sugar.clear();
-                var parser = new sb.GlycoCTParser($('#formula').val());
-                sugar = parser.parseGlycoCT();
-                shapes = [];
-                generateShapes();
-                var i = 1;
-                while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
-                {
-                    i++;
-                }
-                clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-i];
-                displayTree();
-            });
-    });
-    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
 });
 
 var menuChosenPath; // Path taken by user in the menu
@@ -205,13 +156,35 @@ var menuAction = [{
         subDivisions: "shape"
     }]
 }, {
-    division: "addStructure",
-    display_division: "Add Structure"
+    division: "repeatUnit",
+    display_division: "Repeat Unit"
 }, {
     division: "updateNode",
     display_division: "Update Node",
     subDivisions: "shape"
 }];
+
+var menu2Action = [
+    {
+        division: "addStructure",
+        display_division: "Add Structure"
+    },
+    {
+        division: "quickMode",
+        display_division: "Toggle Quick Mode"
+    },
+    {
+        division: "io",
+        display_division: "GlycoCT",
+        subDivisions: [{
+            division: "exportFormula",
+            display_division: "Export"
+        }, {
+            division: "typeFormula",
+            display_division: "Import"
+        }]
+    }
+    ];
 
 
 //Managing displaying more rows for subs
@@ -303,12 +276,13 @@ function updateMenu(chosenDivision) {
 
     d3.select("#actions").selectAll("*").remove(); // Reinitialize the svg rectangles menu
     d3.select("#labels").selectAll("*").remove(); // Reinitialize the svg labels menu
-    d3.select("#multiActions").selectAll("*").remove();
-    d3.select("#multiLabels").selectAll("*").remove();
+    d3.select("#actions2").selectAll("*").remove();
+    d3.select("#labels2").selectAll("*").remove();
+
     var actions = d3.select("#actions"); // Rectangles
+    var actions2 = d3.select("#actions2");
     var labels = d3.select("#labels"); // Labels
-    var multiActions = d3.select("#multiActions");
-    var multiLabels = d3.select("#multiLabels");
+    var labels2 = d3.select("#labels2");
 
     // Set the height and width of our svg menu
     var svgMenu = d3.select("#svgMenu").attr({
@@ -319,10 +293,6 @@ function updateMenu(chosenDivision) {
         height: menuDimensions.height,
         width: menuDimensions.width
     });
-    var svgMultiselectMenu = d3.select("#svgMultiselectMenu").attr({
-        height: menuDimensions.height,
-        width: menuDimensions.width
-    })
     var newMenuAction = [];
 
     // This case happens when update is called with no parameter (first update)
@@ -345,10 +315,6 @@ function updateMenu(chosenDivision) {
         if (chosenDivision.indexOf("Color") > -1) {
             d3.select("#svgInfos").transition().duration(200).style("display", "block");
             d3.select("#svgMenu").transition().duration(200).style("display", "none");
-
-            // TODO: SELECT DEFAULT CHOICES
-            selectIsomer("isomerDChoice");
-            selectRingType("ringTypePChoice");
             return;
         } else {
             // Get the subdivisions of chosen menu
@@ -368,10 +334,60 @@ function updateMenu(chosenDivision) {
         return;
     }
 
-
     menuDimensions.barWidth = menuDimensions.width / newMenuAction.length; // Calculate width of each rect of the menu
     var bars = actions.selectAll("rect").data(newMenuAction);
+    var bars2 = actions2.selectAll("rect").data(menu2Action);
     var textNodes = labels.selectAll("text").data(newMenuAction); // Get all the labels of the menu
+    var textNodes2 = labels2.selectAll("text").data(menu2Action);
+
+    bars2.enter().append("rect")
+        .attr("width", 1000 / 3)
+        .attr("height", 40)
+        .attr("y", 0)
+        .attr("x", function (d, i) {
+            return (1000 / 3) * i;
+        })
+        .attr("id", function (d) {
+            return d.division;
+        })
+        .attr("rx", 15) // Corner for the rect
+        .attr("ry", 15) // Cornet for the rect
+        .attr("class",  "bar choice")
+        .style("fill", function (d) {
+            if (quickMode && d.division == "quickMode")
+            {
+                return "#000592";
+            }
+        })
+        .on("click", function (d) {
+            if (d.division == "quickMode")
+            {
+                quickMode = !quickMode;
+                updateMenu();
+            }
+        }).on("mouseover", function (d) {
+        // On hover of addNode, we display its two subdivisions
+        if (d.division == "io") {
+            manageHoverIO(d, actions2);
+            if (labels2.selectAll("text")[0][2])
+                labels2.selectAll("text")[0][2].remove();
+            labels2.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 9000 / 12).attr("y", 8);
+            labels2.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 11000 / 12).attr("y", 8);
+        }
+    });
+    textNodes2.enter().append("text")
+        .attr("class", "label")
+        .attr("x", function (d, i) {
+            var barWidth = 333.3333333333333;
+            return (barWidth * i) + (barWidth / 2);
+        })
+        .attr("y", function () {
+            var barHeight = 40;
+            return barHeight/5; // Choose an y to center label
+        })
+        .text(function (d) {
+            return d.display_division;
+        });
 
     // If we are not displaying colors
     if (newMenuAction != colorDivisions) {
@@ -407,10 +423,46 @@ function updateMenu(chosenDivision) {
                         $('#error').css({'top': mouseY - 80, 'left': mouseX - 50}).fadeIn(400).delay(1000).fadeOut(400);
                         return;
                     }
+                    // Push the information in the table and update the menu
+                    infosTable.push(d.division);
+                    updateMenu(d.division);
                 }
-                // Push the information in the table and update the menu
-                infosTable.push(d.division);
-                updateMenu(d.division);
+                else if (d.division == "repeatUnit")
+                {
+                    if (sugar)
+                    {
+                        var svgMenu = d3.select("#svgMenu");
+                        if (repeatUnitConfirm > 0)
+                        {
+                            handleRepetition();
+                            repeatUnitConfirm = 0;
+                        }
+                        if (selectedNodes.length == 0)
+                        {
+                            svgMenu.style("height", "65px");
+                            svgMenu.select("#actions").append("rect")
+                                .attr("width", 1000)
+                                .attr("class", "bar")
+                                .attr("height", 30)
+                                .attr("id", "menuSubErrorRect")
+                                .attr("x", 0)
+                                .attr("y", 40)
+                                .style("fill", "#ffffff");
+                            svgMenu.select("#labels").append("text")
+                                .attr("class", "errorLabel")
+                                .attr("id", "menuSubError")
+                                .attr("x", 500)
+                                .attr("y", 50)
+                                .text("Use Ctrl + Click to select several nodes. Click again to only repeat the selected node.");
+                            $('#menuSubError').fadeIn(400).delay(10000).fadeOut(400, function() {
+                                svgMenu.style("height", "40px");
+                                svgMenu.select("#menuSubError").remove();
+                                svgMenu.select("#menuSubErrorRect").remove();
+                            });
+                            repeatUnitConfirm++;
+                        }
+                    }
+                }
             }).on("mouseover", function (d) {
             // On hover of addNode, we display its two subdivisions
             if (d.division == "addNode") {
@@ -514,9 +566,6 @@ function updateMenu(chosenDivision) {
     if (typeof chosenDivision != 'undefined') {
         addCancelOperation(actions, labels);
     }
-
-    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
-
 }
 
 /**
@@ -689,6 +738,7 @@ function handleRepetition()
                 node.node.repeatingUnit = repeatingUnit;
             }
             displayTree();
+            updateMenu();
         }
     }
 }

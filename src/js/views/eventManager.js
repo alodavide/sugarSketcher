@@ -142,7 +142,7 @@ function manageMouseOutAnomericity() {
 function manageHoverAddNode(menuItem,actions) {
     var x = d3.select("#svgMenu").select("#addNode").attr("x"); // Get the x attribute of the add Node rect
     d3.select("#svgMenu").select("#addNode").remove(); // Remove the add Node rect
-    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false'); // Lower opacity of add Structure
+    d3.select("#repeatUnit").style("opacity", "0.2"); // Lower opacity of add Structure
     d3.select("#updateNode").style("opacity", "0.2"); // Lower opacity of update Node
 
     // Add Monosaccharide rect and label
@@ -160,7 +160,7 @@ function manageHoverAddNode(menuItem,actions) {
             var mouseTarget = d3.select(newHovered[newHovered.length -1]);
             if (mouseTarget.attr("id") != "substituentNode") {
                 updateMenu();
-                d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
+                d3.select("#repeatUnit").style("opacity", "1");
                 d3.select("#updateNode").style("opacity", "1");
             }
         }).on("click", function () { // On click, simply update menu and push information to infosTable
@@ -183,7 +183,7 @@ function manageHoverAddNode(menuItem,actions) {
                 var mouseTarget = d3.select(newHovered[newHovered.length - 1]);
                 if (mouseTarget.attr("id") != "monosaccharideNode") {
                     updateMenu();
-                    d3.select("#addStructure").style("opacity", "0.2").on("click", 'false');
+                    d3.select("#repeatUnit").style("opacity", "1");
                     d3.select("#updateNode").style("opacity", "1");
                 }
             }
@@ -219,6 +219,106 @@ function manageHoverAddNode(menuItem,actions) {
             d3.select("#svgMenu").style("display", "none"); // Hide the menu
             d3.select("#svgSubstituents").transition().style("display", "block"); // Display substituents menu
         });
+}
+
+function manageHoverIO(menuItem,actions)
+{
+    var x = parseInt(d3.select("#svgMenu2").select("#io").attr("x")); // Get the x attribute of the title
+    var y = parseInt(d3.select("#svgMenu2").select("#io").attr("y")); // Get the y attribute of the title
+    d3.select("#svgMenu2").select("#io").remove();
+    d3.select("#addStructure").style("opacity", "0.2"); // Lower opacity of add Structure
+    d3.select("#quickMode").style("opacity", "0.2"); // Lower opacity of update Node
+
+    // Export
+    actions.append("rect")
+        .attr("class", "bar choice")
+        .attr("id", menuItem.subDivisions[0].division)
+        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("height", 40) // Height is the same as the menu one
+        .attr("x", x)
+        .attr("y", y)
+        .attr("rx", 15) // Corners for the rect
+        .attr("ry", 15) // Corners for the rect
+        .on("mouseout", function() { //Mouseout event
+            // Check if moving to substituent node rect, if not then update menu
+            var newHovered = document.querySelectorAll(":hover");
+            var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+            if (mouseTarget.attr("id") != "typeFormula") {
+                updateMenu();
+                d3.select("#addStructure").style("opacity", "1");
+                d3.select("#quickMode").style("opacity", "1");
+            }
+        }).on("click", function () {
+            d3.select("#formula").style("display","block");
+            d3.select("#validateFormula").style("display", "none");
+            var writer = new sb.GlycoCTWriter(sugar, treeData);
+            $('#formula').val(writer.exportGlycoCT());
+            $('#formula').select();
+            var formula = document.querySelector("#formula");
+
+            try {
+                var successful = document.execCommand('copy');
+                d3.select("#copyMsg")
+                    .transition(1000)
+                    .style("color", "green")
+                    .style("opacity", 1)
+                    .text("The formula has been copied to the Clipboard.");
+            } catch (err) {
+                d3.select("#copyMsg")
+                    .transition(1000)
+                    .style("color", "black")
+                    .style("opacity", 1)
+                    .text("Please use Ctrl+C.");
+            }
+            d3.select("#validateFormula").style("display", "none");
+    });
+
+    // Import
+    actions.append("rect")
+        .attr("class", "bar choice")
+        .attr("id", menuItem.subDivisions[1].division)
+        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("height", 40) // Height is the same as the menu one
+        .attr("x", x+1000/6) // Place this rect at the same x as the addNode title
+        .attr("y", y)
+        .attr("rx", 15) // Corners for the rect
+        .attr("ry", 15) // Corners for the rect
+        .on("mouseout", function() { //Mouseout event
+            // Check if moving to substituent node rect, if not then update menu
+            var newHovered = document.querySelectorAll(":hover");
+            var mouseTarget = d3.select(newHovered[newHovered.length -1]);
+            if (mouseTarget.attr("id") != "exportFormula") {
+                updateMenu();
+                d3.select("#addStructure").style("opacity", "1");
+                d3.select("#quickMode").style("opacity", "1");
+            }
+        }).on("click", function () {
+            d3.select("#formula").style("display","block");
+            d3.select("#validateFormula").style("display", "block");
+            $('#formula').val("");
+            $('#formula').focus();
+            d3.select("#copyMsg")
+                .text("");
+            d3.select("#validateFormula")
+                .style("display", "block")
+                .on('click', function() {
+                    treeData = {};
+                    selectedNodes = [];
+                    if (sugar)
+                        sugar.clear();
+                    var parser = new sb.GlycoCTParser($('#formula').val());
+                    sugar = parser.parseGlycoCT();
+                    shapes = [];
+                    generateShapes();
+                    var i = 1;
+                    while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
+                    {
+                        i++;
+                    }
+                    clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-i];
+                    displayTree();
+                });
+    });
 }
 
 /**

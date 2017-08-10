@@ -9,6 +9,7 @@ const origin = [200, 600];
 const circleRadius = 15;
 
 var ctrl; // Boolean if ctrl is held
+var quickMode;
 
 //Values for links X and Y
 var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 7: [0,-1*gap], 8: [0,-1*gap], 9: [0,-1*gap], 'undefined': [0,-1*gap]};
