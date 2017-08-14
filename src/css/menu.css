@@ -64,6 +64,10 @@
     text-anchor: left;
 }
 
+.subLabel {
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+}
+
 .choice {
     fill:#cc0000;
     stroke: white;

@@ -106,7 +106,7 @@ export default class GlycoCTParser{
                 {
                     isomer = Isomer.UNDEFINED;
                 }
-                    if (stemType.substring(0, 1) === isom.name.toLowerCase())
+                if (stemType.substring(0, 1) === isom.name.toLowerCase())
                 {
                     isomer = isom;
                 }
@@ -263,30 +263,33 @@ export default class GlycoCTParser{
             links = this.getSection("LIN",this.formula);
         }
         var repSection = this.getSection("REP",this.formula);
-        var reps = this.getRepeatingUnit(repSection);
+        //var reps = this.getRepeatingUnit(repSection);
 
         var residueListById = [""];
         var nodesIds = {};
 
         // Repeating Units
         /*if (Object.keys(reps).length > 0) {
-            for (var key in reps) {
-                var minMax = key.split("=")[1].split("-");
-                var rep = reps[key];
-                res.push(this.getSection("RES", rep));
-                links.push(this.getSection("LIN", rep));
-            }
-        }*/
+         for (var key in reps) {
+         var minMax = key.split("=")[1].split("-");
+         var rep = reps[key];
+         res.push(this.getSection("RES", rep));
+         links.push(this.getSection("LIN", rep));
+         }
+         }*/
 
         for (var residueId in res) {
             if (res[residueId] !== "") {
                 var residue = res[residueId].split(':');
-                if (residue[0].substring(residue[0].length-1) === "r")
+                /*if (residue[0].substring(residue[0].length-1) === "r")
                 {
                     var repId = residue[1].substring(1)-1; // Corresponding id for the "reps" array
                     residue = reps[repId][1][1];
+                }*/
+                if (residue !== undefined)
+                {
+                    residueListById.push(residue);
                 }
-                residueListById.push(residue);
             }
         }
 

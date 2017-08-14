@@ -526,7 +526,7 @@ function displayLabels(linkLabel, links, anom)
         }
         else
         {
-            var css = "linkLabel ";
+            var css = "linkLabel subLabel ";
             var linked = findLinkForMono(d.target.node).linkedCarbon.value;
             if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
             {
@@ -598,7 +598,7 @@ function displayLabels(linkLabel, links, anom)
                 } else if (d.target.node.anomericity.name == "BETA") {
                     anomericity = "β";
                 } else {
-                    anomericity = "?"
+                    anomericity = "?\u00A0";
                 }
             }
             var anomerCarbonLabel;

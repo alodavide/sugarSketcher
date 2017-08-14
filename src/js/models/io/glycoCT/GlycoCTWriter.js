@@ -230,7 +230,7 @@ export default class GlycoCTWriter{
     }
 
     generateRES(resId, repId, res, associatedSubs, repNumber, offset = 0) { // Offset: if we have some Repeating Units, we generate the RES section within the REP
-                                                                            // with this function, but the offset will create a continuity with the previous indexes
+        // with this function, but the offset will create a continuity with the previous indexes
         var formula = "RES\n";
         var i;
         for (i = 0; i < res.length; i++)
