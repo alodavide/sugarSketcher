@@ -343,12 +343,28 @@ function displayTree() {
                 }
 
 
-                $('#repeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
-                d3.select("#repeat").on('click', function () { // On click on paste option
-                    handleRepetition();
-                    fadeOutContextMenu();
-                });
-                yPos += 22;
+                if (clickedNode.repeatingUnit == undefined)
+                {
+                    $('#repeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                    d3.select("#repeat").on('click', function () { // On click on paste option
+                        handleRepetition();
+                        fadeOutContextMenu();
+                    });
+                    yPos += 22;
+                }
+                else {
+                    $('#unrepeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                    d3.select("#unrepeat").on('click', function () { // On click on paste option
+                        for (var node of clickedNode.repeatingUnit.nodes)
+                        {
+                            delete node.node.repeatingUnit;
+                        }
+                        displayTree();
+                        fadeOutContextMenu();
+                    });
+                    yPos += 22;
+                }
+
 
             });
 
@@ -1141,6 +1157,7 @@ function fadeOutContextMenu()
     $('#copyNode').fadeOut(400); // Hide the copy option
     $('#pasteNode').fadeOut(400); // Hide the paste option
     $('#repeat').fadeOut(400); // Hide the repeat option
+    $('#unrepeat').fadeOut(400); // Hide the repeat option
 
     $('#pieLinkCarbon').css("display", "none"); // Hide chart
 }

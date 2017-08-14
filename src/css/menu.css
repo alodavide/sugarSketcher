@@ -179,7 +179,7 @@
     fill:#cc0000; !important;
 }
 
-#copyNode, #pasteNode, #deleteNode, #deleteSubs, #repeat {
+#copyNode, #pasteNode, #deleteNode, #deleteSubs, #repeat, #unrepeat {
     position:absolute;
     cursor:pointer;
     display:none;
