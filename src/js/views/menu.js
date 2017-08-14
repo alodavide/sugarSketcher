@@ -801,7 +801,7 @@ function handleRepetition()
     {
         findNodesInTree(nodes);
         var repEntry, repExit;
-        if (isBranchSelected(nodes) && nodes[0].children != undefined) // if root of selection has at least 2 branches
+        if (isBranchSelected(nodes))
         {
             repEntry = nodes[0].node;
             repExit = findRepExit(nodes[0]);
@@ -893,12 +893,10 @@ function findEntryAndExit(nodes)
     var minDepth = nodes[0].depth;
     var maxId = nodes[0].node;
     var minId = nodes[0].node;
+    var unselectedChildren = 0;
     for (var node of nodes)
     {
-        if (node.children != undefined && node.children.length > 1)
-        {
-            return false;
-        }
+        unselectedChildren += countUnselectedChildren(node, nodes);
         if (node.depth > maxDepth)
         {
             maxDepth = node.depth;
@@ -910,7 +908,34 @@ function findEntryAndExit(nodes)
             minId = node.node;
         }
     }
-    return [minId,maxId];
+    if (unselectedChildren > 1)
+    {
+        return false;
+    }
+    else
+    {
+        return [minId,maxId];
+    }
+}
+
+function countUnselectedChildren(node, nodes)
+{
+    var count = 0;
+    if (node.children != undefined)
+    {
+        for (var child of node.children)
+        {
+            if (!nodes.includes(child))
+            {
+                count++
+            }
+        }
+        return count;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
