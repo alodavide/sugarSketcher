@@ -22,14 +22,14 @@ export default class EdgeComparator {
         var bondsE2 = this.bonds(e2);
         if (bondsE1 > bondsE2)
         {
-            return -1;
+            return 1;
         }
         else if (bondsE1 === bondsE2) {
             var parentLinkPosE1 = this.parentLinkPos(e1);
             var parentLinkPosE2 = this.parentLinkPos(e2);
             if (parentLinkPosE1 > parentLinkPosE2)
             {
-                return -1;
+                return 1;
             }
             else if (parentLinkPosE1 === parentLinkPosE2)
             {
@@ -37,7 +37,7 @@ export default class EdgeComparator {
                 var childLinkPosE2 = this.childLinkPos(e2);
                 if (childLinkPosE1 > childLinkPosE2)
                 {
-                    return -1;
+                    return 1;
                 }
                 else if (childLinkPosE1 === childLinkPosE2)
                 {
@@ -45,7 +45,7 @@ export default class EdgeComparator {
                     var linkageTypeE2 = this.linkageType(e2);
                     if (linkageTypeE1 > linkageTypeE2)
                     {
-                        return -1;
+                        return 1;
                     }
                     else if (linkageTypeE1 === linkageTypeE2)
                     {
@@ -55,7 +55,7 @@ export default class EdgeComparator {
             }
         }
 
-        return 1;
+        return -1;
 
     }
 

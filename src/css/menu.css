@@ -129,6 +129,13 @@
     overflow: visible;
 }
 
+#svgQuickInfos {
+    width:1000px;
+    display:none;
+    height:40px;
+    overflow: visible;
+}
+
 #svgMenu, #svgMenu2, #svgQuickMono {
     display:none;
     overflow: visible;

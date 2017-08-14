@@ -202,6 +202,8 @@ substituentDisplayMore.on("click", function() {
         }
     }
 
+    var moreSubs = subsRects.append("g").attr("id", "moreSubs");
+
     // If only the 5 most used are actually displayed
     if(d3.selectAll(".subChoice")[0].length == 5) {
         var currentIndex = 0;
@@ -210,7 +212,7 @@ substituentDisplayMore.on("click", function() {
         while (currentIndex < subTypes.length) {
             var currentXLabels = 90; // x to place labels
             var currentXRects = 0; // x to place rects
-            subsRects.selectAll("rect").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("rect")
+            moreSubs.selectAll("rect").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("rect")
                 .attr("width", 180) // 1/5 of the menu
                 .attr("height", 40) // Fixed height
                 .attr("x",function() {
@@ -230,7 +232,7 @@ substituentDisplayMore.on("click", function() {
                     infosTable.push(d);
                     displayPie();
                 });
-            subsLabels.selectAll("text").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("text")
+            moreSubs.selectAll("text").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("text")
                 .text(function(d) {
                     return d;
                 })
@@ -248,6 +250,11 @@ substituentDisplayMore.on("click", function() {
         }
         d3.select("#svgSubstituents").style("height", "240px"); // Increase height of substituents svg to see all the added ones
     }
+    else
+    {
+        subsRects.select("#moreSubs").remove();
+        d3.select("#svgSubstituents").style("height", "40px");
+    }
 });
 
 //Cancel Button Substituent
@@ -260,6 +267,14 @@ cancelSubButton.on("click", function() {
     d3.selectAll(".createdSubLabel").remove(); // Remove all added labels
     updateMenu(); // Update to main menu
     d3.select("#svgMenu").transition().style("display", "block"); // Display main menu
+});
+
+var cancelQuickInfos = d3.select("#cancelQuickInfos");
+cancelQuickInfos.on("click", function() {
+    $('#pieLinkCarbon').css("display", "none"); // Hide the piechart
+    reinitializeQuickInfos();
+    updateMenu(); // Update to main menu
+    d3.select("#svgQuickMono").transition().style("display", "block"); // Display main menu
 });
 
 

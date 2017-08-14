@@ -4434,7 +4434,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        var repId = residue[1].substring(1)-1; // Corresponding id for the "reps" array
 	                        residue = reps[repId][1][1];
 	                    }*/
-	                    residueListById.push(residue);
+	                    if (residue !== undefined) {
+	                        residueListById.push(residue);
+	                    }
 	                }
 	            }
 	
@@ -4858,6 +4860,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "comparatorFunction",
 	        value: function comparatorFunction(a, b) {
+	            if (b === undefined) {
+	                return -1;
+	            }
 	            var comp = new _EdgeComparator2.default();
 	            var edge1 = this.getLink(a.parent.node.id, a.node.id);
 	            var edge2 = this.getLink(b.parent.node.id, b.node.id);
@@ -4867,11 +4872,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: "sort",
 	        value: function sort(arr) {
 	
-	            var len = arr.len;
+	            var arr2 = Object.assign({}, arr);
+	            var len = arr.length;
 	
 	            for (var i = 0; i < len; i++) {
 	                while (i > -1) {
-	                    if (comparatorFunction(arr[i], arr[i + 1]) > 0) {
+	                    if (this.comparatorFunction(arr[i], arr[i + 1]) > 0) {
 	                        var temp = arr[i];
 	                        arr[i] = arr[i + 1];
 	                        arr[i + 1] = temp;
@@ -5383,22 +5389,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var bondsE1 = this.bonds(e1);
 	            var bondsE2 = this.bonds(e2);
 	            if (bondsE1 > bondsE2) {
-	                return -1;
+	                return 1;
 	            } else if (bondsE1 === bondsE2) {
 	                var parentLinkPosE1 = this.parentLinkPos(e1);
 	                var parentLinkPosE2 = this.parentLinkPos(e2);
 	                if (parentLinkPosE1 > parentLinkPosE2) {
-	                    return -1;
+	                    return 1;
 	                } else if (parentLinkPosE1 === parentLinkPosE2) {
 	                    var childLinkPosE1 = this.childLinkPos(e1);
 	                    var childLinkPosE2 = this.childLinkPos(e2);
 	                    if (childLinkPosE1 > childLinkPosE2) {
-	                        return -1;
+	                        return 1;
 	                    } else if (childLinkPosE1 === childLinkPosE2) {
 	                        var linkageTypeE1 = this.linkageType(e1);
 	                        var linkageTypeE2 = this.linkageType(e2);
 	                        if (linkageTypeE1 > linkageTypeE2) {
-	                            return -1;
+	                            return 1;
 	                        } else if (linkageTypeE1 === linkageTypeE2) {
 	                            return this.compareNodes(e1, e2);
 	                        }
@@ -5406,7 +5412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            return 1;
+	            return -1;
 	        }
 	    }, {
 	        key: "parentLinkPos",
@@ -5478,32 +5484,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var childrenN1 = this.children(n1);
 	            var childrenN2 = this.children(n2);
 	            if (childrenN1 > childrenN2) {
-	                return -1;
+	                return 1;
 	            } else if (childrenN1 === childrenN2) {
 	                var longestN1 = this.longestBranch(n1) - n1.depth;
 	                var longestN2 = this.longestBranch(n2) - n2.depth;
 	                if (longestN1 > longestN2) {
-	                    return -1;
+	                    return 1;
 	                } else if (longestN1 === longestN2) {
 	                    var terminalsN1 = this.terminals(n1);
 	                    var terminalsN2 = this.terminals(n2);
 	                    if (terminalsN1 > terminalsN2) {
-	                        return -1;
+	                        return 1;
 	                    } else if (terminalsN1 === terminalsN2) {
 	                        var branchingN1 = this.branching(n1);
 	                        var branchingN2 = this.branching(n2);
 	                        if (branchingN1 > branchingN2) {
-	                            return -1;
+	                            return 1;
 	                        } else if (branchingN1 === branchingN2) {
 	                            if (n1.node.monosaccharideType.name >= n2.node.monosaccharideType.name) {
-	                                return -1;
+	                                return 1;
 	                            }
 	                        }
 	                    }
 	                }
 	            }
 	
-	            return 1;
+	            return -1;
 	        }
 	    }, {
 	        key: "longestBranch",

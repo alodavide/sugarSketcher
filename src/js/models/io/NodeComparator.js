@@ -17,14 +17,14 @@ export default class NodeComparator {
         var childrenN2 = this.children(n2);
         if (childrenN1 > childrenN2)
         {
-            return -1;
+            return 1;
         }
         else if (childrenN1 === childrenN2) {
             var longestN1 = this.longestBranch(n1) - n1.depth;
             var longestN2 = this.longestBranch(n2) - n2.depth;
             if (longestN1 > longestN2)
             {
-                return -1;
+                return 1;
             }
             else if (longestN1 === longestN2)
             {
@@ -32,7 +32,7 @@ export default class NodeComparator {
                 var terminalsN2 = this.terminals(n2);
                 if (terminalsN1 > terminalsN2)
                 {
-                    return -1;
+                    return 1;
                 }
                 else if (terminalsN1 === terminalsN2)
                 {
@@ -40,20 +40,20 @@ export default class NodeComparator {
                     var branchingN2 = this.branching(n2);
                     if (branchingN1 > branchingN2)
                     {
-                        return -1;
+                        return 1;
                     }
                     else if (branchingN1 === branchingN2)
                     {
                         if (n1.node.monosaccharideType.name >= n2.node.monosaccharideType.name)
                         {
-                            return -1;
+                            return 1;
                         }
                     }
                 }
             }
         }
 
-    return 1;
+    return -1;
 
     }
 

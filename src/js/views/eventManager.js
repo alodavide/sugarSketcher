@@ -246,7 +246,7 @@ function manageHoverAddNode(menuItem,actions) {
                     .attr("id", "menuSubError")
                     .attr("x", 500)
                     .attr("y", 50)
-                    .text("Can not have a substituent as a root. Add a Monosaccharide first.");
+                    .text("Cannot have a substituent as a root. Add a Monosaccharide first.");
                     $('#menuSubError').fadeIn(400).delay(10000).fadeOut(400, function() {
                         svgMenu.style("height", "40px");
                         svgMenu.select("#menuSubError").remove();

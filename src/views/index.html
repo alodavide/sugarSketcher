@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="../css/menu.css">
     <script type="text/javascript" src="../js/views/jquery.min.js"></script>
     <script type="text/javascript" src="../js/views/lodash.js"></script>
+    <style type="text/css">
+        #cancelChoiceShape {
+        }
+    </style>
 </head>
 
 <body>
@@ -164,10 +168,12 @@
         <g id="quickActions">
             <rect width="490" height="40" y="0" x="0" rx="15" ry="15" id="quickAnomericityTitleChoice" class="bar choice"></rect>
             <rect width="490" height="40" y="0" x="510" rx="15" ry="15" id="quickLinkedCarbonTitleChoice" class="bar choice"></rect>
+            <rect id="cancelQuickInfos" width="40" x="1010" height="40" class="bar" fill="#505656"></rect>
         </g>
         <g id="quickLabels">
             <text id ="quickLabelAnomericityTitle" class="label" x="245" y="8">Anomericity</text>
             <text id ="quickLabelLinkedCarbonTitle" class="label" x="755" y="8">Linked Carbon</text>
+            <text class="label cancelLabel" x="1030" y="8"><<</text>
         </g>
     </svg>
 </div>

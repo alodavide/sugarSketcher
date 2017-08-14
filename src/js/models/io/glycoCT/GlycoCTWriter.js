@@ -118,6 +118,10 @@ export default class GlycoCTWriter{
 
 
     comparatorFunction(a,b) {
+        if (b === undefined)
+        {
+            return -1;
+        }
         var comp = new EdgeComparator();
         var edge1 = this.getLink(a.parent.node.id,a.node.id);
         var edge2 = this.getLink(b.parent.node.id, b.node.id);
@@ -126,11 +130,12 @@ export default class GlycoCTWriter{
 
     sort(arr) {
 
-        var len = arr.len;
+        var arr2 = Object.assign({},arr);
+        var len = arr.length;
 
         for (var i = 0; i < len; i++) {
             while (i > -1) {
-                if (comparatorFunction(arr[i],arr[i + 1]) > 0) {
+                if (this.comparatorFunction(arr[i],arr[i + 1]) > 0) {
                     var temp = arr[i];
                     arr[i] = arr[i + 1];
                     arr[i + 1] = temp;
