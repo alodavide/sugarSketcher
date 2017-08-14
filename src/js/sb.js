@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -113,43 +113,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
-	var _GlycosidicLinkage = __webpack_require__(15);
+	var _QuickModeMonosaccharides = __webpack_require__(15);
+	
+	var _QuickModeMonosaccharides2 = _interopRequireDefault(_QuickModeMonosaccharides);
+	
+	var _GlycosidicLinkage = __webpack_require__(16);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(16);
+	var _SubstituentLinkage = __webpack_require__(17);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
-	var _Monosaccharide = __webpack_require__(17);
+	var _Monosaccharide = __webpack_require__(18);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(18);
+	var _Substituent = __webpack_require__(19);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _Sugar = __webpack_require__(19);
+	var _Sugar = __webpack_require__(20);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
-	var _RepeatingUnit = __webpack_require__(20);
+	var _RepeatingUnit = __webpack_require__(21);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
-	var _GlycoCTParser = __webpack_require__(21);
+	var _GlycoCTParser = __webpack_require__(22);
 	
 	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
 	
-	var _GlycoCTWriter = __webpack_require__(22);
+	var _GlycoCTWriter = __webpack_require__(23);
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
-	var _NodeComparator = __webpack_require__(24);
+	var _NodeComparator = __webpack_require__(25);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _Controller = __webpack_require__(25);
+	var _Controller = __webpack_require__(26);
 	
 	var _Controller2 = _interopRequireDefault(_Controller);
 	
@@ -165,10 +169,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	//Linkages
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -192,15 +199,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Controller = _Controller2.default;
 	exports.SubstituentsPositions = _SubstituentsPositions2.default;
 	exports.MonosaccharideGlycoCT = _MonosaccharideGlycoCT2.default;
+	exports.QuickModeMonosaccharides = _QuickModeMonosaccharides2.default;
 	
 	//Controller
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
 	
-	//Data Structure
+	
+	//Glycomics Structure
+	//Dictionary
 
 /***/ }),
 /* 1 */
@@ -2778,6 +2783,111 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _enumify = __webpack_require__(5);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 11/08/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var QuickModeMonosaccharides = function (_Enum) {
+	    _inherits(QuickModeMonosaccharides, _Enum);
+	
+	    function QuickModeMonosaccharides() {
+	        _classCallCheck(this, QuickModeMonosaccharides);
+	
+	        return _possibleConstructorReturn(this, (QuickModeMonosaccharides.__proto__ || Object.getPrototypeOf(QuickModeMonosaccharides)).apply(this, arguments));
+	    }
+	
+	    return QuickModeMonosaccharides;
+	}(_enumify.Enum);
+	
+	exports.default = QuickModeMonosaccharides;
+	
+	
+	QuickModeMonosaccharides.initEnum({
+	
+	    Gal: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    },
+	
+	    Glc: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    },
+	
+	    Man: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    },
+	
+	    GalNAc: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    },
+	
+	    GlcNAc: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    },
+	
+	    Fuc: {
+	        isomer: "L",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    },
+	
+	    Kdn: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "2"
+	    },
+	
+	    Neu5Ac: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "2"
+	    },
+	
+	    Neu5Gc: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "2"
+	    },
+	
+	    Neu: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "2"
+	    },
+	
+	    Xyl: {
+	        isomer: "D",
+	        ringType: "P",
+	        anomerCarbon: "1"
+	    }
+	
+	});
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -2870,7 +2980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycosidicLinkage;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2940,7 +3050,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SubstituentLinkage;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3081,7 +3191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Monosaccharide;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3149,7 +3259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Substituent;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3169,19 +3279,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
 	
-	var _Monosaccharide = __webpack_require__(17);
+	var _Monosaccharide = __webpack_require__(18);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(18);
+	var _Substituent = __webpack_require__(19);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _GlycosidicLinkage = __webpack_require__(15);
+	var _GlycosidicLinkage = __webpack_require__(16);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(16);
+	var _SubstituentLinkage = __webpack_require__(17);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -3728,7 +3838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Sugar;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3779,7 +3889,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = RepeatingUnit;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3793,7 +3903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Sugar = __webpack_require__(19);
+	var _Sugar = __webpack_require__(20);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
@@ -3817,7 +3927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _Monosaccharide = __webpack_require__(17);
+	var _Monosaccharide = __webpack_require__(18);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
@@ -3829,11 +3939,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
 	
-	var _Substituent = __webpack_require__(18);
+	var _Substituent = __webpack_require__(19);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _SubstituentLinkage = __webpack_require__(16);
+	var _SubstituentLinkage = __webpack_require__(17);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -3849,7 +3959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentsPositions2 = _interopRequireDefault(_SubstituentsPositions);
 	
-	var _RepeatingUnit = __webpack_require__(20);
+	var _RepeatingUnit = __webpack_require__(21);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
@@ -4572,7 +4682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTParser;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4585,7 +4695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 05/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Substituent = __webpack_require__(18);
+	var _Substituent = __webpack_require__(19);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
@@ -4593,7 +4703,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _GlycosidicLinkage = __webpack_require__(15);
+	var _GlycosidicLinkage = __webpack_require__(16);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
@@ -4605,11 +4715,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _EdgeComparator = __webpack_require__(23);
+	var _EdgeComparator = __webpack_require__(24);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
-	var _RepeatingUnit = __webpack_require__(20);
+	var _RepeatingUnit = __webpack_require__(21);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
@@ -4617,7 +4727,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
-	var _SubstituentLinkage = __webpack_require__(16);
+	var _SubstituentLinkage = __webpack_require__(17);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -5307,7 +5417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTWriter;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5324,11 +5434,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 10/07/2017.
 	 */
 	
-	var _NodeComparator = __webpack_require__(24);
+	var _NodeComparator = __webpack_require__(25);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _GlycosidicLinkage = __webpack_require__(15);
+	var _GlycosidicLinkage = __webpack_require__(16);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
@@ -5410,7 +5520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EdgeComparator;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5423,7 +5533,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 10/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _EdgeComparator = __webpack_require__(23);
+	var _EdgeComparator = __webpack_require__(24);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -5648,7 +5758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = NodeComparator;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 	"use strict";

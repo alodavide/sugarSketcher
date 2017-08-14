@@ -9,6 +9,10 @@ var sugar, controller;
 
 var repeatUnitConfirm = 0;
 
+var quickIsomer = "";
+var quickRingType = "";
+var quickAnomerCarbon = "";
+
 // Function called when document is ready
 
 $(document).ready(function() {
@@ -17,7 +21,6 @@ $(document).ready(function() {
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
-    //manageHoverIO();
     d3.select("#svgTree").on('click', function() {
         fadeOutContextMenu();
     })
@@ -305,20 +308,111 @@ function updateMenu(chosenDivision) {
         d3.select("#svgSubstituents").transition().style("display", "none");
         d3.select("#svgInfos").transition().style("display", "none");
         d3.select("#svgCarbons").transition().style("display", "none");
-        d3.select("#svgMenu").transition().style("display", "block");
-        d3.select("#svgMultiselectMenu").transition().style("display", "block");
+        d3.select("#svgQuickInfos").transition().style("display", "none");
+        if (quickMode)
+        {
+            d3.select("#svgMenu").transition().style("display", "none");
+            var svgQuick = d3.select("#svgQuickMono").style("height","55px").style("width","1000px").style("margin", "0 auto 10px").style("display", "block").attr("x",0);
+
+            var common = [];
+            for (var mono of sb.QuickModeMonosaccharides)
+            {
+                common.push(mono);
+            }
+
+            var g = svgQuick.selectAll("rect").data(common)
+                .enter()
+                .append("g")
+                .attr("id", function (d) {
+                    return d.name;
+                })
+                .attr("class", "shapeChoice")
+                .on("click", function(d) {
+                    infosTable.push("addNode");
+                    infosTable.push("Monosaccharide");
+                    infosTable.push(sb.MonosaccharideType[d.name].shape);
+                    var color;
+                    for (var c of colorDivisions) {
+                        if (c.display_division == sb.MonosaccharideType[d.name].color) {
+                            color = c.division;
+                        }
+                    }
+                    infosTable.push(color);
+                    quickRingType = d.ringType;
+                    quickAnomerCarbon = d.anomerCarbon;
+                    quickIsomer = d.isomer;
+                    updateMenu(d);
+                });
+
+            g.append("rect")
+                .attr("width", 91)
+                .attr("height", 40)
+                .attr("x", function(d)
+                {
+                    return d.ordinal*91;
+                })
+                .attr("y", 0)
+                .attr("class", "bar choice")
+                .style("fill", "gray");
+
+            g.append("path")
+                .attr("class", "shapeElement")
+                .attr("d", d3.superformula()
+                    .size(400)
+                    .type(function (d) {
+                        return sb.MonosaccharideType[d.name].shape.toLowerCase(); // Get the shape of the monosaccharide type
+                    }))
+                .attr("transform", function (d) {
+                    var rotate = 0, translate = d.ordinal*91+45;
+                    var shape = sb.MonosaccharideType[d.name].shape;
+                    if (shape == "star") {
+                        rotate = -20;
+                    } else if (shape == "triangle") {
+                        rotate = 30;
+                    }
+                    return "translate("+translate+",20) rotate("+rotate+")";
+                })
+                .style("fill", function(d) {
+                     return sb.MonosaccharideType[d.name].color;
+                });
+
+            g.append("text")
+                .attr("class", "labelMonoChoice")
+                .attr("x", function(d)
+                {
+                    return d.ordinal*91+45;
+                })
+                .attr("y", 45)
+                .text(function(d) {
+                    return d.name;
+                });
+        }
+        else
+        {
+            d3.select("#svgQuickMono").transition().style("display", "none");
+            d3.select("#svgMenu").transition().style("display", "block");
+        }
         d3.select("#svgMenu2").transition().style("display", "block");
         newMenuAction = menuAction;
     } else { // Get SubDivisions that we want to update menu
-        menuChosenPath.push(chosenDivision);
-        // If chose a color, then we hide the svg and show the svg for anomericity, isomer and type
-        if (chosenDivision.indexOf("Color") > -1) {
-            d3.select("#svgInfos").transition().duration(200).style("display", "block");
-            d3.select("#svgMenu").transition().duration(200).style("display", "none");
-            return;
-        } else {
-            // Get the subdivisions of chosen menu
-            newMenuAction = getSubDivisions(menuAction, chosenDivision)
+        if (quickMode && sb.QuickModeMonosaccharides[chosenDivision.name]) // If quickMode
+        {
+            d3.select("#svgQuickMono").transition().style("display", "none");
+            var svgQuick = d3.select("#svgQuickInfos").style("height","55px").style("width","1000px").style("margin", "0 auto 10px").style("display", "block");
+        }
+        else
+        {
+            menuChosenPath.push(chosenDivision);
+
+            // If chose a color, then we hide the svg and show the svg for anomericity, isomer and type
+            if (chosenDivision.indexOf("Color") > -1) {
+                d3.select("#svgInfos").transition().duration(200).style("display", "block");
+                d3.select("#svgMenu").transition().duration(200).style("display", "none");
+                return;
+            } else {
+                // Get the subdivisions of chosen menu
+                newMenuAction = getSubDivisions(menuAction, chosenDivision)
+            }
         }
     }
 
