@@ -309,7 +309,24 @@ function displayTree() {
                         }
                     });
                 d3.select("#deleteNode").on('click', function () { // Click on delete option
-                    deleteNode(node); // Delete the node clicked
+                    if (selectedNodes.length != 0)
+                    {
+                        var wholeSelection = [clickedNode].concat(selectedNodes);
+                        for (var n of wholeSelection)
+                        {
+                            var parent = getNodeParent(n);
+                            if (parent == undefined || !wholeSelection.includes(parent)) // highest node in selection
+                            {
+                                selectedNodes = [];
+                                deleteNode(n);
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        deleteNode(node); // Delete the node clicked
+                    }
                     fadeOutContextMenu();
                 });
 

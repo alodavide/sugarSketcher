@@ -763,7 +763,24 @@ document.onkeydown = function (e) {
     } else if (e.keyCode == 46) { // Delete button keycode
         if (clickedNode != null) { // If there is no clicked node, then no action
             // Else delete the node from the graph, and then from the tree
-            deleteNode(clickedNode);
+            if (selectedNodes.length != 0)
+            {
+                var wholeSelection = [clickedNode].concat(selectedNodes);
+                for (var n of wholeSelection)
+                {
+                    var parent = getNodeParent(n);
+                    if (parent == undefined || !wholeSelection.includes(parent)) // highest node in selection
+                    {
+                        selectedNodes = [];
+                        deleteNode(n);
+
+                    }
+                }
+            }
+            else
+            {
+                deleteNode(clickedNode); // Delete the node clicked
+            }
         }
     }
     else if (e.keyCode == 82) { // r key
@@ -1081,7 +1098,7 @@ function reassembleNodes()
         var linkedCarbon = edge.linkedCarbon.value;
         var usualX = shapes[source][0]+XYvalues[linkedCarbon][1];
         var usualY = shapes[source][1]+XYvalues[linkedCarbon][0];
-        if (shapes[target][0] != usualX || shapes[target][1] != usualY) // If the node is not where it should be
+        if (shapes[target] != undefined && (shapes[target][0] != usualX || shapes[target][1] != usualY)) // If the node is not where it should be
         {
             if (isAvailible(usualX, usualY) == "")
             {
