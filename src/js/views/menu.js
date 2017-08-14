@@ -846,10 +846,45 @@ function handleRepetition()
             {
                 node.node.repeatingUnit = repeatingUnit;
             }
+            moveNodesInsideRep();
             displayTree();
             updateMenu();
         }
     }
+}
+
+function moveNodesInsideRep()
+{
+    var nodes = tree.nodes(treeData);
+    var repeatingUnits = generateRepeatingUnits(nodes);
+    for (var rep of repeatingUnits) // for each Repeating unit
+    {
+        var repCoord = getRepCoord(rep);
+        for (var node of nodes) // and for each node
+        {
+            if (node.node instanceof sb.Monosaccharide)
+            {
+                // if the node is not part of the repeating unit AND is located inside the square, move it
+                while ((node.node.repeatingUnit == undefined || node.node.repeatingUnit.id != rep.id) &&
+                (shapes[node.node.id][0] >= repCoord[0] &&
+                shapes[node.node.id][0] <= repCoord[1] &&
+                shapes[node.node.id][1] >= repCoord[2] &&
+                shapes[node.node.id][1] <= repCoord[3]))
+                {
+                    var link;
+                    for (var e of sugar.graph.edges())
+                    {
+                        if (e.target == node.node.id)
+                            link = e;
+                    }
+                    var linkedCarbon = link.linkedCarbon.value;
+                    shapes[node.node.id][0] += XYvalues[linkedCarbon][1];
+                    shapes[node.node.id][1] += XYvalues[linkedCarbon][0];
+                }
+            }
+        }
+    }
+
 }
 
 function findEntryAndExit(nodes)
@@ -1096,14 +1131,27 @@ function createNewNode() {
             var glycosidicLink = new sb.GlycosidicLinkage(generatedEdgeId, clickedNode, monosaccharide, anomerCarbon, linkedCarbon);
             sugar.addMonosaccharide(monosaccharide, glycosidicLink);
             updateTreeVisualization(glycosidicLink);
-            var node = {"node":monosaccharide};
+            var parent = getNodeParent(monosaccharide);
+            var node = {"node":monosaccharide, "parent":parent};
             var shape = calculateXandYNode(node);
             shapes[generatedNodeId] = shape;
         }
+        moveNodesInsideRep();
         clickedNode = monosaccharide;
         displayTree();
         updateMenu();
         return generatedNodeId;
+    }
+}
+
+function getNodeParent(node)
+{
+    for (var e of sugar.graph.edges())
+    {
+        if (e.target == node.id)
+        {
+            return e.sourceNode;
+        }
     }
 }
 
