@@ -1088,6 +1088,7 @@ function createNewNode() {
             sugar = new sb.Sugar("Sugar", monosaccharide);
             var node = {"node":monosaccharide};
             var shape = calculateXandYNode(node);
+
             shapes[generatedNodeId] = shape;
             updateTreeVisualization(); // Update visualization in the svg
         } else {
@@ -1355,12 +1356,9 @@ function generateShapes()
         } else {
             if (link instanceof sb.GlycosidicLinkage) {
                 updateTreeVisualization(link);
-                if (!Object.keys(shapes).includes(mono.id))
-                {
-                    var node = {"node":mono};
-                    var shape = calculateXandYNode(node);
-                    shapes[node.node.id] = shape;
-                }
+                var node = {"node":mono};
+                var shape = calculateXandYNode(node);
+                shapes[node.node.id] = shape;
             }
             else
             {

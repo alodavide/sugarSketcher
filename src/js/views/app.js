@@ -888,10 +888,12 @@ function calculateXandYNode(node) {
         var linkedCarbon = link.linkedCarbon.value; // Get linked carbon value
         var sourceX;
         var sourceY;
+        var sourceId;
         // Calculate new coordinates for the wanted node
         for (var n of tree.nodes(treeData)) {
             if (n.node == link.sourceNode) {
-                var source = shapes[n.node.id];
+                sourceId = n.node.id;
+                var source = shapes[sourceId];
                 sourceX = source[0];
                 sourceY = source[1];
             }
@@ -905,7 +907,7 @@ function calculateXandYNode(node) {
         var availible = isAvailible(newX, newY);
         if (availible != "")
         {
-            var newPos = findNewSpot(newX,newY, link.linkedCarbon.value);
+            var newPos = findNewSpot(newX,newY, link.linkedCarbon.value, sourceId);
             newX = newPos[0];
             newY = newPos[1];
         }
@@ -1038,11 +1040,11 @@ function createTriangleLinearGradient(color, gradientId) {
  * Returns a new availible position for a shape to be at.
  * @param x, y, linkedCarbon
  */
-function findNewSpot(x, y, linked)
+function findNewSpot(x, y, linked, sourceId = clickedNode.id)
 {
     switch(linked) {
         case 1: // Right
-            y = shapes[clickedNode.id][1];
+            y = shapes[sourceId][1];
             var limit = y;
             for (var id in shapes)
             {
@@ -1053,7 +1055,7 @@ function findNewSpot(x, y, linked)
             }
             break;
         case 2: // Down
-            x = shapes[clickedNode.id][0];
+            x = shapes[sourceId][0];
             var limit = x;
             for (var id in shapes)
             {
@@ -1069,7 +1071,7 @@ function findNewSpot(x, y, linked)
                 x += gap;
             break;
         case 4: // Left
-            y = shapes[clickedNode.id][1];
+            y = shapes[sourceId][1];
             var limit = y;
             for (var id in shapes)
             {
@@ -1080,7 +1082,7 @@ function findNewSpot(x, y, linked)
             }
             break;
         case 5: // Left
-            y = shapes[clickedNode.id][1];
+            y = shapes[sourceId][1];
             var limit = y;
             for (var id in shapes)
             {
@@ -1096,7 +1098,7 @@ function findNewSpot(x, y, linked)
                 x -= gap;
             break;
         case "undefined": // Up
-            x = shapes[clickedNode.id][0];
+            x = shapes[sourceId][0];
             var limit = x;
             for (var id in shapes)
             {
