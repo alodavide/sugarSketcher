@@ -928,12 +928,13 @@ function moveNodesInsideRep()
             if (node.node instanceof sb.Monosaccharide)
             {
                 var linkedCarbon;
+                var dontMove = false;
                 // if the node is not part of the repeating unit AND is located inside the square, move it
-                while ((node.node.repeatingUnit == undefined || node.node.repeatingUnit.id != rep.id) &&
+                while (((node.node.repeatingUnit == undefined || node.node.repeatingUnit.id != rep.id) &&
                     (shapes[node.node.id][0] >= repCoord[0] &&
                     shapes[node.node.id][0] <= repCoord[1] &&
                     shapes[node.node.id][1] >= repCoord[2] &&
-                    shapes[node.node.id][1] <= repCoord[3]))
+                    shapes[node.node.id][1] <= repCoord[3])) && !dontMove)
                 {
                     var link;
                     for (var e of sugar.graph.edges())
@@ -942,15 +943,78 @@ function moveNodesInsideRep()
                             link = e;
                     }
                     linkedCarbon = link.linkedCarbon.value;
-                    moveNodeAndChildren(node,XYvalues[linkedCarbon][1],XYvalues[linkedCarbon][0]);
-                    /*if (isAvailible(shapes[node.node.id][0], shapes[node.node.id][1]) != "") // if the new spot is unavailible
+                    if (!checkNodesInLine(shapes[node.node.id][0], shapes[node.node.id][1], XYvalues[linkedCarbon][0], XYvalues[linkedCarbon][1], repCoord))
+                        moveNodeAndChildren(node,XYvalues[linkedCarbon][1],XYvalues[linkedCarbon][0]);
+                    else
                     {
-                        shapes[node.node.id] = findNewSpot(shapes[node.node.id][0], shapes[node.node.id][1], linkedCarbon, node.parent.node.id);
-                    }*/
+                        dontMove = true;
+                    }
                 }
             }
         }
     }
+}
+
+/**
+ *
+ * @param startX
+ * @param startY
+ * @param dx
+ * @param dy
+ * @param limit
+ * This function will check if a node can escape a repeating unit without hitting another node
+ */
+function checkNodesInLine(startX, startY, dy, dx, repCoord)
+{
+    var limit;
+    var x = startX+dx, y = startY+dy;
+    if (dx == 0) // Horizontal
+    {
+        if (dy > 0) // going to the right
+        {
+            limit = repCoord[3];
+            while (y < limit)
+            {
+                if (isAvailible(x, y) != "")
+                    return true;
+                y += dy;
+            }
+        }
+        else if (dy < 0) // going to the left
+        {
+            limit = repCoord[2];
+            while (y > limit)
+            {
+                if (isAvailible(x, y) != "")
+                    return true;
+                y += dy;
+            }
+        }
+    }
+    else if (dy == 0) // Vertical
+    {
+        if (dx > 0) // going to the bottom
+        {
+            limit = repCoord[1];
+            while (x < limit)
+            {
+                if (isAvailible(x, y) != "")
+                    return true;
+                x += dx;
+            }
+        }
+        else if (dx < 0) // going to the top
+        {
+            limit = repCoord[0];
+            while (x > limit)
+            {
+                if (isAvailible(x, y) != "")
+                    return true;
+                x += dx;
+            }
+        }
+    }
+    return false;
 }
 
 function moveNodeAndChildren(node, dx, dy)
@@ -959,11 +1023,11 @@ function moveNodeAndChildren(node, dx, dy)
     while (stack.length != 0)
     {
         var n = stack.pop();
-        shapes[node.node.id][0] += dx;
-        shapes[node.node.id][1] += dy;
-        if (node.children != undefined)
+        shapes[n.node.id][0] += dx;
+        shapes[n.node.id][1] += dy;
+        if (n.children != undefined)
         {
-            for (var child of node.children)
+            for (var child of n.children)
             {
                 stack.push(child);
             }
