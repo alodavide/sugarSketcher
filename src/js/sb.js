@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -117,43 +117,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _QuickModeMonosaccharides2 = _interopRequireDefault(_QuickModeMonosaccharides);
 	
-	var _GlycosidicLinkage = __webpack_require__(16);
+	var _Structures = __webpack_require__(16);
+	
+	var _Structures2 = _interopRequireDefault(_Structures);
+	
+	var _GlycosidicLinkage = __webpack_require__(17);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(17);
+	var _SubstituentLinkage = __webpack_require__(18);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
-	var _Monosaccharide = __webpack_require__(18);
+	var _Monosaccharide = __webpack_require__(19);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(19);
+	var _Substituent = __webpack_require__(20);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _Sugar = __webpack_require__(20);
+	var _Sugar = __webpack_require__(21);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
-	var _RepeatingUnit = __webpack_require__(21);
+	var _RepeatingUnit = __webpack_require__(22);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
-	var _GlycoCTParser = __webpack_require__(22);
+	var _GlycoCTParser = __webpack_require__(23);
 	
 	var _GlycoCTParser2 = _interopRequireDefault(_GlycoCTParser);
 	
-	var _GlycoCTWriter = __webpack_require__(23);
+	var _GlycoCTWriter = __webpack_require__(24);
 	
 	var _GlycoCTWriter2 = _interopRequireDefault(_GlycoCTWriter);
 	
-	var _NodeComparator = __webpack_require__(25);
+	var _NodeComparator = __webpack_require__(26);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _Controller = __webpack_require__(26);
+	var _Controller = __webpack_require__(27);
 	
 	var _Controller2 = _interopRequireDefault(_Controller);
 	
@@ -169,13 +173,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	//Linkages
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
 	
-	//Data Structure
+	
+	//Glycomics Structure
+	//Dictionary
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -200,12 +201,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.SubstituentsPositions = _SubstituentsPositions2.default;
 	exports.MonosaccharideGlycoCT = _MonosaccharideGlycoCT2.default;
 	exports.QuickModeMonosaccharides = _QuickModeMonosaccharides2.default;
+	exports.Structures = _Structures2.default;
 	
 	//Controller
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 
 /***/ }),
 /* 1 */
@@ -2888,6 +2893,317 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _enumify = __webpack_require__(5);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Renaud on 15/08/2017.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+	
+	var Structures = function (_Enum) {
+	    _inherits(Structures, _Enum);
+	
+	    function Structures() {
+	        _classCallCheck(this, Structures);
+	
+	        return _possibleConstructorReturn(this, (Structures.__proto__ || Object.getPrototypeOf(Structures)).apply(this, arguments));
+	    }
+	
+	    return Structures;
+	}(_enumify.Enum);
+	
+	exports.default = Structures;
+	
+	
+	Structures.initEnum({
+	
+	    ncore: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:a-dman-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(6+1)7d"
+	    },
+	
+	    ncorefuc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:a-dman-HEX-1:5\n8b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(6+1)7d\n7:1o(6+1)8d"
+	    },
+	
+	    ncorebisect: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:b-dglc-HEX-1:5\n8s:n-acetyl\n9b:a-dman-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(4+1)7d\n7:7d(2+1)8n\n8:5o(6+1)9d"
+	    },
+	
+	    ncorebisectfuc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:b-dglc-HEX-1:5\n8s:n-acetyl\n9b:a-dman-HEX-1:5\n10b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(4+1)7d\n7:7d(2+1)8n\n8:5o(6+1)9d\n9:1o(6+1)10d"
+	    },
+	
+	    ncorehyb: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:a-dman-HEX-1:5\n8b:a-dman-HEX-1:5\n9b:a-dman-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(6+1)7d\n7:7o(3+1)8d\n8:7o(6+1)9d"
+	    },
+	
+	    ncorehybfuc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:a-dman-HEX-1:5\n8b:a-dman-HEX-1:5\n9b:a-dman-HEX-1:5\n10b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(6+1)7d\n7:7o(3+1)8d\n8:7o(6+1)9d\n9:1o(6+1)10d"
+	    },
+	
+	    ncorehybbis: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:b-dglc-HEX-1:5\n8s:n-acetyl\n9b:a-dman-HEX-1:5\n10b:a-dman-HEX-1:5\n11b:a-dman-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(4+1)7d\n7:7d(2+1)8n\n8:5o(6+1)9d\n9:9o(3+1)10d\n10:9o(6+1)11d"
+	    },
+	
+	    ncorehybbisfuc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:b-dglc-HEX-1:5\n8s:n-acetyl\n9b:a-dman-HEX-1:5\n10b:a-dman-HEX-1:5\n11b:a-dman-HEX-1:5\n12b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:5o(4+1)7d\n7:7d(2+1)8n\n8:5o(6+1)9d\n9:9o(3+1)10d\n10:9o(6+1)11d\n11:1o(6+1)12d"
+	    },
+	
+	    ncoreman: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dman-HEX-1:5\n6b:a-dman-HEX-1:5\n7b:a-dman-HEX-1:5\n8b:a-dman-HEX-1:5\n9b:a-dman-HEX-1:5\n10b:a-dman-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5o(3+1)6d\n6:6o(2+1)7d\n7:5o(6+1)8d\n8:8o(3+1)9d\n9:8o(6+1)10d"
+	    },
+	
+	    ocore1: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d"
+	    },
+	
+	    ocore2: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:b-dglc-HEX-1:5\n5s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(6+1)4d\n4:4d(2+1)5n"
+	    },
+	
+	    ocore3: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3d(2+1)4n"
+	    },
+	
+	    ocore4: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dglc-HEX-1:5\n6s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3d(2+1)4n\n4:1o(6+1)5d\n5:5d(2+1)6n"
+	    },
+	
+	    ocore5: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:a-dgal-HEX-1:5\n4s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3d(2+1)4n"
+	    },
+	
+	    ocore6: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(6+1)3d\n3:3d(2+1)4n"
+	    },
+	
+	    ocore7: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:a-dgal-HEX-1:5\n4s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(6+1)3d\n3:3d(2+1)4n"
+	    },
+	
+	    ocore8: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2s:n-acetyl\n3b:a-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d"
+	    },
+	
+	    gslarthro: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dman-HEX-1:5\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dgal-HEX-1:5\n6s:n-acetyl\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d\n5:5d(2+1)6n"
+	    },
+	
+	    gslgala: {
+	        glycoct: "RES\n1b:a-dgal-HEX-1:5\n2b:a-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d"
+	    },
+	
+	    gslganglio: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:b-dgal-HEX-1:5\n4s:n-acetyl\n5b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(4+1)3d\n3:3d(2+1)4n\n4:3o(3+1)5d"
+	    },
+	
+	    gslglobo: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:a-dgal-HEX-1:5\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\nLIN\n1:1o(4+1)2d\n2:2o(4+1)3d\n3:3o(3+1)4d\n4:4d(2+1)5n"
+	    },
+	
+	    gslisoglobo: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:a-dgal-HEX-1:5\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3o(3+1)4d\n4:4d(2+1)5n"
+	    },
+	
+	    gsllacto: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3d(2+1)4n\n4:3o(3+1)5d"
+	    },
+	
+	    gslmollu: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dman-HEX-1:5\n3b:a-dman-HEX-1:5\n4b:b-dglc-HEX-1:5\n5s:n-acetyl\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3o(2+1)4d\n4:4d(2+1)5n"
+	    },
+	
+	    gslmuco: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:b-dgal-HEX-1:5\n4b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(4+1)3d\n3:3o(3+1)4d"
+	    },
+	
+	    gslneolacto: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d"
+	    },
+	
+	    gaghyaluronic: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5|6:a\n4b:b-dglc-HEX-1:5\n5s:n-acetyl\n6b:b-dglc-HEX-1:5|6:a\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(4+1)4d\n4:4d(2+1)5n\n5:4o(3+1)6d"
+	    },
+	
+	    gagchodroitin4: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5|6:a\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\n6b:b-dglc-HEX-1:5|6:a\n7s:sulfate\n8s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(4+1)4d\n4:4d(2+1)5n\n5:4o(3+1)6d\n6:4o(4+-1)7n\n7:1o(4+-1)8n"
+	    },
+	
+	    gagchodroitin6: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5|6:a\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\n6b:b-dglc-HEX-1:5|6:a\n7s:sulfate\n8s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(4+1)4d\n4:4d(2+1)5n\n5:4o(3+1)6d\n6:4o(6+-1)7n\n7:1o(6+-1)8n"
+	    },
+	
+	    gagchodroitin26: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5|6:a\n4s:sulfate\n5b:b-dgal-HEX-1:5\n6s:n-acetyl\n7b:b-dglc-HEX-1:5|6:a\n8s:sulfate\n9s:sulfate\n10s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(2+-1)4n\n4:3o(4+1)5d\n5:5d(2+1)6n\n6:5o(3+1)7d\n7:7o(2+-1)8n\n8:5o(6+-1)9n\n9:1o(6+-1)10n"
+	    },
+	
+	    gagchodroitin46: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dglc-HEX-1:5|6:a\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\n6b:b-dglc-HEX-1:5|6:a\n7s:sulfate\n8s:sulfate\n9s:sulfate\n10s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(4+1)4d\n4:4d(2+1)5n\n5:4o(3+1)6d\n6:4o(4+-1)7n\n7:4o(6+-1)8n\n8:1o(4+-1)9n\n9:1o(6+-1)10n"
+	    },
+	
+	    gagdermatan: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dido-HEX-1:5|6:a\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\n6b:b-dido-HEX-1:5|6:a\n7s:sulfate\n8s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(4+1)4d\n4:4d(2+1)5n\n5:4o(3+1)6d\n6:4o(4+-1)7n\n7:1o(4+-1)8n"
+	    },
+	
+	    gagkeratan: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:b-dglc-HEX-1:5\n5s:n-acetyl\n6b:b-dgal-HEX-1:5\n7s:sulfate\n8s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3o(3+1)4d\n4:4d(2+1)5n\n5:4o(4+1)6d\n6:4o(6+-1)7n\n7:1o(6+-1)8n"
+	    },
+	
+	    gagheparin: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-sulfate\n3s:sulfate\n4b:a-dido-HEX-1:5|6:a\n5s:sulfate\n6b:b-dglc-HEX-1:5\n7s:n-sulfate\n8s:sulfate\n9b:a-dido-HEX-1:5|6:a\n10s:sulfate\n11s:sulfate\nLIN\n1:1d(2+-1)2n\n2:1o(3+-1)3n\n3:1o(4+1)4d\n4:4o(2+-1)5n\n5:4o(4+1)6d\n6:6d(2+-1)7n\n7:6o(3+-1)8n\n8:6o(4+1)9d\n9:6o(6+-1)10n\n10:1o(6+-1)11n"
+	    },
+	
+	    gagheparan: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:a-dido-HEX-1:5|6:a\n4s:sulfate\n5b:b-dglc-HEX-1:5\n6s:n-sulfate\n7b:a-dido-HEX-1:5|6:a\n8s:sulfate\n9s:sulfate\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3o(2+-1)4n\n4:3o(4+1)5d\n5:5d(2+-1)6n\n6:5o(4+1)7d\n7:5o(6+-1)8n\n8:1o(6+-1)9n"
+	    },
+	
+	    milklac: {
+	        glycoct: "RES\n1b:x-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d"
+	    },
+	
+	    milk3fuclac: {
+	        glycoct: "RES\n1b:x-dglc-HEX-1:5\n2b:a-lgal-HEX-1:5|6:d\n3b:b-dgal-HEX-1:5\nLIN\n1:1o(3+1)2d\n2:1o(4+1)3d"
+	    },
+	
+	    milk2fuclac: {
+	        glycoct: "RES\n1b:x-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:a-lgal-HEX-1:5|6:d\nLIN\n1:1o(4+1)2d\n2:2o(2+1)3d"
+	    },
+	
+	    milkdifuc: {
+	        glycoct: "RES\n1b:x-dglc-HEX-1:5\n2b:a-lgal-HEX-1:5|6:d\n3b:b-dgal-HEX-1:5\n4b:a-lgal-HEX-1:5|6:d\nLIN\n1:1o(3+1)2d\n2:1o(4+1)3d\n3:3o(2+1)4d"
+	    },
+	
+	    milktetra: {
+	        glycoct: "RES\n1b:x-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3d(2+1)4n\n4:3o(3+1)5d"
+	    },
+	
+	    milkneotetra: {
+	        glycoct: "RES\n1b:x-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:b-dglc-HEX-1:5\n4s:n-acetyl\n5b:b-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(3+1)3d\n3:3d(2+1)4n\n4:3o(4+1)5d"
+	    },
+	
+	    antigenA: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2b:a-lgal-HEX-1:5|6:d\n3b:a-dgal-HEX-1:5\n4s:n-acetyl\nLIN\n1:1o(2+1)2d\n2:1o(3+1)3d\n3:3d(2+1)4n"
+	    },
+	
+	    antigenB: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2b:a-lgal-HEX-1:5|6:d\n3b:b-dgal-HEX-1:5\nLIN\n1:1o(2+1)2d\n2:1o(3+1)3d"
+	    },
+	
+	    antigenH: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2b:a-lgal-HEX-1:5|6:d\nLIN\n1:1o(2+1)2d"
+	    },
+	
+	    antigenCAD: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\n6b:b-dgal-HEX-1:5\n7s:n-acetyl\n8b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n9s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(3+2)4d\n4:4d(5+1)5n\n5:3o(4+1)6d\n6:6d(2+1)7n\n7:1o(6+2)8d\n8:8d(5+1)9n"
+	    },
+	
+	    antigenP: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:a-dgal-HEX-1:5\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\nLIN\n1:1o(4+1)2d\n2:2o(4+1)3d\n3:3o(3+1)4d\n4:4d(2+1)5n"
+	    },
+	
+	    antigenPk: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2b:b-dgal-HEX-1:5\n3b:a-dgal-HEX-1:5\nLIN\n1:1o(4+1)2d\n2:2o(4+1)3d"
+	    },
+	
+	    antigenSda: {
+	        glycoct: "RES\n1b:b-dgal-HEX-1:5\n2b:b-dglc-HEX-1:5\n3s:n-acetyl\n4b:b-dgal-HEX-1:5\n5b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n6s:n-acetyl\n7b:b-dgal-HEX-1:5\n8s:n-acetyl\nLIN\n1:1o(3+1)2d\n2:2d(2+1)3n\n3:2o(4+1)4d\n4:4o(3+2)5d\n5:5d(5+1)6n\n6:4o(4+1)7d\n7:7d(2+1)8n"
+	    },
+	
+	    highMannose: {
+	        glycoct: "RES\n1b:a-dman-HEX-1:5\n2b:a-dman-HEX-1:5\nLIN\n1:1o(2+1)2d"
+	    },
+	
+	    lacDiNAc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n"
+	    },
+	
+	    lactoseAmine: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d"
+	    },
+	
+	    neoLactoseAmine: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d"
+	    },
+	
+	    polyLactoseAmine: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:b-dglc-HEX-1:5\n5s:n-acetyl\n6b:b-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3o(3+1)4d\n4:4d(2+1)5n\n5:4o(4+1)6d"
+	    },
+	
+	    sialyllactoNLSa: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(3+2)4d\n4:4d(5+1)5n"
+	    },
+	
+	    sialyllactorNLSb: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(6+2)4d\n4:4d(5+1)5n"
+	    },
+	
+	    sialyllactoNLSc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(6+2)4d\n4:4d(5+1)5n"
+	    },
+	
+	    disialyllactorNLDS: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\n6b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n7s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(3+2)4d\n4:4d(5+1)5n\n5:1o(6+2)6d\n6:6d(5+1)7n"
+	    },
+	
+	    fucosylatedLacDiNAc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:a-lgal-HEX-1:5|6:d\n4b:b-dgal-HEX-1:5\n5s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(4+1)4d\n4:4d(2+1)5n"
+	    },
+	
+	    sialylatedLacDiNAc: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4s:n-acetyl\n5b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n6s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3d(2+1)4n\n4:3o(6+2)5d\n5:5d(5+1)6n"
+	    },
+	
+	    lewisA: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(4+1)4d"
+	    },
+	
+	    lewisB: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-lgal-HEX-1:5|6:d\n5b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(2+1)4d\n4:1o(4+1)5d"
+	    },
+	
+	    lewisC: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d"
+	    },
+	
+	    lewisD: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(2+1)4d"
+	    },
+	
+	    lewisX: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:a-lgal-HEX-1:5|6:d\n4b:b-dgal-HEX-1:5\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(4+1)4d"
+	    },
+	
+	    lewisY: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:a-lgal-HEX-1:5|6:d\n4b:b-dgal-HEX-1:5\n5b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(4+1)4d\n4:4o(2+1)5d"
+	    },
+	
+	    sialylLewisA: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\n6b:a-lgal-HEX-1:5|6:d\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:3o(3+2)4d\n4:4d(5+1)5n\n5:1o(4+1)6d"
+	    },
+	
+	    sialylLewisX: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:a-lgal-HEX-1:5|6:d\n4b:b-dgal-HEX-1:5\n5b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n6s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(3+1)3d\n3:1o(4+1)4d\n4:4o(3+2)5d\n5:5d(5+1)6n"
+	    },
+	
+	    VIM2: {
+	        glycoct: "RES\n1b:b-dglc-HEX-1:5\n2s:n-acetyl\n3b:b-dgal-HEX-1:5\n4b:a-dgro-dgal-NON-2:6|1:a|2:keto|3:d\n5s:n-acetyl\nLIN\n1:1d(2+1)2n\n2:1o(4+1)3d\n3:3o(3+2)4d\n4:4d(5+1)5n"
+	    }
+	
+	});
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -2980,7 +3296,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycosidicLinkage;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3050,7 +3366,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = SubstituentLinkage;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3191,7 +3507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Monosaccharide;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3259,7 +3575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Substituent;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3279,19 +3595,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
 	
-	var _Monosaccharide = __webpack_require__(18);
+	var _Monosaccharide = __webpack_require__(19);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _Substituent = __webpack_require__(19);
+	var _Substituent = __webpack_require__(20);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _GlycosidicLinkage = __webpack_require__(16);
+	var _GlycosidicLinkage = __webpack_require__(17);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
-	var _SubstituentLinkage = __webpack_require__(17);
+	var _SubstituentLinkage = __webpack_require__(18);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -3838,7 +4154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = Sugar;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3889,7 +4205,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = RepeatingUnit;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3903,7 +4219,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Sugar = __webpack_require__(20);
+	var _Sugar = __webpack_require__(21);
 	
 	var _Sugar2 = _interopRequireDefault(_Sugar);
 	
@@ -3927,7 +4243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _Monosaccharide = __webpack_require__(18);
+	var _Monosaccharide = __webpack_require__(19);
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
@@ -3939,11 +4255,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
 	
-	var _Substituent = __webpack_require__(19);
+	var _Substituent = __webpack_require__(20);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _SubstituentLinkage = __webpack_require__(17);
+	var _SubstituentLinkage = __webpack_require__(18);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -4611,7 +4927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTParser;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4624,7 +4940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 05/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Substituent = __webpack_require__(19);
+	var _Substituent = __webpack_require__(20);
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
@@ -4632,7 +4948,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentType2 = _interopRequireDefault(_SubstituentType);
 	
-	var _GlycosidicLinkage = __webpack_require__(16);
+	var _GlycosidicLinkage = __webpack_require__(17);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
@@ -4644,11 +4960,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideType2 = _interopRequireDefault(_MonosaccharideType);
 	
-	var _EdgeComparator = __webpack_require__(24);
+	var _EdgeComparator = __webpack_require__(25);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
-	var _RepeatingUnit = __webpack_require__(21);
+	var _RepeatingUnit = __webpack_require__(22);
 	
 	var _RepeatingUnit2 = _interopRequireDefault(_RepeatingUnit);
 	
@@ -4656,7 +4972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _MonosaccharideGlycoCT2 = _interopRequireDefault(_MonosaccharideGlycoCT);
 	
-	var _SubstituentLinkage = __webpack_require__(17);
+	var _SubstituentLinkage = __webpack_require__(18);
 	
 	var _SubstituentLinkage2 = _interopRequireDefault(_SubstituentLinkage);
 	
@@ -5349,7 +5665,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = GlycoCTWriter;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5366,11 +5682,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 10/07/2017.
 	 */
 	
-	var _NodeComparator = __webpack_require__(25);
+	var _NodeComparator = __webpack_require__(26);
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _GlycosidicLinkage = __webpack_require__(16);
+	var _GlycosidicLinkage = __webpack_require__(17);
 	
 	var _GlycosidicLinkage2 = _interopRequireDefault(_GlycosidicLinkage);
 	
@@ -5452,7 +5768,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EdgeComparator;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5465,7 +5781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by Renaud on 10/07/2017.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _EdgeComparator = __webpack_require__(24);
+	var _EdgeComparator = __webpack_require__(25);
 	
 	var _EdgeComparator2 = _interopRequireDefault(_EdgeComparator);
 	
@@ -5690,7 +6006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = NodeComparator;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 	"use strict";

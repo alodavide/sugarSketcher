@@ -21,6 +21,42 @@ $(document).ready(function() {
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
+
+    // Add structures to the select element
+    var div = document.getElementById("structuresDiv");
+    var selectList = document.createElement("select");
+    selectList.id = "structure";
+    div.appendChild(selectList);
+    for (var s of sb.Structures) {
+        var option = document.createElement("option");
+        option.value = s.glycoct;
+        option.text = s.name;
+        selectList.appendChild(option);
+    }
+    var submit = document.createElement("input");
+    submit.type = "submit";
+    submit.id = "submitStructure";
+    div.appendChild(submit);
+
+    d3.select("#submitStructure").on('click', function() {
+        var glycoct = $('#structure').val();
+        treeData = {};
+        selectedNodes = [];
+        if (sugar)
+            sugar.clear();
+        var parser = new sb.GlycoCTParser(glycoct);
+        sugar = parser.parseGlycoCT();
+        shapes = [];
+        generateShapes();
+        var i = 1;
+        while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
+        {
+            i++;
+        }
+        clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-i];
+        displayTree();
+    });
+
     d3.select("#svgTree").on('click', function() {
         fadeOutContextMenu();
     })
@@ -474,6 +510,14 @@ function updateMenu(chosenDivision) {
                 quickMode = !quickMode;
                 updateMenu();
             }
+            else if (d.division == "addStructure")
+            {
+                d3.select("#formula").style("display","none");
+                d3.select("#validateFormula").style("display", "none");
+                d3.select("#copyMsg").style("display", "none");
+
+                d3.select("#structuresDiv").style("display", "block");
+            }
         }).on("mouseover", function (d) {
         // On hover of addNode, we display its two subdivisions
         if (d.division == "io") {
@@ -822,6 +866,7 @@ function handleRepetition()
         {
             repEntry = nodes[0].node;
             repExit = findRepExit(nodes[0]);
+            console.log(repExit);
             if (repExit.length != 1) // If the rep unit has 2 exits
             {
                 return;
@@ -881,12 +926,14 @@ function moveNodesInsideRep()
         {
             if (node.node instanceof sb.Monosaccharide)
             {
+                var linkedCarbon;
+                var prevCoord = Object.assign({},shapes[node.node.id]);
                 // if the node is not part of the repeating unit AND is located inside the square, move it
                 while ((node.node.repeatingUnit == undefined || node.node.repeatingUnit.id != rep.id) &&
-                (shapes[node.node.id][0] >= repCoord[0] &&
-                shapes[node.node.id][0] <= repCoord[1] &&
-                shapes[node.node.id][1] >= repCoord[2] &&
-                shapes[node.node.id][1] <= repCoord[3]))
+                    (shapes[node.node.id][0] >= repCoord[0] &&
+                    shapes[node.node.id][0] <= repCoord[1] &&
+                    shapes[node.node.id][1] >= repCoord[2] &&
+                    shapes[node.node.id][1] <= repCoord[3]))
                 {
                     var link;
                     for (var e of sugar.graph.edges())
@@ -894,10 +941,15 @@ function moveNodesInsideRep()
                         if (e.target == node.node.id)
                             link = e;
                     }
-                    var linkedCarbon = link.linkedCarbon.value;
+                    linkedCarbon = link.linkedCarbon.value;
                     shapes[node.node.id][0] += XYvalues[linkedCarbon][1];
                     shapes[node.node.id][1] += XYvalues[linkedCarbon][0];
+                    if (isAvailible(shapes[node.node.id][0], shapes[node.node.id][1]) != "") // if the new spot is unavailible
+                    {
+                        shapes[node.node.id] = findNewSpot(shapes[node.node.id][0], shapes[node.node.id][1], linkedCarbon, node.parent.node.id);
+                    }
                 }
+                var delta;
             }
         }
     }
@@ -965,18 +1017,18 @@ function findRepExit(root)
     while (stack.length > 0)
     {
         var node = stack.pop();
+        console.log(countUnselectedChildren(node, wholeSelection));
+        if (countUnselectedChildren(node, wholeSelection) == 1)
+        {
+            if (!exits.includes(node))
+                exits.push(node);
+        }
         if (node.children != undefined)
         {
             for (var child of node.children)
             {
-                if (!wholeSelection.includes(child.node))
-                {
-                    if (!exits.includes(node.node))
-                    {
-                        exits.push(node.node);
-                    }
-                }
-                stack.push(child);
+                if (wholeSelection.includes(child.node))
+                    stack.push(child);
             }
         }
     }

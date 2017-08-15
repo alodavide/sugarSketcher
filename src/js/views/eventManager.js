@@ -289,6 +289,7 @@ function manageHoverIO(menuItem,actions)
         }).on("click", function () {
             d3.select("#formula").style("display","block");
             d3.select("#validateFormula").style("display", "none");
+            d3.select("#structuresDiv").style("display", "none");
             var writer = new sb.GlycoCTWriter(sugar, treeData);
             $('#formula').val(writer.exportGlycoCT());
             $('#formula').select();
@@ -333,6 +334,7 @@ function manageHoverIO(menuItem,actions)
         }).on("click", function () {
             d3.select("#formula").style("display","block");
             d3.select("#validateFormula").style("display", "block");
+            d3.select("#structuresDiv").style("display", "none");
             $('#formula').val("");
             $('#formula').focus();
             d3.select("#copyMsg")
