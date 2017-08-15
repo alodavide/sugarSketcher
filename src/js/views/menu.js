@@ -862,18 +862,17 @@ function handleRepetition()
     {
         findNodesInTree(nodes);
         var repEntry, repExit;
-        if (isBranchSelected(nodes))
+        if (isBranchSelected(nodes)) // BRANCH
         {
             repEntry = nodes[0].node;
             repExit = findRepExit(nodes[0]);
-            console.log(repExit);
             if (repExit.length != 1) // If the rep unit has 2 exits
             {
                 return;
             }
-            repExit = repExit[0];
+            repExit = repExit[0].node;
         }
-        else
+        else // NO BRANCH
         {
             var entryExit = findEntryAndExit(nodes);
             if (!entryExit)
@@ -883,6 +882,8 @@ function handleRepetition()
             repEntry = entryExit[0];
             repExit = entryExit[1];
         }
+
+
 
         if (repExit != undefined) // Doesn't finish by a fork
         {
@@ -927,7 +928,6 @@ function moveNodesInsideRep()
             if (node.node instanceof sb.Monosaccharide)
             {
                 var linkedCarbon;
-                var prevCoord = Object.assign({},shapes[node.node.id]);
                 // if the node is not part of the repeating unit AND is located inside the square, move it
                 while ((node.node.repeatingUnit == undefined || node.node.repeatingUnit.id != rep.id) &&
                     (shapes[node.node.id][0] >= repCoord[0] &&
@@ -942,26 +942,41 @@ function moveNodesInsideRep()
                             link = e;
                     }
                     linkedCarbon = link.linkedCarbon.value;
-                    shapes[node.node.id][0] += XYvalues[linkedCarbon][1];
-                    shapes[node.node.id][1] += XYvalues[linkedCarbon][0];
-                    if (isAvailible(shapes[node.node.id][0], shapes[node.node.id][1]) != "") // if the new spot is unavailible
+                    moveNodeAndChildren(node,XYvalues[linkedCarbon][1],XYvalues[linkedCarbon][0]);
+                    /*if (isAvailible(shapes[node.node.id][0], shapes[node.node.id][1]) != "") // if the new spot is unavailible
                     {
                         shapes[node.node.id] = findNewSpot(shapes[node.node.id][0], shapes[node.node.id][1], linkedCarbon, node.parent.node.id);
-                    }
+                    }*/
                 }
-                var delta;
             }
         }
     }
+}
 
+function moveNodeAndChildren(node, dx, dy)
+{
+    var stack = [node];
+    while (stack.length != 0)
+    {
+        var n = stack.pop();
+        shapes[node.node.id][0] += dx;
+        shapes[node.node.id][1] += dy;
+        if (node.children != undefined)
+        {
+            for (var child of node.children)
+            {
+                stack.push(child);
+            }
+        }
+    }
 }
 
 function findEntryAndExit(nodes)
 {
     var maxDepth = nodes[0].depth;
     var minDepth = nodes[0].depth;
-    var maxId = nodes[0].node;
-    var minId = nodes[0].node;
+    var maxNode = nodes[0].node;
+    var minNode = nodes[0].node;
     var unselectedChildren = 0;
     for (var node of nodes)
     {
@@ -969,12 +984,12 @@ function findEntryAndExit(nodes)
         if (node.depth > maxDepth)
         {
             maxDepth = node.depth;
-            maxId = node.node;
+            maxNode = node.node;
         }
         if (node.depth < minDepth)
         {
             minDepth = node.depth;
-            minId = node.node;
+            minNode = node.node;
         }
     }
     if (unselectedChildren > 1)
@@ -983,7 +998,7 @@ function findEntryAndExit(nodes)
     }
     else
     {
-        return [minId,maxId];
+        return [minNode,maxNode];
     }
 }
 
@@ -1011,13 +1026,13 @@ function countUnselectedChildren(node, nodes)
 function findRepExit(root)
 {
     var wholeSelection = [clickedNode].concat(selectedNodes);
+    findNodesInTree(wholeSelection);
     var exits = [];
     var stack = [root];
 
     while (stack.length > 0)
     {
         var node = stack.pop();
-        console.log(countUnselectedChildren(node, wholeSelection));
         if (countUnselectedChildren(node, wholeSelection) == 1)
         {
             if (!exits.includes(node))
@@ -1027,7 +1042,7 @@ function findRepExit(root)
         {
             for (var child of node.children)
             {
-                if (wholeSelection.includes(child.node))
+                if (wholeSelection.includes(child))
                     stack.push(child);
             }
         }

@@ -438,13 +438,13 @@ function displayTree() {
             .style('stroke', function(d){
                 if (d.node == clickedNode)
                 {
-                    if (d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "fuc" || d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "sia")
-                    {
-                        return "black";
-                    }
-                    else if (selectedNodes.length != 0)
+                    if (selectedNodes.length != 0)
                     {
                         return "#58ACFA";
+                    }
+                    else if (d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "fuc" || d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "sia")
+                    {
+                        return "black";
                     }
                     else
                     {
