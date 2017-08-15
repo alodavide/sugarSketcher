@@ -627,9 +627,9 @@ function displayLabels(linkLabel, links, anom)
             else
             {
                 if (d.target.node.anomericity.name == "ALPHA") {
-                    anomericity = "α"
+                    anomericity = "α\u00A0"
                 } else if (d.target.node.anomericity.name == "BETA") {
-                    anomericity = "β";
+                    anomericity = "β\u00A0";
                 } else {
                     anomericity = "?\u00A0";
                 }
