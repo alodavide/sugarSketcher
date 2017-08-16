@@ -2,6 +2,10 @@
  * Created by Nicolas Hory on 04/08/16.
  */
 
+
+var progress; // out of 7
+
+
 /*
     Manage help button in informations svg
 */
@@ -123,7 +127,17 @@ function selectAnomericity(target) {
     if (clicked.classed("selectedAnomericity")) { // If it was already selected
         clicked.classed("selectedAnomericity", false); // Unselect and change color
         clicked.style("fill", "#cc0000");
+        if (quickMode)
+            progress -= 2;
+        else
+            progress--;
+        redrawProgress();
     } else { // If it's a new selection
+        if (quickMode)
+            progress += 2;
+        else
+            progress++;
+        redrawProgress();
         var anomericityChoices = d3.selectAll(".choiceAnomericity")[0];
         // Unselect all anomericity choices
         for (var choice of anomericityChoices) {
@@ -444,7 +458,11 @@ function selectIsomer(target) {
     if (clicked.classed("selectedIsomer")) {
         clicked.classed("selectedIsomer", false);
         clicked.style("fill", "#cc0000");
+        progress--;
+        redrawProgress();
     } else {
+        progress++;
+        redrawProgress();
         // If was not selected, unselect all the other isomer choices, and adapt color
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
         for (var choice of isomerChoices) {
@@ -536,7 +554,11 @@ function selectRingType(target) {
     if (clicked.classed("selectedRingType")) {
         clicked.classed("selectedRingType", false);
         clicked.style("fill", "#cc0000");
+        progress--;
+        redrawProgress();
     } else {
+        progress++;
+        redrawProgress();
         // If not selected, unselect all the other ring type choices, and adapt colors
         var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
         for (var choice of ringTypeChoices) {
@@ -626,6 +648,11 @@ function reinitializeDisplayInfos() {
     d3.select("#ringTypeTitleChoice").style("display", "block");
     d3.select("#labelRingTypeTitle").style("display", "block");
 
+    removeInfosChoices();
+}
+
+function removeInfosChoices()
+{
     // Remove all the choices rects and labels
     d3.selectAll(".choiceAnomericity").remove();
     d3.selectAll(".labelChoiceAnomericity").remove();
@@ -765,7 +792,17 @@ function selectLinkedCarbon(target) {
     if (clicked.classed("selectedLinkedCarbon")) { // If already selected, unselect  and change color
         clicked.classed("selectedLinkedCarbon", false);
         clicked.style("fill", "#cc0000");
+        if (quickMode)
+            progress -= 2;
+        else
+            progress--;
+        redrawProgress();
     } else {
+        if (quickMode)
+            progress += 2;
+        else
+            progress++;
+        redrawProgress();
         // If was not selected, unselect all the other choices and adapt color
         var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
         for (var choice of linkedCarbonChoices) {
@@ -896,7 +933,11 @@ function selectAnomerCarbon(target) {
     if (clicked.classed("selectedAnomerCarbon")) { // If it was selected, unselect it and change color
         clicked.classed("selectedAnomerCarbon", false);
         clicked.style("fill", "#cc0000");
+        progress--;
+        redrawProgress();
     } else { // If it was not selected, unselect all other anomer choices, and adapt style
+        progress++;
+        redrawProgress();
         var isomerChoices = d3.selectAll(".choiceAnomerCarbon")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
@@ -994,13 +1035,14 @@ function checkLinkedCarbon() {
     }
 }
 
+function redrawProgress()
+{
+    var svg = d3.select("#progressChart");
+    d3.selectAll("#progressBar").remove();
+    svg.append("rect")
+        .attr("width", progress/7*1000)
+        .attr("height", "4px")
+        .attr("id", "progressBar")
+        .attr("fill", "#02b600");
 
-function rightRoundedRect(x, y, width, height, radius) {
-    return "M" + x + "," + y
-        + "h" + (width - radius)
-        + "a" + radius + "," + radius + " 0 0 1 " + radius + "," + radius
-        + "v" + (height - 2 * radius)
-        + "a" + radius + "," + radius + " 0 0 1 " + -radius + "," + radius
-        + "h" + (radius - width)
-        + "z";
 }

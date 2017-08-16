@@ -16,6 +16,8 @@ var quickAnomerCarbon = "";
 // Function called when document is ready
 
 $(document).ready(function() {
+    progress = 0;
+    redrawProgress();
     ctrl = false;
     quickMode = false;
     updateMenu();  // Update menu
@@ -94,6 +96,8 @@ var shapeChoices= document.getElementsByClassName("shapeChoice");
 for (var shape of shapeChoices) {
     shape.addEventListener('click', function(e) {
         // When a shape is clicked, we update the menu, and store the chosen shape in infosTable
+        progress = 1;
+        redrawProgress();
         infosTable.push(e.target.parentNode.id.split("Shape")[0]);
         d3.select("#svgShape").transition().style("display", "none");
         updateMenu("shape");
@@ -107,6 +111,8 @@ for (var shape of shapeChoices) {
 // Exit button
 var shapeExitButton = d3.selectAll(".cancelResidue");
 shapeExitButton.on("click", function() {
+    progress = 0;
+    redrawProgress();
     menuChosenPath = []; // Remove all information from menuChosenPath
     updateMenu(); // Update menu
     infosTable = []; // Remove all added information in infosTable
@@ -115,12 +121,16 @@ shapeExitButton.on("click", function() {
 // Cancel button in shape menu, coming back to main menu
 var shapeCancelButton = d3.select("#cancelChoiceShape");
 shapeCancelButton.on("click", function() {
+    progress = 0;
+    redrawProgress();
     updateMenu();
 });
 
 // Cancel button in informations svg, coming back to shape svg, managing displays
 var infosCancelButton = d3.select("#cancelChoiceInfos");
 infosCancelButton.on("click", function() {
+    progress = 1;
+    redrawProgress();
     infosTable.pop(); // Remove last chosen information
     // Remove last two paths taken in the menu
     menuChosenPath.pop();
@@ -135,6 +145,8 @@ infosCancelButton.on("click", function() {
 var carbonCancelButton = d3.select("#cancelChoiceCarbon");
 carbonCancelButton.on("click", function() {
     // Remove anomericity, isomer and ring type
+    progress = 2;
+    redrawProgress();
     infosTable.pop();
     infosTable.pop();
     infosTable.pop();
@@ -203,7 +215,7 @@ var menuAction = [{
 var menu2Action = [
     {
         division: "addStructure",
-        display_division: "Add Structure"
+        display_division: "Load Structure"
     },
     {
         division: "quickMode",
@@ -311,6 +323,8 @@ cancelQuickInfos.on("click", function() {
     reinitializeQuickInfos();
     updateMenu(); // Update to main menu
     d3.select("#svgQuickMono").transition().style("display", "block"); // Display main menu
+    progress = 0;
+    redrawProgress();
 });
 
 
@@ -333,6 +347,14 @@ function updateMenu(chosenDivision) {
         d3.select("#labels2").selectAll("*").remove();
     }
 
+    if (chosenDivision == undefined)
+    {
+        progress = 0;
+        removeInfosChoices();
+    }
+
+    redrawProgress();
+
     var actions = d3.select("#actions"); // Rectangles
     var actions2 = d3.select("#actions2");
     var labels = d3.select("#labels"); // Labels
@@ -347,6 +369,10 @@ function updateMenu(chosenDivision) {
         height: menuDimensions.height,
         width: menuDimensions.width
     });
+    var svgProgress = d3.select("#svgProgress").attr({
+        height: menuDimensions.height,
+        width: menuDimensions.width
+    })
     var newMenuAction = [];
 
     // This case happens when update is called with no parameter (first update)
@@ -363,7 +389,7 @@ function updateMenu(chosenDivision) {
         if (quickMode)
         {
             d3.select("#svgMenu").transition().style("display", "none");
-            var svgQuick = d3.select("#svgQuickMono").style("height","55px").style("width","1000px").style("margin", "0 auto 10px").style("display", "block").attr("x",0);
+            var svgQuick = d3.select("#svgQuickMono").style("height","50px").style("width","1000px").style("margin", "0 auto 10px").style("display", "block").attr("x",0);
 
             var common = [];
             for (var mono of sb.QuickModeMonosaccharides)
@@ -392,6 +418,8 @@ function updateMenu(chosenDivision) {
                     quickRingType = d.ringType;
                     quickAnomerCarbon = d.anomerCarbon;
                     quickIsomer = d.isomer;
+                    progress = 3;
+                    redrawProgress();
                     updateMenu(d);
                 });
 
@@ -449,7 +477,7 @@ function updateMenu(chosenDivision) {
         if (quickMode && sb.QuickModeMonosaccharides[chosenDivision.name]) // If quickMode
         {
             d3.select("#svgQuickMono").transition().style("display", "none");
-            var svgQuick = d3.select("#svgQuickInfos").style("height","55px").style("width","1000px").style("margin", "0 auto 10px").style("display", "block");
+            var svgQuick = d3.select("#svgQuickInfos").style("height","50px").style("width","1000px").style("margin", "0 auto 10px").style("display", "block");
         }
         else
         {
@@ -521,11 +549,14 @@ function updateMenu(chosenDivision) {
         }).on("mouseover", function (d) {
         // On hover of addNode, we display its two subdivisions
         if (d.division == "io") {
-            manageHoverIO(d, actions2);
-            if (labels2.selectAll("text")[0][2])
-                labels2.selectAll("text")[0][2].remove();
-            labels2.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 9000 / 12).attr("y", 8);
-            labels2.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 11000 / 12).attr("y", 8);
+            if (infosTable.length == 0) // If the user is not creating a node
+            {
+                manageHoverIO(d, actions2);
+                if (labels2.selectAll("text")[0][2])
+                    labels2.selectAll("text")[0][2].remove();
+                labels2.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 9000 / 12).attr("y", 8);
+                labels2.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 11000 / 12).attr("y", 8);
+            }
         }
     });
     textNodes2.enter().append("text")
@@ -544,7 +575,7 @@ function updateMenu(chosenDivision) {
 
     // If we are not displaying colors
     if (newMenuAction != colorDivisions) {
-        d3.select("#svgMenu").style("height", "40px"); // Set height of the menu bac kto 40 px
+        d3.select("#svgMenu").style("height", "50px"); // Set height of the menu bac kto 40 px
 
         // Append a rect with calculated width, height; x and y
         bars.enter().append("rect")
@@ -614,6 +645,11 @@ function updateMenu(chosenDivision) {
                             });
                             repeatUnitConfirm = 1;
                         }
+                        else if (selectedNodes.length > 0)
+                        {
+                            handleRepetition();
+                            repeatUnitConfirm = 0;
+                        }
                     }
                 }
             }).on("mouseover", function (d) {
@@ -638,7 +674,7 @@ function updateMenu(chosenDivision) {
                 return d.display_division;
             });
     } else { // If we are displaying colors
-        d3.select("#svgMenu").style("height", "60px"); // Update height to show circles and labels of monosaccharides
+        d3.select("#svgMenu").style("height", "50px"); // Update height to show circles and labels of monosaccharides
         bars.enter().append("circle")
             .attr("cy", 20)
             .attr("cx", function (d, i) {
@@ -671,6 +707,8 @@ function updateMenu(chosenDivision) {
                 }
             })
             .on("click", function (d) {
+                progress = 2;
+                redrawProgress();
                 // Manage click, if combination impossible the click is not doing anything
                 var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
                 // Check if the shape is bisected
@@ -736,6 +774,8 @@ function addCancelOperation (actions, labels) {
         .attr("x", 1010).attr("y", 0)
         .style("fill", "#505656")
         .on("click", function () {
+            progress--;
+            redrawProgress();
             menuChosenPath.pop(); // Remove last information from menuChosenPath
             updateMenu(menuChosenPath.pop()); // Update menu from last step
             infosTable.pop(); // Remove the last added information in infosTable
@@ -749,6 +789,8 @@ function addCancelOperation (actions, labels) {
         .attr("x", 1050).attr("y", 0)
         .style("fill", "#505656")
         .on("click", function () {
+            progress = 0;
+            redrawProgress();
             menuChosenPath = []; // Remove all information from menuChosenPath
             updateMenu(); // Update menu
             infosTable = []; // Remove all added information in infosTable
@@ -1313,6 +1355,8 @@ function createNewNode() {
         clickedNode = monosaccharide;
         displayTree();
         updateMenu();
+        progress = 0;
+        redrawProgress();
         return generatedNodeId;
     }
 }
