@@ -87,7 +87,7 @@ function displayPie() {
                 // Hide the piechart and the substituents menu
                 $('#pieLinkCarbon').css("display", "none");
                 d3.select("#svgSubstituents").style("display", "none");
-                d3.select("#svgSubstituents").style("height", "40px");
+                d3.select("#svgSubstituents").style("height", "50px");
 
                 // Remove all substituent choices
                 d3.selectAll(".createdSubChoice").remove();

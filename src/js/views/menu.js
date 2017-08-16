@@ -250,10 +250,9 @@ substituentDisplayMore.on("click", function() {
         }
     }
 
-    var moreSubs = subsRects.append("g").attr("id", "moreSubs");
-
     // If only the 5 most used are actually displayed
     if(d3.selectAll(".subChoice")[0].length == 5) {
+        var moreSubs = subsRects.append("g").attr("id", "moreSubs");
         var currentIndex = 0;
         var currentY = 40;
         // Loop to add new substituents to the menu
@@ -300,8 +299,9 @@ substituentDisplayMore.on("click", function() {
     }
     else
     {
+        console.log("close");
+        d3.select("#svgSubstituents").style("height", "50px");
         subsRects.select("#moreSubs").remove();
-        d3.select("#svgSubstituents").style("height", "40px");
     }
 });
 
