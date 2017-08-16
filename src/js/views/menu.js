@@ -1201,6 +1201,7 @@ function deleteNode(node) {
         sugar.clear();
         shapes = [];
         clickedNode = null;
+        d3.selectAll("#rootAttach").remove();
     } else {
         deleteAllShapesInGraph(node);
         deleteAllChildrenInGraph(node);
@@ -1345,8 +1346,11 @@ function createNewNode() {
             sugar = new sb.Sugar("Sugar", monosaccharide);
             var node = {"node":monosaccharide};
             var shape = calculateXandYNode(node);
-
             shapes[generatedNodeId] = shape;
+            var rootShape = [origin[0],origin[1]+gap];
+            shapes["root"] = rootShape;
+            rootLinkedCarbon = linkedCarbon;
+            rootAnomerCarbon = anomerCarbon;
             updateTreeVisualization(); // Update visualization in the svg
         } else {
             var generatedEdgeId = randomString(7); // If tree not empty, generate id, create linkage and update visualziation

@@ -724,7 +724,7 @@ function addHoverManagerLinkedCarbon(quick = false) {
                 .attr("x", x + i*width/ (maxCarbons+1)) // Calculate the x for each choice
                 .attr("rx", 15) // Corners of the rect
                 .attr("value", associatedValues[k]) // Get the value associated to the choice
-                .attr("opacity", function() {
+                .attr("opacity", function(d) {
                     // Lower opacity of already used linked carbon values
                     var usedCarbons = checkUsedCarbons();
                     if (usedCarbons.indexOf(parseInt(k)) != -1) {
@@ -1027,6 +1027,10 @@ function checkUsedCarbons() {
         }
         var edges = sugar.graph.edges();
         // For each edge, if the source is the clickedNode, we add the linked carbon value to the array
+        if (clickedNode == treeData.node)
+        {
+            usedCarbons.push(rootAnomerCarbon.value);
+        }
         for (var edge of edges) {
             if (edge.sourceNode == clickedNode) {
                 usedCarbons.push(edge.linkedCarbon.value);

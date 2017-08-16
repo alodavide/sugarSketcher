@@ -4,6 +4,8 @@ var clickedNode = null;
 var selectedNodes = [];
 var copiedNode = null;
 
+var rootLinkedCarbon, rootAnomerCarbon;
+
 const gap = 50;
 const origin = [200, 600];
 const circleRadius = 15;
@@ -386,6 +388,21 @@ function displayTree() {
             });
 
 
+        // Root attach point ~
+        node.append("path").style("visibility", function(d) {
+            if (d.parent == undefined)
+                return "visible";
+            else
+                return "hidden";
+        })
+            .attr("fill", "none")
+            .attr("id", "rootAttach")
+            .attr("width", function(d) {
+                return 50;
+            })
+            .attr("height", 50).attr("stroke", "black")
+            .attr("d", "M50,20 Q61,10 50,0 T50,-20" +
+                "       M50,0 L-10,0");
 
 
 
@@ -547,6 +564,9 @@ function displayTree() {
 
 function displayLabels(linkLabel, links, anom)
 {
+    var root = {"node":{"id":"root"}};
+    var rootLink = {"source":root,"target":treeData};
+    links.push(rootLink);
     linkLabel.data(links)
     .enter().append("text")
     .attr("class", function(d) {
@@ -583,7 +603,10 @@ function displayLabels(linkLabel, links, anom)
         {
             var target = shapes[d.target.node.id]; // Calculate target coordinates
             var usualX = (source[1] + target[1]) / 2; // Get x of the middle of the link
-            finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+            if (d.source.node.id == "root")
+                finalX = usualX+5; // Add value to have a visible display (not on the line)
+            else
+                finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
         }
         else // Substituant
         {
@@ -599,7 +622,10 @@ function displayLabels(linkLabel, links, anom)
         {
             var target = shapes[d.target.node.id]; // Calculate target coordinates
             var usualY = (source[0] + target[0]) / 2; // Get y of the middle of the link
-            finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
+            if (d.source.node.id == "root")
+                finalY = usualY + 5; // Add value to have a visible display
+            else
+                finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
         }
         else // Substituant
         {
@@ -644,12 +670,23 @@ function displayLabels(linkLabel, links, anom)
                 anomerCarbonLabel = "\u00A0";
             else
             {
-
-                if (link.anomerCarbon.value == "undefined") {
-                    anomerCarbonLabel = "?";
+                if (d.source.node.id == "root")
+                {
+                    if (rootAnomerCarbon.value == "undefined") {
+                        anomerCarbonLabel = "?";
+                    }
+                    else {
+                        anomerCarbonLabel = rootAnomerCarbon.value;
+                    }
                 }
-                else {
-                    anomerCarbonLabel = link.anomerCarbon.value;
+                else
+                {
+                    if (link.anomerCarbon.value == "undefined") {
+                        anomerCarbonLabel = "?";
+                    }
+                    else {
+                        anomerCarbonLabel = link.anomerCarbon.value;
+                    }
                 }
             }
 
@@ -657,10 +694,21 @@ function displayLabels(linkLabel, links, anom)
             if (anom)
                 linkedCarbonLabel = "\u00A0";
             else {
-                if (link.linkedCarbon.value == 'undefined') {
-                    linkedCarbonLabel = "?";
-                } else {
-                    linkedCarbonLabel = link.linkedCarbon.value;
+                if (d.source.node.id == "root")
+                {
+                    if (rootLinkedCarbon.value == 'undefined') {
+                        linkedCarbonLabel = "?";
+                    } else {
+                        linkedCarbonLabel = rootLinkedCarbon.value;
+                    }
+                }
+                else
+                {
+                    if (link.linkedCarbon.value == 'undefined') {
+                        linkedCarbonLabel = "?";
+                    } else {
+                        linkedCarbonLabel = link.linkedCarbon.value;
+                    }
                 }
             }
             var coma;
