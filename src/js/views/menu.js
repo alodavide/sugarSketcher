@@ -120,9 +120,9 @@ var shapeExitButton = d3.selectAll(".cancelResidue");
 shapeExitButton.on("click", function() {
     redrawProgress(progress, 0);
     progress = 0;
-    menuChosenPath = []; // Remove all information from menuChosenPath
+    reinitializeDisplayInfos(); // Reinitialize the display of informations
+    reinitializeDisplayCarbons(); // Reinitialize display of carbons svg
     updateMenu(); // Update menu
-    infosTable = []; // Remove all added information in infosTable
 });
 
 // Cancel button in shape menu, coming back to main menu
@@ -798,6 +798,7 @@ function addCancelOperation (actions, labels) {
             redrawProgress(progress, 0);
             progress = 0;
             menuChosenPath = []; // Remove all information from menuChosenPath
+            removeInfosChoices();
             updateMenu(); // Update menu
             infosTable = []; // Remove all added information in infosTable
         });
