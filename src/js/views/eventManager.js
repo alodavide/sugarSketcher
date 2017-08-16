@@ -123,6 +123,7 @@ function addHoverManagerAnomericity(quick = false) {
  * @param target
  */
 function selectAnomericity(target) {
+    var prev = progress;
     var clicked = d3.select("#"+target); // Select the target of the click
     if (clicked.classed("selectedAnomericity")) { // If it was already selected
         clicked.classed("selectedAnomericity", false); // Unselect and change color
@@ -130,29 +131,23 @@ function selectAnomericity(target) {
         if (quickMode)
         {
             progress -= 2;
-            redrawProgress(progress+2);
+            redrawProgress(prev);
         }
         else
         {
             progress--;
-            redrawProgress(progress+1);
+            redrawProgress(prev);
         }
     } else { // If it's a new selection
-        if (quickMode)
-        {
-            progress += 2;
-            redrawProgress(progress-2);
-        }
-        else
-        {
-            progress++;
-            redrawProgress(progress-1);
-        }
         var anomericityChoices = d3.selectAll(".choiceAnomericity")[0];
         // Unselect all anomericity choices
         for (var choice of anomericityChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedAnomericity")) {
+                if (quickMode)
+                    progress -= 2;
+                else
+                    progress--;
                 current.classed("selectedAnomericity", false);
                 current.style("fill", "#cc0000");
             }
@@ -160,9 +155,17 @@ function selectAnomericity(target) {
         // Select the clicked one
         d3.select("#" + target).style("fill", "#000592").classed("selectedAnomericity", true);
         if (quickMode)
+        {
             checkSelectedQuickInfo();
+            progress += 2;
+        }
         else
-            checkSelectedAllInfos(); // Check if the three informations (anomericity, isomer and ring type) have been selected
+        {
+            checkSelectedAllInfos();
+            progress++;
+
+        } // Check if the three informations (anomericity, isomer and ring type) have been selected
+        redrawProgress(prev);
     }
 }
 
@@ -463,26 +466,28 @@ function manageMouseOutIsomer() {
  * @param target
  */
 function selectIsomer(target) {
+    var prev = progress;
     var clicked = d3.select("#"+target); // Get the selected isomer choice
     // If it was already selected, unselect and change color
     if (clicked.classed("selectedIsomer")) {
         clicked.classed("selectedIsomer", false);
         clicked.style("fill", "#cc0000");
         progress--;
-        redrawProgress(progress+1);
+        redrawProgress(prev);
     } else {
-        progress++;
-        redrawProgress(progress-1);
         // If was not selected, unselect all the other isomer choices, and adapt color
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedIsomer")) {
+                progress--;
                 current.classed("selectedIsomer", false);
                 current.style("fill", "#cc0000");
             }
         }
         d3.select("#" + target).style("fill", "#000592").classed("selectedIsomer", true); // Add class and change color
+        progress++;
+        redrawProgress(prev);
         checkSelectedAllInfos(); // Check if the three infos have been selected
     }
 }
@@ -559,26 +564,28 @@ function manageMouseOutRingType() {
  * @param target
  */
 function selectRingType(target) {
+    var prev = progress;
     var clicked = d3.select("#"+target); // Get the selected choice
     // If already selected, unselect and change color
     if (clicked.classed("selectedRingType")) {
         clicked.classed("selectedRingType", false);
         clicked.style("fill", "#cc0000");
         progress--;
-        redrawProgress(progress+1);
+        redrawProgress(prev);
     } else {
-        progress++;
-        redrawProgress(progress-1);
         // If not selected, unselect all the other ring type choices, and adapt colors
         var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
         for (var choice of ringTypeChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedRingType")) {
+                progress--;
                 current.classed("selectedRingType", false);
                 current.style("fill", "#cc0000");
             }
         }
         d3.select("#" + target).style("fill", "#000592").classed("selectedRingType", true); // Add selected class and change color
+        progress++;
+        redrawProgress(prev);
         checkSelectedAllInfos(); // Check if the three informations have been selected
     }
 }
@@ -798,6 +805,7 @@ function manageMouseOutLinkedCarbon(quick) {
  * @param target
  */
 function selectLinkedCarbon(target) {
+    var prev = progress;
     var clicked = d3.select("#"+target); // Get the target choice
     if (clicked.classed("selectedLinkedCarbon")) { // If already selected, unselect  and change color
         clicked.classed("selectedLinkedCarbon", false);
@@ -805,34 +813,38 @@ function selectLinkedCarbon(target) {
         if (quickMode)
         {
             progress -= 2;
-            redrawProgress(progress+2);
+            redrawProgress(prev);
         }
         else
         {
             progress--;
-            redrawProgress(progress+1);
+            redrawProgress(prev);
         }
     } else {
-        if (quickMode)
-        {
-            progress += 2;
-            redrawProgress(progress-2);
-        }
-        else
-        {
-            progress++;
-            redrawProgress(progress-1);
-        }
         // If was not selected, unselect all the other choices and adapt color
         var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
         for (var choice of linkedCarbonChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedLinkedCarbon")) {
+                if (quickMode)
+                    progress -= 2;
+                else
+                    progress--;
                 current.classed("selectedLinkedCarbon", false);
                 current.style("fill", "#cc0000");
             }
         }
         d3.select("#" + target).style("fill", "#000592").classed("selectedLinkedCarbon", true);
+        if (quickMode)
+        {
+            progress += 2;
+            redrawProgress(prev);
+        }
+        else
+        {
+            progress++;
+            redrawProgress(prev);
+        }
         if (quickMode)
             checkSelectedQuickInfo();
         else
@@ -949,24 +961,26 @@ function manageMouseOutAnomerCarbon() {
  * @param target The clicked anomer carbon choice
  */
 function selectAnomerCarbon(target) {
+    var prev = progress;
     var clicked = d3.select("#"+target); // Get the selected choice
     if (clicked.classed("selectedAnomerCarbon")) { // If it was selected, unselect it and change color
         clicked.classed("selectedAnomerCarbon", false);
         clicked.style("fill", "#cc0000");
         progress--;
-        redrawProgress(progress+1);
+        redrawProgress(prev);
     } else { // If it was not selected, unselect all other anomer choices, and adapt style
-        progress++;
-        redrawProgress(progress-1);
         var isomerChoices = d3.selectAll(".choiceAnomerCarbon")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
             if (current.classed("selectedAnomerCarbon")) {
                 current.classed("selectedAnomerCarbon", false);
+                progress--;
                 current.style("fill", "#cc0000");
             }
         }
         d3.select("#" + target).style("fill", "#000592").classed("selectedAnomerCarbon", true); // Add the selected class and change color
+        progress++;
+        redrawProgress(prev);
         checkSelectedAllCarbons(); // Check if the two carbon values have been selected
     }
 }

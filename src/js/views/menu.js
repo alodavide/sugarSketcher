@@ -340,6 +340,16 @@ cancelQuickInfos.on("click", function() {
  * @param chosenDivision
  */
 function updateMenu(chosenDivision) {
+
+    if (quickMode)
+    {
+        d3.select("#quickMode").style("fill", "#000592");
+    }
+    else
+    {
+        d3.select("#quickMode").attr("class", "bar choice");
+    }
+
     // Fixed size of the menu
     var menuDimensions = {
         height: 40,
