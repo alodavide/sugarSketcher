@@ -609,7 +609,12 @@ function displayLabels(linkLabel, links, anom)
     })
     .style("stroke", function (d) {
         var allSelectedNodes = [clickedNode].concat(selectedNodes);
-        if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
+        if (d.target.node instanceof sb.Substituent && d.source.node == clickedNode && selectedNodes.length == 0)
+        {
+            return "red";
+        }
+        if ((d.target.node instanceof sb.Substituent && allSelectedNodes.includes(d.source.node)) || // If it's a sub and its parent is selected
+            (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node))) { // or both are monosaccharides are selected
             return "#58ACFA";
         }
         else if (anom)

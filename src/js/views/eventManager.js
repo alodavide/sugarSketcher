@@ -1055,8 +1055,8 @@ function checkLinkedCarbon() {
     }
 }
 
-function redrawProgress(prev)
+function redrawProgress(prev, newValue = progress)
 {
     d3.select("#progressBar").transition()
-    .styleTween("width", function() { return d3.interpolate(prev/7*1000, progress/7*1000); });
+    .styleTween("width", function() { return d3.interpolate(prev/7*1000, newValue/7*1000); });
 }

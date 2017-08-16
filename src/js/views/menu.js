@@ -118,8 +118,8 @@ for (var shape of shapeChoices) {
 // Exit button
 var shapeExitButton = d3.selectAll(".cancelResidue");
 shapeExitButton.on("click", function() {
+    redrawProgress(progress, 0);
     progress = 0;
-    redrawProgress(0);
     menuChosenPath = []; // Remove all information from menuChosenPath
     updateMenu(); // Update menu
     infosTable = []; // Remove all added information in infosTable
@@ -128,16 +128,16 @@ shapeExitButton.on("click", function() {
 // Cancel button in shape menu, coming back to main menu
 var shapeCancelButton = d3.select("#cancelChoiceShape");
 shapeCancelButton.on("click", function() {
+    redrawProgress(progress, 0);
     progress = 0;
-    redrawProgress(0);
     updateMenu();
 });
 
 // Cancel button in informations svg, coming back to shape svg, managing displays
 var infosCancelButton = d3.select("#cancelChoiceInfos");
 infosCancelButton.on("click", function() {
+    redrawProgress(progress, 1);
     progress = 1;
-    redrawProgress(0);
     infosTable.pop(); // Remove last chosen information
     // Remove last two paths taken in the menu
     menuChosenPath.pop();
@@ -152,8 +152,8 @@ infosCancelButton.on("click", function() {
 var carbonCancelButton = d3.select("#cancelChoiceCarbon");
 carbonCancelButton.on("click", function() {
     // Remove anomericity, isomer and ring type
+    redrawProgress(progress, 2);
     progress = 2;
-    redrawProgress(1);
     infosTable.pop();
     infosTable.pop();
     infosTable.pop();
@@ -795,8 +795,8 @@ function addCancelOperation (actions, labels) {
         .attr("x", 1050).attr("y", 0)
         .style("fill", "#505656")
         .on("click", function () {
+            redrawProgress(progress, 0);
             progress = 0;
-            redrawProgress(0);
             menuChosenPath = []; // Remove all information from menuChosenPath
             updateMenu(); // Update menu
             infosTable = []; // Remove all added information in infosTable
@@ -1121,7 +1121,7 @@ function countUnselectedChildren(node, nodes)
     {
         for (var child of node.children)
         {
-            if (!nodes.includes(child))
+            if (!nodes.includes(child) && child.node instanceof sb.Monosaccharide)
             {
                 count++
             }
@@ -1361,8 +1361,8 @@ function createNewNode() {
         clickedNode = monosaccharide;
         displayTree();
         updateMenu();
+        redrawProgress(progress, 0);
         progress = 0;
-        redrawProgress(0);
         return generatedNodeId;
     }
 }
