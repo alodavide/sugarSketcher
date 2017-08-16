@@ -347,7 +347,7 @@ function updateMenu(chosenDivision) {
     }
     else
     {
-        d3.select("#quickMode").attr("class", "bar choice");
+        d3.select("#quickMode").style("fill", "#cc0000");
     }
 
     // Fixed size of the menu
@@ -552,6 +552,9 @@ function updateMenu(chosenDivision) {
             if (d.division == "quickMode")
             {
                 quickMode = !quickMode;
+                reinitializeQuickInfos();
+                reinitializeDisplayCarbons();
+                reinitializeDisplayInfos();
                 updateMenu();
             }
             else if (d.division == "addStructure")
