@@ -17,12 +17,19 @@ var quickAnomerCarbon = "";
 
 $(document).ready(function() {
     progress = 0;
-    redrawProgress();
     ctrl = false;
     quickMode = false;
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations
     addHoverManagersCarbons(); // Add hover managers for carbons
+
+    var svg = d3.select("#progressChart");
+    d3.selectAll("#progressBar").remove();
+    svg.append("rect")
+        .attr("width", progress/7*1000)
+        .attr("height", "4px")
+        .attr("id", "progressBar")
+        .attr("fill", "#02b600");
 
     // Add structures to the select element
     var div = document.getElementById("structuresDiv");
@@ -97,7 +104,7 @@ for (var shape of shapeChoices) {
     shape.addEventListener('click', function(e) {
         // When a shape is clicked, we update the menu, and store the chosen shape in infosTable
         progress = 1;
-        redrawProgress();
+        redrawProgress(0);
         infosTable.push(e.target.parentNode.id.split("Shape")[0]);
         d3.select("#svgShape").transition().style("display", "none");
         updateMenu("shape");
@@ -112,7 +119,7 @@ for (var shape of shapeChoices) {
 var shapeExitButton = d3.selectAll(".cancelResidue");
 shapeExitButton.on("click", function() {
     progress = 0;
-    redrawProgress();
+    redrawProgress(0);
     menuChosenPath = []; // Remove all information from menuChosenPath
     updateMenu(); // Update menu
     infosTable = []; // Remove all added information in infosTable
@@ -122,7 +129,7 @@ shapeExitButton.on("click", function() {
 var shapeCancelButton = d3.select("#cancelChoiceShape");
 shapeCancelButton.on("click", function() {
     progress = 0;
-    redrawProgress();
+    redrawProgress(0);
     updateMenu();
 });
 
@@ -130,7 +137,7 @@ shapeCancelButton.on("click", function() {
 var infosCancelButton = d3.select("#cancelChoiceInfos");
 infosCancelButton.on("click", function() {
     progress = 1;
-    redrawProgress();
+    redrawProgress(0);
     infosTable.pop(); // Remove last chosen information
     // Remove last two paths taken in the menu
     menuChosenPath.pop();
@@ -146,7 +153,7 @@ var carbonCancelButton = d3.select("#cancelChoiceCarbon");
 carbonCancelButton.on("click", function() {
     // Remove anomericity, isomer and ring type
     progress = 2;
-    redrawProgress();
+    redrawProgress(1);
     infosTable.pop();
     infosTable.pop();
     infosTable.pop();
@@ -324,7 +331,7 @@ cancelQuickInfos.on("click", function() {
     updateMenu(); // Update to main menu
     d3.select("#svgQuickMono").transition().style("display", "block"); // Display main menu
     progress = 0;
-    redrawProgress();
+    redrawProgress(0);
 });
 
 
@@ -351,9 +358,8 @@ function updateMenu(chosenDivision) {
     {
         progress = 0;
         removeInfosChoices();
+        redrawProgress(0);
     }
-
-    redrawProgress();
 
     var actions = d3.select("#actions"); // Rectangles
     var actions2 = d3.select("#actions2");
@@ -419,7 +425,7 @@ function updateMenu(chosenDivision) {
                     quickAnomerCarbon = d.anomerCarbon;
                     quickIsomer = d.isomer;
                     progress = 3;
-                    redrawProgress();
+                    redrawProgress(2);
                     updateMenu(d);
                 });
 
@@ -708,7 +714,7 @@ function updateMenu(chosenDivision) {
             })
             .on("click", function (d) {
                 progress = 2;
-                redrawProgress();
+                redrawProgress(1);
                 // Manage click, if combination impossible the click is not doing anything
                 var chosenShape = infosTable[infosTable.length - 1]; // Get the selected shape
                 // Check if the shape is bisected
@@ -775,7 +781,7 @@ function addCancelOperation (actions, labels) {
         .style("fill", "#505656")
         .on("click", function () {
             progress--;
-            redrawProgress();
+            redrawProgress(progress+1);
             menuChosenPath.pop(); // Remove last information from menuChosenPath
             updateMenu(menuChosenPath.pop()); // Update menu from last step
             infosTable.pop(); // Remove the last added information in infosTable
@@ -790,7 +796,7 @@ function addCancelOperation (actions, labels) {
         .style("fill", "#505656")
         .on("click", function () {
             progress = 0;
-            redrawProgress();
+            redrawProgress(0);
             menuChosenPath = []; // Remove all information from menuChosenPath
             updateMenu(); // Update menu
             infosTable = []; // Remove all added information in infosTable
@@ -1356,7 +1362,7 @@ function createNewNode() {
         displayTree();
         updateMenu();
         progress = 0;
-        redrawProgress();
+        redrawProgress(0);
         return generatedNodeId;
     }
 }

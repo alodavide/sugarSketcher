@@ -128,16 +128,26 @@ function selectAnomericity(target) {
         clicked.classed("selectedAnomericity", false); // Unselect and change color
         clicked.style("fill", "#cc0000");
         if (quickMode)
+        {
             progress -= 2;
+            redrawProgress(progress+2);
+        }
         else
+        {
             progress--;
-        redrawProgress();
+            redrawProgress(progress+1);
+        }
     } else { // If it's a new selection
         if (quickMode)
+        {
             progress += 2;
+            redrawProgress(progress-2);
+        }
         else
+        {
             progress++;
-        redrawProgress();
+            redrawProgress(progress-1);
+        }
         var anomericityChoices = d3.selectAll(".choiceAnomericity")[0];
         // Unselect all anomericity choices
         for (var choice of anomericityChoices) {
@@ -459,10 +469,10 @@ function selectIsomer(target) {
         clicked.classed("selectedIsomer", false);
         clicked.style("fill", "#cc0000");
         progress--;
-        redrawProgress();
+        redrawProgress(progress+1);
     } else {
         progress++;
-        redrawProgress();
+        redrawProgress(progress-1);
         // If was not selected, unselect all the other isomer choices, and adapt color
         var isomerChoices = d3.selectAll(".choiceIsomer")[0];
         for (var choice of isomerChoices) {
@@ -555,10 +565,10 @@ function selectRingType(target) {
         clicked.classed("selectedRingType", false);
         clicked.style("fill", "#cc0000");
         progress--;
-        redrawProgress();
+        redrawProgress(progress+1);
     } else {
         progress++;
-        redrawProgress();
+        redrawProgress(progress-1);
         // If not selected, unselect all the other ring type choices, and adapt colors
         var ringTypeChoices = d3.selectAll(".choiceRingType")[0];
         for (var choice of ringTypeChoices) {
@@ -793,16 +803,26 @@ function selectLinkedCarbon(target) {
         clicked.classed("selectedLinkedCarbon", false);
         clicked.style("fill", "#cc0000");
         if (quickMode)
+        {
             progress -= 2;
+            redrawProgress(progress+2);
+        }
         else
+        {
             progress--;
-        redrawProgress();
+            redrawProgress(progress+1);
+        }
     } else {
         if (quickMode)
+        {
             progress += 2;
+            redrawProgress(progress-2);
+        }
         else
+        {
             progress++;
-        redrawProgress();
+            redrawProgress(progress-1);
+        }
         // If was not selected, unselect all the other choices and adapt color
         var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
         for (var choice of linkedCarbonChoices) {
@@ -934,10 +954,10 @@ function selectAnomerCarbon(target) {
         clicked.classed("selectedAnomerCarbon", false);
         clicked.style("fill", "#cc0000");
         progress--;
-        redrawProgress();
+        redrawProgress(progress+1);
     } else { // If it was not selected, unselect all other anomer choices, and adapt style
         progress++;
-        redrawProgress();
+        redrawProgress(progress-1);
         var isomerChoices = d3.selectAll(".choiceAnomerCarbon")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
@@ -1035,14 +1055,8 @@ function checkLinkedCarbon() {
     }
 }
 
-function redrawProgress()
+function redrawProgress(prev)
 {
-    var svg = d3.select("#progressChart");
-    d3.selectAll("#progressBar").remove();
-    svg.append("rect")
-        .attr("width", progress/7*1000)
-        .attr("height", "4px")
-        .attr("id", "progressBar")
-        .attr("fill", "#02b600");
-
+    d3.select("#progressBar").transition()
+    .styleTween("width", function() { return d3.interpolate(prev/7*1000, progress/7*1000); });
 }
