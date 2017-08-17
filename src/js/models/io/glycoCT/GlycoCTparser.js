@@ -111,7 +111,6 @@ export default class GlycoCTParser{
                     isomer = isom;
                 }
             }
-            stemType = stemType.substring(1);
             var glycoct = residue[1].substring(3,residue[1].length-2);
             var firstTransform = residue[2].split("|");
             var transform = "";
@@ -263,44 +262,161 @@ export default class GlycoCTParser{
             links = this.getSection("LIN",this.formula);
         }
         var repSection = this.getSection("REP",this.formula);
-        //var reps = this.getRepeatingUnit(repSection);
+        var reps = this.getRepeatingUnit(repSection);
 
-        var residueListById = [""];
         var nodesIds = {};
 
-        // Repeating Units
-        /*if (Object.keys(reps).length > 0) {
-         for (var key in reps) {
-         var minMax = key.split("=")[1].split("-");
-         var rep = reps[key];
-         res.push(this.getSection("RES", rep));
-         links.push(this.getSection("LIN", rep));
-         }
-         }*/
-
-        for (var residueId in res) {
-            if (res[residueId] !== "") {
-                var residue = res[residueId].split(':');
-                /*if (residue[0].substring(residue[0].length-1) === "r")
-                {
-                    var repId = residue[1].substring(1)-1; // Corresponding id for the "reps" array
-                    residue = reps[repId][1][1];
-                }*/
-                if (residue !== undefined)
-                {
-                    residueListById.push(residue);
-                }
-            }
+        if (reps.length != 0)
+        {
+            var resLin = this.mergeRep(reps, res, links);
+            res = resLin[0];
+            links = resLin[1];
         }
 
-        residueListById = this.generateNodes(links,nodesIds,residueListById);
+        this.generateNodes(links,nodesIds,res);
 
         return this.sugar;
     }
 
-    generateNodes(links,nodesIds,residueListById)
+    mergeRep(reps,res,links)
     {
-        var residueListCopy = Object.assign({},residueListById);
+
+        var repeatingUnitsObjects = [];
+
+        // First merge the RES
+        var finalRes = [];
+        var repUnitRead = 0;
+        var repUnitOffsets = [];
+        var repUnitIndices = {};
+        for (var i in res)
+        {
+            if (res[i].split(":")[0].indexOf("r") == -1) // Not a repeating unit
+            {
+                finalRes.push(res[i]);
+            }
+            else
+            {
+                repUnitIndices[parseInt(i)+1] = reps[repUnitRead];
+                finalRes = finalRes.concat(reps[repUnitRead].res);
+                repUnitOffsets.push(reps[repUnitRead].res.length);
+                repUnitRead++;
+            }
+        }
+
+        // Then links
+        var finalLinks = [];
+        repUnitRead = 0;
+        // STEP 1: Insert all the links
+        for (i in links)
+        {
+            finalLinks.push(links[i]);
+            if (this.isTargetARep(links[i], repUnitIndices)) // target node is a repeating unit
+            {
+                finalLinks = finalLinks.concat(reps[repUnitRead].lin);
+                repUnitRead++;
+            }
+        }
+
+        // STEP 2: Edit the links' sources and targets to make them match with the RES new order
+        var flagInRep = false;
+        var addedLines = 0;
+        var curRepIndex;
+        repUnitRead = 0;
+        for (i in finalLinks)
+        {
+            if (!this.isSourceARep(finalLinks[i],repUnitIndices) && this.isTargetARep(finalLinks[i],repUnitIndices)) // Entering a rep
+            {
+                flagInRep = true;
+                curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+            }
+
+            else if (!this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices))
+            {
+                var offset = parseInt(this.getLinkSource(reps[repUnitRead].lin[0]))-curRepIndex-addedLines;
+                finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset);
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset);
+                if (flagInRep)
+                {
+                    addedLines++;
+                }
+            }
+
+            else if (this.isSourceARep(finalLinks[i],repUnitIndices) && this.isTargetARep(finalLinks[i],repUnitIndices)) // Transition between 2 reps
+            {
+                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+addedLines);
+                curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                repUnitRead++;
+            }
+
+            else if (this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Ending a rep
+            {
+                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+addedLines);
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                flagInRep = false;
+                repUnitRead++;
+            }
+        }
+
+        return [finalRes,finalLinks];
+    }
+
+    getLinkSource(link)
+    {
+        return link.split("o")[0].split(":")[1];
+    }
+
+    getLinkTarget(link)
+    {
+        return link.split(")")[1].split("d")[0];
+    }
+
+    updateLinkTarget(link, target)
+    {
+        var output = link.split(")")[0] + ")" + target + "d";
+        return output;
+    }
+
+    updateLinkSource(link, source)
+    {
+        var output = link.split(":")[0] + ":" + source + "o" + link.split("o")[1];
+        return output;
+    }
+
+    isTargetARep(link, repUnitIndices)
+    {
+        var target = link.split(")")[1].split("d")[0];
+        if (repUnitIndices[target])
+            return true;
+        return false;
+    }
+
+    isSourceARep(link, repUnitIndices)
+    {
+        var source = link.split("o")[0].split(":")[1];
+        if (repUnitIndices[source])
+            return true;
+        return false;
+    }
+
+    totalRepOffset(repUnitoffsets, repUnitRead)
+    {
+        var total = 0;
+        for (var i = 0; i < repUnitRead; i++)
+        {
+            total += repUnitoffsets[i];
+        }
+        return total;
+    }
+
+    generateNodes(links,nodesIds,res)
+    {
+        var residueListById = [""]; // "" is for the offset so that node number 1 is at index 1
+        for (var residue of res)
+        {
+            residueListById.push(residue.split(":"));
+        }
         for (var linkId in links) {
             if (links[linkId] !== "") {
                 var link = links[linkId];
@@ -328,7 +444,6 @@ export default class GlycoCTParser{
                 nodesIds[targetId] = nodeId;
             }
         }
-        return residueListCopy;
     }
 
 
@@ -380,15 +495,19 @@ export default class GlycoCTParser{
 
     getRepeatingUnit(array)
     {
+        var info;
         var output = [], value = [], key = "";
         for (var line of array)
         {
             var split = line.split(/REP\d+:/);
             if (split[1])
             {
-                if (value !== [] && key !== "")
+                if (value.length != 0 && key !== "")
                 {
-                    output.push([key,value]);
+                    info = {"exitNode":key.split("o")[0], "entryNode":key.split(")")[1].split("d")[0],
+                        "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+                        "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1]};
+                    output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
                 }
                 value = [];
                 key = split[1];
@@ -400,7 +519,10 @@ export default class GlycoCTParser{
         }
         if (value.length !== 0)
         {
-            output.push([key,value]);
+            info = {"exitNode":key.split("o")[0], "entryNode":key.split(")")[1].split("d")[0],
+                "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+                "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1]};
+            output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
         }
         return output;
     }
