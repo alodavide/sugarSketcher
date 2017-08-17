@@ -1641,6 +1641,10 @@ function generateShapes()
             var node = {"node":mono};
             var shape = calculateXandYNode(node);
             shapes[node.node.id] = shape;
+            var rootShape = [origin[0],origin[1]+gap];
+            shapes["root"] = rootShape;
+            rootLinkedCarbon = sb.LinkedCarbon.UNDEFINED;
+            rootAnomerCarbon = sb.AnomerCarbon.ONE;
             updateTreeVisualization(); // Update visualization in the svg
         } else {
             if (link instanceof sb.GlycosidicLinkage) {

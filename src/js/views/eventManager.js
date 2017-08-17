@@ -89,7 +89,7 @@ function addHoverManagerAnomericity(quick = false) {
                     var newHovered = document.querySelectorAll(":hover"); // Get the hovered target information
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]); // Most precise hovered target information
                     // If mouse not moving to another choice of anomericity, then we manage the event (to avoid having display on and off when moving between choices)
-                    if (!mouseTarget.classed("choiceAnomericity")) {
+                    if (mouseTarget != null && !mouseTarget.classed("choiceAnomericity")) {
                         manageMouseOutAnomericity(quick);
                     }
                 })
@@ -223,7 +223,7 @@ function manageHoverAddNode(menuItem,actions) {
             // Check if moving to substituent node rect, if not then update menu
             var newHovered = document.querySelectorAll(":hover");
             var mouseTarget = d3.select(newHovered[newHovered.length -1]);
-            if (mouseTarget.attr("id") != "substituentNode") {
+            if (mouseTarget != null && mouseTarget.attr("id") != "substituentNode") {
                 updateMenu();
                 d3.select("#repeatUnit").style("opacity", "1");
                 d3.select("#updateNode").style("opacity", "1");
@@ -246,7 +246,7 @@ function manageHoverAddNode(menuItem,actions) {
             if(d3.select("#svgMenu").style("display") != "none") {
                 var newHovered = document.querySelectorAll(":hover");
                 var mouseTarget = d3.select(newHovered[newHovered.length - 1]);
-                if (mouseTarget.attr("id") != "monosaccharideNode") {
+                if (mouseTarget != null && mouseTarget.attr("id") != "monosaccharideNode") {
                     updateMenu();
                     d3.select("#repeatUnit").style("opacity", "1");
                     d3.select("#updateNode").style("opacity", "1");
@@ -308,7 +308,7 @@ function manageHoverIO(menuItem,actions)
             // Check if moving to substituent node rect, if not then update menu
             var newHovered = document.querySelectorAll(":hover");
             var mouseTarget = d3.select(newHovered[newHovered.length -1]);
-            if (mouseTarget.attr("id") != "typeFormula") {
+            if (mouseTarget != null && mouseTarget.attr("id") != "typeFormula") {
                 updateMenu();
                 d3.select("#addStructure").style("opacity", "1");
                 d3.select("#quickMode").style("opacity", "1");
@@ -353,7 +353,7 @@ function manageHoverIO(menuItem,actions)
             // Check if moving to substituent node rect, if not then update menu
             var newHovered = document.querySelectorAll(":hover");
             var mouseTarget = d3.select(newHovered[newHovered.length -1]);
-            if (mouseTarget.attr("id") != "exportFormula") {
+            if (mouseTarget != null && mouseTarget.attr("id") != "exportFormula") {
                 updateMenu();
                 d3.select("#addStructure").style("opacity", "1");
                 d3.select("#quickMode").style("opacity", "1");
@@ -424,7 +424,7 @@ function addHoverManagerIsomer() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
                     // If we are not moving to another choice of isomer, then we manage the event
-                    if (!mouseTarget.classed("choiceIsomer")) {
+                    if (mouseTarget != null && !mouseTarget.classed("choiceIsomer")) {
                         manageMouseOutIsomer();
                     }
                 })
@@ -520,7 +520,7 @@ function addHoverManagerRingType() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
                     // If we are not moving to another choice of ring type, then we manage the event
-                    if (!mouseTarget.classed("choiceRingType")) {
+                    if (mouseTarget != null && !mouseTarget.classed("choiceRingType")) {
                         manageMouseOutRingType();
                     }
                 })
@@ -736,7 +736,7 @@ function addHoverManagerLinkedCarbon(quick = false) {
                     // If we dont move to another choice of linked carbon, manage the mouseout
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
-                    if (!mouseTarget.classed("choiceLinkedCarbon")) {
+                    if (mouseTarget != null && !mouseTarget.classed("choiceLinkedCarbon")) {
                         manageMouseOutLinkedCarbon(quick);
                     }
                 })
@@ -926,7 +926,7 @@ function addHoverManagerAnomerCarbon() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
                     // If not moving to another anomer choice, manage the event
-                    if (!mouseTarget.classed("choiceAnomerCarbon")) {
+                    if (mouseTarget != null && !mouseTarget.classed("choiceAnomerCarbon")) {
                         manageMouseOutAnomerCarbon();
                     }
                 })
