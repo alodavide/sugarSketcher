@@ -402,7 +402,7 @@ function displayTree() {
             })
             .attr("height", 50).attr("stroke", "black")
             .attr("d", "M50,20 Q61,10 50,0 T50,-20" +
-                "       M50,0 L-10,0");
+                "       M50,0 L-6,0");
 
 
 

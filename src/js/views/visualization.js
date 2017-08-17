@@ -52,8 +52,8 @@ function updateExistingNode() {
     var anomericity = getAnomericityWithSelection(infosTable[3]); // Anomericity
     var isomer = getIsomerWithSelection(infosTable[4]); // Isomer
     var ringType = getRingTypeWithSelection(infosTable[5]); // Ring type
-    //var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
-    //var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
+    var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
+    var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
     var monoToUpdate = sugar.getNodeById(clickedNode.id); // Get the node we want to update in the graph
     monoToUpdate.anomericity = anomericity; // Update anomericity
     monoToUpdate.ringType = ringType; // Update ring type
@@ -64,11 +64,21 @@ function updateExistingNode() {
     }
     var newMonoType = getMonoTypeWithColorAndShape(newColor, newShape, isBisected); // Find new monosaccharide type
     monoToUpdate.monosaccharideType = newMonoType; // Update monosaccharide type
-    var linkToUpdate = findLinkForMono(monoToUpdate); // Get the link to update (if exists)
-    /*if (linkToUpdate != null) {
-        linkToUpdate.linkedCarbon = linkedCarbon; // Update linked carbon
-        linkToUpdate.anomerCarbon = anomerCarbon; // Update anomer carbon
-    }*/
+    if (monoToUpdate == treeData.node)
+    {
+        rootLinkedCarbon = linkedCarbon;
+        rootAnomerCarbon = anomerCarbon;
+    }
+    else
+    {
+        var linkToUpdate = findLinkForMono(monoToUpdate); // Get the link to update (if exists)
+        var prevLinkedCarbon = linkToUpdate.linkedCarbon.value;
+        if (linkToUpdate != null) {
+            linkToUpdate.linkedCarbon = linkedCarbon; // Update linked carbon
+            linkToUpdate.anomerCarbon = anomerCarbon; // Update anomer carbon
+        }
+        moveNodeAndChildren(findNodeInTree(treeData,monoToUpdate),XYvalues[linkedCarbon.value][1] - XYvalues[prevLinkedCarbon][1], XYvalues[linkedCarbon.value][0] - XYvalues[prevLinkedCarbon][0])
+    }
     updateNodeInTree(treeData,monoToUpdate); // Update the node in the tree
 }
 

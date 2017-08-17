@@ -640,15 +640,7 @@ function checkSelectedAllInfos() {
         infosTable.push(isomer);
         infosTable.push(ringType);
         reinitializeDisplayInfos(); // Reinitialize display of the infos svg
-        if (infosTable[0] == "updateNode")
-        {
-            updateExistingNode();
-            updateMenu();
-        }
-        else
-        {
-            d3.select("#svgCarbons").transition().style("display", "block"); // Display the carbon choice svg
-        }
+        d3.select("#svgCarbons").transition().style("display", "block"); // Display the carbon choice svg
     }
 }
 
@@ -914,6 +906,22 @@ function addHoverManagerAnomerCarbon() {
                 .attr("x", x + i*width/4)
                 .attr("rx", 15)
                 .attr("value", associatedValues[k])
+                .attr("opacity", function() {
+                    var i = 1;
+                    if (infosTable[0] == "addNode")
+                        i++;
+                    var color = getColorCodeFromString(infosTable[i+1]);
+                    var shape = infosTable[i];
+                    var isBisected = (shape.indexOf("bisected") != -1); // Check if the shape is bisected
+                    if (isBisected) {
+                        shape = shape.split("bisected")[1]; // We update the value of the shape by removing keywork "bisected"
+                    }
+                    var newType = getMonoTypeWithColorAndShape(color, shape, isBisected);
+                    if (!(sb.SubstituentsPositions[newType.name] && sb.SubstituentsPositions[newType.name].position == parseInt(associatedValues[k]))) {
+                            return 1;
+                    }
+                    return 0.2;
+                })
                 .on("mouseout", function() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
@@ -923,7 +931,19 @@ function addHoverManagerAnomerCarbon() {
                     }
                 })
                 .on("click", function () {
-                    selectAnomerCarbon(this.id);
+                    var i = 1;
+                    if (infosTable[0] == "addNode")
+                        i++;
+                    var color = getColorCodeFromString(infosTable[i+1]);
+                    var shape = infosTable[i];
+                    var isBisected = (shape.indexOf("bisected") != -1); // Check if the shape is bisected
+                    if (isBisected) {
+                        shape = shape.split("bisected")[1]; // We update the value of the shape by removing keywork "bisected"
+                    }
+                    var newType = getMonoTypeWithColorAndShape(color, shape, isBisected);
+                    if (!(sb.SubstituentsPositions[newType.name] && sb.SubstituentsPositions[newType.name].position == parseInt(associatedValues[k]))) {
+                        selectAnomerCarbon(this.id);
+                    }
                 });
         }
         // Hide the label of the title, and append all the labels for the choices (x in absolute)
@@ -1004,6 +1024,7 @@ function checkSelectedAllCarbons() {
             console.log("Need to add a structure"); // Manage add structure
         } else {
             updateExistingNode(); // Manage update of node
+            updateMenu();
         }
     }
 }
@@ -1041,7 +1062,7 @@ function checkUsedCarbons() {
         }
         var edges = sugar.graph.edges();
         // For each edge, if the source is the clickedNode, we add the linked carbon value to the array
-        if (clickedNode == treeData.node)
+        if (clickedNode == treeData.node && infosTable[0] != "updateNode")// If first node
         {
             usedCarbons.push(rootAnomerCarbon.value);
         }
@@ -1050,7 +1071,8 @@ function checkUsedCarbons() {
                 usedCarbons.push(edge.linkedCarbon.value);
             }
             else if (edge.targetNode == clickedNode) {
-                usedCarbons.push(edge.anomerCarbon.value);
+                if (infosTable[0] != "updateNode")
+                    usedCarbons.push(edge.anomerCarbon.value);
             }
         }
         return usedCarbons; // Return the final array
