@@ -4742,9 +4742,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                res = merge[0];
 	                links = merge[1];
 	                repInfo = merge[2];
-	                console.log(links);
+	
 	                console.log(repInfo);
 	            }
+	
+	            console.log(res);
+	            console.log(links);
 	
 	            this.generateNodes(links, nodesIds, res, repInfo);
 	

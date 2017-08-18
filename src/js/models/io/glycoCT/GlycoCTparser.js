@@ -279,8 +279,8 @@ export default class GlycoCTParser{
             res = merge[0];
             links = merge[1];
             repInfo = merge[2];
-            console.log(links);
-            console.log(repInfo);
+            /*console.log(links);
+            console.log(repInfo);*/
         }
 
         this.generateNodes(links,nodesIds,res, repInfo);

@@ -57,6 +57,8 @@ $(document).ready(function() {
         sugar = parser.parseGlycoCT();
         shapes = [];
         generateShapes();
+        treeData = generateTree();
+        updateRepeatingUnitsNodesInTree();
         var i = 1;
         while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
         {
