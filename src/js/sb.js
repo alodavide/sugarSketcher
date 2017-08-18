@@ -4743,6 +4743,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                links = merge[1];
 	                repInfo = merge[2];
 	                console.log(links);
+	                console.log(repInfo);
 	            }
 	
 	            this.generateNodes(links, nodesIds, res, repInfo);
@@ -4855,6 +4856,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	                    } else if (this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) // Ending a rep
 	                    {
+	                        if (i == 0) {
+	                            repeatingUnit = new _RepeatingUnit2.default(this.randomString(7), [], reps[repUnitRead].info.min, reps[repUnitRead].info.max, this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
+	                            repeatingUnitsObjects.push(repeatingUnit);
+	                        }
+	
 	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
 	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
 	                        repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
