@@ -471,7 +471,7 @@ export default class GlycoCTWriter{
             formula += "REP\n";
             for (var rep of this.rep)
             {
-                this.generateArrays(rep.nodes[0],rep.id);
+                this.generateArrays(this.findRepMinDepth(rep),rep.id);
                 var entryId = lastResId+1;
                 associatedSubs = [];
                 resInfo = this.generateRES(resId,repId,this.res,associatedSubs,repNumber,lastResId);
@@ -495,6 +495,21 @@ export default class GlycoCTWriter{
         }
 
         return formula;
+    }
+
+    findRepMinDepth(rep)
+    {
+        var minVal = rep.nodes[0].depth;
+        var minNode = rep.nodes[0];
+        for (var node of rep.nodes)
+        {
+            if (node.depth < minVal)
+            {
+                minVal = node.depth;
+                minNode = node;
+            }
+        }
+        return minNode;
     }
 
 

@@ -4742,6 +4742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                res = merge[0];
 	                links = merge[1];
 	                repInfo = merge[2];
+	                console.log(links);
 	            }
 	
 	            this.generateNodes(links, nodesIds, res, repInfo);
@@ -4776,8 +4777,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Then links
 	            var finalLinks = [];
 	            repUnitRead = 0;
+	            var allLinks = [];
 	            // STEP 1: Insert all the links
 	            for (i in links) {
+	                allLinks.push(links[i]);
 	                finalLinks.push(links[i]);
 	                if (this.isTargetARep(links[i], repUnitIndices)) // target node is a repeating unit
 	                    {
@@ -4791,41 +4794,69 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var addedLines = 0;
 	            var curRepIndex;
 	            repUnitRead = 0;
+	            var _iteratorNormalCompletion12 = true;
+	            var _didIteratorError12 = false;
+	            var _iteratorError12 = undefined;
+	
+	            try {
+	                for (var _iterator12 = reps[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                    var r = _step12.value;
+	
+	                    allLinks = allLinks.concat(r.lin);
+	                }
+	            } catch (err) {
+	                _didIteratorError12 = true;
+	                _iteratorError12 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                        _iterator12.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError12) {
+	                        throw _iteratorError12;
+	                    }
+	                }
+	            }
+	
 	            for (i in finalLinks) {
+	                var offset = allLinks.indexOf(finalLinks[i]) - finalLinks.indexOf(finalLinks[i]) + repUnitRead + 1;
 	                if (!this.isSourceARep(finalLinks[i], repUnitIndices) && this.isTargetARep(finalLinks[i], repUnitIndices)) // Entering a rep
 	                    {
 	                        flagInRep = true;
 	                        curRepIndex = parseInt(this.getLinkTarget(finalLinks[i]));
-	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + addedLines);
+	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
+	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
 	                        repeatingUnit = new _RepeatingUnit2.default(this.randomString(7), [], reps[repUnitRead].info.min, reps[repUnitRead].info.max, this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
 	                        repeatingUnitsObjects.push(repeatingUnit);
 	                        repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                    } else if (!this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) {
-	                    // Totally inside or totally outside a rep
-	                    var offset = parseInt(this.getLinkSource(reps[repUnitRead].lin[0])) - curRepIndex - addedLines;
-	                    finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) - offset);
-	                    finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) - offset);
-	                    if (flagInRep) // Inside a rep
-	                        {
-	                            repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                            repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                            addedLines++;
-	                        }
-	                } else if (this.isSourceARep(finalLinks[i], repUnitIndices) && this.isTargetARep(finalLinks[i], repUnitIndices)) // Transition between 2 reps
+	                    } else if (!this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) // Totally inside or totally outside a rep
 	                    {
-	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + addedLines);
+	                        if (flagInRep) // Inside a rep
+	                            {
+	                                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) - offset);
+	                                finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) - offset);
+	                                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
+	                                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
+	                            } else {
+	                            finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
+	                            finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
+	                        }
+	                    } else if (this.isSourceARep(finalLinks[i], repUnitIndices) && this.isTargetARep(finalLinks[i], repUnitIndices)) // Transition between 2 reps
+	                    {
+	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
 	                        curRepIndex = parseInt(this.getLinkTarget(finalLinks[i]));
 	                        repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	
-	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + addedLines);
+	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
 	                        repUnitRead++;
 	                        repeatingUnit = new _RepeatingUnit2.default(this.randomString(7), [], reps[repUnitRead].info.min, reps[repUnitRead].info.max, this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
 	                        repeatingUnitsObjects.push(repeatingUnit);
 	                        repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	                    } else if (this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) // Ending a rep
 	                    {
-	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + addedLines);
-	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + addedLines);
+	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
+	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
 	                        repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	                        flagInRep = false;
 	                        repUnitRead++;
@@ -4872,10 +4903,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }, {
 	        key: 'totalRepOffset',
-	        value: function totalRepOffset(repUnitoffsets, repUnitRead) {
+	        value: function totalRepOffset(reps, repUnitRead) {
+	            if (repUnitRead == 0) {
+	                return 0;
+	            }
 	            var total = 0;
 	            for (var i = 0; i < repUnitRead; i++) {
-	                total += repUnitoffsets[i];
+	                total += reps[i].lin.length;
 	            }
 	            return total;
 	        }
@@ -4884,27 +4918,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function generateNodes(links, nodesIds, res, repInfo) {
 	            var repeatingUnit;
 	            var residueListById = [""]; // "" is for the offset so that node number 1 is at index 1
-	            var _iteratorNormalCompletion12 = true;
-	            var _didIteratorError12 = false;
-	            var _iteratorError12 = undefined;
+	            var _iteratorNormalCompletion13 = true;
+	            var _didIteratorError13 = false;
+	            var _iteratorError13 = undefined;
 	
 	            try {
-	                for (var _iterator12 = res[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-	                    var residue = _step12.value;
+	                for (var _iterator13 = res[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+	                    var residue = _step13.value;
 	
 	                    residueListById.push(residue.split(":"));
 	                }
 	            } catch (err) {
-	                _didIteratorError12 = true;
-	                _iteratorError12 = err;
+	                _didIteratorError13 = true;
+	                _iteratorError13 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
-	                        _iterator12.return();
+	                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
+	                        _iterator13.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError12) {
-	                        throw _iteratorError12;
+	                    if (_didIteratorError13) {
+	                        throw _iteratorError13;
 	                    }
 	                }
 	            }
@@ -4929,29 +4963,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var linkedCarbon, anomerCarbon;
 	                    linkedCarbon = linkages.split("+")[0] === "-1" ? "?" : linkages.split("+")[0];
 	                    anomerCarbon = linkages.split("+")[1] === "-1" ? "?" : linkages.split("+")[1];
-	                    var _iteratorNormalCompletion13 = true;
-	                    var _didIteratorError13 = false;
-	                    var _iteratorError13 = undefined;
+	                    var _iteratorNormalCompletion14 = true;
+	                    var _didIteratorError14 = false;
+	                    var _iteratorError14 = undefined;
 	
 	                    try {
-	                        for (var _iterator13 = this.sugar.graph.nodes()[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-	                            var node = _step13.value;
+	                        for (var _iterator14 = this.sugar.graph.nodes()[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+	                            var node = _step14.value;
 	                            // clickedNode = sourceNode
 	                            if (node.id === nodesIds[sourceId]) {
 	                                this.clickedNode = node;
 	                            }
 	                        }
 	                    } catch (err) {
-	                        _didIteratorError13 = true;
-	                        _iteratorError13 = err;
+	                        _didIteratorError14 = true;
+	                        _iteratorError14 = err;
 	                    } finally {
 	                        try {
-	                            if (!_iteratorNormalCompletion13 && _iterator13.return) {
-	                                _iterator13.return();
+	                            if (!_iteratorNormalCompletion14 && _iterator14.return) {
+	                                _iterator14.return();
 	                            }
 	                        } finally {
-	                            if (_didIteratorError13) {
-	                                throw _iteratorError13;
+	                            if (_didIteratorError14) {
+	                                throw _iteratorError14;
 	                            }
 	                        }
 	                    }
@@ -4969,29 +5003,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'findNodeById',
 	        value: function findNodeById(id) {
-	            var _iteratorNormalCompletion14 = true;
-	            var _didIteratorError14 = false;
-	            var _iteratorError14 = undefined;
+	            var _iteratorNormalCompletion15 = true;
+	            var _didIteratorError15 = false;
+	            var _iteratorError15 = undefined;
 	
 	            try {
-	                for (var _iterator14 = this.sugar.graph.nodes()[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-	                    var node = _step14.value;
+	                for (var _iterator15 = this.sugar.graph.nodes()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+	                    var node = _step15.value;
 	
 	                    if (node.id == id) {
 	                        return node;
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError14 = true;
-	                _iteratorError14 = err;
+	                _didIteratorError15 = true;
+	                _iteratorError15 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion14 && _iterator14.return) {
-	                        _iterator14.return();
+	                    if (!_iteratorNormalCompletion15 && _iterator15.return) {
+	                        _iterator15.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError14) {
-	                        throw _iteratorError14;
+	                    if (_didIteratorError15) {
+	                        throw _iteratorError15;
 	                    }
 	                }
 	            }
@@ -5014,13 +5048,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var output = [];
 	            var flag = false;
-	            var _iteratorNormalCompletion15 = true;
-	            var _didIteratorError15 = false;
-	            var _iteratorError15 = undefined;
+	            var _iteratorNormalCompletion16 = true;
+	            var _didIteratorError16 = false;
+	            var _iteratorError16 = undefined;
 	
 	            try {
-	                for (var _iterator15 = formulaArray[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-	                    var line = _step15.value;
+	                for (var _iterator16 = formulaArray[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+	                    var line = _step16.value;
 	
 	                    if (flag && sections.includes(line)) // If other section encountered
 	                        {
@@ -5042,16 +5076,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError15 = true;
-	                _iteratorError15 = err;
+	                _didIteratorError16 = true;
+	                _iteratorError16 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion15 && _iterator15.return) {
-	                        _iterator15.return();
+	                    if (!_iteratorNormalCompletion16 && _iterator16.return) {
+	                        _iterator16.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError15) {
-	                        throw _iteratorError15;
+	                    if (_didIteratorError16) {
+	                        throw _iteratorError16;
 	                    }
 	                }
 	            }
@@ -5065,13 +5099,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var output = [],
 	                value = [],
 	                key = "";
-	            var _iteratorNormalCompletion16 = true;
-	            var _didIteratorError16 = false;
-	            var _iteratorError16 = undefined;
+	            var _iteratorNormalCompletion17 = true;
+	            var _didIteratorError17 = false;
+	            var _iteratorError17 = undefined;
 	
 	            try {
-	                for (var _iterator16 = array[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-	                    var line = _step16.value;
+	                for (var _iterator17 = array[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+	                    var line = _step17.value;
 	
 	                    var split = line.split(/REP\d+:/);
 	                    if (split[1]) {
@@ -5087,16 +5121,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError16 = true;
-	                _iteratorError16 = err;
+	                _didIteratorError17 = true;
+	                _iteratorError17 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion16 && _iterator16.return) {
-	                        _iterator16.return();
+	                    if (!_iteratorNormalCompletion17 && _iterator17.return) {
+	                        _iterator17.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError16) {
-	                        throw _iteratorError16;
+	                    if (_didIteratorError17) {
+	                        throw _iteratorError17;
 	                    }
 	                }
 	            }
@@ -5807,7 +5841,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
 	                        var rep = _step11.value;
 	
-	                        this.generateArrays(rep.nodes[0], rep.id);
+	                        this.generateArrays(this.findRepMinDepth(rep), rep.id);
 	                        var entryId = lastResId + 1;
 	                        associatedSubs = [];
 	                        resInfo = this.generateRES(resId, repId, this.res, associatedSubs, repNumber, lastResId);
@@ -5845,6 +5879,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	
 	            return formula;
+	        }
+	    }, {
+	        key: "findRepMinDepth",
+	        value: function findRepMinDepth(rep) {
+	            var minVal = rep.nodes[0].depth;
+	            var minNode = rep.nodes[0];
+	            var _iteratorNormalCompletion12 = true;
+	            var _didIteratorError12 = false;
+	            var _iteratorError12 = undefined;
+	
+	            try {
+	                for (var _iterator12 = rep.nodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                    var node = _step12.value;
+	
+	                    if (node.depth < minVal) {
+	                        minVal = node.depth;
+	                        minNode = node;
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError12 = true;
+	                _iteratorError12 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                        _iterator12.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError12) {
+	                        throw _iteratorError12;
+	                    }
+	                }
+	            }
+	
+	            return minNode;
 	        }
 	    }]);
 	

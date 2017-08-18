@@ -279,6 +279,7 @@ export default class GlycoCTParser{
             res = merge[0];
             links = merge[1];
             repInfo = merge[2];
+            console.log(links);
         }
 
         this.generateNodes(links,nodesIds,res, repInfo);
@@ -316,9 +317,11 @@ export default class GlycoCTParser{
         // Then links
         var finalLinks = [];
         repUnitRead = 0;
+        var allLinks = [];
         // STEP 1: Insert all the links
         for (i in links)
         {
+            allLinks.push(links[i]);
             finalLinks.push(links[i]);
             if (this.isTargetARep(links[i], repUnitIndices)) // target node is a repeating unit
             {
@@ -332,40 +335,49 @@ export default class GlycoCTParser{
         var addedLines = 0;
         var curRepIndex;
         repUnitRead = 0;
+        for (var r of reps)
+        {
+            allLinks = allLinks.concat(r.lin);
+        }
+
         for (i in finalLinks)
         {
+            var offset = allLinks.indexOf(finalLinks[i]) - finalLinks.indexOf(finalLinks[i]) + repUnitRead + 1;
             if (!this.isSourceARep(finalLinks[i],repUnitIndices) && this.isTargetARep(finalLinks[i],repUnitIndices)) // Entering a rep
             {
                 flagInRep = true;
                 curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
+                finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
                 repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
                     this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
                 repeatingUnitsObjects.push(repeatingUnit);
                 repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
             }
 
-            else if (!this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices))
+            else if (!this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Totally inside or totally outside a rep
             {
-                // Totally inside or totally outside a rep
-                var offset = parseInt(this.getLinkSource(reps[repUnitRead].lin[0]))-curRepIndex-addedLines;
-                finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset);
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset);
                 if (flagInRep) // Inside a rep
                 {
+                    finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset);
+                    finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset);
                     repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
                     repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-                    addedLines++;
+                }
+                else
+                {
+                    finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
+                    finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
                 }
             }
 
             else if (this.isSourceARep(finalLinks[i],repUnitIndices) && this.isTargetARep(finalLinks[i],repUnitIndices)) // Transition between 2 reps
             {
-                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+addedLines);
+                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
                 curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
                 repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
                 repUnitRead++;
                 repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
                     this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
@@ -375,8 +387,8 @@ export default class GlycoCTParser{
 
             else if (this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Ending a rep
             {
-                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+addedLines);
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
                 repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
                 flagInRep = false;
                 repUnitRead++;
@@ -424,12 +436,16 @@ export default class GlycoCTParser{
         return false;
     }
 
-    totalRepOffset(repUnitoffsets, repUnitRead)
+    totalRepOffset(reps, repUnitRead)
     {
+        if (repUnitRead == 0)
+        {
+            return 0;
+        }
         var total = 0;
         for (var i = 0; i < repUnitRead; i++)
         {
-            total += repUnitoffsets[i];
+            total += reps[i].lin.length;
         }
         return total;
     }
