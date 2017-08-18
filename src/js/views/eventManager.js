@@ -377,6 +377,8 @@ function manageHoverIO(menuItem,actions)
                     sugar = parser.parseGlycoCT();
                     shapes = [];
                     generateShapes();
+                    treeData = generateTree();
+                    updateRepeatingUnitsNodesInTree();
                     var i = 1;
                     while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
                     {
@@ -386,6 +388,89 @@ function manageHoverIO(menuItem,actions)
                     displayTree();
                 });
     });
+}
+
+
+function generateTree() {
+    // Put parentId in each node
+    var nodes = sugar.graph.nodes();
+    for (var nodePos in nodes)
+    {
+        var parent;
+        for (var edge of sugar.graph.edges())
+        {
+            if (edge.target == nodes[nodePos].id)
+            {
+                parent = edge.sourceNode;
+            }
+        }
+        if (parent !== undefined)
+            nodes[nodePos] = {"node":nodes[nodePos],"parentId":parent.id,"children":[]};
+        else
+            nodes[nodePos] = {"node":nodes[nodePos],"children":[]};
+    }
+
+    // Switch to tree view
+    var map = {}, node, roots = [];
+    var parentsIds = {};
+    var nodesDepths = {};
+    for (var i = 0; i < nodes.length; i += 1) {
+        node = nodes[i];
+        node.children = [];
+        map[node.node.id] = i; // use map to look-up the parents
+        if (node.parentId !== undefined) {
+            nodes[map[node.parentId]].children.push(node);
+            parentsIds[node.node.id] = node;
+            if (node.node.id !== node.parentId)
+                nodes[map[node.parentId]].parent = parentsIds[node.parentId];
+
+            if (nodesDepths[node.node.id] === undefined)
+            {
+                nodes[map[node.parentId]].depth = nodesDepths[node.parentId]+1;
+                nodesDepths[node.node.id] = nodesDepths[node.parentId]+1;
+            }
+
+            delete nodes[map[node.parentId]].parentId;
+        } else {
+            roots = node;
+            parentsIds[node.node.id] = node;
+            nodesDepths[node.node.id] = 0;
+            roots.depth = 0;
+        }
+    }
+
+    delete roots.parent;
+
+    return roots;
+
+}
+
+
+function updateRepeatingUnitsNodesInTree()
+{
+    var repeatingUnits = [], node;
+    for (node of sugar.graph.nodes()) // We gather all the Rep
+    {
+        if (node.repeatingUnit != undefined)
+        {
+            if (!repeatingUnits.includes(node.repeatingUnit))
+            {
+                repeatingUnits.push(node.repeatingUnit);
+            }
+        }
+    }
+    for (var rep of repeatingUnits) // For each one we gather all the nodes that have it
+    {
+        var nodes = [];
+        for (node of sugar.graph.nodes())
+        {
+            if (node.repeatingUnit && node.repeatingUnit.id == rep.id)
+            {
+                nodes.push(findNodeInTree(treeData,node));
+            }
+        }
+        rep.nodes = nodes;
+    }
 }
 
 /**

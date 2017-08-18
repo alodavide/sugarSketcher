@@ -25,8 +25,6 @@ export default class RepeatingUnit {
         {
             this.max = parseInt(max);
         }
-        this.entryNode = entry;
-        this.exitNode = exit;
         if (linkedCarbon === "?")
         {
             this.linkedCarbon = LinkedCarbon.UNDEFINED;

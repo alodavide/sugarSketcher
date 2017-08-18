@@ -1182,6 +1182,7 @@ function findNodesInTree(arr)
     {
         arr[i] = findNodeInTree(treeData,arr[i]);
     }
+    return arr;
 }
 
 document.onkeyup = function(e) {
@@ -1637,7 +1638,7 @@ function generateShapes()
                 link = edge;
             }
         }
-        if (Object.keys(treeData).length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
+        if (shapes.length === 0) { // If tree is empty, instantiate the sugar with the monosaccharide as the root
             var node = {"node":mono};
             var shape = calculateXandYNode(node);
             shapes[node.node.id] = shape;

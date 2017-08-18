@@ -939,13 +939,14 @@ function changeChildrenIds(node) {
  * @returns {*}
  */
 function findLinkForMono(monosaccharide) {
-    var links = tree.links(tree.nodes(treeData)); // Tree links
+    var links = sugar.graph.edges(); // Tree links
     for (var link of links) {
         // If the link has the node as target, return the edge from the graph s
-        if (link.target.node.id == monosaccharide.id) {
-            return sugar.getEdge(link.source.node, link.target.node);
+        if (link.target == monosaccharide.id) {
+            return sugar.getEdge(link.sourceNode, link.targetNode);
         }
     }
+    return undefined;
 }
 
 
@@ -975,10 +976,11 @@ function calculateXandYNode(node) {
         var sourceX;
         var sourceY;
         var sourceId;
+
         // Calculate new coordinates for the wanted node
-        for (var n of tree.nodes(treeData)) {
-            if (n.node == link.sourceNode) {
-                sourceId = n.node.id;
+        for (var n of sugar.graph.nodes()) {
+            if (n == link.sourceNode) {
+                sourceId = n.id;
                 var source = shapes[sourceId];
                 sourceX = source[0];
                 sourceY = source[1];

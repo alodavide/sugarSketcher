@@ -471,7 +471,7 @@ export default class GlycoCTWriter{
             formula += "REP\n";
             for (var rep of this.rep)
             {
-                this.generateArrays(findNodeInTree(treeData,rep.entryNode),rep.id);
+                this.generateArrays(rep.nodes[0],rep.id);
                 var entryId = lastResId+1;
                 associatedSubs = [];
                 resInfo = this.generateRES(resId,repId,this.res,associatedSubs,repNumber,lastResId);

@@ -17,6 +17,7 @@ import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import GlycoCTSubstituents from "./SubstituentsGlycoCT";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
 import SubstituentsPositions from "./SubstituentsPositions";
+import RepeatingUnit from "../../glycomics/RepeatingUnit";
 
 export default class GlycoCTParser{
 
@@ -78,7 +79,7 @@ export default class GlycoCTParser{
         return undefined;
     }
 
-    createResidue(residue, linkedCarbon, anomerCarbon)
+    createResidue(residue, linkedCarbon, anomerCarbon, repeatingUnit)
     {
         if (residue[0].substring(residue[0].length-1) === "b") { // monosaccharide
             var anomericity;
@@ -157,6 +158,10 @@ export default class GlycoCTParser{
 
             var nodeId = this.randomString(7);
             var node = new Monosaccharide(nodeId,monoType, anomericity, isomer, ringType);
+            if (repeatingUnit !== undefined)
+            {
+                node.repeatingUnit = repeatingUnit;
+            }
             if (linkedCarbon === "r" && anomerCarbon === "r") // Root
             {
                 this.sugar = new Sugar("Sugar", node);
@@ -266,14 +271,17 @@ export default class GlycoCTParser{
 
         var nodesIds = {};
 
+        var repInfo = [];
+
         if (reps.length != 0)
         {
-            var resLin = this.mergeRep(reps, res, links);
-            res = resLin[0];
-            links = resLin[1];
+            var merge = this.mergeRep(reps, res, links);
+            res = merge[0];
+            links = merge[1];
+            repInfo = merge[2];
         }
 
-        this.generateNodes(links,nodesIds,res);
+        this.generateNodes(links,nodesIds,res, repInfo);
 
         return this.sugar;
     }
@@ -281,7 +289,9 @@ export default class GlycoCTParser{
     mergeRep(reps,res,links)
     {
 
-        var repeatingUnitsObjects = [];
+        var repeatingUnitsObjects = []; // Contains all the instanciated Rep objects
+        var repeatingUnit;
+        var repInfo = {}; // Shows which node is associated to which Rep
 
         // First merge the RES
         var finalRes = [];
@@ -329,15 +339,22 @@ export default class GlycoCTParser{
                 flagInRep = true;
                 curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
                 finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
+                    this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
+                repeatingUnitsObjects.push(repeatingUnit);
+                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
             }
 
             else if (!this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices))
             {
+                // Totally inside or totally outside a rep
                 var offset = parseInt(this.getLinkSource(reps[repUnitRead].lin[0]))-curRepIndex-addedLines;
                 finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset);
                 finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset);
-                if (flagInRep)
+                if (flagInRep) // Inside a rep
                 {
+                    repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
+                    repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
                     addedLines++;
                 }
             }
@@ -346,20 +363,27 @@ export default class GlycoCTParser{
             {
                 finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+addedLines);
                 curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
+                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
+
                 finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
                 repUnitRead++;
+                repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
+                    this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
+                repeatingUnitsObjects.push(repeatingUnit);
+                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
             }
 
             else if (this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Ending a rep
             {
                 finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+addedLines);
                 finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+addedLines);
+                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
                 flagInRep = false;
                 repUnitRead++;
             }
         }
 
-        return [finalRes,finalLinks];
+        return [finalRes,finalLinks,repInfo];
     }
 
     getLinkSource(link)
@@ -410,8 +434,9 @@ export default class GlycoCTParser{
         return total;
     }
 
-    generateNodes(links,nodesIds,res)
+    generateNodes(links,nodesIds,res, repInfo)
     {
+        var repeatingUnit;
         var residueListById = [""]; // "" is for the offset so that node number 1 is at index 1
         for (var residue of res)
         {
@@ -424,7 +449,12 @@ export default class GlycoCTParser{
                 var nodeId;
                 if (residueListById[sourceId] !== "") // Root
                 {
-                    nodeId = this.createResidue(residueListById[sourceId], "r", "r");
+                    repeatingUnit = undefined;
+                    if (repInfo.hasOwnProperty(sourceId))
+                    {
+                        repeatingUnit = repInfo[sourceId];
+                    }
+                    nodeId = this.createResidue(residueListById[sourceId], "r", "r", repeatingUnit);
                     residueListById[sourceId] = "";
                     nodesIds[sourceId] = nodeId;
 
@@ -439,11 +469,28 @@ export default class GlycoCTParser{
                         this.clickedNode = node;
                     }
                 }
-                nodeId = this.createResidue(residueListById[targetId],linkedCarbon, anomerCarbon);
+                repeatingUnit = undefined;
+                if (repInfo.hasOwnProperty(targetId))
+                {
+                    repeatingUnit = repInfo[targetId];
+                }
+                nodeId = this.createResidue(residueListById[targetId],linkedCarbon, anomerCarbon, repeatingUnit);
                 residueListById[targetId] = "";
                 nodesIds[targetId] = nodeId;
             }
         }
+    }
+
+    findNodeById(id)
+    {
+        for (var node of this.sugar.graph.nodes())
+        {
+            if (node.id == id)
+            {
+                return node;
+            }
+        }
+        return undefined;
     }
 
 
@@ -504,8 +551,7 @@ export default class GlycoCTParser{
             {
                 if (value.length != 0 && key !== "")
                 {
-                    info = {"exitNode":key.split("o")[0], "entryNode":key.split(")")[1].split("d")[0],
-                        "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+                    info = {"linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
                         "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1]};
                     output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
                 }
@@ -519,8 +565,7 @@ export default class GlycoCTParser{
         }
         if (value.length !== 0)
         {
-            info = {"exitNode":key.split("o")[0], "entryNode":key.split(")")[1].split("d")[0],
-                "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+            info = {"linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
                 "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1]};
             output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
         }
