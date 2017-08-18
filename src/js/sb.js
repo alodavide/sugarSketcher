@@ -4742,12 +4742,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                res = merge[0];
 	                links = merge[1];
 	                repInfo = merge[2];
-	
+	                console.log(links);
 	                console.log(repInfo);
 	            }
-	
-	            console.log(res);
-	            console.log(links);
 	
 	            this.generateNodes(links, nodesIds, res, repInfo);
 	
@@ -4798,6 +4795,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var addedLines = 0;
 	            var curRepIndex;
 	            repUnitRead = 0;
+	            var sources = [];
+	            var branchOffset = 0;
 	            var _iteratorNormalCompletion12 = true;
 	            var _didIteratorError12 = false;
 	            var _iteratorError12 = undefined;
@@ -4836,10 +4835,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	                    } else if (!this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) // Totally inside or totally outside a rep
 	                    {
+	                        /*if (sources.includes(this.getLinkSource(finalLinks[i])))
+	                        {
+	                            branchOffset += offset;
+	                        }*/
 	                        if (flagInRep) // Inside a rep
 	                            {
-	                                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) - offset);
-	                                finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) - offset);
+	                                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) - offset + branchOffset);
+	                                finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) - offset + branchOffset);
 	                                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	                                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
 	                            } else {
@@ -4870,6 +4873,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        flagInRep = false;
 	                        repUnitRead++;
 	                    }
+	
+	                sources.push(this.getLinkSource(finalLinks[i]));
 	            }
 	
 	            return [finalRes, finalLinks, repInfo];

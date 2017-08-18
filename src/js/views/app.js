@@ -365,6 +365,7 @@ function displayTree() {
                 if (clickedNode.repeatingUnit == undefined)
                 {
                     $('#repeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                    $('#unrepeat').fadeOut(0);
                     d3.select("#repeat").on('click', function () { // On click on paste option
                         handleRepetition();
                         fadeOutContextMenu();
@@ -373,6 +374,7 @@ function displayTree() {
                 }
                 else {
                     $('#unrepeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
+                    $('#repeat').fadeOut(0);
                     d3.select("#unrepeat").on('click', function () { // On click on paste option
                         for (var node of clickedNode.repeatingUnit.nodes)
                         {

@@ -279,8 +279,8 @@ export default class GlycoCTParser{
             res = merge[0];
             links = merge[1];
             repInfo = merge[2];
-            /*console.log(links);
-            console.log(repInfo);*/
+            console.log(links);
+            console.log(repInfo);
         }
 
         this.generateNodes(links,nodesIds,res, repInfo);
@@ -336,6 +336,8 @@ export default class GlycoCTParser{
         var addedLines = 0;
         var curRepIndex;
         repUnitRead = 0;
+        var sources = [];
+        var branchOffset = 0;
         for (var r of reps)
         {
             allLinks = allLinks.concat(r.lin);
@@ -358,10 +360,14 @@ export default class GlycoCTParser{
 
             else if (!this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Totally inside or totally outside a rep
             {
+                /*if (sources.includes(this.getLinkSource(finalLinks[i])))
+                {
+                    branchOffset += offset;
+                }*/
                 if (flagInRep) // Inside a rep
                 {
-                    finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset);
-                    finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset);
+                    finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset+branchOffset);
+                    finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset+branchOffset);
                     repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
                     repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
                 }
@@ -401,6 +407,9 @@ export default class GlycoCTParser{
                 flagInRep = false;
                 repUnitRead++;
             }
+
+            sources.push(this.getLinkSource(finalLinks[i]));
+
         }
 
         return [finalRes,finalLinks,repInfo];
