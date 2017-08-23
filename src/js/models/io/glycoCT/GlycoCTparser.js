@@ -279,8 +279,6 @@ export default class GlycoCTParser{
             res = merge[0];
             links = merge[1];
             repInfo = merge[2];
-            console.log(links);
-            console.log(repInfo);
         }
 
         this.generateNodes(links,nodesIds,res, repInfo);
@@ -288,9 +286,7 @@ export default class GlycoCTParser{
         return this.sugar;
     }
 
-    mergeRep(reps,res,links)
-    {
-
+    mergeRep(reps,res,links) {
         var repeatingUnitsObjects = []; // Contains all the instanciated Rep objects
         var repeatingUnit;
         var repInfo = {}; // Shows which node is associated to which Rep
@@ -298,7 +294,6 @@ export default class GlycoCTParser{
         // First merge the RES
         var finalRes = [];
         var repUnitRead = 0;
-        var repUnitOffsets = [];
         var repUnitIndices = {};
         for (var i in res)
         {
@@ -310,7 +305,6 @@ export default class GlycoCTParser{
             {
                 repUnitIndices[parseInt(i)+1] = reps[repUnitRead];
                 finalRes = finalRes.concat(reps[repUnitRead].res);
-                repUnitOffsets.push(reps[repUnitRead].res.length);
                 repUnitRead++;
             }
         }
@@ -331,89 +325,52 @@ export default class GlycoCTParser{
             }
         }
 
-        // STEP 2: Edit the links' sources and targets to make them match with the RES new order
-        var flagInRep = false;
-        var addedLines = 0;
-        var curRepIndex;
-        repUnitRead = 0;
-        var sources = [];
-        var branchOffset = 0;
-        for (var r of reps)
-        {
-            allLinks = allLinks.concat(r.lin);
-        }
-
+        var repeatingUnitObject;
+        var createdUnits = [];
+        var repNodesIds;
         for (i in finalLinks)
         {
-            var offset = allLinks.indexOf(finalLinks[i]) - finalLinks.indexOf(finalLinks[i]) + repUnitRead + 1;
-            if (!this.isSourceARep(finalLinks[i],repUnitIndices) && this.isTargetARep(finalLinks[i],repUnitIndices)) // Entering a rep
+            if (this.isTargetARep(finalLinks[i],repUnitIndices)) // If target is Rep, replace its index by its entry Node
             {
-                flagInRep = true;
-                curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
-                finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
-                repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
-                    this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
-                repeatingUnitsObjects.push(repeatingUnit);
-                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-            }
-
-            else if (!this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Totally inside or totally outside a rep
-            {
-                /*if (sources.includes(this.getLinkSource(finalLinks[i])))
-                {
-                    branchOffset += offset;
-                }*/
-                if (flagInRep) // Inside a rep
-                {
-                    finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))-offset+branchOffset);
-                    finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))-offset+branchOffset);
-                    repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-                    repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
+                if (!createdUnits.includes(this.getLinkTarget(finalLinks[i]))) {
+                    createdUnits.push(this.getLinkTarget(finalLinks[i]));
+                    repeatingUnit = repUnitIndices[this.getLinkTarget(finalLinks[i])];
+                    repeatingUnitObject = new RepeatingUnit(this.randomString(7),[],repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry,
+                        repeatingUnit.info.exit, repeatingUnit.info.linkedCarbon, repeatingUnit.info.anomerCarbon);
+                    repNodesIds = this.getRepNodesIds(repeatingUnit.res);
+                    repeatingUnitsObjects.push([repeatingUnitObject,repNodesIds]);
                 }
-                else
-                {
-                    finalLinks[i] = this.updateLinkSource(finalLinks[i],parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
-                    finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead));
-                }
+                finalLinks[i] = this.updateLinkTarget(finalLinks[i],repUnitIndices[this.getLinkTarget(finalLinks[i])].info.entry);
             }
-
-            else if (this.isSourceARep(finalLinks[i],repUnitIndices) && this.isTargetARep(finalLinks[i],repUnitIndices)) // Transition between 2 reps
+            if (this.isSourceARep(finalLinks[i],repUnitIndices)) // If target is Rep, replace its index by its entry Node
             {
-                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
-                curRepIndex = (parseInt(this.getLinkTarget(finalLinks[i])));
-                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
-                repUnitRead++;
-                repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
-                    this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
-                repeatingUnitsObjects.push(repeatingUnit);
-                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-            }
-
-            else if (this.isSourceARep(finalLinks[i],repUnitIndices) && !this.isTargetARep(finalLinks[i],repUnitIndices)) // Ending a rep
-            {
-                if (i == 0)
+                if (!createdUnits.includes(this.getLinkSource(finalLinks[i])))
                 {
-                    repeatingUnit = new RepeatingUnit(this.randomString(7),[],reps[repUnitRead].info.min, reps[repUnitRead].info.max,
-                        this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
-                    repeatingUnitsObjects.push(repeatingUnit);
+                    createdUnits.push(this.getLinkSource(finalLinks[i]));
+                    repeatingUnit = repUnitIndices[this.getLinkSource(finalLinks[i])];
+                    repeatingUnitObject = new RepeatingUnit(this.randomString(7),[],repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry,
+                        repeatingUnit.info.exit, repeatingUnit.info.linkedCarbon, repeatingUnit.info.anomerCarbon);
+                    repNodesIds = this.getRepNodesIds(repeatingUnit.res);
+                    repeatingUnitsObjects.push([repeatingUnitObject,repNodesIds]);
                 }
-
-                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
-                finalLinks[i] = this.updateLinkTarget(finalLinks[i],parseInt(this.getLinkTarget(finalLinks[i]))+this.totalRepOffset(reps,repUnitRead+1));
-                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-                flagInRep = false;
-                repUnitRead++;
+                finalLinks[i] = this.updateLinkSource(finalLinks[i],repUnitIndices[this.getLinkSource(finalLinks[i])].info.exit);
             }
-
-            sources.push(this.getLinkSource(finalLinks[i]));
-
         }
 
-        return [finalRes,finalLinks,repInfo];
+        return [finalRes, finalLinks, repeatingUnitsObjects];
+
     }
+
+    getRepNodesIds(res)
+    {
+        var output = [];
+        for (var r of res)
+        {
+            output.push(r.split(/\w:/)[0]);
+        }
+        return output;
+    }
+
 
     getLinkSource(link)
     {
@@ -467,13 +424,25 @@ export default class GlycoCTParser{
         return total;
     }
 
-    generateNodes(links,nodesIds,res, repInfo)
+    findMatchingRep(sourceId, repInfo)
+    {
+        for (var pair of repInfo)
+        {
+            if (pair[1].includes(""+sourceId))
+            {
+                return pair[0];
+            }
+        }
+        return undefined;
+    }
+
+    generateNodes(links,nodesIds,res,repInfo)
     {
         var repeatingUnit;
-        var residueListById = [""]; // "" is for the offset so that node number 1 is at index 1
+        var residueListById = {};
         for (var residue of res)
         {
-            residueListById.push(residue.split(":"));
+            residueListById[residue.split(/\w:/)[0]] = (residue.split(":"));
         }
         for (var linkId in links) {
             if (links[linkId] !== "") {
@@ -482,15 +451,10 @@ export default class GlycoCTParser{
                 var nodeId;
                 if (residueListById[sourceId] !== "") // Root
                 {
-                    repeatingUnit = undefined;
-                    if (repInfo.hasOwnProperty(sourceId))
-                    {
-                        repeatingUnit = repInfo[sourceId];
-                    }
+                    repeatingUnit = this.findMatchingRep(sourceId, repInfo);
                     nodeId = this.createResidue(residueListById[sourceId], "r", "r", repeatingUnit);
                     residueListById[sourceId] = "";
                     nodesIds[sourceId] = nodeId;
-
                 }
                 var targetId = parseInt(link.split(")")[1]);
                 var linkages = link.split(/[\(\)]+/)[1];
@@ -502,11 +466,7 @@ export default class GlycoCTParser{
                         this.clickedNode = node;
                     }
                 }
-                repeatingUnit = undefined;
-                if (repInfo.hasOwnProperty(targetId))
-                {
-                    repeatingUnit = repInfo[targetId];
-                }
+                repeatingUnit = this.findMatchingRep(targetId, repInfo);
                 nodeId = this.createResidue(residueListById[targetId],linkedCarbon, anomerCarbon, repeatingUnit);
                 residueListById[targetId] = "";
                 nodesIds[targetId] = nodeId;
@@ -585,7 +545,8 @@ export default class GlycoCTParser{
                 if (value.length != 0 && key !== "")
                 {
                     info = {"linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
-                        "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1]};
+                        "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1],
+                        "exit":key.split("o")[0], "entry":key.split(")")[1].split("d")[0]};
                     output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
                 }
                 value = [];
@@ -599,7 +560,8 @@ export default class GlycoCTParser{
         if (value.length !== 0)
         {
             info = {"linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
-                "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1]};
+                "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1],
+                "exit":key.split("o")[0], "entry":key.split(")")[1].split("d")[0]};
             output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
         }
         return output;

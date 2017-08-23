@@ -4742,8 +4742,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                res = merge[0];
 	                links = merge[1];
 	                repInfo = merge[2];
-	                console.log(links);
-	                console.log(repInfo);
 	            }
 	
 	            this.generateNodes(links, nodesIds, res, repInfo);
@@ -4753,7 +4751,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'mergeRep',
 	        value: function mergeRep(reps, res, links) {
-	
 	            var repeatingUnitsObjects = []; // Contains all the instanciated Rep objects
 	            var repeatingUnit;
 	            var repInfo = {}; // Shows which node is associated to which Rep
@@ -4761,7 +4758,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // First merge the RES
 	            var finalRes = [];
 	            var repUnitRead = 0;
-	            var repUnitOffsets = [];
 	            var repUnitIndices = {};
 	            for (var i in res) {
 	                if (res[i].split(":")[0].indexOf("r") == -1) // Not a repeating unit
@@ -4770,7 +4766,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    } else {
 	                    repUnitIndices[parseInt(i) + 1] = reps[repUnitRead];
 	                    finalRes = finalRes.concat(reps[repUnitRead].res);
-	                    repUnitOffsets.push(reps[repUnitRead].res.length);
 	                    repUnitRead++;
 	                }
 	            }
@@ -4790,22 +4785,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	            }
 	
-	            // STEP 2: Edit the links' sources and targets to make them match with the RES new order
-	            var flagInRep = false;
-	            var addedLines = 0;
-	            var curRepIndex;
-	            repUnitRead = 0;
-	            var sources = [];
-	            var branchOffset = 0;
+	            var repeatingUnitObject;
+	            var createdUnits = [];
+	            var repNodesIds;
+	            for (i in finalLinks) {
+	                if (this.isTargetARep(finalLinks[i], repUnitIndices)) // If target is Rep, replace its index by its entry Node
+	                    {
+	                        if (!createdUnits.includes(this.getLinkTarget(finalLinks[i]))) {
+	                            createdUnits.push(this.getLinkTarget(finalLinks[i]));
+	                            repeatingUnit = repUnitIndices[this.getLinkTarget(finalLinks[i])];
+	                            repeatingUnitObject = new _RepeatingUnit2.default(this.randomString(7), [], repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry, repeatingUnit.info.exit, repeatingUnit.info.linkedCarbon, repeatingUnit.info.anomerCarbon);
+	                            repNodesIds = this.getRepNodesIds(repeatingUnit.res);
+	                            repeatingUnitsObjects.push([repeatingUnitObject, repNodesIds]);
+	                        }
+	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], repUnitIndices[this.getLinkTarget(finalLinks[i])].info.entry);
+	                    }
+	                if (this.isSourceARep(finalLinks[i], repUnitIndices)) // If target is Rep, replace its index by its entry Node
+	                    {
+	                        if (!createdUnits.includes(this.getLinkSource(finalLinks[i]))) {
+	                            createdUnits.push(this.getLinkSource(finalLinks[i]));
+	                            repeatingUnit = repUnitIndices[this.getLinkSource(finalLinks[i])];
+	                            repeatingUnitObject = new _RepeatingUnit2.default(this.randomString(7), [], repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry, repeatingUnit.info.exit, repeatingUnit.info.linkedCarbon, repeatingUnit.info.anomerCarbon);
+	                            repNodesIds = this.getRepNodesIds(repeatingUnit.res);
+	                            repeatingUnitsObjects.push([repeatingUnitObject, repNodesIds]);
+	                        }
+	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], repUnitIndices[this.getLinkSource(finalLinks[i])].info.exit);
+	                    }
+	            }
+	
+	            return [finalRes, finalLinks, repeatingUnitsObjects];
+	        }
+	    }, {
+	        key: 'getRepNodesIds',
+	        value: function getRepNodesIds(res) {
+	            var output = [];
 	            var _iteratorNormalCompletion12 = true;
 	            var _didIteratorError12 = false;
 	            var _iteratorError12 = undefined;
 	
 	            try {
-	                for (var _iterator12 = reps[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                for (var _iterator12 = res[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
 	                    var r = _step12.value;
 	
-	                    allLinks = allLinks.concat(r.lin);
+	                    output.push(r.split(/\w:/)[0]);
 	                }
 	            } catch (err) {
 	                _didIteratorError12 = true;
@@ -4822,62 +4844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            for (i in finalLinks) {
-	                var offset = allLinks.indexOf(finalLinks[i]) - finalLinks.indexOf(finalLinks[i]) + repUnitRead + 1;
-	                if (!this.isSourceARep(finalLinks[i], repUnitIndices) && this.isTargetARep(finalLinks[i], repUnitIndices)) // Entering a rep
-	                    {
-	                        flagInRep = true;
-	                        curRepIndex = parseInt(this.getLinkTarget(finalLinks[i]));
-	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
-	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
-	                        repeatingUnit = new _RepeatingUnit2.default(this.randomString(7), [], reps[repUnitRead].info.min, reps[repUnitRead].info.max, this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
-	                        repeatingUnitsObjects.push(repeatingUnit);
-	                        repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                    } else if (!this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) // Totally inside or totally outside a rep
-	                    {
-	                        /*if (sources.includes(this.getLinkSource(finalLinks[i])))
-	                        {
-	                            branchOffset += offset;
-	                        }*/
-	                        if (flagInRep) // Inside a rep
-	                            {
-	                                finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) - offset + branchOffset);
-	                                finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) - offset + branchOffset);
-	                                repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                                repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                            } else {
-	                            finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
-	                            finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead));
-	                        }
-	                    } else if (this.isSourceARep(finalLinks[i], repUnitIndices) && this.isTargetARep(finalLinks[i], repUnitIndices)) // Transition between 2 reps
-	                    {
-	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
-	                        curRepIndex = parseInt(this.getLinkTarget(finalLinks[i]));
-	                        repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	
-	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
-	                        repUnitRead++;
-	                        repeatingUnit = new _RepeatingUnit2.default(this.randomString(7), [], reps[repUnitRead].info.min, reps[repUnitRead].info.max, this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
-	                        repeatingUnitsObjects.push(repeatingUnit);
-	                        repInfo[parseInt(this.getLinkTarget(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                    } else if (this.isSourceARep(finalLinks[i], repUnitIndices) && !this.isTargetARep(finalLinks[i], repUnitIndices)) // Ending a rep
-	                    {
-	                        if (i == 0) {
-	                            repeatingUnit = new _RepeatingUnit2.default(this.randomString(7), [], reps[repUnitRead].info.min, reps[repUnitRead].info.max, this.getLinkTarget(finalLinks[i]), -1, reps[repUnitRead].info.linkedCarbon, reps[repUnitRead].info.anomerCarbon);
-	                            repeatingUnitsObjects.push(repeatingUnit);
-	                        }
-	
-	                        finalLinks[i] = this.updateLinkSource(finalLinks[i], parseInt(this.getLinkSource(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
-	                        finalLinks[i] = this.updateLinkTarget(finalLinks[i], parseInt(this.getLinkTarget(finalLinks[i])) + this.totalRepOffset(reps, repUnitRead + 1));
-	                        repInfo[parseInt(this.getLinkSource(finalLinks[i]))] = repeatingUnitsObjects[repUnitRead];
-	                        flagInRep = false;
-	                        repUnitRead++;
-	                    }
-	
-	                sources.push(this.getLinkSource(finalLinks[i]));
-	            }
-	
-	            return [finalRes, finalLinks, repInfo];
+	            return output;
 	        }
 	    }, {
 	        key: 'getLinkSource',
@@ -4928,19 +4895,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return total;
 	        }
 	    }, {
-	        key: 'generateNodes',
-	        value: function generateNodes(links, nodesIds, res, repInfo) {
-	            var repeatingUnit;
-	            var residueListById = [""]; // "" is for the offset so that node number 1 is at index 1
+	        key: 'findMatchingRep',
+	        value: function findMatchingRep(sourceId, repInfo) {
 	            var _iteratorNormalCompletion13 = true;
 	            var _didIteratorError13 = false;
 	            var _iteratorError13 = undefined;
 	
 	            try {
-	                for (var _iterator13 = res[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-	                    var residue = _step13.value;
+	                for (var _iterator13 = repInfo[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+	                    var pair = _step13.value;
 	
-	                    residueListById.push(residue.split(":"));
+	                    if (pair[1].includes("" + sourceId)) {
+	                        return pair[0];
+	                    }
 	                }
 	            } catch (err) {
 	                _didIteratorError13 = true;
@@ -4957,6 +4924,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
+	            return undefined;
+	        }
+	    }, {
+	        key: 'generateNodes',
+	        value: function generateNodes(links, nodesIds, res, repInfo) {
+	            var repeatingUnit;
+	            var residueListById = {};
+	            var _iteratorNormalCompletion14 = true;
+	            var _didIteratorError14 = false;
+	            var _iteratorError14 = undefined;
+	
+	            try {
+	                for (var _iterator14 = res[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+	                    var residue = _step14.value;
+	
+	                    residueListById[residue.split(/\w:/)[0]] = residue.split(":");
+	                }
+	            } catch (err) {
+	                _didIteratorError14 = true;
+	                _iteratorError14 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion14 && _iterator14.return) {
+	                        _iterator14.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError14) {
+	                        throw _iteratorError14;
+	                    }
+	                }
+	            }
+	
 	            for (var linkId in links) {
 	                if (links[linkId] !== "") {
 	                    var link = links[linkId];
@@ -4964,10 +4963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var nodeId;
 	                    if (residueListById[sourceId] !== "") // Root
 	                        {
-	                            repeatingUnit = undefined;
-	                            if (repInfo.hasOwnProperty(sourceId)) {
-	                                repeatingUnit = repInfo[sourceId];
-	                            }
+	                            repeatingUnit = this.findMatchingRep(sourceId, repInfo);
 	                            nodeId = this.createResidue(residueListById[sourceId], "r", "r", repeatingUnit);
 	                            residueListById[sourceId] = "";
 	                            nodesIds[sourceId] = nodeId;
@@ -4977,37 +4973,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var linkedCarbon, anomerCarbon;
 	                    linkedCarbon = linkages.split("+")[0] === "-1" ? "?" : linkages.split("+")[0];
 	                    anomerCarbon = linkages.split("+")[1] === "-1" ? "?" : linkages.split("+")[1];
-	                    var _iteratorNormalCompletion14 = true;
-	                    var _didIteratorError14 = false;
-	                    var _iteratorError14 = undefined;
+	                    var _iteratorNormalCompletion15 = true;
+	                    var _didIteratorError15 = false;
+	                    var _iteratorError15 = undefined;
 	
 	                    try {
-	                        for (var _iterator14 = this.sugar.graph.nodes()[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-	                            var node = _step14.value;
+	                        for (var _iterator15 = this.sugar.graph.nodes()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+	                            var node = _step15.value;
 	                            // clickedNode = sourceNode
 	                            if (node.id === nodesIds[sourceId]) {
 	                                this.clickedNode = node;
 	                            }
 	                        }
 	                    } catch (err) {
-	                        _didIteratorError14 = true;
-	                        _iteratorError14 = err;
+	                        _didIteratorError15 = true;
+	                        _iteratorError15 = err;
 	                    } finally {
 	                        try {
-	                            if (!_iteratorNormalCompletion14 && _iterator14.return) {
-	                                _iterator14.return();
+	                            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+	                                _iterator15.return();
 	                            }
 	                        } finally {
-	                            if (_didIteratorError14) {
-	                                throw _iteratorError14;
+	                            if (_didIteratorError15) {
+	                                throw _iteratorError15;
 	                            }
 	                        }
 	                    }
 	
-	                    repeatingUnit = undefined;
-	                    if (repInfo.hasOwnProperty(targetId)) {
-	                        repeatingUnit = repInfo[targetId];
-	                    }
+	                    repeatingUnit = this.findMatchingRep(targetId, repInfo);
 	                    nodeId = this.createResidue(residueListById[targetId], linkedCarbon, anomerCarbon, repeatingUnit);
 	                    residueListById[targetId] = "";
 	                    nodesIds[targetId] = nodeId;
@@ -5017,29 +5010,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'findNodeById',
 	        value: function findNodeById(id) {
-	            var _iteratorNormalCompletion15 = true;
-	            var _didIteratorError15 = false;
-	            var _iteratorError15 = undefined;
+	            var _iteratorNormalCompletion16 = true;
+	            var _didIteratorError16 = false;
+	            var _iteratorError16 = undefined;
 	
 	            try {
-	                for (var _iterator15 = this.sugar.graph.nodes()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-	                    var node = _step15.value;
+	                for (var _iterator16 = this.sugar.graph.nodes()[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+	                    var node = _step16.value;
 	
 	                    if (node.id == id) {
 	                        return node;
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError15 = true;
-	                _iteratorError15 = err;
+	                _didIteratorError16 = true;
+	                _iteratorError16 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion15 && _iterator15.return) {
-	                        _iterator15.return();
+	                    if (!_iteratorNormalCompletion16 && _iterator16.return) {
+	                        _iterator16.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError15) {
-	                        throw _iteratorError15;
+	                    if (_didIteratorError16) {
+	                        throw _iteratorError16;
 	                    }
 	                }
 	            }
@@ -5062,13 +5055,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var output = [];
 	            var flag = false;
-	            var _iteratorNormalCompletion16 = true;
-	            var _didIteratorError16 = false;
-	            var _iteratorError16 = undefined;
+	            var _iteratorNormalCompletion17 = true;
+	            var _didIteratorError17 = false;
+	            var _iteratorError17 = undefined;
 	
 	            try {
-	                for (var _iterator16 = formulaArray[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-	                    var line = _step16.value;
+	                for (var _iterator17 = formulaArray[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+	                    var line = _step17.value;
 	
 	                    if (flag && sections.includes(line)) // If other section encountered
 	                        {
@@ -5090,51 +5083,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError16 = true;
-	                _iteratorError16 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion16 && _iterator16.return) {
-	                        _iterator16.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError16) {
-	                        throw _iteratorError16;
-	                    }
-	                }
-	            }
-	
-	            return output;
-	        }
-	    }, {
-	        key: 'getRepeatingUnit',
-	        value: function getRepeatingUnit(array) {
-	            var info;
-	            var output = [],
-	                value = [],
-	                key = "";
-	            var _iteratorNormalCompletion17 = true;
-	            var _didIteratorError17 = false;
-	            var _iteratorError17 = undefined;
-	
-	            try {
-	                for (var _iterator17 = array[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-	                    var line = _step17.value;
-	
-	                    var split = line.split(/REP\d+:/);
-	                    if (split[1]) {
-	                        if (value.length != 0 && key !== "") {
-	                            info = { "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
-	                                "min": key.split("=")[1].split("-")[0], "max": key.split("=")[1].split("-")[1] };
-	                            output.push({ "info": info, "res": this.getSection("RES", value), "lin": this.getSection("LIN", value) });
-	                        }
-	                        value = [];
-	                        key = split[1];
-	                    } else {
-	                        value.push(line);
-	                    }
-	                }
-	            } catch (err) {
 	                _didIteratorError17 = true;
 	                _iteratorError17 = err;
 	            } finally {
@@ -5149,9 +5097,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
+	            return output;
+	        }
+	    }, {
+	        key: 'getRepeatingUnit',
+	        value: function getRepeatingUnit(array) {
+	            var info;
+	            var output = [],
+	                value = [],
+	                key = "";
+	            var _iteratorNormalCompletion18 = true;
+	            var _didIteratorError18 = false;
+	            var _iteratorError18 = undefined;
+	
+	            try {
+	                for (var _iterator18 = array[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+	                    var line = _step18.value;
+	
+	                    var split = line.split(/REP\d+:/);
+	                    if (split[1]) {
+	                        if (value.length != 0 && key !== "") {
+	                            info = { "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+	                                "min": key.split("=")[1].split("-")[0], "max": key.split("=")[1].split("-")[1],
+	                                "exit": key.split("o")[0], "entry": key.split(")")[1].split("d")[0] };
+	                            output.push({ "info": info, "res": this.getSection("RES", value), "lin": this.getSection("LIN", value) });
+	                        }
+	                        value = [];
+	                        key = split[1];
+	                    } else {
+	                        value.push(line);
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError18 = true;
+	                _iteratorError18 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion18 && _iterator18.return) {
+	                        _iterator18.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError18) {
+	                        throw _iteratorError18;
+	                    }
+	                }
+	            }
+	
 	            if (value.length !== 0) {
 	                info = { "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
-	                    "min": key.split("=")[1].split("-")[0], "max": key.split("=")[1].split("-")[1] };
+	                    "min": key.split("=")[1].split("-")[0], "max": key.split("=")[1].split("-")[1],
+	                    "exit": key.split("o")[0], "entry": key.split(")")[1].split("d")[0] };
 	                output.push({ "info": info, "res": this.getSection("RES", value), "lin": this.getSection("LIN", value) });
 	            }
 	            return output;
