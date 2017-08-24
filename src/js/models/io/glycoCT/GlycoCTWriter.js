@@ -420,6 +420,10 @@ export default class GlycoCTWriter{
                         formula += this.writeSubLink(i+offset, source, target, linkedCarbon, anomerCarbon);
                     }
                 }
+                else
+                {
+                    offset--;
+                }
 
             }
 
@@ -454,7 +458,7 @@ export default class GlycoCTWriter{
         // LIN
         var linInfo = this.generateLIN(resId, associatedSubs);
         formula += linInfo[1];
-        var lastLinId = resInfo[0];
+        var lastLinId = linInfo[0];
 
 
         // REP

@@ -5757,7 +5757,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            } else {
 	                                formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
 	                            }
-	                        }
+	                        } else {
+	                        offset--;
+	                    }
 	                }
 	
 	                var _iteratorNormalCompletion9 = true;
@@ -5809,7 +5811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // LIN
 	            var linInfo = this.generateLIN(resId, associatedSubs);
 	            formula += linInfo[1];
-	            var lastLinId = resInfo[0];
+	            var lastLinId = linInfo[0];
 	
 	            // REP
 	
