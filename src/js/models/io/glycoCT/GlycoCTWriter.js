@@ -100,16 +100,16 @@ export default class GlycoCTWriter{
         return formula;
     }
 
-    writeMonoLink(i, source, target, linkedCarbon, anomerCarbon)
+    writeMonoLink(i, source, target, linkedCarbon, anomerCarbon, prefix = "o", suffix = "d")
     {
         var formula = "";
-        formula += i + ":" + source + "o";
+        formula += i + ":" + source + prefix;
 
         formula += "(" + linkedCarbon;
         formula += "+";
         formula += anomerCarbon + ")";
 
-        formula += target + "d";
+        formula += target + suffix;
 
         formula += "\n";
 
@@ -413,7 +413,19 @@ export default class GlycoCTWriter{
 
                     if (edges[i] instanceof GlycosidicLinkage)
                     {
-                        formula += this.writeMonoLink(i+1+offset, source, target, linkedCarbon, anomerCarbon);
+                        var prefix = "o";
+                        var suffix = "d";
+                        var sourceRep = findNodeInTree(treeData,edges[i].sourceNode).node.repeatingUnit;
+                        var targetRep = findNodeInTree(treeData,edges[i].targetNode).node.repeatingUnit;
+                        if (sourceRep !== undefined)
+                        {
+                            prefix = "n";
+                        }
+                        if (targetRep !== undefined)
+                        {
+                            suffix = "n";
+                        }
+                        formula += this.writeMonoLink(i+1+offset, source, target, linkedCarbon, anomerCarbon, prefix, suffix);
                     }
                     else
                     {
@@ -422,7 +434,7 @@ export default class GlycoCTWriter{
                 }
                 else
                 {
-                    offset--;
+                    offset--; // As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
                 }
 
             }
@@ -485,8 +497,11 @@ export default class GlycoCTWriter{
                 formula += rep.linkedCarbon === LinkedCarbon.UNDEFINED ? "-1" : rep.linkedCarbon;
                 formula += "+";
                 formula += rep.anomerCarbon === LinkedCarbon.UNDEFINED ? "-1" : rep.anomerCarbon;
-                formula += ")" + entryId + "d=" + rep.min + "-" + rep.max +"\n";
-                formula += resInfo[1];
+                formula += ")" + entryId + "d=";
+                formula += rep.min === "?" ? "-1" : rep.min;
+                formula += "-";
+                formula += rep.max === "?" ? "-1" : rep.max;
+                formula += "\n" + resInfo[1];
                 linInfo = this.generateLIN(resId,associatedSubs,lastLinId,rep.id);
                 lastLinId = linInfo[0];
                 formula += linInfo[1];
