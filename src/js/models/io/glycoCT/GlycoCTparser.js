@@ -325,6 +325,11 @@ export default class GlycoCTParser{
             }
         }
 
+
+
+        // update the links:
+        // If the target of a link is a repeating unit, change to the first residue of the unit (entering the unit)
+        // If the source is a repeating unit, change to the ending residue (leaving the unit)
         var repeatingUnitObject;
         var createdUnits = [];
         var repNodesIds;
@@ -374,12 +379,12 @@ export default class GlycoCTParser{
 
     getLinkSource(link)
     {
-        return link.split("o")[0].split(":")[1];
+        return link.split(/[on]/)[0].split(":")[1];
     }
 
     getLinkTarget(link)
     {
-        return link.split(")")[1].split("d")[0];
+        return link.split(")")[1].split(/[dn]/)[0];
     }
 
     updateLinkTarget(link, target)
@@ -390,13 +395,13 @@ export default class GlycoCTParser{
 
     updateLinkSource(link, source)
     {
-        var output = link.split(":")[0] + ":" + source + "o" + link.split("o")[1];
+        var output = link.split(":")[0] + ":" + source + "o" + link.split(/[on]/)[1];
         return output;
     }
 
     isTargetARep(link, repUnitIndices)
     {
-        var target = link.split(")")[1].split("d")[0];
+        var target = link.split(")")[1].split(/[dn]/)[0];
         if (repUnitIndices[target])
             return true;
         return false;
@@ -404,7 +409,7 @@ export default class GlycoCTParser{
 
     isSourceARep(link, repUnitIndices)
     {
-        var source = link.split("o")[0].split(":")[1];
+        var source = link.split(/[on]/)[0].split(":")[1];
         if (repUnitIndices[source])
             return true;
         return false;
@@ -535,7 +540,7 @@ export default class GlycoCTParser{
 
     getRepeatingUnit(array)
     {
-        var info;
+        var info, min, max;
         var output = [], value = [], key = "";
         for (var line of array)
         {
@@ -544,8 +549,10 @@ export default class GlycoCTParser{
             {
                 if (value.length != 0 && key !== "")
                 {
+                    min = key.split("=")[1].substring(0,2) == "-1" ? "?" : key.split("=")[1].split("-")[0];
+                    max = key.substring(key.length-2) == "-1" ? "?" : key.split("-")[key.split("-").length-1];
                     info = {"linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
-                        "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1],
+                        "min": min, "max": max,
                         "exit":key.split("o")[0], "entry":key.split(")")[1].split("d")[0]};
                     output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
                 }
@@ -559,8 +566,10 @@ export default class GlycoCTParser{
         }
         if (value.length !== 0)
         {
+            min = key.split("=")[1].substring(0,2) == "-1" ? "?" : key.split("=")[1].split("-")[0];
+            max = key.substring(key.length-2) == "-1" ? "?" : key.split("-")[key.split("-").length-1];
             info = {"linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
-                "min": key.split("=")[1].split("-")[0], "max":key.split("=")[1].split("-")[1],
+                "min": min, "max": max,
                 "exit":key.split("o")[0], "entry":key.split(")")[1].split("d")[0]};
             output.push({"info":info,"res":this.getSection("RES",value),"lin":this.getSection("LIN",value)});
         }
