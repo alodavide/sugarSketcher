@@ -201,11 +201,12 @@ function displayTree() {
     treeSvg.selectAll('.linkLabel').remove(); // Remove all link labels
     treeSvg.selectAll('.rep').remove(); // Remove all the brackets
     treeSvg.selectAll('.repLabel').remove(); // Remove all the Repeating labels
+    treeSvg.selectAll('#rootAttach').remove(); // Remove the root attach
 
 
     if (sugar.rootIsSet()) {
-    var nodes = tree.nodes(treeData); // Tree nodes
-    var links = tree.links(nodes); // Tree links
+        var nodes = tree.nodes(treeData); // Tree nodes
+        var links = tree.links(nodes); // Tree links
 
         vis.selectAll(".nodelink")
             .data(links)
@@ -255,15 +256,15 @@ function displayTree() {
 
 
         var linkLabel = vis.selectAll(".linkLabel"); // Link labels
-        displayLabels(linkLabel,links,true); // First display anomericity
-        displayLabels(linkLabel,links,false); // Then linkages (to change font-family)
+        displayLabels(linkLabel, links, true); // First display anomericity
+        displayLabels(linkLabel, links, false); // Then linkages (to change font-family)
 
 
         // Create nodes
         var node = vis.selectAll("g.node")
             .data(nodes)
             .enter().append("g")
-            .style("visibility", function(d) {
+            .style("visibility", function (d) {
                 return (d.node["anomericity"]) ? "visible" : "hidden"; // Do not display Substituant nodes
             })
             .attr("x", function (d) {
@@ -282,8 +283,7 @@ function displayTree() {
             .on('click', function () {
                 // On click, simply display menu and hide all other svg's
                 d3.event.stopPropagation();
-                if (selectedNodes.length == 0)
-                {
+                if (selectedNodes.length == 0) {
                     d3.select("#svgMenu").style("display", "block");
                 }
                 else // display Multiselection Menu
@@ -311,11 +311,9 @@ function displayTree() {
                         }
                     });
                 d3.select("#deleteNode").on('click', function () { // Click on delete option
-                    if (selectedNodes.length != 0)
-                    {
+                    if (selectedNodes.length != 0) {
                         var wholeSelection = [clickedNode].concat(selectedNodes);
-                        for (var n of wholeSelection)
-                        {
+                        for (var n of wholeSelection) {
                             var parent = getNodeParent(n);
                             if (parent == undefined || !wholeSelection.includes(parent)) // highest node in selection
                             {
@@ -325,8 +323,7 @@ function displayTree() {
                             }
                         }
                     }
-                    else
-                    {
+                    else {
                         deleteNode(node); // Delete the node clicked
                     }
                     fadeOutContextMenu();
@@ -351,8 +348,7 @@ function displayTree() {
                     });
                     yPos += 22;
                 }
-                if (clickedNodeHasSubs())
-                {
+                if (clickedNodeHasSubs()) {
                     $('#deleteSubs').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
                     d3.select("#deleteSubs").on('click', function () { // On click on paste option
                         deleteSubs(node);
@@ -362,8 +358,7 @@ function displayTree() {
                 }
 
 
-                if (clickedNode.repeatingUnit == undefined)
-                {
+                if (clickedNode.repeatingUnit == undefined) {
                     $('#repeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
                     $('#unrepeat').fadeOut(0);
                     d3.select("#repeat").on('click', function () { // On click on paste option
@@ -376,8 +371,7 @@ function displayTree() {
                     $('#unrepeat').css({'top': mouseY - yModification + yPos, 'left': mouseX - 110}).fadeIn(400); // Display the paste option
                     $('#repeat').fadeOut(0);
                     d3.select("#unrepeat").on('click', function () { // On click on paste option
-                        for (var node of clickedNode.repeatingUnit.nodes)
-                        {
+                        for (var node of clickedNode.repeatingUnit.nodes) {
                             delete node.node.repeatingUnit;
                         }
                         displayTree();
@@ -389,9 +383,8 @@ function displayTree() {
 
             });
 
-
         // Root attach point ~
-        node.append("path").style("visibility", function(d) {
+        node.append("path").style("visibility", function (d) {
             if (d.parent == undefined)
                 return "visible";
             else
@@ -399,13 +392,12 @@ function displayTree() {
         })
             .attr("fill", "none")
             .attr("id", "rootAttach")
-            .attr("width", function(d) {
+            .attr("width", function (d) {
                 return 50;
             })
             .attr("height", 50).attr("stroke", "black")
             .attr("d", "M50,20 Q61,10 50,0 T50,-20" +
                 "       M50,0 L-6,0");
-
 
 
         // For each node, append a path
@@ -454,46 +446,38 @@ function displayTree() {
                     }
                 }
             })
-            .style('stroke', function(d){
-                if (d.node == clickedNode)
-                {
-                    if (selectedNodes.length != 0)
-                    {
+            .style('stroke', function (d) {
+                if (d.node == clickedNode) {
+                    if (selectedNodes.length != 0) {
                         return "#58ACFA";
                     }
-                    else if (d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "fuc" || d.node.monosaccharideType.name.toLowerCase().substring(0,3) == "sia")
-                    {
+                    else if (d.node.monosaccharideType.name.toLowerCase().substring(0, 3) == "fuc" || d.node.monosaccharideType.name.toLowerCase().substring(0, 3) == "sia") {
                         return "black";
                     }
-                    else
-                    {
+                    else {
                         return "red";
                     }
                 }
-                else if (selectedNodes.includes(d.node))
-                {
+                else if (selectedNodes.includes(d.node)) {
                     return "#58ACFA";
                 }
-                else
-                {
+                else {
                     return "black";
                 }
             })
-            .style('stroke-width', function(d){
+            .style('stroke-width', function (d) {
                 if (d.node == clickedNode) {
                     if (selectedNodes.length != 0) {
                         return "6px";
                     }
                     return "4px";
                 }
-                if (selectedNodes.includes(d.node))
-                {
+                if (selectedNodes.includes(d.node)) {
                     return "4px";
                 }
                 return "1px";
             })
             .on('click', clickCircle); // Select the node on click
-
 
 
         var repeatingUnits = generateRepeatingUnits(nodes);
@@ -504,59 +488,59 @@ function displayTree() {
             .enter();
 
         rep.append("path")
-            .attr("class","rep")
-            .attr("height",function(d) {
+            .attr("class", "rep")
+            .attr("height", function (d) {
                 var repInfo = getRepCoord(d);
-                return (repInfo[1]-repInfo[0])+"px";
+                return (repInfo[1] - repInfo[0]) + "px";
             })
-            .attr("width","10px")
-            .attr("x", function(d) {
+            .attr("width", "10px")
+            .attr("x", function (d) {
                 return getRepCoord(d)[0];
             })
-            .attr("y", function(d) {
+            .attr("y", function (d) {
                 return getRepCoord(d)[2];
             })
             .attr("transform", function (d) {
                 var repInfo = getRepCoord(d);
                 return "translate(" + repInfo[2] + "," + repInfo[0] + ")";
             })
-            .attr("d", function(d) {
+            .attr("d", function (d) {
                 var repInfo = getRepCoord(d);
-                return "M 10 0 L 0 0 L 0 " + (repInfo[1]-repInfo[0]) + " L 10 " + (repInfo[1]-repInfo[0])
-                    + "M " + (repInfo[3]-repInfo[2]) + " 0 L " + ((repInfo[3]-repInfo[2])+10) + " 0 L " +
-                    ((repInfo[3]-repInfo[2])+10) + " " + (repInfo[1]-repInfo[0]) + " L " +
-                    (repInfo[3]-repInfo[2]) + " " + (repInfo[1]-repInfo[0]);
+                return "M 10 0 L 0 0 L 0 " + (repInfo[1] - repInfo[0]) + " L 10 " + (repInfo[1] - repInfo[0])
+                    + "M " + (repInfo[3] - repInfo[2]) + " 0 L " + ((repInfo[3] - repInfo[2]) + 10) + " 0 L " +
+                    ((repInfo[3] - repInfo[2]) + 10) + " " + (repInfo[1] - repInfo[0]) + " L " +
+                    (repInfo[3] - repInfo[2]) + " " + (repInfo[1] - repInfo[0]);
             })
-            .attr("fill","none")
-            .attr("stroke","gray")
-            .attr("stroke-width","1px");
+            .attr("fill", "none")
+            .attr("stroke", "gray")
+            .attr("stroke-width", "1px");
 
         // Display numbers of repeats
         rep.append("text")
-            .attr("class","repLabel")
-            .attr("x",function(d) {
+            .attr("class", "repLabel")
+            .attr("x", function (d) {
                 return getRepCoord(d)[2];
             })
-            .attr("y", function(d) {
-                return getRepCoord(d)[1]+15;
+            .attr("y", function (d) {
+                return getRepCoord(d)[1] + 15;
             })
-            .style("stroke","gray")
-            .style("font-family","Lato light")
-            .text(function(d) {
+            .style("stroke", "gray")
+            .style("font-family", "Lato light")
+            .text(function (d) {
                 return d.min;
             });
 
         rep.append("text")
-            .attr("class","repLabel")
-            .attr("x",function(d) {
+            .attr("class", "repLabel")
+            .attr("x", function (d) {
                 return getRepCoord(d)[2];
             })
-            .attr("y", function(d) {
-                return getRepCoord(d)[0]-5;
+            .attr("y", function (d) {
+                return getRepCoord(d)[0] - 5;
             })
-            .style("stroke","gray")
-            .style("font-family","Lato light")
-            .text(function(d) {
+            .style("stroke", "gray")
+            .style("font-family", "Lato light")
+            .text(function (d) {
                 return d.max;
             });
 

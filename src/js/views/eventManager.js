@@ -314,6 +314,11 @@ function manageHoverIO(menuItem,actions)
                 d3.select("#quickMode").style("opacity", "1");
             }
         }).on("click", function () {
+            d3.select("#exportImage").style("display", "block").on("click", function() {
+                var exporter = new sb.ExportImage();
+                var img = exporter.save();
+                exporter.download(img);
+            });
             d3.select("#formula").style("display","block");
             d3.select("#validateFormula").style("display", "none");
             d3.select("#structuresDiv").style("display", "none");
@@ -362,6 +367,7 @@ function manageHoverIO(menuItem,actions)
             d3.select("#formula").style("display","block");
             d3.select("#validateFormula").style("display", "block");
             d3.select("#structuresDiv").style("display", "none");
+            d3.select("#exportImage").style("display", "none");
             $('#formula').val("");
             $('#formula').focus();
             d3.select("#copyMsg")
@@ -725,6 +731,7 @@ function checkSelectedAllInfos() {
         infosTable.push(isomer);
         infosTable.push(ringType);
         reinitializeDisplayInfos(); // Reinitialize display of the infos svg
+        reinitializeDisplayCarbons();
         d3.select("#svgCarbons").transition().style("display", "block"); // Display the carbon choice svg
     }
 }

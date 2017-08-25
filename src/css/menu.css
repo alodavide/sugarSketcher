@@ -90,7 +90,7 @@
     width:1000px;
 }
 
-#validateFormula {
+#validateFormula, #exportImage {
     display:none;
     width:150px;
     height:30px;
@@ -206,7 +206,7 @@
 }
 
 #copyMsg {
-    margin-bottom:50px;
+    margin-bottom:10px;
 }
 
 textarea {

@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.ExportImage = exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -157,26 +157,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _Controller = __webpack_require__(27);
+	var _ExportImage = __webpack_require__(27);
+	
+	var _ExportImage2 = _interopRequireDefault(_ExportImage);
+	
+	var _Controller = __webpack_require__(28);
 	
 	var _Controller2 = _interopRequireDefault(_Controller);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	//IO
+	/**
+	 * This file allows the creation of a bundle library. 
+	 * Author:  Davide Alocci
+	 * Version: 0.0.1
+	 */
 	
-	
-	//Sugar
-	
-	
-	//Nodes
-	
-	
-	//Linkages
-	
-	
-	//Glycomics Structure
-	//Dictionary
+	//Data Structure
 	exports.Graph = _Graph2.default;
 	exports.GraphEdge = _GraphEdge2.default;
 	exports.GraphNode = _GraphNode2.default;
@@ -202,15 +199,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.MonosaccharideGlycoCT = _MonosaccharideGlycoCT2.default;
 	exports.QuickModeMonosaccharides = _QuickModeMonosaccharides2.default;
 	exports.Structures = _Structures2.default;
+	exports.ExportImage = _ExportImage2.default;
 	
 	//Controller
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
 	
-	//Data Structure
+	
+	//IO
+	
+	
+	//Sugar
+	
+	
+	//Nodes
+	
+	
+	//Linkages
+	
+	
+	//Glycomics Structure
+	//Dictionary
 
 /***/ }),
 /* 1 */
@@ -6276,6 +6283,119 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 27 */
+/***/ (function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	/**
+	 * Created by Renaud on 18/08/2017.
+	 */
+	
+	var ExportImage = function () {
+	    function ExportImage() {
+	        _classCallCheck(this, ExportImage);
+	    }
+	
+	    _createClass(ExportImage, [{
+	        key: 'get_xml_svg_code',
+	        value: function get_xml_svg_code(div_svg) {
+	            // Get the d3js SVG element
+	            var tmp = document.getElementById(div_svg);
+	            var svg = tmp.getElementsByTagName("svg")[0];
+	
+	            // Extract the data as SVG text string
+	            var xml = new XMLSerializer().serializeToString(svg);
+	            return xml.replace('xmlns="http://www.w3.org/2000/svg"', 'xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"');
+	        }
+	    }, {
+	        key: 'get_html_svg_code',
+	        value: function get_html_svg_code(div_svg) {
+	            // Get the d3js SVG element
+	            var tmp = document.getElementById(div_svg);
+	            var svg = tmp.getElementsByTagName("svg")[0];
+	
+	            // Extract the data as SVG text string
+	            return svg.innerHTML;
+	        }
+	    }, {
+	        key: 'show_svg_code',
+	        value: function show_svg_code(div_svg, div_svg_code) {
+	            var svg_xml = get_xml_svg_code(div_svg);
+	
+	            //Optional: prettify the XML with proper indentations
+	            svg_xml = vkbeautify.xml(svg_xml);
+	
+	            // Set the content of the <pre> element with the XML
+	            //    $("#svg_code").text(svg_xml);
+	            $(div_svg_code).text(svg_xml);
+	
+	            //Optional: Use Google-Code-Prettifier to add colors.
+	            //prettyPrint();
+	        }
+	    }, {
+	        key: 'save',
+	        value: function save() {
+	
+	            var html = this.get_xml_svg_code("viz");
+	
+	            var imgsrc = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(html)));
+	
+	            return imgsrc;
+	        }
+	    }, {
+	        key: 'download',
+	        value: function download(imgsrc) {
+	
+	            var image = new Image();
+	            image.src = imgsrc;
+	            image.onload = function () {
+	
+	                var link = document.createElement("a");
+	
+	                link.addEventListener('click', function (ev) {
+	                    link.download = 'glycan.svg';
+	                    link.href = imgsrc;
+	                    link.id = "link_img";
+	                }, false);
+	                document.body.appendChild(link);
+	
+	                link.click();
+	            };
+	        }
+	    }, {
+	        key: 'getDateToString',
+	        value: function getDateToString() {
+	            var now = new Date();
+	
+	            var datetime = now.getFullYear() + "" + leadingZero(now.getMonth() + 1) + leadingZero(now.getDate()) + "_" + leadingZero(now.getHours()) + leadingZero(now.getMinutes()) + leadingZero(now.getSeconds());
+	            return datetime;
+	
+	            function leadingZero(val) {
+	                var str = val.toString();
+	                if (str.length == 1) {
+	                    str = '0' + str;
+	                }
+	
+	                return str;
+	            }
+	        }
+	    }]);
+	
+	    return ExportImage;
+	}();
+	
+	exports.default = ExportImage;
+
+/***/ }),
+/* 28 */
 /***/ (function(module, exports) {
 
 	"use strict";

@@ -163,8 +163,6 @@ carbonCancelButton.on("click", function() {
     reinitializeDisplayInfos(); // Reinitialize display of informations svg
     reinitializeDisplayCarbons(); // Reinitialize display of carbons svg
     d3.select("#svgInfos").transition().style("display", "block"); // Display main menu
-    document.getElementById("error").innerHTML = "Hover on anomericity, isomer and ring types buttons to choose values";
-    $('#error').css({'top': 300, 'left': 500}).fadeIn(400).delay(1000).fadeOut(400);
 });
 
 // Color Divisions with all possible colors
@@ -308,7 +306,6 @@ substituentDisplayMore.on("click", function() {
     }
     else
     {
-        console.log("close");
         d3.select("#svgSubstituents").style("height", "50px");
         subsRects.select("#moreSubs").remove();
     }
@@ -743,6 +740,7 @@ function updateMenu(chosenDivision) {
                 // If there is no type for this combination, no action
                 if (existingMonoType != sb.MonosaccharideType.UNDEFINED) {
                     infosTable.push(d.division);
+                    reinitializeDisplayInfos();
                     updateMenu(d.division);
                 }
             });
