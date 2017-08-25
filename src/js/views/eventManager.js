@@ -315,7 +315,7 @@ function manageHoverIO(menuItem,actions)
             }
         }).on("click", function () {
             d3.select("#exportImage").style("display", "block").on("click", function() {
-                var exporter = new sb.ExportImage();
+                var exporter = new sb.ImageExporter();
                 var img = exporter.save();
                 exporter.download(img);
             });

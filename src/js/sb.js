@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ExportImage = exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.ImageExporter = exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -157,9 +157,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _NodeComparator2 = _interopRequireDefault(_NodeComparator);
 	
-	var _ExportImage = __webpack_require__(27);
+	var _ImageExporter = __webpack_require__(27);
 	
-	var _ExportImage2 = _interopRequireDefault(_ExportImage);
+	var _ImageExporter2 = _interopRequireDefault(_ImageExporter);
 	
 	var _Controller = __webpack_require__(28);
 	
@@ -199,7 +199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.MonosaccharideGlycoCT = _MonosaccharideGlycoCT2.default;
 	exports.QuickModeMonosaccharides = _QuickModeMonosaccharides2.default;
 	exports.Structures = _Structures2.default;
-	exports.ExportImage = _ExportImage2.default;
+	exports.ImageExporter = _ImageExporter2.default;
 	
 	//Controller
 	
@@ -6299,12 +6299,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by Renaud on 18/08/2017.
 	 */
 	
-	var ExportImage = function () {
-	    function ExportImage() {
-	        _classCallCheck(this, ExportImage);
+	var ImageExporter = function () {
+	    function ImageExporter() {
+	        _classCallCheck(this, ImageExporter);
 	    }
 	
-	    _createClass(ExportImage, [{
+	    _createClass(ImageExporter, [{
 	        key: 'get_xml_svg_code',
 	        value: function get_xml_svg_code(div_svg) {
 	            // Get the d3js SVG element
@@ -6370,29 +6370,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                link.click();
 	            };
 	        }
-	    }, {
-	        key: 'getDateToString',
-	        value: function getDateToString() {
-	            var now = new Date();
-	
-	            var datetime = now.getFullYear() + "" + leadingZero(now.getMonth() + 1) + leadingZero(now.getDate()) + "_" + leadingZero(now.getHours()) + leadingZero(now.getMinutes()) + leadingZero(now.getSeconds());
-	            return datetime;
-	
-	            function leadingZero(val) {
-	                var str = val.toString();
-	                if (str.length == 1) {
-	                    str = '0' + str;
-	                }
-	
-	                return str;
-	            }
-	        }
 	    }]);
 	
-	    return ExportImage;
+	    return ImageExporter;
 	}();
 	
-	exports.default = ExportImage;
+	exports.default = ImageExporter;
 
 /***/ }),
 /* 28 */

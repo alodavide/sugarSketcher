@@ -40,7 +40,7 @@ import RepeatingUnit from './js/models/glycomics/RepeatingUnit';
 import GlycoCTParser from './js/models/io/glycoCT/GlycoCTParser';
 import GlycoCTWriter from './js/models/io/glycoCT/GlycoCTWriter';
 import NodeComparator from './js/models/io/NodeComparator';
-import ExportImage from './js/models/io/ExportImage';
+import ImageExporter from './js/models/io/ImageExporter';
 
 
 //Controller
@@ -52,4 +52,4 @@ export { Graph, GraphEdge, GraphNode, AnomerCarbon, Anomericity, Isomer,
     GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser,
     GlycoCTWriter, GlycoCTSubstituents, NodeComparator, RepeatingUnit, Controller,
     SubstituentsPositions, MonosaccharideGlycoCT, QuickModeMonosaccharides,
-    Structures, ExportImage};
+    Structures, ImageExporter};
