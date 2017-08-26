@@ -5774,18 +5774,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                var suffix = "d";
 	                                var sourceRep = findNodeInTree(treeData, edges[i].sourceNode).node.repeatingUnit;
 	                                var targetRep = findNodeInTree(treeData, edges[i].targetNode).node.repeatingUnit;
-	                                if (sourceRep !== undefined) {
-	                                    prefix = "n";
+	                                if (sourceRep !== targetRep) {
+	                                    if (sourceRep !== undefined) {
+	                                        prefix = "n";
+	                                    }
+	                                    if (targetRep !== undefined) {
+	                                        suffix = "n";
+	                                    }
 	                                }
-	                                if (targetRep !== undefined) {
-	                                    suffix = "n";
-	                                }
+	
 	                                formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon, prefix, suffix);
 	                            } else {
 	                                formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
 	                            }
 	                        } else {
-	                        offset--; // As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
+	                        //offset--; // As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
 	                    }
 	                }
 	
@@ -5797,6 +5800,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
 	                        var pair = _step9.value;
 	
+	                        console.log(offset);
 	                        formula += this.writeSubLink(i + offset, pair[1], pair[0] + offset, pair[2], 1);
 	                        i++;
 	                    }

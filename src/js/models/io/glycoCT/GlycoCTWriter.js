@@ -417,14 +417,18 @@ export default class GlycoCTWriter{
                         var suffix = "d";
                         var sourceRep = findNodeInTree(treeData,edges[i].sourceNode).node.repeatingUnit;
                         var targetRep = findNodeInTree(treeData,edges[i].targetNode).node.repeatingUnit;
-                        if (sourceRep !== undefined)
+                        if (sourceRep !== targetRep)
                         {
-                            prefix = "n";
+                            if (sourceRep !== undefined)
+                            {
+                                prefix = "n";
+                            }
+                            if (targetRep !== undefined)
+                            {
+                                suffix = "n";
+                            }
                         }
-                        if (targetRep !== undefined)
-                        {
-                            suffix = "n";
-                        }
+
                         formula += this.writeMonoLink(i+1+offset, source, target, linkedCarbon, anomerCarbon, prefix, suffix);
                     }
                     else
@@ -438,6 +442,7 @@ export default class GlycoCTWriter{
                 }
 
             }
+
 
             for (var pair of associatedSubs)
             {
