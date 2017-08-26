@@ -315,9 +315,13 @@ function manageHoverIO(menuItem,actions)
             }
         }).on("click", function () {
             d3.select("#exportImage").style("display", "block").on("click", function() {
+                exporting = true;
+                displayTree();
                 var exporter = new sb.ImageExporter();
                 var img = exporter.save();
                 exporter.download(img);
+                exporting = false;
+                displayTree();
             });
             d3.select("#formula").style("display","block");
             d3.select("#validateFormula").style("display", "none");

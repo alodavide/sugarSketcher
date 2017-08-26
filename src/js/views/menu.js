@@ -18,6 +18,7 @@ var quickAnomerCarbon = "";
 $(document).ready(function() {
     progress = 0;
     ctrl = false;
+    exporting = false;
     quickMode = false;
     updateMenu();  // Update menu
     addHoverManagersInfos(); // Add hover managers for informations

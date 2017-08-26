@@ -12,6 +12,7 @@ const circleRadius = 15;
 
 var ctrl; // Boolean if ctrl is held
 var quickMode;
+var exporting;
 
 //Values for links X and Y
 var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 7: [0,-1*gap], 8: [0,-1*gap], 9: [0,-1*gap], 'undefined': [0,-1*gap]};
@@ -211,20 +212,10 @@ function displayTree() {
         vis.selectAll(".nodelink")
             .data(links)
             .enter().append("line") // Append a new line for each link
-            .attr("class", function (d) {
-                if (d.target.node["anomericity"]) { // Monosaccharide
-                    // If anomericity is alpha, then add dashed class to the link
-                    if (d.target.node.anomericity.name == "ALPHA") {
-                        return "nodelink dashedNodeLink";
-                    } else {
-                        return "nodelink";
-                    }
-                }
-                else // Substituant
-                {
-                    return "";
-                }
-            })
+            .attr("class", "nodelink")
+            .style("fill","none")
+            .style("stroke-width", "3px")
+            .style("cursor", "default")
             // Calculate X and Y of source and targets, and draw the line
             .attr("x1", function (d) {
                 if (d.target.node["anomericity"]) // Monosaccharide
@@ -247,10 +238,20 @@ function displayTree() {
                 return 0;
             })
             .style("stroke", function (d) {
-                var allSelectedNodes = [clickedNode].concat(selectedNodes);
-                if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
-                    return "#58ACFA";
+                if (!exporting)
+                {
+                    var allSelectedNodes = [clickedNode].concat(selectedNodes);
+                    if (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node)) {
+                        return "#58ACFA";
+                    }
+                    else
+                        return "#000";
                 }
+                return "#000";
+            })
+            .style("stroke-dasharray", function(d) {
+                if (d.target.node.anomericity.name == "ALPHA")
+                    return "5.5";
             })
             .attr('pointer-events', 'none');
 
@@ -447,33 +448,44 @@ function displayTree() {
                 }
             })
             .style('stroke', function (d) {
-                if (d.node == clickedNode) {
-                    if (selectedNodes.length != 0) {
+                if (!exporting)
+                {
+                    if (d.node == clickedNode) {
+                        if (selectedNodes.length != 0) {
+                            return "#58ACFA";
+                        }
+                        else if (d.node.monosaccharideType.name.toLowerCase().substring(0, 3) == "fuc" || d.node.monosaccharideType.name.toLowerCase().substring(0, 3) == "sia") {
+                            return "black";
+                        }
+                        else {
+                            return "red";
+                        }
+                    }
+                    else if (selectedNodes.includes(d.node)) {
                         return "#58ACFA";
                     }
-                    else if (d.node.monosaccharideType.name.toLowerCase().substring(0, 3) == "fuc" || d.node.monosaccharideType.name.toLowerCase().substring(0, 3) == "sia") {
+                    else {
                         return "black";
                     }
-                    else {
-                        return "red";
-                    }
                 }
-                else if (selectedNodes.includes(d.node)) {
-                    return "#58ACFA";
-                }
-                else {
+                else
+                {
                     return "black";
                 }
             })
             .style('stroke-width', function (d) {
-                if (d.node == clickedNode) {
-                    if (selectedNodes.length != 0) {
-                        return "6px";
+                if (!exporting)
+                {
+                    if (d.node == clickedNode) {
+                        if (selectedNodes.length != 0) {
+                            return "6px";
+                        }
+                        return "4px";
                     }
-                    return "4px";
-                }
-                if (selectedNodes.includes(d.node)) {
-                    return "4px";
+                    if (selectedNodes.includes(d.node)) {
+                        return "4px";
+                    }
+                    return "1px";
                 }
                 return "1px";
             })
@@ -555,33 +567,73 @@ function displayLabels(linkLabel, links, anom)
     links.push(rootLink);
     linkLabel.data(links)
     .enter().append("text")
-    .attr("class", function(d) {
-        if (d.target.node["anomericity"]) // Monosaccharide
-        {
-            var css = "linkLabel middleAnchor";
-            if (anom)
-                css += " anomericityLabel";
-            return  css;
-        }
-        else
-        {
-            var css = "linkLabel subLabel ";
-            var linked = findLinkForMono(d.target.node).linkedCarbon.value;
-            if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
+        .attr("class", "linkLabel")
+        .style("fill", function(d) {
+            if (!exporting)
             {
-                css += "middleAnchor";
+                var allSelectedNodes = [clickedNode].concat(selectedNodes);
+                if (d.target.node instanceof sb.Substituent && d.source.node == clickedNode && selectedNodes.length == 0)
+                {
+                    return "red";
+                }
+                if ((d.target.node instanceof sb.Substituent && allSelectedNodes.includes(d.source.node)) || // If it's a sub and its parent is selected
+                    (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node))) { // or both are monosaccharides are selected
+                    return "#58ACFA";
+                }
+                else if (anom)
+                {
+                    return "#4b4b4b";
+                }
+                return "black";
             }
-            else if (linked == 1)
+            return "black";
+        })
+        .style("font-family", function(d) {
+            if (d.target.node["anomericity"]) // Monosaccharide
             {
-                css += "leftAnchor";
+                return "Courier New";
             }
-            else if (linked == 4 || linked == 5)
+            else
             {
-                css += "rightAnchor";
+                return "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
             }
-            return css;
-        }
-    })
+        })
+        .style("font-size", "10px")
+        .style("alignment-baseline", "text-before-edge")
+        .style("dominant-baseline", "text-before-edge")
+        .style("text-anchor", function(d) {
+            if (d.target.node["anomericity"]) // Monosaccharide
+            {
+                return "middle";
+            }
+            else
+            {
+                var linked = findLinkForMono(d.target.node).linkedCarbon.value;
+                if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
+                {
+                    return "middle";
+                }
+                else if (linked == 1)
+                {
+                    return "left";
+                }
+                else if (linked == 4 || linked == 5)
+                {
+                    return "right";
+                }
+            }
+            return "middle";
+        })
+        .style("font-style", function(d) {
+            if (d.target.node["anomericity"]) // Monosaccharide
+            {
+                if (anom)
+                {
+                    return "italic";
+                }
+            }
+            return "";
+        })
     .attr("x", function (d) {
         var finalX; // Final x of the label
         var source = shapes[d.source.node.id]; // Calculate source coordinates
@@ -620,19 +672,24 @@ function displayLabels(linkLabel, links, anom)
         return finalY; // Return the obtained value
     })
     .style("stroke", function (d) {
-        var allSelectedNodes = [clickedNode].concat(selectedNodes);
-        if (d.target.node instanceof sb.Substituent && d.source.node == clickedNode && selectedNodes.length == 0)
+        if (!exporting)
         {
-            return "red";
+            var allSelectedNodes = [clickedNode].concat(selectedNodes);
+            if (d.target.node instanceof sb.Substituent && d.source.node == clickedNode && selectedNodes.length == 0)
+            {
+                return "red";
+            }
+            if ((d.target.node instanceof sb.Substituent && allSelectedNodes.includes(d.source.node)) || // If it's a sub and its parent is selected
+                (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node))) { // or both are monosaccharides are selected
+                return "#58ACFA";
+            }
+            else if (anom)
+            {
+                return "#4b4b4b";
+            }
+            return "black";
         }
-        if ((d.target.node instanceof sb.Substituent && allSelectedNodes.includes(d.source.node)) || // If it's a sub and its parent is selected
-            (allSelectedNodes.includes(d.target.node) && allSelectedNodes.includes(d.source.node))) { // or both are monosaccharides are selected
-            return "#58ACFA";
-        }
-        else if (anom)
-        {
-            return "#4b4b4b";
-        }
+        return "black";
     })
     .text(function (d) {
         if (d.target.node["anomericity"]) // Monosaccharide

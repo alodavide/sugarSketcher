@@ -5293,6 +5293,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            }
+	
+	            return undefined;
 	        }
 	    }, {
 	        key: "getMono",
@@ -5788,7 +5790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
 	                            }
 	                        } else {
-	                        //offset--; // As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
+	                        offset--; // As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
 	                    }
 	                }
 	
@@ -5800,7 +5802,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    for (var _iterator9 = associatedSubs[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
 	                        var pair = _step9.value;
 	
-	                        console.log(offset);
 	                        formula += this.writeSubLink(i + offset, pair[1], pair[0] + offset, pair[2], 1);
 	                        i++;
 	                    }
@@ -5834,30 +5835,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var repNumber = 1;
 	
-	            // RES
-	            var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
-	            var formula = resInfo[1];
-	            var lastResId = resInfo[0];
-	
-	            // LIN
-	            var linInfo = this.generateLIN(resId, associatedSubs);
-	            formula += linInfo[1];
-	            var lastLinId = linInfo[0];
-	
-	            // REP
-	
 	            var _iteratorNormalCompletion10 = true;
 	            var _didIteratorError10 = false;
 	            var _iteratorError10 = undefined;
 	
 	            try {
-	                for (var _iterator10 = this.res[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-	                    var residue = _step10.value;
+	                for (var _iterator10 = res[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                    var r = _step10.value;
 	
-	                    if (residue instanceof _RepeatingUnit2.default) {
-	                        this.rep.push(residue);
+	                    if (r.node && _SubstituentsPositions2.default[r.node.monosaccharideType.name]) {
+	                        var i = 0;
+	                        while (this.getSub(r.node.monosaccharideType.name.substring(i)) === undefined) {
+	                            i++;
+	                        }var subName = r.node.monosaccharideType.name.substring(i);
+	                        console.log(subName);
 	                    }
 	                }
+	
+	                // RES
 	            } catch (err) {
 	                _didIteratorError10 = true;
 	                _iteratorError10 = err;
@@ -5873,15 +5868,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
+	            var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
+	            var formula = resInfo[1];
+	            var lastResId = resInfo[0];
+	
+	            // LIN
+	            var linInfo = this.generateLIN(resId, associatedSubs);
+	            formula += linInfo[1];
+	            var lastLinId = linInfo[0];
+	
+	            // REP
+	
+	            var _iteratorNormalCompletion11 = true;
+	            var _didIteratorError11 = false;
+	            var _iteratorError11 = undefined;
+	
+	            try {
+	                for (var _iterator11 = this.res[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                    var residue = _step11.value;
+	
+	                    if (residue instanceof _RepeatingUnit2.default) {
+	                        this.rep.push(residue);
+	                    }
+	                }
+	            } catch (err) {
+	                _didIteratorError11 = true;
+	                _iteratorError11 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                        _iterator11.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError11) {
+	                        throw _iteratorError11;
+	                    }
+	                }
+	            }
+	
 	            if (this.rep.length !== 0) {
 	                formula += "REP\n";
-	                var _iteratorNormalCompletion11 = true;
-	                var _didIteratorError11 = false;
-	                var _iteratorError11 = undefined;
+	                var _iteratorNormalCompletion12 = true;
+	                var _didIteratorError12 = false;
+	                var _iteratorError12 = undefined;
 	
 	                try {
-	                    for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-	                        var rep = _step11.value;
+	                    for (var _iterator12 = this.rep[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                        var rep = _step12.value;
 	
 	                        this.generateArrays(this.findRepMinDepth(rep), rep.id);
 	                        var entryId = lastResId + 1;
@@ -5903,16 +5936,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        formula += linInfo[1];
 	                    }
 	                } catch (err) {
-	                    _didIteratorError11 = true;
-	                    _iteratorError11 = err;
+	                    _didIteratorError12 = true;
+	                    _iteratorError12 = err;
 	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
-	                            _iterator11.return();
+	                        if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                            _iterator12.return();
 	                        }
 	                    } finally {
-	                        if (_didIteratorError11) {
-	                            throw _iteratorError11;
+	                        if (_didIteratorError12) {
+	                            throw _iteratorError12;
 	                        }
 	                    }
 	                }
@@ -5930,13 +5963,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function findRepMinDepth(rep) {
 	            var minVal = rep.nodes[0].depth;
 	            var minNode = rep.nodes[0];
-	            var _iteratorNormalCompletion12 = true;
-	            var _didIteratorError12 = false;
-	            var _iteratorError12 = undefined;
+	            var _iteratorNormalCompletion13 = true;
+	            var _didIteratorError13 = false;
+	            var _iteratorError13 = undefined;
 	
 	            try {
-	                for (var _iterator12 = rep.nodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-	                    var node = _step12.value;
+	                for (var _iterator13 = rep.nodes[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+	                    var node = _step13.value;
 	
 	                    if (node.depth < minVal) {
 	                        minVal = node.depth;
@@ -5944,16 +5977,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError12 = true;
-	                _iteratorError12 = err;
+	                _didIteratorError13 = true;
+	                _iteratorError13 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
-	                        _iterator12.return();
+	                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
+	                        _iterator13.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError12) {
-	                        throw _iteratorError12;
+	                    if (_didIteratorError13) {
+	                        throw _iteratorError13;
 	                    }
 	                }
 	            }

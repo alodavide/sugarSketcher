@@ -34,39 +34,6 @@
     dominant-baseline: text-before-edge;
 }
 
-@font-face {
-    font-family: monofonto;
-    src: url('../../monofonto.ttf');
-}
-
-.linkLabel {
-    stroke:black;
-    fill:black;
-    font-family: monofonto;
-    font-size: 10px;
-    alignment-baseline: text-before-edge;
-    dominant-baseline: text-before-edge;
-}
-
-.anomericityLabel {
-    font-style: italic;
-}
-
-.middleAnchor {
-    text-anchor: middle;
-}
-
-.rightAnchor {
-    text-anchor: right;
-}
-
-.leftAnchor {
-    text-anchor: left;
-}
-
-.subLabel {
-    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
-}
 
 .choice {
     fill:#cc0000;

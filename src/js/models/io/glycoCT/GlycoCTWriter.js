@@ -50,6 +50,7 @@ export default class GlycoCTWriter{
             if (sub.label.toLowerCase() === label.toLowerCase())
                 return sub;
         }
+        return undefined;
     }
 
     getMono(name)
@@ -454,6 +455,7 @@ export default class GlycoCTWriter{
     }
 
 
+
     exportGlycoCT() {
         var resId = {};
         var repId = {};
@@ -466,6 +468,17 @@ export default class GlycoCTWriter{
         }
         var repNumber = 1;
 
+        /*for (var r of res)
+        {
+            if (r.node && SubstituentsPositions[r.node.monosaccharideType.name])
+            {
+                var i = 0;
+                while (this.getSub(r.node.monosaccharideType.name.substring(i)) === undefined)
+                    i++;
+                var sub = this.getSub(r.node.monosaccharideType.name.substring(i));
+
+            }
+        }*/
 
         // RES
         var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
