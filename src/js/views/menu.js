@@ -7,8 +7,9 @@
 // The sugar we use as data structure, to be visualized using d3 tree
 var sugar, controller;
 
-var repeatUnitConfirm = 0;
+var repeatUnitConfirm = 0; // When only one node is selected, and the user clicks on Repeat Unit, he has to click a second time to confirm. This var keeps track of the number of clicks
 
+// When using the QuickMode we need to keep track of these info:
 var quickIsomer = "";
 var quickRingType = "";
 var quickAnomerCarbon = "";
@@ -895,6 +896,7 @@ document.onkeydown = function (e) {
     }
 };
 
+// Checks if the selection array "nodes" is linear or has a fork
 function isBranchSelected(nodes)
 {
     for (var node of nodes)
@@ -918,6 +920,7 @@ function isBranchSelected(nodes)
     return false;
 }
 
+// Verifies if the selection is legal for a repetion, then creates it
 function handleRepetition()
 {
     var nodes = [clickedNode].concat(selectedNodes);
@@ -979,6 +982,13 @@ function handleRepetition()
     }
 }
 
+/* This function is used to visually move the nodes out of a repetition if they are not part of it
+   A repetition is shown on the screen as a rectangle area bordered by brackets. However there can be
+   nodes inside this rectangle even though they don't belong in the repetition. To avoid a confusion, this
+   function pushes them out of this area
+
+   However, if a node cannot escape (other nodes are blocking the way out), it won't move
+*/
 function moveNodesInsideRep()
 {
     var nodes = tree.nodes(treeData);
@@ -1024,7 +1034,7 @@ function moveNodesInsideRep()
  * @param startY
  * @param dx
  * @param dy
- * @param limit
+ * @param repCoord
  * This function will check if a node can escape a repeating unit without hitting another node
  */
 function checkNodesInLine(startX, startY, dy, dx, repCoord)
@@ -1080,6 +1090,7 @@ function checkNodesInLine(startX, startY, dy, dx, repCoord)
     return false;
 }
 
+// Visually moves a node and its children
 function moveNodeAndChildren(node, dx, dy)
 {
     var stack = [node];
@@ -1098,6 +1109,7 @@ function moveNodeAndChildren(node, dx, dy)
     }
 }
 
+// Find the entry and exit of a bunch of nodes (for repeating units)
 function findEntryAndExit(nodes)
 {
     var maxDepth = nodes[0].depth;
@@ -1129,6 +1141,11 @@ function findEntryAndExit(nodes)
     }
 }
 
+// Used to check if the repetition can be done on the array "nodes"
+// If there are more than 1 unselected children in the array, there are several exits to the repeating unit, which is impossible.
+// If there are 0 unselected children, the repetition is only possible if there are no branches selected:
+// if you select the end of a linear sugar, there are no exits because the last selected node is the last node of the sugar (Repetition OK)
+// however, if there is a branch an no unselected children, the group of nodes ends with a fork, which is impossible
 function countUnselectedChildren(node, nodes)
 {
     var count = 0;
@@ -1149,7 +1166,7 @@ function countUnselectedChildren(node, nodes)
     }
 }
 
-
+// Find the exit(s) of a group of nodes (for repeating unit)
 function findRepExit(root)
 {
     var wholeSelection = [clickedNode].concat(selectedNodes);
@@ -1177,6 +1194,7 @@ function findRepExit(root)
     return exits;
 }
 
+// Turns an array of Monosaccharides into an array of tree nodes
 function findNodesInTree(arr)
 {
     for (var i in arr)
@@ -1193,6 +1211,7 @@ document.onkeyup = function(e) {
     }
 };
 
+// Check if any of the nodes in arr are already in a REP
 function isRepeated(arr)
 {
     for (var node of arr)
@@ -1245,7 +1264,12 @@ function deleteNode(node) {
     updateMenu();
 }
 
-
+/**
+ * Deletes all the subs of a node.
+ * If the node is a mono+sub (e.g GulNAc), when called for the first time the function will only delete the substituents except NAc on linkedCarbon 2
+ * If called again on it, the GulNAc will turn to Gul.
+ * @param node
+ */
 function deleteSubs(node)
 {
     var name = node.monosaccharideType.name;
@@ -1282,8 +1306,8 @@ function deleteSubs(node)
 }
 
 /**
- * Gathers all the scattered nodes
- * (because after a deletion some nodes can stay far away)
+ * Visually gathers all the scattered nodes
+ * (because after a deletion some nodes can stay far away for no reason anymore)
  */
 function reassembleNodes()
 {
@@ -1627,6 +1651,10 @@ function test(n)
     displayTree();
 }
 
+
+/**
+ * Generates the "shapes" array that contains all the nodes positions, from the sugar
+ */
 function generateShapes()
 {
     for (var mono of sugar.graph.nodes())

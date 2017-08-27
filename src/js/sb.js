@@ -4295,6 +4295,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.formula = formula;
 	    }
 	
+	    // Used to generate unique IDs
+	
+	
 	    _createClass(GlycoCTParser, [{
 	        key: 'randomString',
 	        value: function randomString(length) {
@@ -4313,6 +4316,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return str;
 	        }
+	
+	        /**
+	         * Gets SubstituentType from name
+	         * @param name
+	         */
+	
 	    }, {
 	        key: 'getSub',
 	        value: function getSub(name) {
@@ -4341,6 +4350,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	
+	        /**
+	         * Get MonosaccharideType from name
+	         * @param name
+	         */
+	
 	    }, {
 	        key: 'getMono',
 	        value: function getMono(name) {
@@ -4377,6 +4392,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	
+	        /**
+	         * Gets MonosaccharideGlycoCT from stemType (e.g glc-HEX) and transform
+	         * @param stemType
+	         * @param transform
+	         * @returns {*}
+	         */
+	
 	    }, {
 	        key: 'getMonoType',
 	        value: function getMonoType(stemType, transform) {
@@ -4409,11 +4432,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return undefined;
 	        }
+	
+	        /**
+	         * Adds one residue to the sugar
+	         * @param residue e.g : ["3b","glc-HEX-1","5"]
+	         * @param linkedCarbon
+	         * @param anomerCarbon
+	         * @param repeatingUnit : String
+	         * @returns {*}
+	         */
+	
 	    }, {
 	        key: 'createResidue',
 	        value: function createResidue(residue, linkedCarbon, anomerCarbon, repeatingUnit) {
+	            // If we generate a Monosaccharide
 	            if (residue[0].substring(residue[0].length - 1) === "b") {
-	                // monosaccharide
+	
+	                // Parse anomericity
 	                var anomericity;
 	                var _iteratorNormalCompletion4 = true;
 	                var _didIteratorError4 = false;
@@ -4447,7 +4482,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	
 	                var dashSplit = residue[1].split("-");
-	                var stemType = dashSplit[1];
+	                var stemType = dashSplit[1]; // Also contains isomer as the first char
+	
+	                // Parse Isomer
 	                var isomer;
 	                var _iteratorNormalCompletion5 = true;
 	                var _didIteratorError5 = false;
@@ -4480,30 +4517,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	
 	                var glycoct = residue[1].substring(3, residue[1].length - 2);
-	                var firstTransform = residue[2].split("|");
+	                /* As we split on ":", the first part of the first transformation is stuck with the second part of ring type.
+	                   e.g: 1b:b-dman-HEX-1:5|6:a
+	                   -> residue = ["1b","b-dman-HEX-1","5|6","a"]
+	                */
+	                var firstTransform = residue[2].split("|"); // Contains ringType and first part of first transformation
 	                var transform = "";
 	                if (firstTransform.length > 1) // at least one transformation
 	                    {
+	                        // We rebuild the whole transformation
 	                        transform = "|" + firstTransform[1];
 	                        for (var k = 3; k < residue.length; k++) {
 	                            transform += ":" + residue[k];
 	                        }
 	                    }
+	
+	                // Fetch the Monosaccharide type in the database considering the given glycoct + transform combination
+	                // First we try the whole name
 	                var monoType = this.getMonoType(glycoct, transform);
 	                if (monoType === undefined) {
-	                    // if monosaccharide is amond the simple HEX cases
+	                    // Second, we check if the monosaccharide is among the simple HEX cases (e.g: 1b:b-HEX-1:4 -> they have no stemType, just the superclass HEX)
 	                    glycoct = residue[1].substring(2, residue[1].length - 2);
 	                    monoType = this.getMonoType(glycoct, transform);
 	                    if (monoType === undefined) {
-	                        // if monosaccharide is among the exceptions for the ring type
+	                        // Third, we check if the monosaccharide is among the exceptions for the ring type (Kdn for example include ringType in their formula: 1b:b-lgro-dgal-NON-2:6)
 	                        glycoct = residue[1].substring(3) + ":" + firstTransform[0];
 	                        monoType = this.getMonoType(glycoct, transform);
 	                        if (monoType === undefined) {
+	                            // Finally, the monosaccharide is not known
 	                            monoType = _MonosaccharideGlycoCT2.default.Unknown;
 	                        }
 	                    }
 	                }
 	                monoType = _MonosaccharideType2.default[monoType.name];
+	
+	                // Then we parse the ringType
 	                var ringStop = residue[2].substring(0, 1);
 	                var ringType;
 	                if (ringStop === "4") {
@@ -4515,14 +4563,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	
 	                var nodeId = this.randomString(7);
+	                // Creating the monosaccharide object
 	                var node = new _Monosaccharide2.default(nodeId, monoType, anomericity, isomer, ringType);
+	                // Assign to repeatingUnit if the node is in one
 	                if (repeatingUnit !== undefined) {
 	                    node.repeatingUnit = repeatingUnit;
 	                }
-	                if (linkedCarbon === "r" && anomerCarbon === "r") // Root
-	                    {
-	                        this.sugar = new _Sugar2.default("Sugar", node);
-	                    } else {
+	                // If linkedCarbon and anomerCarbon are "r", we are building the root
+	                if (linkedCarbon === "r" && anomerCarbon === "r") {
+	                    this.sugar = new _Sugar2.default("Sugar", node);
+	                } else {
+	                    // Parse the AnomerCarbon
 	                    var ac;
 	                    var _iteratorNormalCompletion6 = true;
 	                    var _didIteratorError6 = false;
@@ -4539,6 +4590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                ac = anomC;
 	                            }
 	                        }
+	                        // Parse the LinkedCarbon
 	                    } catch (err) {
 	                        _didIteratorError6 = true;
 	                        _iteratorError6 = err;
@@ -4587,9 +4639,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
 	                }
+	                // Return the nodeId so we can access the node once it's been created
 	                return nodeId;
 	            } else if (residue[0].substring(residue[0].length - 1) === "s") {
-	                // substituent
+	                // We're creating a substituent
+	                // Parse the sub name
 	                var subName = residue[1];
 	                var substituentType;
 	                var _iteratorNormalCompletion8 = true;
@@ -4631,6 +4685,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            substituentType = subType;
 	                        }
 	                    }
+	
+	                    // Parse sub's linkedCarbon
 	                } catch (err) {
 	                    _didIteratorError9 = true;
 	                    _iteratorError9 = err;
@@ -4678,7 +4734,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	
 	                var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
+	                // Create substituent Object
 	                var substituent = new _Substituent2.default(subId, substituentType);
+	                // Check if when we add the sub at this particular position we get a new parent monosaccharide type
+	                // e.g Gal + NAc(linkedCarbon=2) => GalNAc
 	                var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
 	                if (newType && _SubstituentsPositions2.default[newType.name].position == linkedCarbon) {
 	                    this.updateNodeType(this.clickedNode, newType);
@@ -4688,6 +4747,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	
+	        /**
+	         * Find a node in the sugar, and change its type
+	         * @param node
+	         * @param type
+	         */
+	
 	    }, {
 	        key: 'updateNodeType',
 	        value: function updateNodeType(node, type) {
@@ -4718,43 +4784,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	
+	        /**
+	         * Main function of the class, used to parse the formula
+	         * @returns {*}
+	         */
+	
 	    }, {
 	        key: 'parseGlycoCT',
 	        value: function parseGlycoCT() {
 	            if (this.formula === "") {
 	                return new _Sugar2.default("Sugar");
 	            }
+	            // Get the text lines under the RES section
 	            var res = this.getSection("RES", this.formula);
 	            var links;
-	            if (!this.formula.split("LIN")[1]) // Only one node without links
+	            if (!this.formula.split("LIN")[1]) // If the formula is only one node (no link)
 	                {
 	                    if (!res[0]) // wrong formula
 	                        {
 	                            return new _Sugar2.default("Sugar");
 	                        }
+	                    // Create the root (LinkedCarbon and AnomerCarbon of root are unknwown from GlycoCT formula)
 	                    this.createResidue(res[0].split(":"), "r", "r");
 	                    return this.sugar;
 	                } else {
+	                // Get the text lines under the LIN section
 	                links = this.getSection("LIN", this.formula);
 	            }
+	            // Get the rep section
 	            var repSection = this.getSection("REP", this.formula);
+	            // Get each rep from the rep section
 	            var reps = this.getRepeatingUnit(repSection);
 	
+	            // This will contain the id of the created nodes
 	            var nodesIds = {};
 	
+	            // This will contain the RepeatingUnit objects, and the nodes that are in it [[RepObject,[nodes...]],...]
 	            var repInfo = [];
 	
+	            // If there are some Repeating Units in the formula
 	            if (reps.length != 0) {
+	                // Use the function to insert the residues and links lines from the REPS to the main RES section
+	                // so that we get rid of the REP section and finally have only RES and LIN sections, with mixed up indices (doesn't matter)
 	                var merge = this.mergeRep(reps, res, links);
 	                res = merge[0];
 	                links = merge[1];
 	                repInfo = merge[2];
 	            }
 	
+	            // We finally call the function that reads through the lines and calls the function to create nodes
 	            this.generateNodes(links, nodesIds, res, repInfo);
 	
 	            return this.sugar;
 	        }
+	
+	        /**
+	         * Function that inserts the residues and links from the REPs sections into the main RES and LIN sections
+	         * Outputs an array of 3 arrays: the new RES section, the new LIN section, repInfo which contains the RepeatingUnit objects and which nodes belongs to them
+	         * @param reps
+	         * @param res
+	         * @param links
+	         * @returns {[*,*,*]}
+	         */
+	
 	    }, {
 	        key: 'mergeRep',
 	        value: function mergeRep(reps, res, links) {
@@ -4792,7 +4885,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	            }
 	
-	            // update the links:
+	            // STEP 2: Update the links:
 	            // If the target of a link is a repeating unit, change to the first residue of the unit (entering the unit)
 	            // If the source is a repeating unit, change to the ending residue (leaving the unit)
 	            var repeatingUnitObject;
@@ -4825,6 +4918,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return [finalRes, finalLinks, repeatingUnitsObjects];
 	        }
+	
+	        /**
+	         * Get the index of all the nodes within an array of residues. Used to get the nodes in a specific rep
+	         * @param res
+	         * @returns {Array}
+	         */
+	
 	    }, {
 	        key: 'getRepNodesIds',
 	        value: function getRepNodesIds(res) {
@@ -4878,6 +4978,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var output = link.split(":")[0] + ":" + source + "o" + link.split(/[on]/)[1];
 	            return output;
 	        }
+	
+	        // Checks if the target of the link is a repeating unit in the main RES section
+	
 	    }, {
 	        key: 'isTargetARep',
 	        value: function isTargetARep(link, repUnitIndices) {
@@ -4885,6 +4988,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (repUnitIndices[target]) return true;
 	            return false;
 	        }
+	
+	        // Checks if the source of the link is a repeating unit in the main RES section
+	
 	    }, {
 	        key: 'isSourceARep',
 	        value: function isSourceARep(link, repUnitIndices) {
@@ -4892,18 +4998,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (repUnitIndices[source]) return true;
 	            return false;
 	        }
-	    }, {
-	        key: 'totalRepOffset',
-	        value: function totalRepOffset(reps, repUnitRead) {
-	            if (repUnitRead == 0) {
-	                return 0;
-	            }
-	            var total = 0;
-	            for (var i = 0; i < repUnitRead; i++) {
-	                total += reps[i].lin.length;
-	            }
-	            return total;
-	        }
+	
+	        // Get a node's RepeatingUnit object
+	
 	    }, {
 	        key: 'findMatchingRep',
 	        value: function findMatchingRep(sourceId, repInfo) {
@@ -4936,11 +5033,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return undefined;
 	        }
+	
+	        /**
+	         * Reads through all the lines
+	         * @param links
+	         * @param nodesIds
+	         * @param res
+	         * @param repInfo
+	         */
+	
 	    }, {
 	        key: 'generateNodes',
 	        value: function generateNodes(links, nodesIds, res, repInfo) {
 	            var repeatingUnit;
 	            var residueListById = {};
+	
+	            // Fill in the residueListById array
 	            var _iteratorNormalCompletion14 = true;
 	            var _didIteratorError14 = false;
 	            var _iteratorError14 = undefined;
@@ -4951,6 +5059,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    residueListById[residue.split(/\w:/)[0]] = residue.split(":");
 	                }
+	                // Now we read the links to build the whole sugar
 	            } catch (err) {
 	                _didIteratorError14 = true;
 	                _iteratorError14 = err;
@@ -4968,16 +5077,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            for (var linkId in links) {
 	                if (links[linkId] !== "") {
+	                    // If the link is not empty
 	                    var link = links[linkId];
 	                    var sourceId = parseInt(link.split(":")[1].split("(")[0]);
 	                    var nodeId;
-	                    if (residueListById[sourceId] !== "") // Root
+	                    if (residueListById[sourceId] !== "") // The source node hasn't been created, so this is the root
 	                        {
 	                            repeatingUnit = this.findMatchingRep(sourceId, repInfo);
 	                            nodeId = this.createResidue(residueListById[sourceId], "r", "r", repeatingUnit);
 	                            residueListById[sourceId] = "";
 	                            nodesIds[sourceId] = nodeId;
 	                        }
+	                    // Then we create the target node of the link
 	                    var targetId = parseInt(link.split(")")[1]);
 	                    var linkages = link.split(/[\(\)]+/)[1];
 	                    var linkedCarbon, anomerCarbon;
@@ -5049,6 +5160,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return undefined;
 	        }
+	
+	        /**
+	         * Returns an array of lines that correspond to the entire requested section (RES, LIN, REP...)
+	         * @param section
+	         * @param formula
+	         * @returns {Array}
+	         */
+	
 	    }, {
 	        key: 'getSection',
 	        value: function getSection(section, formula) {
@@ -5109,6 +5228,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return output;
 	        }
+	
+	        /**
+	         * Returns all the infos that we can read from the REP section for every RepeatingUnit
+	         * Output : [{"info", "res", "lin"},...]
+	         * "info": {"linkedCarbon", "anomerCarbon", "min", "max", "exit", "entry"}
+	         * @param array
+	         * @returns {Array}
+	         */
+	
 	    }, {
 	        key: 'getRepeatingUnit',
 	        value: function getRepeatingUnit(array) {
@@ -5263,6 +5391,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return str;
 	        }
+	
+	        // Get SubstituentType
+	
 	    }, {
 	        key: "getSub",
 	        value: function getSub(label) {
@@ -5296,6 +5427,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return undefined;
 	        }
+	
+	        // Get MonosaccharideType
+	
 	    }, {
 	        key: "getMono",
 	        value: function getMono(name) {
@@ -5324,10 +5458,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	
+	        // Add a Substituent residue line to the formula
+	
 	    }, {
 	        key: "writeSub",
 	        value: function writeSub(i, substituent) {
 	            var formula = "";
+	            // Substituents start with index + "s"
 	            formula += i + 1 + "s:";
 	            var subName = substituent.substituentType.name;
 	            var substituentType = "";
@@ -5389,22 +5527,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            formula += substituentType + "\n";
 	            return formula;
 	        }
+	
+	        // Add a substituent link to the formula
+	
 	    }, {
 	        key: "writeSubLink",
 	        value: function writeSubLink(i, source, target, linkedCarbon, anomerCarbon) {
 	            var formula = "";
+	            // Substituent links start with index, and "d"
 	            formula += i + 1 + ":" + source + "d";
 	
 	            formula += "(" + linkedCarbon;
 	            formula += "+";
 	            formula += anomerCarbon + ")";
 	
+	            // They end with "n"
 	            formula += target + "n";
 	
 	            formula += "\n";
 	
 	            return formula;
 	        }
+	
+	        // Add a Monosaccharide link to the formula
+	
 	    }, {
 	        key: "writeMonoLink",
 	        value: function writeMonoLink(i, source, target, linkedCarbon, anomerCarbon) {
@@ -5412,18 +5558,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var suffix = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "d";
 	
 	            var formula = "";
+	            // Monosaccharide links start by either "n" if the source node is ending a Repeating Unit, or "o" otherwise
 	            formula += i + ":" + source + prefix;
 	
 	            formula += "(" + linkedCarbon;
 	            formula += "+";
 	            formula += anomerCarbon + ")";
 	
+	            // They end with "n" if the target node starts a Repeating Unit, "d" otherwise
 	            formula += target + suffix;
 	
 	            formula += "\n";
 	
 	            return formula;
 	        }
+	
+	        // Compares 2 nodes a and b using the EdgeComparator first, then the NodeComparator if we can't decide
+	
 	    }, {
 	        key: "comparatorFunction",
 	        value: function comparatorFunction(a, b) {
@@ -5435,6 +5586,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var edge2 = this.getLink(b.parent.node.id, b.node.id);
 	            return comp.compare(edge1, edge2);
 	        }
+	
+	        // Basic sorting algorithm to sort a node's children to get the right order for the GlycoCT
+	
 	    }, {
 	        key: "sort",
 	        value: function sort(arr) {
@@ -5456,6 +5610,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return arr;
 	        }
+	
+	        // Get a link between two nodes whose ids are given
+	
 	    }, {
 	        key: "getLink",
 	        value: function getLink(id1, id2) {
@@ -5486,6 +5643,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	        }
+	
+	        /**
+	         * Puts all the info we need in the arrays res, edges and rep
+	         * This function is used for the main RES, but also for the RES inside a REP so we have this "unit" var to keep track of this
+	         * @param root
+	         * @param unit: id of the repeating unit if we're writing lines within a rep
+	         */
+	
 	    }, {
 	        key: "generateArrays",
 	        value: function generateArrays(root) {
@@ -5502,9 +5667,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var stack = [];
 	            stack.push(root);
 	            if (root.node !== undefined) {
+	                // We go through the tree
 	                while (stack.length > 0) {
 	                    var node = stack.pop();
 	                    var nodeUnit = node.node.repeatingUnit;
+	                    // if (we're not writing for a REP && current node is in no REP) || (we're writing for a REP && the current's node's repeating unit is the unit we're writing for)
 	                    if (unit === "" && nodeUnit === undefined || unit !== "" && nodeUnit !== undefined && nodeUnit.id === unit) {
 	                        this.res.push(node);
 	                        if (this.res.length > 1) // if we have at least 2 nodes : add link
@@ -5512,46 +5679,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                this.edges.push(this.getLink(node.parent.node.id, node.node.id));
 	                            }
 	                    } else {
-	                        if (unit === "") {
-	                            if (node.parent !== undefined && node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
-	                                {
-	                                    this.edges.push(this.getLink(node.parent.node.id, node.node.id));
-	                                } else if (nodeUnit !== undefined) {
-	                                if (node.children !== undefined) {
-	                                    var _iteratorNormalCompletion6 = true;
-	                                    var _didIteratorError6 = false;
-	                                    var _iteratorError6 = undefined;
+	                        if (unit === "") // we're not writing for a unit
+	                            {
+	                                if (node.parent !== undefined && node.parent.node.repeatingUnit !== nodeUnit) // If child is the first of the repeating unit
+	                                    {
+	                                        this.edges.push(this.getLink(node.parent.node.id, node.node.id));
+	                                    } else if (nodeUnit !== undefined) {
+	                                    if (node.children !== undefined) {
+	                                        // We go through the children, if they are also part of the unit we add the link
+	                                        var _iteratorNormalCompletion6 = true;
+	                                        var _didIteratorError6 = false;
+	                                        var _iteratorError6 = undefined;
 	
-	                                    try {
-	                                        for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-	                                            var rootChild = _step6.value;
-	
-	                                            if (rootChild.node.repeatingUnit !== nodeUnit) {
-	                                                this.edges.push(this.getLink(rootChild.node.id, node.node.id));
-	                                            }
-	                                        }
-	                                    } catch (err) {
-	                                        _didIteratorError6 = true;
-	                                        _iteratorError6 = err;
-	                                    } finally {
 	                                        try {
-	                                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-	                                                _iterator6.return();
+	                                            for (var _iterator6 = node.children[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                                                var rootChild = _step6.value;
+	
+	                                                if (rootChild.node.repeatingUnit !== nodeUnit) {
+	                                                    this.edges.push(this.getLink(rootChild.node.id, node.node.id));
+	                                                }
 	                                            }
+	                                        } catch (err) {
+	                                            _didIteratorError6 = true;
+	                                            _iteratorError6 = err;
 	                                        } finally {
-	                                            if (_didIteratorError6) {
-	                                                throw _iteratorError6;
+	                                            try {
+	                                                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                                                    _iterator6.return();
+	                                                }
+	                                            } finally {
+	                                                if (_didIteratorError6) {
+	                                                    throw _iteratorError6;
+	                                                }
 	                                            }
 	                                        }
 	                                    }
 	                                }
+	                                // we add the res to the residue list
+	                                if (!this.res.includes(nodeUnit)) {
+	                                    this.res.push(nodeUnit);
+	                                }
 	                            }
-	                            if (!this.res.includes(nodeUnit)) {
-	                                this.res.push(nodeUnit);
-	                            }
-	                        }
 	                    }
 	
+	                    // Finally we add the children to the stack, in the right order
 	                    var children = node.children;
 	                    if (children !== undefined) {
 	                        if (children.length > 1) {
@@ -5587,6 +5758,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.res = [];
 	            }
 	        }
+	
+	        /**
+	         * This function writes a RES section (main or in a REP) by reading in the arrays prepared by generateArrays()
+	         * @param resId
+	         * @param repId
+	         * @param res
+	         * @param associatedSubs: e.g: GalNAc -> Gal + associatedSub (NAc)
+	         * @param repNumber: number of the current REP (REP1, REP2...)
+	         * @param offset: when we call it several times, the residues' indices don't start from 0
+	         * @returns {[*,*]}
+	         */
+	
 	    }, {
 	        key: "generateRES",
 	        value: function generateRES(resId, repId, res, associatedSubs, repNumber) {
@@ -5595,126 +5778,138 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // with this function, but the offset will create a continuity with the previous indexes
 	            var formula = "RES\n";
 	            var i;
+	            // For every residue (whether it's a sub, mono, or rep)
 	            for (i = 0; i < res.length; i++) {
-	                if (res[i] instanceof _RepeatingUnit2.default) {
-	                    formula += i + 1 + offset + "r:r" + repNumber;
-	                    resId[res[i].id] = i + 1 + offset;
-	                    repId[res[i].id] = repNumber;
-	                    repNumber++;
-	                    formula += "\n";
-	                } else if (res[i].node instanceof _Substituent2.default) {
-	                    formula += this.writeSub(i + offset, res[i].node);
-	                    resId[res[i].node.id] = i + 1 + offset;
-	                } else {
-	                    resId[res[i].node.id] = i + 1 + offset;
-	                    formula += i + 1 + offset + "b:";
-	                    switch (res[i].node._anomericity.name) {
-	                        case "ALPHA":
-	                            formula += "a";
-	                            break;
-	                        case "BETA":
-	                            formula += "b";
-	                            break;
-	                        default:
-	                            formula += "x";
-	                            break;
-	                    }
-	                    formula += "-";
+	                if (res[i] instanceof _RepeatingUnit2.default) // If the residue is a REP
+	                    {
+	                        formula += i + 1 + offset + "r:r" + repNumber;
+	                        resId[res[i].id] = i + 1 + offset;
+	                        repId[res[i].id] = repNumber;
+	                        repNumber++;
+	                        formula += "\n";
+	                    } else if (res[i].node instanceof _Substituent2.default) // If the residue is a sub
+	                    {
+	                        formula += this.writeSub(i + offset, res[i].node);
+	                        resId[res[i].node.id] = i + 1 + offset;
+	                    } else // If the residue is a Monosaccharide
+	                    {
+	                        resId[res[i].node.id] = i + 1 + offset;
+	                        formula += i + 1 + offset + "b:";
+	                        switch (res[i].node._anomericity.name) {
+	                            case "ALPHA":
+	                                formula += "a";
+	                                break;
+	                            case "BETA":
+	                                formula += "b";
+	                                break;
+	                            default:
+	                                formula += "x";
+	                                break;
+	                        }
+	                        formula += "-";
 	
-	                    var resName = res[i].node._monosaccharideType.name;
+	                        var resName = res[i].node._monosaccharideType.name;
 	
-	                    // Nonulosonates exceptions:
-	                    switch (resName) {
-	                        case "Neu5Ac":
-	                            resName = "KdnNAc";
-	                            break;
-	                        case "Neu5Gc":
-	                            resName = "KdnGc";
-	                            break;
-	                        case "Neu":
-	                            resName = "KdnN";
-	                            break;
-	                        case "MurNGc":
-	                            resName = "MurGc";
-	                            break;
-	                    }
-	
-	                    var transform;
-	
-	                    var isoExceptions = ["Hex", "dHex", "HexA", "HexN", "ddHex", "HexNAc", "dHexNAc", "Pen", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
-	
-	                    if (!isoExceptions.includes(resName)) // Exceptions
-	                        {
-	                            switch (res[i].node._isomer.name) {
-	                                case "L":
-	                                    formula += "l";
-	                                    break;
-	                                case "D":
-	                                    formula += "d";
-	                                    break;
-	                                default:
-	                                    formula += "x";
-	                                    break;
-	                            }
+	                        // In this function, we'll rename weird Monosaccharides names so we can recognize them more easily.
+	                        // E.g: Neu5Ac => KdnNAc so we can recognize Kdn and NAc
+	                        // Nonulosonates exceptions:
+	                        switch (resName) {
+	                            case "Neu5Ac":
+	                                resName = "KdnNAc";
+	                                break;
+	                            case "Neu5Gc":
+	                                resName = "KdnGc";
+	                                break;
+	                            case "Neu":
+	                                resName = "KdnN";
+	                                break;
+	                            case "MurNGc":
+	                                resName = "MurGc";
+	                                break;
 	                        }
 	
-	                    if (_MonosaccharideGlycoCT2.default[resName] !== undefined) // if the residue has a defined name
-	                        {
-	                            formula += _MonosaccharideGlycoCT2.default[resName].glycoct;
-	                            transform = _MonosaccharideGlycoCT2.default[resName].transform;
-	                        } else {
-	                        var monoName, subName, assocSubType, assocSub, linkedCarbon;
-	                        if (_MonosaccharideGlycoCT2.default[resName.substring(0, 3)] !== undefined) // If the 3 first letters make a monosaccharide
+	                        var transform;
+	
+	                        // These types either don't need a specified isomericity or already bear it by default in their glycoct in the database
+	                        var isoExceptions = ["Hex", "dHex", "HexA", "HexN", "ddHex", "HexNAc", "dHexNAc", "Pen", "Oli", "Abe", "Col", "Nonu", "LDManHep", "DDManHep"];
+	
+	                        if (!isoExceptions.includes(resName)) // Exceptions
 	                            {
-	                                monoName = resName.substring(0, 3);
-	                                subName = resName.substring(3);
-	                                formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
-	                                transform = _MonosaccharideGlycoCT2.default[monoName].transform;
-	                                assocSubType = this.getSub(subName);
-	                                assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
-	                                if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
-	                                    {
-	                                        linkedCarbon = _SubstituentsPositions2.default[resName].position;
-	                                    }
-	                                associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
-	                            } else if (_MonosaccharideGlycoCT2.default[resName.substring(0, 4)] !== undefined) // If the 4 first letters make a monosaccharide. e.g Nonu
-	                            {
-	                                monoName = resName.substring(0, 4);
-	                                subName = resName.substring(4);
-	                                formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
-	                                transform = _MonosaccharideGlycoCT2.default[monoName].transform;
-	                                assocSubType = this.getSub(subName);
-	                                assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
-	                                if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
-	                                    {
-	                                        linkedCarbon = _SubstituentsPositions2.default[resName].position;
-	                                    }
-	                                associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                                switch (res[i].node._isomer.name) {
+	                                    case "L":
+	                                        formula += "l";
+	                                        break;
+	                                    case "D":
+	                                        formula += "d";
+	                                        break;
+	                                    default:
+	                                        formula += "x";
+	                                        break;
+	                                }
 	                            }
+	
+	                        if (_MonosaccharideGlycoCT2.default[resName] !== undefined) // if the residue has a defined name
+	                            {
+	                                formula += _MonosaccharideGlycoCT2.default[resName].glycoct;
+	                                transform = _MonosaccharideGlycoCT2.default[resName].transform;
+	                            } else // It can be that the residue is a Mono+Sub (GalNAc...)
+	                            {
+	                                var monoName, subName, assocSubType, assocSub, linkedCarbon;
+	                                if (_MonosaccharideGlycoCT2.default[resName.substring(0, 3)] !== undefined) // If the 3 first letters make a monosaccharide
+	                                    {
+	                                        // We get the raw monosaccharide type, and we put the substituent in an array to be treated later
+	                                        monoName = resName.substring(0, 3);
+	                                        subName = resName.substring(3);
+	                                        formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
+	                                        transform = _MonosaccharideGlycoCT2.default[monoName].transform;
+	                                        assocSubType = this.getSub(subName);
+	                                        assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
+	                                        if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
+	                                            {
+	                                                linkedCarbon = _SubstituentsPositions2.default[resName].position;
+	                                            }
+	                                        associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                                    } else if (_MonosaccharideGlycoCT2.default[resName.substring(0, 4)] !== undefined) // If the 4 first letters make a monosaccharide. e.g Nonu
+	                                    {
+	                                        // See above
+	                                        monoName = resName.substring(0, 4);
+	                                        subName = resName.substring(4);
+	                                        formula += _MonosaccharideGlycoCT2.default[monoName].glycoct;
+	                                        transform = _MonosaccharideGlycoCT2.default[monoName].transform;
+	                                        assocSubType = this.getSub(subName);
+	                                        assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
+	                                        if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
+	                                            {
+	                                                linkedCarbon = _SubstituentsPositions2.default[resName].position;
+	                                            }
+	                                        associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                                    }
+	                            }
+	
+	                        // These exceptions already bear their ringType in their glycoct
+	                        var ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
+	                        if (!ringExceptions.includes(resName)) // Ring exceptions
+	                            {
+	                                formula += "-";
+	                                switch (res[i].node._ringType.name) {
+	                                    case "P":
+	                                        formula += "1:5";
+	                                        break;
+	                                    case "F":
+	                                        formula += "1:4";
+	                                        break;
+	                                    default:
+	                                        formula += "x:x";
+	                                        break;
+	                                }
+	                            }
+	
+	                        formula += transform;
+	
+	                        formula += "\n";
 	                    }
-	
-	                    var ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
-	                    if (!ringExceptions.includes(resName)) // Ring exceptions
-	                        {
-	                            formula += "-";
-	                            switch (res[i].node._ringType.name) {
-	                                case "P":
-	                                    formula += "1:5";
-	                                    break;
-	                                case "F":
-	                                    formula += "1:4";
-	                                    break;
-	                                default:
-	                                    formula += "x:x";
-	                                    break;
-	                            }
-	                        }
-	
-	                    formula += transform;
-	
-	                    formula += "\n";
-	                }
 	            }
+	            // Finally we treat the associatedSubs
 	            var _iteratorNormalCompletion8 = true;
 	            var _didIteratorError8 = false;
 	            var _iteratorError8 = undefined;
@@ -5745,6 +5940,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return [i + offset, formula];
 	        }
+	
+	        /**
+	         * This function writes a LIN section (main or in a REP) by reading in the arrays prepared by generateArrays()
+	         * @param resId
+	         * @param associatedSubs: e.g: GalNAc -> Gal + associatedSub (NAc)
+	         * @param offset: when we call it several times, the residues' indices don't start from 0
+	         * @param unit: if we are writing for a unit
+	         * @returns {[*,*]}
+	         */
+	
 	    }, {
 	        key: "generateLIN",
 	        value: function generateLIN(resId, associatedSubs) {
@@ -5759,6 +5964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var prevSource = 0,
 	                    prevTarget = 0;
 	                for (i = 0; i < edges.length; i++) {
+	                    // We get the link information
 	                    var source = edges[i].sourceNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
 	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
 	                    var anomerCarbon;
@@ -5766,7 +5972,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    var target = edges[i].targetNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	
-	                    if (prevSource !== source || prevTarget !== target) // When operating with repeating units, some links are duplicated
+	                    if (prevSource !== source || prevTarget !== target) // Cheap fix to this bug: When operating with repeating units, some links are duplicated
 	                        {
 	                            prevSource = source;
 	                            prevTarget = target;
@@ -5776,6 +5982,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                var suffix = "d";
 	                                var sourceRep = findNodeInTree(treeData, edges[i].sourceNode).node.repeatingUnit;
 	                                var targetRep = findNodeInTree(treeData, edges[i].targetNode).node.repeatingUnit;
+	                                // Set the prefix and suffix to get the right ones according to repeating units
 	                                if (sourceRep !== targetRep) {
 	                                    if (sourceRep !== undefined) {
 	                                        prefix = "n";
@@ -5784,13 +5991,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        suffix = "n";
 	                                    }
 	                                }
-	
 	                                formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon, prefix, suffix);
 	                            } else {
 	                                formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
 	                            }
 	                        } else {
-	                        offset--; // As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
+	                        offset--; // The following of the cheap fix above: As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
 	                    }
 	                }
 	
@@ -5822,6 +6028,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            return [i + offset, formula];
 	        }
+	
+	        /**
+	         * Main function called from outside the class to return the final formula
+	         * @returns {*}
+	         */
+	
 	    }, {
 	        key: "exportGlycoCT",
 	        value: function exportGlycoCT() {
@@ -5835,24 +6047,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var repNumber = 1;
 	
+	            // RES
+	            var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
+	            var formula = resInfo[1];
+	            var lastResId = resInfo[0];
+	
+	            // LIN
+	            var linInfo = this.generateLIN(resId, associatedSubs);
+	            formula += linInfo[1];
+	            var lastLinId = linInfo[0];
+	
+	            // REP
+	
 	            var _iteratorNormalCompletion10 = true;
 	            var _didIteratorError10 = false;
 	            var _iteratorError10 = undefined;
 	
 	            try {
-	                for (var _iterator10 = res[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-	                    var r = _step10.value;
+	                for (var _iterator10 = this.res[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                    var residue = _step10.value;
 	
-	                    if (r.node && _SubstituentsPositions2.default[r.node.monosaccharideType.name]) {
-	                        var i = 0;
-	                        while (this.getSub(r.node.monosaccharideType.name.substring(i)) === undefined) {
-	                            i++;
-	                        }var subName = r.node.monosaccharideType.name.substring(i);
-	                        console.log(subName);
+	                    if (residue instanceof _RepeatingUnit2.default) {
+	                        this.rep.push(residue);
 	                    }
 	                }
-	
-	                // RES
 	            } catch (err) {
 	                _didIteratorError10 = true;
 	                _iteratorError10 = err;
@@ -5868,88 +6086,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	
-	            var resInfo = this.generateRES(resId, repId, res, associatedSubs, repNumber);
-	            var formula = resInfo[1];
-	            var lastResId = resInfo[0];
+	            if (this.rep.length !== 0) // if we have REPs
+	                {
+	                    formula += "REP\n";
+	                    var _iteratorNormalCompletion11 = true;
+	                    var _didIteratorError11 = false;
+	                    var _iteratorError11 = undefined;
 	
-	            // LIN
-	            var linInfo = this.generateLIN(resId, associatedSubs);
-	            formula += linInfo[1];
-	            var lastLinId = linInfo[0];
-	
-	            // REP
-	
-	            var _iteratorNormalCompletion11 = true;
-	            var _didIteratorError11 = false;
-	            var _iteratorError11 = undefined;
-	
-	            try {
-	                for (var _iterator11 = this.res[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-	                    var residue = _step11.value;
-	
-	                    if (residue instanceof _RepeatingUnit2.default) {
-	                        this.rep.push(residue);
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError11 = true;
-	                _iteratorError11 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion11 && _iterator11.return) {
-	                        _iterator11.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError11) {
-	                        throw _iteratorError11;
-	                    }
-	                }
-	            }
-	
-	            if (this.rep.length !== 0) {
-	                formula += "REP\n";
-	                var _iteratorNormalCompletion12 = true;
-	                var _didIteratorError12 = false;
-	                var _iteratorError12 = undefined;
-	
-	                try {
-	                    for (var _iterator12 = this.rep[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-	                        var rep = _step12.value;
-	
-	                        this.generateArrays(this.findRepMinDepth(rep), rep.id);
-	                        var entryId = lastResId + 1;
-	                        associatedSubs = [];
-	                        resInfo = this.generateRES(resId, repId, this.res, associatedSubs, repNumber, lastResId);
-	                        lastResId = resInfo[0];
-	                        var exitId = lastResId;
-	                        formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
-	                        formula += rep.linkedCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.linkedCarbon;
-	                        formula += "+";
-	                        formula += rep.anomerCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.anomerCarbon;
-	                        formula += ")" + entryId + "d=";
-	                        formula += rep.min === "?" ? "-1" : rep.min;
-	                        formula += "-";
-	                        formula += rep.max === "?" ? "-1" : rep.max;
-	                        formula += "\n" + resInfo[1];
-	                        linInfo = this.generateLIN(resId, associatedSubs, lastLinId, rep.id);
-	                        lastLinId = linInfo[0];
-	                        formula += linInfo[1];
-	                    }
-	                } catch (err) {
-	                    _didIteratorError12 = true;
-	                    _iteratorError12 = err;
-	                } finally {
 	                    try {
-	                        if (!_iteratorNormalCompletion12 && _iterator12.return) {
-	                            _iterator12.return();
+	                        for (var _iterator11 = this.rep[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                            var rep = _step11.value;
+	
+	                            this.generateArrays(this.findRepMinDepth(rep), rep.id);
+	                            var entryId = lastResId + 1;
+	                            associatedSubs = [];
+	                            resInfo = this.generateRES(resId, repId, this.res, associatedSubs, repNumber, lastResId);
+	                            lastResId = resInfo[0];
+	                            var exitId = lastResId;
+	                            formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
+	                            formula += rep.linkedCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.linkedCarbon;
+	                            formula += "+";
+	                            formula += rep.anomerCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.anomerCarbon;
+	                            formula += ")" + entryId + "d=";
+	                            formula += rep.min === "?" ? "-1" : rep.min;
+	                            formula += "-";
+	                            formula += rep.max === "?" ? "-1" : rep.max;
+	                            formula += "\n" + resInfo[1];
+	                            linInfo = this.generateLIN(resId, associatedSubs, lastLinId, rep.id);
+	                            lastLinId = linInfo[0];
+	                            formula += linInfo[1];
 	                        }
+	                    } catch (err) {
+	                        _didIteratorError11 = true;
+	                        _iteratorError11 = err;
 	                    } finally {
-	                        if (_didIteratorError12) {
-	                            throw _iteratorError12;
+	                        try {
+	                            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+	                                _iterator11.return();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError11) {
+	                                throw _iteratorError11;
+	                            }
 	                        }
 	                    }
 	                }
-	            }
 	
 	            if (formula.substring(formula.length - 1) == '\n') // Remove final \n
 	                {
@@ -5958,18 +6139,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            return formula;
 	        }
+	
+	        // Returns the node with the minimum depth in tree (aka the entry)
+	
 	    }, {
 	        key: "findRepMinDepth",
 	        value: function findRepMinDepth(rep) {
 	            var minVal = rep.nodes[0].depth;
 	            var minNode = rep.nodes[0];
-	            var _iteratorNormalCompletion13 = true;
-	            var _didIteratorError13 = false;
-	            var _iteratorError13 = undefined;
+	            var _iteratorNormalCompletion12 = true;
+	            var _didIteratorError12 = false;
+	            var _iteratorError12 = undefined;
 	
 	            try {
-	                for (var _iterator13 = rep.nodes[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-	                    var node = _step13.value;
+	                for (var _iterator12 = rep.nodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+	                    var node = _step12.value;
 	
 	                    if (node.depth < minVal) {
 	                        minVal = node.depth;
@@ -5977,16 +6161,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError13 = true;
-	                _iteratorError13 = err;
+	                _didIteratorError12 = true;
+	                _iteratorError12 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion13 && _iterator13.return) {
-	                        _iterator13.return();
+	                    if (!_iteratorNormalCompletion12 && _iterator12.return) {
+	                        _iterator12.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError13) {
-	                        throw _iteratorError13;
+	                    if (_didIteratorError12) {
+	                        throw _iteratorError12;
 	                    }
 	                }
 	            }

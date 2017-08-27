@@ -25,6 +25,7 @@ export default class GlycoCTParser{
         this.formula = formula;
     }
 
+    // Used to generate unique IDs
     randomString(length) {
         // Possible chars in the generated string
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
@@ -40,6 +41,10 @@ export default class GlycoCTParser{
         return str;
     }
 
+    /**
+     * Gets SubstituentType from name
+     * @param name
+     */
     getSub(name)
     {
         for (var sub of SubstituentType)
@@ -49,6 +54,10 @@ export default class GlycoCTParser{
         }
     }
 
+    /**
+     * Get MonosaccharideType from name
+     * @param name
+     */
     getMono(name)
     {
         switch (name)
@@ -67,6 +76,12 @@ export default class GlycoCTParser{
         }
     }
 
+    /**
+     * Gets MonosaccharideGlycoCT from stemType (e.g glc-HEX) and transform
+     * @param stemType
+     * @param transform
+     * @returns {*}
+     */
     getMonoType(stemType, transform)
     {
         for (var mono of MonosaccharideGlycoCT)
@@ -79,9 +94,20 @@ export default class GlycoCTParser{
         return undefined;
     }
 
+    /**
+     * Adds one residue to the sugar
+     * @param residue e.g : ["3b","glc-HEX-1","5"]
+     * @param linkedCarbon
+     * @param anomerCarbon
+     * @param repeatingUnit : String
+     * @returns {*}
+     */
     createResidue(residue, linkedCarbon, anomerCarbon, repeatingUnit)
     {
-        if (residue[0].substring(residue[0].length-1) === "b") { // monosaccharide
+        // If we generate a Monosaccharide
+        if (residue[0].substring(residue[0].length-1) === "b") {
+
+            // Parse anomericity
             var anomericity;
             for (var anom of Anomericity)
             {
@@ -99,7 +125,9 @@ export default class GlycoCTParser{
                 }
             }
             var dashSplit = residue[1].split("-");
-            var stemType = dashSplit[1];
+            var stemType = dashSplit[1]; // Also contains isomer as the first char
+
+            // Parse Isomer
             var isomer;
             for (var isom of Isomer)
             {
@@ -112,35 +140,48 @@ export default class GlycoCTParser{
                     isomer = isom;
                 }
             }
+
+
             var glycoct = residue[1].substring(3,residue[1].length-2);
-            var firstTransform = residue[2].split("|");
+            /* As we split on ":", the first part of the first transformation is stuck with the second part of ring type.
+               e.g: 1b:b-dman-HEX-1:5|6:a
+               -> residue = ["1b","b-dman-HEX-1","5|6","a"]
+            */
+            var firstTransform = residue[2].split("|"); // Contains ringType and first part of first transformation
             var transform = "";
             if (firstTransform.length > 1) // at least one transformation
             {
+                // We rebuild the whole transformation
                 transform = "|" + firstTransform[1];
                 for (var k = 3; k < residue.length; k++)
                 {
                     transform += ":"+residue[k];
                 }
             }
+
+            // Fetch the Monosaccharide type in the database considering the given glycoct + transform combination
+            // First we try the whole name
             var monoType = this.getMonoType(glycoct, transform);
             if (monoType === undefined)
             {
-                // if monosaccharide is amond the simple HEX cases
+                // Second, we check if the monosaccharide is among the simple HEX cases (e.g: 1b:b-HEX-1:4 -> they have no stemType, just the superclass HEX)
                 glycoct = residue[1].substring(2,residue[1].length-2);
                 monoType = this.getMonoType(glycoct, transform);
                 if (monoType === undefined)
                 {
-                    // if monosaccharide is among the exceptions for the ring type
+                    // Third, we check if the monosaccharide is among the exceptions for the ring type (Kdn for example include ringType in their formula: 1b:b-lgro-dgal-NON-2:6)
                     glycoct = residue[1].substring(3) + ":" + firstTransform[0];
                     monoType = this.getMonoType(glycoct, transform);
                     if (monoType === undefined)
                     {
+                        // Finally, the monosaccharide is not known
                         monoType = MonosaccharideGlycoCT.Unknown;
                     }
                 }
             }
             monoType = MonosaccharideType[monoType.name];
+
+            // Then we parse the ringType
             var ringStop = residue[2].substring(0, 1);
             var ringType;
             if (ringStop === "4")
@@ -157,17 +198,21 @@ export default class GlycoCTParser{
             }
 
             var nodeId = this.randomString(7);
+            // Creating the monosaccharide object
             var node = new Monosaccharide(nodeId,monoType, anomericity, isomer, ringType);
+            // Assign to repeatingUnit if the node is in one
             if (repeatingUnit !== undefined)
             {
                 node.repeatingUnit = repeatingUnit;
             }
-            if (linkedCarbon === "r" && anomerCarbon === "r") // Root
+            // If linkedCarbon and anomerCarbon are "r", we are building the root
+            if (linkedCarbon === "r" && anomerCarbon === "r")
             {
                 this.sugar = new Sugar("Sugar", node);
             }
             else
             {
+                // Parse the AnomerCarbon
                 var ac;
                 for (var anomC of AnomerCarbon)
                 {
@@ -180,6 +225,7 @@ export default class GlycoCTParser{
                         ac = anomC;
                     }
                 }
+                // Parse the LinkedCarbon
                 var lc;
                 for (var linkedC of LinkedCarbon)
                 {
@@ -194,9 +240,11 @@ export default class GlycoCTParser{
                 }
                 this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
             }
+            // Return the nodeId so we can access the node once it's been created
             return nodeId;
         }
-        else if (residue[0].substring(residue[0].length-1) === "s") { // substituent
+        else if (residue[0].substring(residue[0].length-1) === "s") { // We're creating a substituent
+            // Parse the sub name
             var subName = residue[1];
             var substituentType;
             for (var sub of GlycoCTSubstituents) {
@@ -209,6 +257,8 @@ export default class GlycoCTParser{
                     substituentType = subType;
                 }
             }
+
+            // Parse sub's linkedCarbon
             var lcs;
             for (var linkedCS of LinkedCarbon)
             {
@@ -222,7 +272,10 @@ export default class GlycoCTParser{
                 }
             }
             var subId = this.randomString(7); // If the Mono-Sub combination has a predefined code, change the monosaccharide
+            // Create substituent Object
             var substituent = new Substituent(subId,substituentType);
+            // Check if when we add the sub at this particular position we get a new parent monosaccharide type
+            // e.g Gal + NAc(linkedCarbon=2) => GalNAc
             var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
             if (newType && SubstituentsPositions[newType.name].position == linkedCarbon) {
                 this.updateNodeType(this.clickedNode, newType);
@@ -235,6 +288,11 @@ export default class GlycoCTParser{
         }
     }
 
+    /**
+     * Find a node in the sugar, and change its type
+     * @param node
+     * @param type
+     */
     updateNodeType(node, type)
     {
         for (var sugarNode of this.sugar.graph.nodes())
@@ -246,46 +304,68 @@ export default class GlycoCTParser{
         }
     }
 
-
+    /**
+     * Main function of the class, used to parse the formula
+     * @returns {*}
+     */
     parseGlycoCT() {
         if (this.formula === "") {
             return new Sugar("Sugar");
         }
+        // Get the text lines under the RES section
         var res = this.getSection("RES",this.formula);
         var links;
-        if (! this.formula.split("LIN")[1]) // Only one node without links
+        if (! this.formula.split("LIN")[1]) // If the formula is only one node (no link)
         {
             if (!res[0]) // wrong formula
             {
                 return new Sugar("Sugar");
             }
+            // Create the root (LinkedCarbon and AnomerCarbon of root are unknwown from GlycoCT formula)
             this.createResidue(res[0].split(":"), "r", "r");
             return this.sugar;
         }
         else
         {
+            // Get the text lines under the LIN section
             links = this.getSection("LIN",this.formula);
         }
+        // Get the rep section
         var repSection = this.getSection("REP",this.formula);
+        // Get each rep from the rep section
         var reps = this.getRepeatingUnit(repSection);
 
+        // This will contain the id of the created nodes
         var nodesIds = {};
 
+        // This will contain the RepeatingUnit objects, and the nodes that are in it [[RepObject,[nodes...]],...]
         var repInfo = [];
 
+        // If there are some Repeating Units in the formula
         if (reps.length != 0)
         {
+            // Use the function to insert the residues and links lines from the REPS to the main RES section
+            // so that we get rid of the REP section and finally have only RES and LIN sections, with mixed up indices (doesn't matter)
             var merge = this.mergeRep(reps, res, links);
             res = merge[0];
             links = merge[1];
             repInfo = merge[2];
         }
 
+        // We finally call the function that reads through the lines and calls the function to create nodes
         this.generateNodes(links,nodesIds,res, repInfo);
 
         return this.sugar;
     }
 
+    /**
+     * Function that inserts the residues and links from the REPs sections into the main RES and LIN sections
+     * Outputs an array of 3 arrays: the new RES section, the new LIN section, repInfo which contains the RepeatingUnit objects and which nodes belongs to them
+     * @param reps
+     * @param res
+     * @param links
+     * @returns {[*,*,*]}
+     */
     mergeRep(reps,res,links) {
         var repeatingUnitsObjects = []; // Contains all the instanciated Rep objects
         var repeatingUnit;
@@ -327,7 +407,7 @@ export default class GlycoCTParser{
 
 
 
-        // update the links:
+        // STEP 2: Update the links:
         // If the target of a link is a repeating unit, change to the first residue of the unit (entering the unit)
         // If the source is a repeating unit, change to the ending residue (leaving the unit)
         var repeatingUnitObject;
@@ -366,6 +446,11 @@ export default class GlycoCTParser{
 
     }
 
+    /**
+     * Get the index of all the nodes within an array of residues. Used to get the nodes in a specific rep
+     * @param res
+     * @returns {Array}
+     */
     getRepNodesIds(res)
     {
         var output = [];
@@ -399,6 +484,7 @@ export default class GlycoCTParser{
         return output;
     }
 
+    // Checks if the target of the link is a repeating unit in the main RES section
     isTargetARep(link, repUnitIndices)
     {
         var target = link.split(")")[1].split(/[dn]/)[0];
@@ -407,6 +493,7 @@ export default class GlycoCTParser{
         return false;
     }
 
+    // Checks if the source of the link is a repeating unit in the main RES section
     isSourceARep(link, repUnitIndices)
     {
         var source = link.split(/[on]/)[0].split(":")[1];
@@ -415,20 +502,7 @@ export default class GlycoCTParser{
         return false;
     }
 
-    totalRepOffset(reps, repUnitRead)
-    {
-        if (repUnitRead == 0)
-        {
-            return 0;
-        }
-        var total = 0;
-        for (var i = 0; i < repUnitRead; i++)
-        {
-            total += reps[i].lin.length;
-        }
-        return total;
-    }
-
+    // Get a node's RepeatingUnit object
     findMatchingRep(sourceId, repInfo)
     {
         for (var pair of repInfo)
@@ -441,26 +515,37 @@ export default class GlycoCTParser{
         return undefined;
     }
 
+    /**
+     * Reads through all the lines
+     * @param links
+     * @param nodesIds
+     * @param res
+     * @param repInfo
+     */
     generateNodes(links,nodesIds,res,repInfo)
     {
         var repeatingUnit;
         var residueListById = {};
+
+        // Fill in the residueListById array
         for (var residue of res)
         {
             residueListById[residue.split(/\w:/)[0]] = (residue.split(":"));
         }
+        // Now we read the links to build the whole sugar
         for (var linkId in links) {
-            if (links[linkId] !== "") {
+            if (links[linkId] !== "") { // If the link is not empty
                 var link = links[linkId];
                 var sourceId = parseInt(link.split(":")[1].split("(")[0]);
                 var nodeId;
-                if (residueListById[sourceId] !== "") // Root
+                if (residueListById[sourceId] !== "") // The source node hasn't been created, so this is the root
                 {
                     repeatingUnit = this.findMatchingRep(sourceId, repInfo);
                     nodeId = this.createResidue(residueListById[sourceId], "r", "r", repeatingUnit);
                     residueListById[sourceId] = "";
                     nodesIds[sourceId] = nodeId;
                 }
+                // Then we create the target node of the link
                 var targetId = parseInt(link.split(")")[1]);
                 var linkages = link.split(/[\(\)]+/)[1];
                 var linkedCarbon, anomerCarbon;
@@ -491,7 +576,12 @@ export default class GlycoCTParser{
         return undefined;
     }
 
-
+    /**
+     * Returns an array of lines that correspond to the entire requested section (RES, LIN, REP...)
+     * @param section
+     * @param formula
+     * @returns {Array}
+     */
     getSection(section,formula) {
         const sections = ["RES","LIN","REP","UND","ALT"];
         sections.splice(sections.indexOf(section),1);
@@ -538,6 +628,14 @@ export default class GlycoCTParser{
         return output;
     }
 
+
+    /**
+     * Returns all the infos that we can read from the REP section for every RepeatingUnit
+     * Output : [{"info", "res", "lin"},...]
+     * "info": {"linkedCarbon", "anomerCarbon", "min", "max", "exit", "entry"}
+     * @param array
+     * @returns {Array}
+     */
     getRepeatingUnit(array)
     {
         var info, min, max;

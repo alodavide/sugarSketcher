@@ -6,15 +6,15 @@ var copiedNode = null;
 
 var rootLinkedCarbon, rootAnomerCarbon;
 
-const gap = 50;
+const gap = 50; // Distance between two nodes
 const origin = [200, 600];
-const circleRadius = 15;
+const circleRadius = 15; // Radius of a circle shape
 
 var ctrl; // Boolean if ctrl is held
-var quickMode;
-var exporting;
+var quickMode; // Boolean if Quick Mode button is toggled on
+var exporting; // Boolean to know if we are exporting the SVG of the glycan (to remove the selection from the final image)
 
-//Values for links X and Y
+// Directions where every node should be regarding its parent and its linkedCarbon
 var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 7: [0,-1*gap], 8: [0,-1*gap], 9: [0,-1*gap], 'undefined': [0,-1*gap]};
 // Values for links labels X and Y
 var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 7: [0,14], 8: [0,14], 9: [0,14], 'undefined': [0,14]};
@@ -45,6 +45,8 @@ var clickCircle = function(d) {
     displayTree(); // Update view to show the selection stroke
 };
 
+
+// Get an array of all Repeating Units
 var generateRepeatingUnits = function(nodes)
 {
     var output = [];
@@ -74,6 +76,7 @@ var generateRepeatingUnits = function(nodes)
     return output;
 };
 
+// Used to select from one node to another
 var selectAllNodesBetween = function(node1, node2)
 {
     var root = findNodeInTree(treeData,node1);
@@ -137,6 +140,8 @@ function findNodeInTree(tree,node1)
     return null;
 }
 
+
+// Unselect a node's children (used when we already have a selection, and we make a new smaller selection over it)
 function removeChildrenFromSelection(node)
 {
     var node = findNodeInTree(treeData,node);
@@ -208,6 +213,11 @@ function displayTree() {
     if (sugar.rootIsSet()) {
         var nodes = tree.nodes(treeData); // Tree nodes
         var links = tree.links(nodes); // Tree links
+
+
+        // RENDERING ALL THE SHAPES, LINKS, REPEATING UNITS ETC.
+        // Do not use CSS to change their properties (svg export won't work properly anymore)
+
 
         vis.selectAll(".nodelink")
             .data(links)
@@ -492,6 +502,9 @@ function displayTree() {
             .on('click', clickCircle); // Select the node on click
 
 
+
+
+
         var repeatingUnits = generateRepeatingUnits(nodes);
 
         // Repeating Units
@@ -559,7 +572,15 @@ function displayTree() {
     }
 }
 
-
+/**
+ * Called once to display the linkedCarbon and anomerCarbon of the link,
+ * Then once more to display the anomericity (with a different font-family)
+ * A Monospace font is used so that no matter what the two labels contain,
+ * they won't overlap each other
+ * @param linkLabel
+ * @param links
+ * @param anom
+ */
 function displayLabels(linkLabel, links, anom)
 {
     var root = {"node":{"id":"root"}};
@@ -769,6 +790,7 @@ function displayLabels(linkLabel, links, anom)
 }
 
 
+// Get the coordinates of the repeating unit's brackets considering the nodes that are inside
 function getRepCoord(repeatingUnit)
 {
     var output = [];
@@ -1256,7 +1278,7 @@ function findSubstituantLabelSpot(x, y, linkedCarbon)
 }
 
 /**
- * Moves a node
+ * Visually moves a node
  * @param id, addX, addY
  */
 function moveShape(id, addX, addY)

@@ -3,7 +3,7 @@
  */
 
 
-var progress; // out of 7
+var progress; // amount of progress for the green progress bar throughout the menus (out of 7)
 
 
 /*
@@ -390,6 +390,7 @@ function manageHoverIO(menuItem,actions)
                     treeData = generateTree();
                     updateRepeatingUnitsNodesInTree();
                     var i = 1;
+                    // Select the latest selectable node
                     while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
                     {
                         i++;
@@ -400,7 +401,11 @@ function manageHoverIO(menuItem,actions)
     });
 }
 
-
+/**
+ * Creates a tree from the sugar
+ * Called after using the parser, which only returns a Sugar
+ * @returns {Array}
+ */
 function generateTree() {
     // Put parentId in each node
     var nodes = sugar.graph.nodes();
@@ -455,7 +460,10 @@ function generateTree() {
 
 }
 
-
+/**
+ * After using the parser, the RepeatingUnits don't carry all their needed information (the nodes they contain)
+ * This function fills in the repeatingUnits
+ */
 function updateRepeatingUnitsNodesInTree()
 {
     var repeatingUnits = [], node;
@@ -1144,7 +1152,7 @@ function reinitializeDisplayCarbons() {
 }
 
 /**
- * Checks the used linked carbon values of a node
+ * Checks the used linked carbon values of a node so that we can't use a carbon twice
  */
 function checkUsedCarbons() {
     // If sugar not created yet, return empty array
@@ -1169,22 +1177,6 @@ function checkUsedCarbons() {
             else if (edge.targetNode == clickedNode) {
                 if (infosTable[0] != "updateNode")
                     usedCarbons.push(edge.anomerCarbon.value);
-            }
-        }
-        return usedCarbons; // Return the final array
-    }
-}
-
-function checkLinkedCarbon() {
-    if (Object.keys(treeData).length === 0) {
-        return [];
-    } else {
-        var usedCarbons = [];
-        var edges = sugar.graph.edges();
-        // For each edge, if the source is the clickedNode, we add the linked carbon value to the array
-        for (var edge of edges) {
-            if (edge.targetNode == clickedNode) {
-                usedCarbons.push(edge.anomerCarbon.value);
             }
         }
         return usedCarbons; // Return the final array
