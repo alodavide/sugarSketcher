@@ -5980,8 +5980,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            if (edges[i] instanceof _GlycosidicLinkage2.default) {
 	                                var prefix = "o";
 	                                var suffix = "d";
-	                                var sourceRep = this.findNodeInTree(treeData, edges[i].sourceNode).node.repeatingUnit;
-	                                var targetRep = this.findNodeInTree(treeData, edges[i].targetNode).node.repeatingUnit;
+	                                var sourceRep = this.findNodeInTree(this.tree, edges[i].sourceNode).node.repeatingUnit;
+	                                var targetRep = this.findNodeInTree(this.tree, edges[i].targetNode).node.repeatingUnit;
 	                                // Set the prefix and suffix to get the right ones according to repeating units
 	                                if (sourceRep !== targetRep) {
 	                                    if (sourceRep !== undefined) {
