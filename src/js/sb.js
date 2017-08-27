@@ -5980,8 +5980,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            if (edges[i] instanceof _GlycosidicLinkage2.default) {
 	                                var prefix = "o";
 	                                var suffix = "d";
-	                                var sourceRep = findNodeInTree(treeData, edges[i].sourceNode).node.repeatingUnit;
-	                                var targetRep = findNodeInTree(treeData, edges[i].targetNode).node.repeatingUnit;
+	                                var sourceRep = this.findNodeInTree(treeData, edges[i].sourceNode).node.repeatingUnit;
+	                                var targetRep = this.findNodeInTree(treeData, edges[i].targetNode).node.repeatingUnit;
 	                                // Set the prefix and suffix to get the right ones according to repeating units
 	                                if (sourceRep !== targetRep) {
 	                                    if (sourceRep !== undefined) {
@@ -6027,6 +6027,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	            return [i + offset, formula];
+	        }
+	    }, {
+	        key: "findNodeInTree",
+	        value: function findNodeInTree(tree, node1) {
+	            var stack = [],
+	                node,
+	                i;
+	            stack.push(tree);
+	
+	            while (stack.length > 0) {
+	                node = stack.pop();
+	                if (node.node == node1) {
+	                    return node;
+	                } else if (node.children != undefined) {
+	                    for (i = 0; i < node.children.length; i += 1) {
+	                        stack.push(node.children[i]);
+	                    }
+	                }
+	            }
+	            return null;
 	        }
 	
 	        /**
