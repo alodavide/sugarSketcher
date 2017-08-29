@@ -232,7 +232,7 @@ var menu2Action = [
     },
     {
         division: "io",
-        display_division: "GlycoCT",
+        display_division: "GlycoCT/SVG",
         subDivisions: [{
             division: "exportFormula",
             display_division: "Export"

@@ -260,7 +260,7 @@ function displayTree() {
                 return "#000";
             })
             .style("stroke-dasharray", function(d) {
-                if (d.target.node.anomericity.name == "ALPHA")
+                if (d.target.node.anomericity && d.target.node.anomericity.name == "ALPHA")
                     return "5.5";
             })
             .attr('pointer-events', 'none');
@@ -616,7 +616,7 @@ function displayLabels(linkLabel, links, anom)
             }
             else
             {
-                return "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
+                return "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue";
             }
         })
         .style("font-size", "10px")
