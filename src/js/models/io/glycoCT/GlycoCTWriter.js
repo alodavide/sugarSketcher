@@ -500,8 +500,9 @@ export default class GlycoCTWriter{
                 formula += this.writeSubLink(i+offset, pair[1], pair[0]+offset, pair[2], 1);
                 i++;
             }
+            return [i+offset, formula];
         }
-        return [i+offset, formula];
+        return [0, ""];
     }
 
 

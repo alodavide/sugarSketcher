@@ -6025,8 +6025,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	                }
+	
+	                return [i + offset, formula];
 	            }
-	            return [i + offset, formula];
+	            return [0, ""];
 	        }
 	    }, {
 	        key: "findNodeInTree",
