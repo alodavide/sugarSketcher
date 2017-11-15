@@ -93,5 +93,22 @@ div.tooltip {
     left:0;
     width:100%;
     bottom: 0;
-    height: 1.5em;
+    height: 3.5em;
+    text-align: center;
+}
+
+.expasyLogo{
+    float: left;
+    width: 250px;
+}
+
+.ibLogo{
+    float: right;
+    width: 100px;
+}
+
+.centerFooter{
+    font-size:14px;
+    display: inline-block;
+    margin: 0 auto;
 }
