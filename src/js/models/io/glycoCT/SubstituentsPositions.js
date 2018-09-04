@@ -23,7 +23,6 @@ export default class SubstituentsPositions extends Enum {}
             position:2
         },
 
-
         GulNAc: {
             position:2
         },

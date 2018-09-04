@@ -5,3 +5,4 @@ coverage
 dest
 .babelrc
 gulpfile.js
+src/img/

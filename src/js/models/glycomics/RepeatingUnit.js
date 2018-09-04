@@ -9,36 +9,28 @@ export default class RepeatingUnit {
     {
         this.id = id;
         this.nodes = nodes;
-        if (min === "?")
-        {
+
+        if (min === "?") {
             this.min = min;
-        }
-        else
-        {
+        } else {
             this.min = parseInt(min);
         }
-        if (max === "?")
-        {
+
+        if (max === "?") {
             this.max = max;
-        }
-        else
-        {
+        } else {
             this.max = parseInt(max);
         }
-        if (linkedCarbon === "?")
-        {
+
+        if (linkedCarbon === "?") {
             this.linkedCarbon = LinkedCarbon.UNDEFINED;
-        }
-        else
-        {
+        } else {
             this.linkedCarbon = linkedCarbon;
         }
-        if (anomerCarbon === "?")
-        {
+
+        if (anomerCarbon === "?") {
             this.anomerCarbon = LinkedCarbon.UNDEFINED;
-        }
-        else
-        {
+        } else {
             this.anomerCarbon = anomerCarbon;
         }
     }

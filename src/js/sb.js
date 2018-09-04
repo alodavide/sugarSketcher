@@ -1163,12 +1163,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    return AnomerCarbon.TWO;
 	                case 3:
 	                    return AnomerCarbon.THREE;
-	                case 4:
-	                    return AnomerCarbon.FOUR;
-	                case 5:
-	                    return AnomerCarbon.FIVE;
-	                case 6:
-	                    return AnomerCarbon.SIX;
 	                default:
 	                    return AnomerCarbon.UNDEFINED;
 	            }
@@ -4185,21 +4179,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.id = id;
 	    this.nodes = nodes;
+	
 	    if (min === "?") {
 	        this.min = min;
 	    } else {
 	        this.min = parseInt(min);
 	    }
+	
 	    if (max === "?") {
 	        this.max = max;
 	    } else {
 	        this.max = parseInt(max);
 	    }
+	
 	    if (linkedCarbon === "?") {
 	        this.linkedCarbon = _LinkedCarbon2.default.UNDEFINED;
 	    } else {
 	        this.linkedCarbon = linkedCarbon;
 	    }
+	
 	    if (anomerCarbon === "?") {
 	        this.anomerCarbon = _LinkedCarbon2.default.UNDEFINED;
 	    } else {
@@ -6650,7 +6648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6660,7 +6658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	
 	var Controller = function Controller() {
-	    _classCallCheck(this, Controller);
+	  _classCallCheck(this, Controller);
 	};
 	
 	exports.default = Controller;
