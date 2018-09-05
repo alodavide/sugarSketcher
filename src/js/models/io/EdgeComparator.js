@@ -61,7 +61,7 @@ export default class EdgeComparator {
 
     parentLinkPos(edge)
     {
-        return edge.linkedCarbon.value === "undefined" ? 0 : edge.linkedCarbon.value;
+        return edge.donorPosition.value === "undefined" ? 0 : edge.donorPosition.value;
     }
 
     bonds(edge)
@@ -71,7 +71,7 @@ export default class EdgeComparator {
 
     childLinkPos(edge)
     {
-        return edge.anomerCarbon.value === "undefined" ? 0 : edge.anomerCarbon.value;
+        return edge.acceptorPosition.value === "undefined" ? 0 : edge.acceptorPosition.value;
     }
 
     linkageType(edge)

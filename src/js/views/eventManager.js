@@ -41,12 +41,12 @@ function addHoverManagersInfos() {
 }
 
 /**
- * Add hover manager for the carbon selections: linked and anomer
+ * Add hover manager for the carbon selections: donor and acceptor
  */
 function addHoverManagersCarbons() {
-    addHoverManagerAnomerCarbon(); // Manager for the anomer carbon
-    addHoverManagerLinkedCarbon(); // Manager for the linked carbon
-    addHoverManagerLinkedCarbon(true); // Manager for the linked carbon
+    addHoverManagerAcceptorPosition(); // Manager for the acceptor position
+    addHoverManagerDonorPosition(); // Manager for the donor position
+    addHoverManagerDonorPosition(true); // Manager for the donor position
 }
 
 /**
@@ -326,7 +326,7 @@ function manageHoverIO(menuItem,actions)
             d3.select("#formula").style("display","block");
             d3.select("#validateFormula").style("display", "none");
             d3.select("#structuresDiv").style("display", "none");
-            var writer = new sb.GlycoCTWriter(sugar, treeData);
+            var writer = new sb.GlycoCTWriter(glycan, treeData);
             $('#formula').val(writer.exportGlycoCT());
             $('#formula').select();
             var formula = document.querySelector("#formula");
@@ -381,38 +381,38 @@ function manageHoverIO(menuItem,actions)
                 .on('click', function() {
                     treeData = {};
                     selectedNodes = [];
-                    if (sugar)
-                        sugar.clear();
+                    if (glycan)
+                        glycan.clear();
                     var parser = new sb.GlycoCTParser($('#formula').val());
-                    sugar = parser.parseGlycoCT();
+                    glycan = parser.parseGlycoCT();
                     shapes = [];
                     generateShapes();
                     treeData = generateTree();
                     updateRepeatingUnitsNodesInTree();
                     var i = 1;
                     // Select the latest selectable node
-                    while (sugar.graph.nodes()[sugar.graph.nodes().length-i] instanceof sb.Substituent)
+                    while (glycan.graph.nodes()[glycan.graph.nodes().length-i] instanceof sb.Substituent)
                     {
                         i++;
                     }
-                    clickedNode = sugar.graph.nodes()[sugar.graph.nodes().length-i];
+                    clickedNode = glycan.graph.nodes()[glycan.graph.nodes().length-i];
                     displayTree();
                 });
     });
 }
 
 /**
- * Creates a tree from the sugar
- * Called after using the parser, which only returns a Sugar
+ * Creates a tree from the Glycan
+ * Called after using the parser, which only returns a Glycan
  * @returns {Array}
  */
 function generateTree() {
     // Put parentId in each node
-    var nodes = sugar.graph.nodes();
+    var nodes = glycan.graph.nodes();
     for (var nodePos in nodes)
     {
         var parent;
-        for (var edge of sugar.graph.edges())
+        for (var edge of glycan.graph.edges())
         {
             if (edge.target == nodes[nodePos].id)
             {
@@ -467,7 +467,7 @@ function generateTree() {
 function updateRepeatingUnitsNodesInTree()
 {
     var repeatingUnits = [], node;
-    for (node of sugar.graph.nodes()) // We gather all the Rep
+    for (node of glycan.graph.nodes()) // We gather all the Rep
     {
         if (node.repeatingUnit != undefined)
         {
@@ -480,7 +480,7 @@ function updateRepeatingUnitsNodesInTree()
     for (var rep of repeatingUnits) // For each one we gather all the nodes that have it
     {
         var nodes = [];
-        for (node of sugar.graph.nodes())
+        for (node of glycan.graph.nodes())
         {
             if (node.repeatingUnit && node.repeatingUnit.id == rep.id)
             {
@@ -694,12 +694,12 @@ function selectRingType(target) {
 }
 
 /**
- * Checks if the user selected Anomericity and Linked Carbon
+ * Checks if the user selected Anomericity and Donor Position
  */
 function checkSelectedQuickInfo() {
     var selectedAnomericity = (d3.selectAll(".selectedAnomericity")[0].length != 0); //boolean checking if anomericity selected
-    var selectedLinkedCarbon = (d3.selectAll(".selectedLinkedCarbon")[0].length != 0); //boolean checking if linked carbon selected
-    if (selectedAnomericity && selectedLinkedCarbon)
+    var selectedDonorPosition = (d3.selectAll(".selectedDonorPosition")[0].length != 0); //boolean checking if donor position selected
+    if (selectedAnomericity && selectedDonorPosition)
     {
 
         var anomericity = d3.select(".selectedAnomericity").attr("value");
@@ -709,14 +709,14 @@ function checkSelectedQuickInfo() {
         infosTable.push(quickIsomer);
         infosTable.push(quickRingType);
 
-        var linkedCarbon = d3.select(".selectedLinkedCarbon").attr("value"); // Linked Carbon value
+        var donorPosition = d3.select(".selectedDonorPosition").attr("value"); // Donor Position value
 
-        infosTable.push(linkedCarbon); // Push the linked carbon to the infosTable
-        infosTable.push(quickAnomerCarbon); // Push the anomer carbon to the infosTable
+        infosTable.push(donorPosition); // Push the donor position to the infosTable
+        infosTable.push(quickAcceptorPosition); // Push the acceptor position to the infosTable
 
         quickIsomer = "";
         quickRingType = "";
-        quickAnomerCarbon = "";
+        quickAcceptorPosition = "";
 
         reinitializeQuickInfos();
 
@@ -782,45 +782,45 @@ function reinitializeQuickInfos() {
     d3.selectAll(".choiceAnomericity").remove();
     d3.selectAll(".labelChoiceAnomericity").remove();
 
-    d3.select("#quickLinkedCarbonTitleChoice").style("display", "block");
-    d3.select("#quickLabelLinkedCarbonTitle").style("display", "block");
+    d3.select("#quickDonorPositionTitleChoice").style("display", "block");
+    d3.select("#quickLabelDonorPositionTitle").style("display", "block");
 
     // Remove all choices rects and labels
-    d3.selectAll(".choiceLinkedCarbon").remove();
-    d3.selectAll(".labelChoiceLinkedCarbon").remove();
+    d3.selectAll(".choiceDonorPosition").remove();
+    d3.selectAll(".labelChoiceDonorPosition").remove();
 }
 
 /**
- * Manage the hover on the linked carbon choice
+ * Manage the hover on the donor position choice
  */
-function addHoverManagerLinkedCarbon(quick = false) {
+function addHoverManagerDonorPosition(quick = false) {
     var choice;
     if (quick)
-        choice = "quickLinkedCarbonTitleChoice";
+        choice = "quickDonorPositionTitleChoice";
     else
-        choice = "linkedCarbonTitleChoice";
-    var linkedCarbonTitle = d3.select("#"+choice); // Linked carbon title
-    linkedCarbonTitle.on("mouseover", function () { // Mouseover event
+        choice = "donorPositionTitleChoice";
+    var donorPositionTitle = d3.select("#"+choice); // Donor position title
+    donorPositionTitle.on("mouseover", function () { // Mouseover event
         var maxCarbons = getNumberCarbons(clickedNode);
-        var x = parseInt(d3.select("#"+choice).attr("x")); // Get the x of the linked carbon title
-        var width = d3.select("#"+choice).attr("width"); // Get the width of the linked carbon title
-        var idActions = ["linkedCarbonUnknownChoice", "linkedCarbon1Choice", "linkedCarbon2Choice", "linkedCarbon3Choice", "linkedCarbon4Choice", "linkedCarbon5Choice", "linkedCarbon6Choice", "linkedCarbon7Choice", "linkedCarbon8Choice", "linkedCarbon9Choice"];
+        var x = parseInt(d3.select("#"+choice).attr("x")); // Get the x of the donor position title
+        var width = d3.select("#"+choice).attr("width"); // Get the width of the donor position title
+        var idActions = ["donorPositionUnknownChoice", "donorPosition1Choice", "donorPosition2Choice", "donorPosition3Choice", "donorPosition4Choice", "donorPosition5Choice", "donorPosition6Choice", "donorPosition7Choice", "donorPosition8Choice", "donorPosition9Choice"];
         var associatedValues = ["?", "1", "2", "3", "4", "5", "6", "7", "8", "9"]; // Values for each choice
-        d3.select("#"+choice).style("display", "none"); // Hide the linked carbon title
+        d3.select("#"+choice).style("display", "none"); // Hide the donor position title
         if (quick)
         {
-            var linkedCarbonLabels = d3.select("#quickLabels"); // Linked carbons labels
-            var linkedCarbonActions = d3.select("#quickActions"); // Linked carbons actions
+            var donorPositionLabels = d3.select("#quickLabels"); // Donor positions labels
+            var donorPositionActions = d3.select("#quickActions"); // Donor positions actions
         }
         else
         {
-            var linkedCarbonLabels = d3.select("#labelsCarbons"); // Linked carbons labels
-            var linkedCarbonActions = d3.select("#actionsCarbons"); // Linked carbons actions
+            var donorPositionLabels = d3.select("#labelsCarbons"); // Donor positions labels
+            var donorPositionActions = d3.select("#actionsCarbons"); // Donor positions actions
         }
         for (var i = 0; i < maxCarbons+1; i++) {
             const k = i;
-            linkedCarbonActions.append("rect")
-                .attr("class", "bar choice choiceLinkedCarbon")
+            donorPositionActions.append("rect")
+                .attr("class", "bar choice choiceDonorPosition")
                 .attr("id", idActions[k])
                 .attr("width", width / (maxCarbons+1)) // 1/maxCarbons+1 the width of the title (number of carbons + "?")
                 .attr("height", 40)
@@ -828,7 +828,7 @@ function addHoverManagerLinkedCarbon(quick = false) {
                 .attr("rx", 15) // Corners of the rect
                 .attr("value", associatedValues[k]) // Get the value associated to the choice
                 .attr("opacity", function(d) {
-                    // Lower opacity of already used linked carbon values
+                    // Lower opacity of already used donor position values
                     var usedCarbons = checkUsedCarbons();
                     if (usedCarbons.indexOf(parseInt(k)) != -1) {
                         return 0.2;
@@ -837,74 +837,74 @@ function addHoverManagerLinkedCarbon(quick = false) {
                     }
                 })
                 .on("mouseout", function() {
-                    // If we dont move to another choice of linked carbon, manage the mouseout
+                    // If we dont move to another choice of donor position, manage the mouseout
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
-                    if (mouseTarget != null && !mouseTarget.classed("choiceLinkedCarbon")) {
-                        manageMouseOutLinkedCarbon(quick);
+                    if (mouseTarget != null && !mouseTarget.classed("choiceDonorPosition")) {
+                        manageMouseOutDonorPosition(quick);
                     }
                 })
                 .on("click", function () {
-                    // If we are not selecting an already used linked carbon value, manage the selection
+                    // If we are not selecting an already used donor position value, manage the selection
                     var usedCarbons = checkUsedCarbons();
                     if (usedCarbons.indexOf(parseInt(associatedValues[k])) == -1) {
-                        selectLinkedCarbon(this.id);
+                        selectDonorPosition(this.id);
                     }
                 });
         }
         // Hide the label of the title, and append all the labels for the choices (x in absolute)
         if (quick)
-            d3.select("#quickLabelLinkedCarbonTitle").style("display", "none");
+            d3.select("#quickLabelDonorPositionTitle").style("display", "none");
         else
-            d3.select("#labelLinkedCarbonTitle").style("display", "none");
+            d3.select("#labelDonorPositionTitle").style("display", "none");
         var i = 1;
-        linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text("?").attr("x", x + (980 * i - 490) / (2*(maxCarbons+1))).attr("y", 8);
+        donorPositionLabels.append("text").attr("class", "label labelChoiceDonorPosition").text("?").attr("x", x + (980 * i - 490) / (2*(maxCarbons+1))).attr("y", 8);
         while (i <= maxCarbons)
         {
             i++;
-            linkedCarbonLabels.append("text").attr("class", "label labelChoiceLinkedCarbon").text(i-1).attr("x", x + (980 * i - 490) / (2*(maxCarbons+1))).attr("y", 8);
+            donorPositionLabels.append("text").attr("class", "label labelChoiceDonorPosition").text(i-1).attr("x", x + (980 * i - 490) / (2*(maxCarbons+1))).attr("y", 8);
         }
     });
 }
 
 /**
- * Manage mouse out for linked carbon choices
+ * Manage mouse out for donor position choices
  */
-function manageMouseOutLinkedCarbon(quick) {
-    var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0]; // Get all the linked carbon choices
+function manageMouseOutDonorPosition(quick) {
+    var donorPositionChoices = d3.selectAll(".choiceDonorPosition")[0]; // Get all the donor position choices
     var selected = false;
     // Check if one is selected
-    for (var choice of linkedCarbonChoices) {
-        if ((d3.select("#" +choice.id)).classed("selectedLinkedCarbon")) {
+    for (var choice of donorPositionChoices) {
+        if ((d3.select("#" +choice.id)).classed("selectedDonorPosition")) {
             selected = true;
         }
     }
     // If not any selected, removed all the choices and display title rect and label
     if(!selected) {
-        d3.selectAll(".choiceLinkedCarbon").remove();
-        d3.selectAll(".labelChoiceLinkedCarbon").remove();
+        d3.selectAll(".choiceDonorPosition").remove();
+        d3.selectAll(".labelChoiceDonorPosition").remove();
         if (quick)
         {
-            d3.select("#quickLinkedCarbonTitleChoice").style("display", "block");
-            d3.select("#quickLabelLinkedCarbonTitle").style("display", "block");
+            d3.select("#quickDonorPositionTitleChoice").style("display", "block");
+            d3.select("#quickLabelDonorPositionTitle").style("display", "block");
         }
         else
         {
-            d3.select("#linkedCarbonTitleChoice").style("display", "block");
-            d3.select("#labelLinkedCarbonTitle").style("display", "block");
+            d3.select("#donorPositionTitleChoice").style("display", "block");
+            d3.select("#labelDonorPositionTitle").style("display", "block");
         }
     }
 }
 
 /**
- * Select a linked carbon
+ * Select a donor position
  * @param target
  */
-function selectLinkedCarbon(target) {
+function selectDonorPosition(target) {
     var prev = progress;
     var clicked = d3.select("#"+target); // Get the target choice
-    if (clicked.classed("selectedLinkedCarbon")) { // If already selected, unselect  and change color
-        clicked.classed("selectedLinkedCarbon", false);
+    if (clicked.classed("selectedDonorPosition")) { // If already selected, unselect  and change color
+        clicked.classed("selectedDonorPosition", false);
         clicked.style("fill", "#cc0000");
         if (quickMode)
         {
@@ -918,19 +918,19 @@ function selectLinkedCarbon(target) {
         }
     } else {
         // If was not selected, unselect all the other choices and adapt color
-        var linkedCarbonChoices = d3.selectAll(".choiceLinkedCarbon")[0];
-        for (var choice of linkedCarbonChoices) {
+        var donorPositionChoices = d3.selectAll(".choiceDonorPosition")[0];
+        for (var choice of donorPositionChoices) {
             var current = d3.select("#" + choice.id);
-            if (current.classed("selectedLinkedCarbon")) {
+            if (current.classed("selectedDonorPosition")) {
                 if (quickMode)
                     progress -= 2;
                 else
                     progress--;
-                current.classed("selectedLinkedCarbon", false);
+                current.classed("selectedDonorPosition", false);
                 current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#000592").classed("selectedLinkedCarbon", true);
+        d3.select("#" + target).style("fill", "#000592").classed("selectedDonorPosition", true);
         if (quickMode)
         {
             progress += 2;
@@ -987,23 +987,23 @@ function getNumberCarbons(node)
 }
 
 /**
- * Manage the hover on the anomer carbon choice
+ * Manage the hover on the acceptor position choice
  * */
-function addHoverManagerAnomerCarbon() {
-    var anomerCarbonTitle = d3.select("#anomerCarbonTitleChoice"); // Get the anomer carbon title rect
-    anomerCarbonTitle.on("mouseover", function () { // Mouseover event
-        var x = parseInt(d3.select("#anomerCarbonTitleChoice").attr("x")); // Get the x of the title
-        var width = d3.select("#anomerCarbonTitleChoice").attr("width"); // Get the width of the title
-        var idActions = ["anomerCarbon1Choice", "anomerCarbon2Choice", "anomerCarbon3Choice", "anomerCarbon4Choice", "anomerCarbon5Choice", "anomerCarbon6Choice", "anomerCarbonUnknownChoice"];
+function addHoverManagerAcceptorPosition() {
+    var acceptorPositionTitle = d3.select("#acceptorPositionTitleChoice"); // Get the acceptor position title rect
+    acceptorPositionTitle.on("mouseover", function () { // Mouseover event
+        var x = parseInt(d3.select("#acceptorPositionTitleChoice").attr("x")); // Get the x of the title
+        var width = d3.select("#acceptorPositionTitleChoice").attr("width"); // Get the width of the title
+        var idActions = ["acceptorPosition1Choice", "acceptorPosition2Choice", "acceptorPosition3Choice", "acceptorPositionUnknownChoice"];
         var associatedValues = ["1", "2", "3", "?"]; // Values for each choice
-        d3.select("#anomerCarbonTitleChoice").style("display", "none"); // Hide the anomer carbon title
-        var anomerCarbonLabels = d3.select("#labelsCarbons"); // Labels for anomer carbons choices
-        var anomerCarbonActions = d3.select("#actionsCarbons"); // Rects for anomer carbons choices
+        d3.select("#acceptorPositionTitleChoice").style("display", "none"); // Hide the acceptor position title
+        var acceptorPositionLabels = d3.select("#labelsCarbons"); // Labels for acceptor positions choices
+        var acceptorPositionActions = d3.select("#actionsCarbons"); // Rects for acceptor positions choices
         // Loop for each value
         for (var i = 0; i < 4; i++) {
             const k = i;
-            anomerCarbonActions.append("rect")
-                .attr("class", "bar choice choiceAnomerCarbon")
+            acceptorPositionActions.append("rect")
+                .attr("class", "bar choice choiceAcceptorPosition")
                 .attr("id", idActions[k])
                 .attr("width", width / 4)
                 .attr("height", 40)
@@ -1030,8 +1030,8 @@ function addHoverManagerAnomerCarbon() {
                     var newHovered = document.querySelectorAll(":hover");
                     var mouseTarget = d3.select(newHovered[newHovered.length -1]);
                     // If not moving to another anomer choice, manage the event
-                    if (mouseTarget != null && !mouseTarget.classed("choiceAnomerCarbon")) {
-                        manageMouseOutAnomerCarbon();
+                    if (mouseTarget != null && !mouseTarget.classed("choiceAcceptorPosition")) {
+                        manageMouseOutAcceptorPosition();
                     }
                 })
                 .on("click", function () {
@@ -1046,63 +1046,63 @@ function addHoverManagerAnomerCarbon() {
                     }
                     var newType = getMonoTypeWithColorAndShape(color, shape, isBisected);
                     if (!(sb.SubstituentsPositions[newType.name] && sb.SubstituentsPositions[newType.name].position == parseInt(associatedValues[k]))) {
-                        selectAnomerCarbon(this.id);
+                        selectAcceptorPosition(this.id);
                     }
                 });
         }
         // Hide the label of the title, and append all the labels for the choices (x in absolute)
-        d3.select("#labelAnomerCarbonTitle").style("display", "none");
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("1").attr("x", x + 490 / 8).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("2").attr("x", x + 1470 / 8).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("3").attr("x", x + 2450 / 8).attr("y", 8);
-        anomerCarbonLabels.append("text").attr("class", "label labelChoiceAnomerCarbon").text("?").attr("x", x + 3430 / 8).attr("y", 8);
+        d3.select("#labelAcceptorPositionTitle").style("display", "none");
+        acceptorPositionLabels.append("text").attr("class", "label labelChoiceAcceptorPosition").text("1").attr("x", x + 490 / 8).attr("y", 8);
+        acceptorPositionLabels.append("text").attr("class", "label labelChoiceAcceptorPosition").text("2").attr("x", x + 1470 / 8).attr("y", 8);
+        acceptorPositionLabels.append("text").attr("class", "label labelChoiceAcceptorPosition").text("3").attr("x", x + 2450 / 8).attr("y", 8);
+        acceptorPositionLabels.append("text").attr("class", "label labelChoiceAcceptorPosition").text("?").attr("x", x + 3430 / 8).attr("y", 8);
     });
 }
 
 /**
- * Manage mouse out for anomer carbon choices
+ * Manage mouse out for acceptor position choices
  */
-function manageMouseOutAnomerCarbon() {
-    var anomerCarbonChoices = d3.selectAll(".choiceAnomerCarbon")[0]; // Get all the anomer carbon choices
+function manageMouseOutAcceptorPosition() {
+    var acceptorPositionChoices = d3.selectAll(".choiceAcceptorPosition")[0]; // Get all the acceptor position choices
     var selected = false;
     // Check if one is already selected
-    for (var choice of anomerCarbonChoices) {
-        if ((d3.select("#" +choice.id)).classed("selectedAnomerCarbon")) {
+    for (var choice of acceptorPositionChoices) {
+        if ((d3.select("#" +choice.id)).classed("selectedAcceptorPosition")) {
             selected = true;
         }
     }
     // If not any choice was selected, remove all the rects and labels and display title rect and label
     if(!selected) {
-        d3.selectAll(".choiceAnomerCarbon").remove();
-        d3.selectAll(".labelChoiceAnomerCarbon").remove();
-        d3.select("#anomerCarbonTitleChoice").style("display", "block");
-        d3.select("#labelAnomerCarbonTitle").style("display", "block");
+        d3.selectAll(".choiceAcceptorPosition").remove();
+        d3.selectAll(".labelChoiceAcceptorPosition").remove();
+        d3.select("#acceptorPositionTitleChoice").style("display", "block");
+        d3.select("#labelAcceptorPositionTitle").style("display", "block");
     }
 }
 
 /**
- * Select an anomer carbon
- * @param target The clicked anomer carbon choice
+ * Select an acceptor position
+ * @param target The clicked acceptor position choice
  */
-function selectAnomerCarbon(target) {
+function selectAcceptorPosition(target) {
     var prev = progress;
     var clicked = d3.select("#"+target); // Get the selected choice
-    if (clicked.classed("selectedAnomerCarbon")) { // If it was selected, unselect it and change color
-        clicked.classed("selectedAnomerCarbon", false);
+    if (clicked.classed("selectedAcceptorPosition")) { // If it was selected, unselect it and change color
+        clicked.classed("selectedAcceptorPosition", false);
         clicked.style("fill", "#cc0000");
         progress--;
         redrawProgress(prev);
     } else { // If it was not selected, unselect all other anomer choices, and adapt style
-        var isomerChoices = d3.selectAll(".choiceAnomerCarbon")[0];
+        var isomerChoices = d3.selectAll(".choiceAcceptorPosition")[0];
         for (var choice of isomerChoices) {
             var current = d3.select("#" + choice.id);
-            if (current.classed("selectedAnomerCarbon")) {
-                current.classed("selectedAnomerCarbon", false);
+            if (current.classed("selectedAcceptorPosition")) {
+                current.classed("selectedAcceptorPosition", false);
                 progress--;
                 current.style("fill", "#cc0000");
             }
         }
-        d3.select("#" + target).style("fill", "#000592").classed("selectedAnomerCarbon", true); // Add the selected class and change color
+        d3.select("#" + target).style("fill", "#000592").classed("selectedAcceptorPosition", true); // Add the selected class and change color
         progress++;
         redrawProgress(prev);
         checkSelectedAllCarbons(); // Check if the two carbon values have been selected
@@ -1113,13 +1113,13 @@ function selectAnomerCarbon(target) {
  * Checks that the user selected the two carbon values informations, and changes menu if he did
  */
 function checkSelectedAllCarbons() {
-    var selectedLinkedCarbon = (d3.selectAll(".selectedLinkedCarbon")[0].length != 0); //boolean checking if linked carbon selected
-    var selectedAnomerCarbon = (d3.selectAll(".selectedAnomerCarbon")[0].length != 0); //boolean checking if anomer carbon selected
-    if (selectedLinkedCarbon && selectedAnomerCarbon) { // If both have been selected
-        var linkedCarbon = d3.select(".selectedLinkedCarbon").attr("value"); // Linked Carbon value
-        var anomerCarbon = d3.select(".selectedAnomerCarbon").attr("value"); // Anomer Carbon value
-        infosTable.push(linkedCarbon); // Push the linked carbon to the infosTable
-        infosTable.push(anomerCarbon); // Push the anomer carbon to the infosTable
+    var selectedDonorPosition = (d3.selectAll(".selectedDonorPosition")[0].length != 0); //boolean checking if donor position selected
+    var selectedAcceptorPosition = (d3.selectAll(".selectedAcceptorPosition")[0].length != 0); //boolean checking if acceptor position selected
+    if (selectedDonorPosition && selectedAcceptorPosition) { // If both have been selected
+        var donorPosition = d3.select(".selectedDonorPosition").attr("value"); // Donor Position value
+        var acceptorPosition = d3.select(".selectedAcceptorPosition").attr("value"); // Acceptor Position value
+        infosTable.push(donorPosition); // Push the donor position to the infosTable
+        infosTable.push(acceptorPosition); // Push the acceptor position to the infosTable
         reinitializeDisplayCarbons(); // Reinitialize the display of carbons rects and labels
         var methodToCall = infosTable[0]; // Get the method which has to be called
         if (methodToCall == "addNode") {
@@ -1139,23 +1139,23 @@ function checkSelectedAllCarbons() {
 function reinitializeDisplayCarbons() {
     d3.select("#svgCarbons").transition().style("display","none"); // Hide the carbon menu
     // Put back the titles rects and labels
-    d3.select("#linkedCarbonTitleChoice").style("display", "block");
-    d3.select("#labelLinkedCarbonTitle").style("display", "block");
-    d3.select("#anomerCarbonTitleChoice").style("display", "block");
-    d3.select("#labelAnomerCarbonTitle").style("display", "block");
+    d3.select("#donorPositionTitleChoice").style("display", "block");
+    d3.select("#labelDonorPositionTitle").style("display", "block");
+    d3.select("#acceptorPositionTitleChoice").style("display", "block");
+    d3.select("#labelAcceptorPositionTitle").style("display", "block");
 
     // Remove all choices rects and labels
-    d3.selectAll(".choiceLinkedCarbon").remove();
-    d3.selectAll(".labelChoiceLinkedCarbon").remove();
-    d3.selectAll(".choiceAnomerCarbon").remove();
-    d3.selectAll(".labelChoiceAnomerCarbon").remove();
+    d3.selectAll(".choiceDonorPosition").remove();
+    d3.selectAll(".labelChoiceDonorPosition").remove();
+    d3.selectAll(".choiceAcceptorPosition").remove();
+    d3.selectAll(".labelChoiceAcceptorPosition").remove();
 }
 
 /**
- * Checks the used linked carbon values of a node so that we can't use a carbon twice
+ * Checks the used donor position values of a node so that we can't use a carbon twice
  */
 function checkUsedCarbons() {
-    // If sugar not created yet, return empty array
+    // If glycan not created yet, return empty array
     if (Object.keys(treeData).length === 0) {
         return [];
     } else {
@@ -1164,19 +1164,19 @@ function checkUsedCarbons() {
         {
             usedCarbons.push(sb.SubstituentsPositions[clickedNode.monosaccharideType.name].position);
         }
-        var edges = sugar.graph.edges();
-        // For each edge, if the source is the clickedNode, we add the linked carbon value to the array
+        var edges = glycan.graph.edges();
+        // For each edge, if the source is the clickedNode, we add the donor position value to the array
         if (clickedNode == treeData.node && infosTable[0] != "updateNode")// If first node
         {
-            usedCarbons.push(rootAnomerCarbon.value);
+            usedCarbons.push(rootAcceptorPosition.value);
         }
         for (var edge of edges) {
             if (edge.sourceNode == clickedNode) {
-                usedCarbons.push(edge.linkedCarbon.value);
+                usedCarbons.push(edge.donorPosition.value);
             }
             else if (edge.targetNode == clickedNode) {
                 if (infosTable[0] != "updateNode")
-                    usedCarbons.push(edge.anomerCarbon.value);
+                    usedCarbons.push(edge.acceptorPosition.value);
             }
         }
         return usedCarbons; // Return the final array

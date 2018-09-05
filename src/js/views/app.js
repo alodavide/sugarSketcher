@@ -4,7 +4,7 @@ var clickedNode = null;
 var selectedNodes = [];
 var copiedNode = null;
 
-var rootLinkedCarbon, rootAnomerCarbon;
+var rootDonorPosition, rootAcceptorPosition;
 
 const gap = 50; // Distance between two nodes
 const origin = [200, 600];
@@ -14,7 +14,7 @@ var ctrl; // Boolean if ctrl is held
 var quickMode; // Boolean if Quick Mode button is toggled on
 var exporting; // Boolean to know if we are exporting the SVG of the glycan (to remove the selection from the final image)
 
-// Directions where every node should be regarding its parent and its linkedCarbon
+// Directions where every node should be regarding its parent and its donorPosition
 var XYvalues = {1: [gap, 0], 2: [0, gap], 3: [-1*gap, gap], 4: [-1*gap, 0], 5: [-1*gap, 0], 6: [-1*gap, -1*gap], 7: [0,-1*gap], 8: [0,-1*gap], 9: [0,-1*gap], 'undefined': [0,-1*gap]};
 // Values for links labels X and Y
 var XYlinkLabels = {1: [4, 0], 2: [-3,14], 3: [0, 10], 4: [4, 0], 5: [0,0], 6: [-10,13], 7: [0,14], 8: [0,14], 9: [0,14], 'undefined': [0,14]};
@@ -204,13 +204,13 @@ function displayTree() {
     var treeSvg = d3.select("#svgTree"); // Get the svgTree
     treeSvg.selectAll('.node').remove(); // Remove all the nodes
     treeSvg.selectAll('.nodelink').remove(); // Remove all the links
-    treeSvg.selectAll('.linkLabel').remove(); // Remove all link labels
+    treeSvg.selectAll('.linkLabel').remove(); // Remove all link labelsot
     treeSvg.selectAll('.rep').remove(); // Remove all the brackets
     treeSvg.selectAll('.repLabel').remove(); // Remove all the Repeating labels
     treeSvg.selectAll('#rootAttach').remove(); // Remove the root attach
 
 
-    if (sugar.rootIsSet()) {
+    if (glycan.rootIsSet()) {
         var nodes = tree.nodes(treeData); // Tree nodes
         var links = tree.links(nodes); // Tree links
 
@@ -573,7 +573,7 @@ function displayTree() {
 }
 
 /**
- * Called once to display the linkedCarbon and anomerCarbon of the link,
+ * Called once to display the donorPosition and acceptorPosition of the link,
  * Then once more to display the anomericity (with a different font-family)
  * A Monospace font is used so that no matter what the two labels contain,
  * they won't overlap each other
@@ -629,7 +629,7 @@ function displayLabels(linkLabel, links, anom)
             }
             else
             {
-                var linked = findLinkForMono(d.target.node).linkedCarbon.value;
+                var linked = findLinkForMono(d.target.node).donorPosition.value;
                 if (linked == 2 || linked == 3 || linked == 6 || linked == "undefined")
                 {
                     return "middle";
@@ -665,11 +665,11 @@ function displayLabels(linkLabel, links, anom)
             if (d.source.node.id == "root")
                 finalX = usualX+5; // Add value to have a visible display (not on the line)
             else
-                finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][1]; // Add value to have a visible display (not on the line)
+                finalX = usualX + XYlinkLabels[findLinkForMono(d.target.node).donorPosition.value][1]; // Add value to have a visible display (not on the line)
         }
         else // Substituant
         {
-            finalX = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[1];
+            finalX = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).donorPosition.value)[1];
         }
 
         return finalX; // Return the obtained value
@@ -684,11 +684,11 @@ function displayLabels(linkLabel, links, anom)
             if (d.source.node.id == "root")
                 finalY = usualY + 5; // Add value to have a visible display
             else
-                finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).linkedCarbon.value][0]; // Add value to have a visible display
+                finalY = usualY + XYlinkLabels[findLinkForMono(d.target.node).donorPosition.value][0]; // Add value to have a visible display
         }
         else // Substituant
         {
-            finalY = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).linkedCarbon.value)[0];
+            finalY = findSubstituantLabelSpot(source[0], source[1], findLinkForMono(d.target.node).donorPosition.value)[0];
         }
         return finalY; // Return the obtained value
     })
@@ -729,49 +729,49 @@ function displayLabels(linkLabel, links, anom)
                     anomericity = "?\u00A0";
                 }
             }
-            var anomerCarbonLabel;
+            var acceptorPositionLabel;
             if (anom)
-                anomerCarbonLabel = "\u00A0";
+                acceptorPositionLabel = "\u00A0";
             else
             {
                 if (d.source.node.id == "root")
                 {
-                    if (rootAnomerCarbon.value == "undefined") {
-                        anomerCarbonLabel = "?";
+                    if (rootAcceptorPosition.value == "undefined") {
+                        acceptorPositionLabel = "?";
                     }
                     else {
-                        anomerCarbonLabel = rootAnomerCarbon.value;
+                        acceptorPositionLabel = rootAcceptorPosition.value;
                     }
                 }
                 else
                 {
-                    if (link.anomerCarbon.value == "undefined") {
-                        anomerCarbonLabel = "?";
+                    if (link.acceptorPosition.value == "undefined") {
+                        acceptorPositionLabel = "?";
                     }
                     else {
-                        anomerCarbonLabel = link.anomerCarbon.value;
+                        acceptorPositionLabel = link.acceptorPosition.value;
                     }
                 }
             }
 
-            var linkedCarbonLabel;
+            var donorPositionLabel;
             if (anom)
-                linkedCarbonLabel = "\u00A0";
+                donorPositionLabel = "\u00A0";
             else {
                 if (d.source.node.id == "root")
                 {
-                    if (rootLinkedCarbon.value == 'undefined') {
-                        linkedCarbonLabel = "?";
+                    if (rootDonorPosition.value == 'undefined') {
+                        donorPositionLabel = "?";
                     } else {
-                        linkedCarbonLabel = rootLinkedCarbon.value;
+                        donorPositionLabel = rootDonorPosition.value;
                     }
                 }
                 else
                 {
-                    if (link.linkedCarbon.value == 'undefined') {
-                        linkedCarbonLabel = "?";
+                    if (link.donorPosition.value == 'undefined') {
+                        donorPositionLabel = "?";
                     } else {
-                        linkedCarbonLabel = link.linkedCarbon.value;
+                        donorPositionLabel = link.donorPosition.value;
                     }
                 }
             }
@@ -780,7 +780,7 @@ function displayLabels(linkLabel, links, anom)
                 coma = "\u00A0";
             else
                 coma = ",";
-            return anomericity + anomerCarbonLabel + coma + linkedCarbonLabel; // Text of the label
+            return anomericity + acceptorPositionLabel + coma + donorPositionLabel; // Text of the label
         }
         else
         {
@@ -854,7 +854,7 @@ function pasteNewNode(node) {
         copyOfLinkage.source = nodeToAppend.node.id; // Change the source with the id of the node to append
         copyOfLinkage.sourceNode = nodeToAppend.node; // Change the sourceNode with the node to append
     } else { // If we copied the root, then create a new linkage with undefined anomer and linked carbons
-        copyOfLinkage = new sb.GlycosidicLinkage(randomString(7), sugar.getNodeById(nodeToAppend.node.id), sugar.getNodeById(foundNodeInTree.node.id), sb.AnomerCarbon.UNDEFINED, sb.LinkedCarbon.UNDEFINED);
+        copyOfLinkage = new sb.GlycosidicLinkage(randomString(7), glycan.getNodeById(nodeToAppend.node.id), glycan.getNodeById(foundNodeInTree.node.id), sb.AcceptorPosition.UNDEFINED, sb.DonorPosition.UNDEFINED);
     }
     changeChildrenIds(copyOfNode); // Change all the children nodes ids (to avoid error of twice same id in tree)
     if (typeof nodeToAppend.children == 'undefined') { // Add children property if the node doesn't have children yet
@@ -878,9 +878,9 @@ function pasteNewNode(node) {
     if (typeof nodeToAppend.children === 'undefined') {
         nodeToAppend["children"] = [];
     }
-    sugar.graph.addEdge(copyOfLinkage); // Add the first edge to the graph
+    glycan.graph.addEdge(copyOfLinkage); // Add the first edge to the graph
     for (var link of copyOfLinks) { // Add all links to the graph
-        sugar.graph.addEdge(link);
+        glycan.graph.addEdge(link);
     }
     fadeOutContextMenu();
 
@@ -944,7 +944,7 @@ function findLinksForCopy(node) {
     var allLinks = [];
     if (node.children != null) {
         for (var i = 0; i < node.children.length; i++) {
-            allLinks.push(sugar.getEdge(node.node, node.children[i].node));
+            allLinks.push(glycan.getEdge(node.node, node.children[i].node));
             allLinks = allLinks.concat(findLinksForCopy(node.children[i]));
         }
     }
@@ -957,7 +957,7 @@ function findLinksForCopy(node) {
  * @param node The node to add
  */
 function addNodeCopyInGraph(node) {
-    sugar.graph.addNode(node.node);
+    glycan.graph.addNode(node.node);
     if (node.children != null) {
         for (var i = 0; i < node.children.length; i++) {
             addNodeCopyInGraph(node.children[i]);
@@ -999,16 +999,16 @@ function changeChildrenIds(node) {
 }
 
 /**
- * Finds the edge in the sugar which has the monosaccharide as target
+ * Finds the edge in the glycan which has the monosaccharide as target
  * @param monosaccharide The monosaccharide which is the target fo the searched link
  * @returns {*}
  */
 function findLinkForMono(monosaccharide) {
-    var links = sugar.graph.edges(); // Tree links
+    var links = glycan.graph.edges(); // Tree links
     for (var link of links) {
         // If the link has the node as target, return the edge from the graph s
         if (link.target == monosaccharide.id) {
-            return sugar.getEdge(link.sourceNode, link.targetNode);
+            return glycan.getEdge(link.sourceNode, link.targetNode);
         }
     }
     return undefined;
@@ -1037,13 +1037,13 @@ function isAvailible(x, y)
 function calculateXandYNode(node) {
     var link = findLinkForMono(node.node); // Find the link which has the node as target
     if (typeof link != 'undefined') { // If the link exists
-        var linkedCarbon = link.linkedCarbon.value; // Get linked carbon value
+        var donorPosition = link.donorPosition.value; // Get linked carbon value
         var sourceX;
         var sourceY;
         var sourceId;
 
         // Calculate new coordinates for the wanted node
-        for (var n of sugar.graph.nodes()) {
+        for (var n of glycan.graph.nodes()) {
             if (n == link.sourceNode) {
                 sourceId = n.id;
                 var source = shapes[sourceId];
@@ -1053,14 +1053,14 @@ function calculateXandYNode(node) {
         }
 
         // Modifications we have to do on the obtained value
-        var modificationsXY = XYvalues[linkedCarbon];
+        var modificationsXY = XYvalues[donorPosition];
         var newX = sourceX  + modificationsXY[1]; // Apply the modification on x
         var newY = sourceY + modificationsXY[0]; // Apply the modification on y
 
         var availible = isAvailible(newX, newY);
         if (availible != "")
         {
-            var newPos = findNewSpot(newX,newY, link.linkedCarbon.value, sourceId);
+            var newPos = findNewSpot(newX,newY, link.donorPosition.value, sourceId);
             newX = newPos[0];
             newY = newPos[1];
         }
@@ -1191,7 +1191,7 @@ function createTriangleLinearGradient(color, gradientId) {
 
 /**
  * Returns a new availible position for a shape to be at.
- * @param x, y, linkedCarbon
+ * @param x, y, donorPosition
  */
 function findNewSpot(x, y, linked, sourceId = clickedNode.id)
 {
@@ -1271,10 +1271,10 @@ function findNewSpot(x, y, linked, sourceId = clickedNode.id)
  * @param x, y : Coordinates of the source
  * @param label: label, to calculate offset to node
  */
-function findSubstituantLabelSpot(x, y, linkedCarbon)
+function findSubstituantLabelSpot(x, y, donorPosition)
 {
     var subsXY = {1: [x-7, y+20], 2: [x+16, y], 3: [x+16,y-16], 4: [x-7, y-28], 5: [x+16, y+8], 6: [x-28, y-16], 7: [x-28, y+8], 8: [x-28, y+16], 9: [x+16, y+16], "undefined": [x-28, y]};
-    return subsXY[linkedCarbon];
+    return subsXY[donorPosition];
 }
 
 /**
@@ -1304,7 +1304,7 @@ function clickedNodeHasSubs()
     var name = clickedNode.monosaccharideType.name;
     if (sb.SubstituentsPositions[name])
         return true;
-    for (var edge of sugar.graph.edges())
+    for (var edge of glycan.graph.edges())
     {
         if (edge.sourceNode == clickedNode && edge.targetNode instanceof sb.Substituent)
         {

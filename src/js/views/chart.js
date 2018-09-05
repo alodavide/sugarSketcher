@@ -2,7 +2,7 @@
  * Created by Nicolas Hory on 27/07/16.
  */
 
-// The possible values for the linked carbon
+// The possible values for the donor position
 
 
 var datasetLinkCarbon = [
@@ -20,7 +20,7 @@ var datasetLinkCarbon = [
 
 
 /**
- * Display the piechart for linked carbon for substituent
+ * Display the piechart for donor position for substituent
  */
 function displayPie() {
     var carbons = getNumberCarbons(clickedNode);
@@ -72,7 +72,7 @@ function displayPie() {
             class: 'choiceLinkCarbon'
         })
         .attr("opacity", function(d) {
-            // Change the opacity of the linked carbons which are already used by the node
+            // Change the opacity of the donor positions which are already used by the node
             var usedCarbons = checkUsedCarbons();
             if (usedCarbons.indexOf(parseInt(d.data.name)) != -1 || parseInt(d.data.name) > carbons) {
                 return 0.2;
@@ -81,7 +81,7 @@ function displayPie() {
             }
         })
         .on("click", function (d) {
-            // For each possible linked carbon, manage click
+            // For each possible donor position, manage click
             var usedCarbons = checkUsedCarbons();
             if (d.data.name == '?' || (usedCarbons.indexOf(parseInt(d.data.name)) == -1 && parseInt(d.data.name) <= carbons)) {
                 // Hide the piechart and the substituents menu
@@ -96,7 +96,7 @@ function displayPie() {
             }
         });
 
-    // Labels for each linked carbon
+    // Labels for each donor position
     var text = svg.selectAll('text')
         .data(pie(datasetLinkCarbon))
         .enter()

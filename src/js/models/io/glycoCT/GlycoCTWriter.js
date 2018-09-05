@@ -12,12 +12,12 @@ import RepeatingUnit from "../../glycomics/RepeatingUnit";
 import MonosaccharideGlycoCT from "./MonosaccharideGlycoCT";
 import SubstituentLinkage from "../../glycomics/linkages/SubstituentLinkage";
 import SubstituentsPositions from "./SubstituentsPositions";
-import LinkedCarbon from "../../glycomics/dictionary/LinkedCarbon";
+import DonorPosition from "../../glycomics/dictionary/DonorPosition";
 
 export default class GlycoCTWriter{
 
-    constructor(sugar,tree){
-        this.sugar = sugar;
+    constructor(glycan,tree){
+        this.glycan = glycan;
         this.tree = tree;
         this.res = [];
         this.rep = [];
@@ -90,15 +90,15 @@ export default class GlycoCTWriter{
     }
 
     // Add a substituent link to the formula
-    writeSubLink(i,source, target, linkedCarbon, anomerCarbon)
+    writeSubLink(i,source, target, donorPosition, acceptorPosition)
     {
         var formula = "";
         // Substituent links start with index, and "d"
         formula += i+1 + ":" + source + "d";
 
-        formula += "(" + linkedCarbon;
+        formula += "(" + donorPosition;
         formula += "+";
-        formula += anomerCarbon + ")";
+        formula += acceptorPosition + ")";
 
         // They end with "n"
         formula += target + "n";
@@ -109,15 +109,15 @@ export default class GlycoCTWriter{
     }
 
     // Add a Monosaccharide link to the formula
-    writeMonoLink(i, source, target, linkedCarbon, anomerCarbon, prefix = "o", suffix = "d")
+    writeMonoLink(i, source, target, donorPosition, acceptorPosition, prefix = "o", suffix = "d")
     {
         var formula = "";
         // Monosaccharide links start by either "n" if the source node is ending a Repeating Unit, or "o" otherwise
         formula += i + ":" + source + prefix;
 
-        formula += "(" + linkedCarbon;
+        formula += "(" + donorPosition;
         formula += "+";
-        formula += anomerCarbon + ")";
+        formula += acceptorPosition + ")";
 
         // They end with "n" if the target node starts a Repeating Unit, "d" otherwise
         formula += target + suffix;
@@ -164,7 +164,7 @@ export default class GlycoCTWriter{
     // Get a link between two nodes whose ids are given
     getLink(id1, id2)
     {
-        for (var edge of this.sugar.graph.edges())
+        for (var edge of this.glycan.graph.edges())
         {
             if ((edge.source == id1 && edge.target == id2) || (edge.source == id2 && edge.target == id1))
             {
@@ -354,7 +354,7 @@ export default class GlycoCTWriter{
                 }
                 else // It can be that the residue is a Mono+Sub (GalNAc...)
                 {
-                    var monoName, subName, assocSubType, assocSub, linkedCarbon;
+                    var monoName, subName, assocSubType, assocSub, donorPosition;
                     if (MonosaccharideGlycoCT[resName.substring(0,3)] !== undefined) // If the 3 first letters make a monosaccharide
                     {
                         // We get the raw monosaccharide type, and we put the substituent in an array to be treated later
@@ -366,9 +366,9 @@ export default class GlycoCTWriter{
                         assocSub = new Substituent(this.randomString(7),assocSubType);
                         if (SubstituentsPositions[resName] !== undefined) // Should always be defined
                         {
-                            linkedCarbon = SubstituentsPositions[resName].position;
+                            donorPosition = SubstituentsPositions[resName].position;
                         }
-                        associatedSubs.push([assocSub,i+1+offset,linkedCarbon]);
+                        associatedSubs.push([assocSub,i+1+offset,donorPosition]);
                     }
                     else if (MonosaccharideGlycoCT[resName.substring(0,4)] !== undefined) // If the 4 first letters make a monosaccharide. e.g Nonu
                     {
@@ -381,9 +381,9 @@ export default class GlycoCTWriter{
                         assocSub = new Substituent(this.randomString(7),assocSubType);
                         if (SubstituentsPositions[resName] !== undefined) // Should always be defined
                         {
-                            linkedCarbon = SubstituentsPositions[resName].position;
+                            donorPosition = SubstituentsPositions[resName].position;
                         }
-                        associatedSubs.push([assocSub,i+1+offset, linkedCarbon]);
+                        associatedSubs.push([assocSub,i+1+offset, donorPosition]);
                     }
                 }
 
@@ -445,14 +445,14 @@ export default class GlycoCTWriter{
             {
                 // We get the link information
                 var source = (edges[i].sourceNode.repeatingUnit === undefined || unit !== "") ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
-                var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-                var anomerCarbon;
+                var donorPosition = edges[i].donorPosition.value === "undefined" ? -1 : edges[i].donorPosition.value;
+                var acceptorPosition;
                 if (edges[i] instanceof SubstituentLinkage)
-                    anomerCarbon = 1;
-                else if (edges[i].anomerCarbon.value === "undefined")
-                    anomerCarbon = 1;
+                    acceptorPosition = 1;
+                else if (edges[i].acceptorPosition.value === "undefined")
+                    acceptorPosition = 1;
                 else
-                    anomerCarbon = edges[i].anomerCarbon.value;
+                    acceptorPosition = edges[i].acceptorPosition.value;
 
 
                 var target = (edges[i].targetNode.repeatingUnit === undefined || unit !== "") ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
@@ -480,11 +480,11 @@ export default class GlycoCTWriter{
                                 suffix = "n";
                             }
                         }
-                        formula += this.writeMonoLink(i+1+offset, source, target, linkedCarbon, anomerCarbon, prefix, suffix);
+                        formula += this.writeMonoLink(i+1+offset, source, target, donorPosition, acceptorPosition, prefix, suffix);
                     }
                     else
                     {
-                        formula += this.writeSubLink(i+offset, source, target, linkedCarbon, anomerCarbon);
+                        formula += this.writeSubLink(i+offset, source, target, donorPosition, acceptorPosition);
                     }
                 }
                 else
@@ -573,9 +573,9 @@ export default class GlycoCTWriter{
                 lastResId = resInfo[0];
                 var exitId = lastResId;
                 formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
-                formula += rep.linkedCarbon === LinkedCarbon.UNDEFINED ? "-1" : rep.linkedCarbon;
+                formula += rep.donorPosition === DonorPosition.UNDEFINED ? "-1" : rep.donorPosition;
                 formula += "+";
-                formula += rep.anomerCarbon === LinkedCarbon.UNDEFINED ? "-1" : rep.anomerCarbon;
+                formula += rep.acceptorPosition === AcceptorPosition.UNDEFINED ? "-1" : rep.acceptorPosition;
                 formula += ")" + entryId + "d=";
                 formula += rep.min === "?" ? "-1" : rep.min;
                 formula += "-";

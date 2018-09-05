@@ -3,16 +3,16 @@
  * Version: 0.0.1
  */
 
-import LinkedCarbon from "../../../js/models/glycomics/dictionary/LinkedCarbon";
+import DonorPosition from "../../../js/models/glycomics/dictionary/DonorPosition";
 
-QUnit.module("Test LinkedCarbon enum", {
+QUnit.module("Test DonorPosition enum", {
 });
 
-QUnit.test( "Test LinkedCarbon value" , function( assert ) {
+QUnit.test( "Test DonorPosition value" , function( assert ) {
 
-    assert.ok(LinkedCarbon.ONE.value === 1);
-    assert.ok(LinkedCarbon.UNDEFINED.value === 'undefined');
-    assert.notOk(LinkedCarbon.ONE.value === 3);
-    assert.notOk(LinkedCarbon.UNDEFINED.value === 'ciao');
+    assert.ok(DonorPosition.ONE.value === 1);
+    assert.ok(DonorPosition.UNDEFINED.value === 'undefined');
+    assert.notOk(DonorPosition.ONE.value === 3);
+    assert.notOk(DonorPosition.UNDEFINED.value === 'ciao');
 });
 

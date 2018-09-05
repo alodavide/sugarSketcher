@@ -59,7 +59,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ImageExporter = exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.Controller = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Sugar = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.LinkedCarbon = exports.Isomer = exports.Anomericity = exports.AnomerCarbon = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
+	exports.ImageExporter = exports.Structures = exports.QuickModeMonosaccharides = exports.MonosaccharideGlycoCT = exports.SubstituentsPositions = exports.RepeatingUnit = exports.NodeComparator = exports.GlycoCTSubstituents = exports.GlycoCTWriter = exports.GlycoCTParser = exports.Glycan = exports.Substituent = exports.SubstituentLinkage = exports.GlycosidicLinkage = exports.SubstituentType = exports.Monosaccharide = exports.RingType = exports.MonosaccharideType = exports.DonorPosition = exports.Isomer = exports.Anomericity = exports.AcceptorPosition = exports.GraphNode = exports.GraphEdge = exports.Graph = undefined;
 	
 	var _Graph = __webpack_require__(1);
 	
@@ -73,9 +73,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GraphNode2 = _interopRequireDefault(_GraphNode);
 	
-	var _AnomerCarbon = __webpack_require__(4);
+	var _AcceptorPosition = __webpack_require__(4);
 	
-	var _AnomerCarbon2 = _interopRequireDefault(_AnomerCarbon);
+	var _AcceptorPosition2 = _interopRequireDefault(_AcceptorPosition);
 	
 	var _Anomericity = __webpack_require__(6);
 	
@@ -85,9 +85,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Isomer2 = _interopRequireDefault(_Isomer);
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _DonorPosition = __webpack_require__(8);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _DonorPosition2 = _interopRequireDefault(_DonorPosition);
 	
 	var _MonosaccharideType = __webpack_require__(9);
 	
@@ -137,9 +137,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Substituent2 = _interopRequireDefault(_Substituent);
 	
-	var _Sugar = __webpack_require__(21);
+	var _Glycan = __webpack_require__(21);
 	
-	var _Sugar2 = _interopRequireDefault(_Sugar);
+	var _Glycan2 = _interopRequireDefault(_Glycan);
 	
 	var _RepeatingUnit = __webpack_require__(22);
 	
@@ -161,53 +161,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _ImageExporter2 = _interopRequireDefault(_ImageExporter);
 	
-	var _Controller = __webpack_require__(28);
-	
-	var _Controller2 = _interopRequireDefault(_Controller);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * This file allows the creation of a bundle library. 
-	 * Author:  Davide Alocci
-	 * Version: 0.0.1
-	 */
-	
-	//Data Structure
-	exports.Graph = _Graph2.default;
-	exports.GraphEdge = _GraphEdge2.default;
-	exports.GraphNode = _GraphNode2.default;
-	exports.AnomerCarbon = _AnomerCarbon2.default;
-	exports.Anomericity = _Anomericity2.default;
-	exports.Isomer = _Isomer2.default;
-	exports.LinkedCarbon = _LinkedCarbon2.default;
-	exports.MonosaccharideType = _MonosaccharideType2.default;
-	exports.RingType = _RingType2.default;
-	exports.Monosaccharide = _Monosaccharide2.default;
-	exports.SubstituentType = _SubstituentType2.default;
-	exports.GlycosidicLinkage = _GlycosidicLinkage2.default;
-	exports.SubstituentLinkage = _SubstituentLinkage2.default;
-	exports.Substituent = _Substituent2.default;
-	exports.Sugar = _Sugar2.default;
-	exports.GlycoCTParser = _GlycoCTParser2.default;
-	exports.GlycoCTWriter = _GlycoCTWriter2.default;
-	exports.GlycoCTSubstituents = _SubstituentsGlycoCT2.default;
-	exports.NodeComparator = _NodeComparator2.default;
-	exports.RepeatingUnit = _RepeatingUnit2.default;
-	exports.Controller = _Controller2.default;
-	exports.SubstituentsPositions = _SubstituentsPositions2.default;
-	exports.MonosaccharideGlycoCT = _MonosaccharideGlycoCT2.default;
-	exports.QuickModeMonosaccharides = _QuickModeMonosaccharides2.default;
-	exports.Structures = _Structures2.default;
-	exports.ImageExporter = _ImageExporter2.default;
-	
-	//Controller
-	
 	
 	//IO
 	
 	
-	//Sugar
+	//Glycan
 	
 	
 	//Nodes
@@ -218,6 +177,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	//Glycomics Structure
 	//Dictionary
+	exports.Graph = _Graph2.default;
+	exports.GraphEdge = _GraphEdge2.default;
+	exports.GraphNode = _GraphNode2.default;
+	exports.AcceptorPosition = _AcceptorPosition2.default;
+	exports.Anomericity = _Anomericity2.default;
+	exports.Isomer = _Isomer2.default;
+	exports.DonorPosition = _DonorPosition2.default;
+	exports.MonosaccharideType = _MonosaccharideType2.default;
+	exports.RingType = _RingType2.default;
+	exports.Monosaccharide = _Monosaccharide2.default;
+	exports.SubstituentType = _SubstituentType2.default;
+	exports.GlycosidicLinkage = _GlycosidicLinkage2.default;
+	exports.SubstituentLinkage = _SubstituentLinkage2.default;
+	exports.Substituent = _Substituent2.default;
+	exports.Glycan = _Glycan2.default;
+	exports.GlycoCTParser = _GlycoCTParser2.default;
+	exports.GlycoCTWriter = _GlycoCTWriter2.default;
+	exports.GlycoCTSubstituents = _SubstituentsGlycoCT2.default;
+	exports.NodeComparator = _NodeComparator2.default;
+	exports.RepeatingUnit = _RepeatingUnit2.default;
+	exports.SubstituentsPositions = _SubstituentsPositions2.default;
+	exports.MonosaccharideGlycoCT = _MonosaccharideGlycoCT2.default;
+	exports.QuickModeMonosaccharides = _QuickModeMonosaccharides2.default;
+	exports.Structures = _Structures2.default;
+	exports.ImageExporter = _ImageExporter2.default; /**
+	                                                  * This file allows the creation of a bundle library. 
+	                                                  * Author:  Davide Alocci
+	                                                  * Version: 0.0.1
+	                                                  */
+	
+	//Data Structure
 
 /***/ }),
 /* 1 */
@@ -1144,38 +1134,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 	
-	var AnomerCarbon = function (_Enum) {
-	    _inherits(AnomerCarbon, _Enum);
+	var AcceptorPosition = function (_Enum) {
+	    _inherits(AcceptorPosition, _Enum);
 	
-	    function AnomerCarbon() {
-	        _classCallCheck(this, AnomerCarbon);
+	    function AcceptorPosition() {
+	        _classCallCheck(this, AcceptorPosition);
 	
-	        return _possibleConstructorReturn(this, (AnomerCarbon.__proto__ || Object.getPrototypeOf(AnomerCarbon)).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (AcceptorPosition.__proto__ || Object.getPrototypeOf(AcceptorPosition)).apply(this, arguments));
 	    }
 	
-	    _createClass(AnomerCarbon, [{
-	        key: 'getAnomerCarbon',
-	        value: function getAnomerCarbon(value) {
+	    _createClass(AcceptorPosition, [{
+	        key: 'getAcceptorPosition',
+	        value: function getAcceptorPosition(value) {
 	            switch (value) {
 	                case 1:
-	                    return AnomerCarbon.ONE;
+	                    return AcceptorPosition.ONE;
 	                case 2:
-	                    return AnomerCarbon.TWO;
+	                    return AcceptorPosition.TWO;
 	                case 3:
-	                    return AnomerCarbon.THREE;
+	                    return AcceptorPosition.THREE;
 	                default:
-	                    return AnomerCarbon.UNDEFINED;
+	                    return AcceptorPosition.UNDEFINED;
 	            }
 	        }
 	    }]);
 	
-	    return AnomerCarbon;
+	    return AcceptorPosition;
 	}(_enumify.Enum);
 	
-	exports.default = AnomerCarbon;
+	exports.default = AcceptorPosition;
 	
 	
-	AnomerCarbon.initEnum({
+	AcceptorPosition.initEnum({
 	    ONE: {
 	        value: 1
 	    },
@@ -1503,50 +1493,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 	
-	var LinkedCarbon = function (_Enum) {
-	    _inherits(LinkedCarbon, _Enum);
+	var DonorPosition = function (_Enum) {
+	    _inherits(DonorPosition, _Enum);
 	
-	    function LinkedCarbon() {
-	        _classCallCheck(this, LinkedCarbon);
+	    function DonorPosition() {
+	        _classCallCheck(this, DonorPosition);
 	
-	        return _possibleConstructorReturn(this, (LinkedCarbon.__proto__ || Object.getPrototypeOf(LinkedCarbon)).apply(this, arguments));
+	        return _possibleConstructorReturn(this, (DonorPosition.__proto__ || Object.getPrototypeOf(DonorPosition)).apply(this, arguments));
 	    }
 	
-	    _createClass(LinkedCarbon, [{
-	        key: 'getLinkedCarbon',
-	        value: function getLinkedCarbon(value) {
+	    _createClass(DonorPosition, [{
+	        key: 'getDonorPosition',
+	        value: function getDonorPosition(value) {
 	            switch (value) {
 	                case 1:
-	                    return LinkedCarbon.ONE;
+	                    return DonorPosition.ONE;
 	                case 2:
-	                    return LinkedCarbon.TWO;
+	                    return DonorPosition.TWO;
 	                case 3:
-	                    return LinkedCarbon.THREE;
+	                    return DonorPosition.THREE;
 	                case 4:
-	                    return LinkedCarbon.FOUR;
+	                    return DonorPosition.FOUR;
 	                case 5:
-	                    return LinkedCarbon.FIVE;
+	                    return DonorPosition.FIVE;
 	                case 6:
-	                    return LinkedCarbon.SIX;
+	                    return DonorPosition.SIX;
 	                case 7:
-	                    return LinkedCarbon.SEVEN;
+	                    return DonorPosition.SEVEN;
 	                case 8:
-	                    return LinkedCarbon.EIGHT;
+	                    return DonorPosition.EIGHT;
 	                case 9:
-	                    return LinkedCarbon.NINE;
+	                    return DonorPosition.NINE;
 	                default:
-	                    return LinkedCarbon.UNDEFINED;
+	                    return DonorPosition.UNDEFINED;
 	            }
 	        }
 	    }]);
 	
-	    return LinkedCarbon;
+	    return DonorPosition;
 	}(_enumify.Enum);
 	
-	exports.default = LinkedCarbon;
+	exports.default = DonorPosition;
 	
 	
-	LinkedCarbon.initEnum({
+	DonorPosition.initEnum({
 	    ONE: {
 	        value: 1
 	    },
@@ -2825,67 +2815,67 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Gal: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    },
 	
 	    Glc: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    },
 	
 	    Man: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    },
 	
 	    GalNAc: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    },
 	
 	    GlcNAc: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    },
 	
 	    Fuc: {
 	        isomer: "L",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    },
 	
 	    Kdn: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "2"
+	        acceptorPosition: "2"
 	    },
 	
 	    Neu5Ac: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "2"
+	        acceptorPosition: "2"
 	    },
 	
 	    Neu5Gc: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "2"
+	        acceptorPosition: "2"
 	    },
 	
 	    Neu: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "2"
+	        acceptorPosition: "2"
 	    },
 	
 	    Xyl: {
 	        isomer: "D",
 	        ringType: "P",
-	        anomerCarbon: "1"
+	        acceptorPosition: "1"
 	    }
 	
 	});
@@ -3217,13 +3207,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GraphEdge2 = _interopRequireDefault(_GraphEdge);
 	
-	var _AnomerCarbon = __webpack_require__(4);
+	var _AcceptorPosition = __webpack_require__(4);
 	
-	var _AnomerCarbon2 = _interopRequireDefault(_AnomerCarbon);
+	var _AcceptorPosition2 = _interopRequireDefault(_AcceptorPosition);
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _DonorPosition = __webpack_require__(8);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _DonorPosition2 = _interopRequireDefault(_DonorPosition);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3240,54 +3230,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	var GlycosidicLinkage = function (_Edge) {
 	    _inherits(GlycosidicLinkage, _Edge);
 	
-	    function GlycosidicLinkage(id, sourceNode, targetNode, anomerCarbon, linkedCarbon) {
+	    function GlycosidicLinkage(id, sourceNode, targetNode, acceptorPosition, donorPosition) {
 	        _classCallCheck(this, GlycosidicLinkage);
 	
 	        var _this = _possibleConstructorReturn(this, (GlycosidicLinkage.__proto__ || Object.getPrototypeOf(GlycosidicLinkage)).call(this, id, sourceNode, targetNode));
 	
-	        if (anomerCarbon instanceof _AnomerCarbon2.default) {
-	            _this._anomerCarbon = anomerCarbon;
-	        } else if (typeof anomerCarbon == 'undefined') {
-	            _this._anomerCarbon = _AnomerCarbon2.default.UNDEFINED;
+	        if (acceptorPosition instanceof _AcceptorPosition2.default) {
+	            _this._acceptorPosition = acceptorPosition;
+	        } else if (typeof acceptorPosition == 'undefined') {
+	            _this._acceptorPosition = _AcceptorPosition2.default.UNDEFINED;
 	        } else {
-	            throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
+	            throw "The Acceptor Position must be AcceptorPosition type. Please use the enum under src/js/glycomics/dictionary/AcceptorPosition.js";
 	        }
 	
-	        if (linkedCarbon instanceof _LinkedCarbon2.default) {
-	            _this._linkedCarbon = linkedCarbon;
-	        } else if (typeof linkedCarbon == 'undefined') {
-	            _this._linkedCarbon = _LinkedCarbon2.default.UNDEFINED;
+	        if (donorPosition instanceof _DonorPosition2.default) {
+	            _this._donorPosition = donorPosition;
+	        } else if (typeof donorPosition == 'undefined') {
+	            _this._donorPosition = _DonorPosition2.default.UNDEFINED;
 	        } else {
-	            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+	            throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
 	        }
 	        return _this;
 	    }
 	
 	    _createClass(GlycosidicLinkage, [{
-	        key: 'anomerCarbon',
+	        key: 'acceptorPosition',
 	        get: function get() {
-	            return this._anomerCarbon;
+	            return this._acceptorPosition;
 	        },
-	        set: function set(anomerCarbon) {
-	            if (anomerCarbon instanceof _AnomerCarbon2.default) {
-	                this._anomerCarbon = anomerCarbon;
+	        set: function set(acceptorPosition) {
+	            if (acceptorPosition instanceof _AcceptorPosition2.default) {
+	                this._acceptorPosition = acceptorPosition;
 	            } else {
-	                throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
+	                throw "The Donor Position must be AcceptorPosition type. Please use the enum under src/js/glycomics/dictionary/AcceptorPosition.js";
 	            }
-	            return anomerCarbon;
+	            return acceptorPosition;
 	        }
 	    }, {
-	        key: 'linkedCarbon',
+	        key: 'donorPosition',
 	        get: function get() {
-	            return this._linkedCarbon;
+	            return this._donorPosition;
 	        },
-	        set: function set(linkedCarbon) {
-	            if (linkedCarbon instanceof _LinkedCarbon2.default) {
-	                this._linkedCarbon = linkedCarbon;
+	        set: function set(donorPosition) {
+	            if (donorPosition instanceof _DonorPosition2.default) {
+	                this._donorPosition = donorPosition;
 	            } else {
-	                throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+	                throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
 	            }
-	            return linkedCarbon;
+	            return donorPosition;
 	        }
 	    }]);
 	
@@ -3312,9 +3302,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _GraphEdge2 = _interopRequireDefault(_GraphEdge);
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _DonorPosition = __webpack_require__(8);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _DonorPosition2 = _interopRequireDefault(_DonorPosition);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -3331,33 +3321,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	var SubstituentLinkage = function (_Edge) {
 	    _inherits(SubstituentLinkage, _Edge);
 	
-	    function SubstituentLinkage(id, target, source, linkedCarbon) {
+	    function SubstituentLinkage(id, target, source, donorPosition) {
 	        _classCallCheck(this, SubstituentLinkage);
 	
 	        var _this = _possibleConstructorReturn(this, (SubstituentLinkage.__proto__ || Object.getPrototypeOf(SubstituentLinkage)).call(this, id, target, source));
 	
-	        if (linkedCarbon instanceof _LinkedCarbon2.default) {
-	            _this._linkedCarbon = linkedCarbon;
-	        } else if (typeof linkedCarbon == 'undefined') {
-	            _this._linkedCarbon = _LinkedCarbon2.default.UNDEFINED;
+	        if (donorPosition instanceof _DonorPosition2.default) {
+	            _this._donorPosition = donorPosition;
+	        } else if (typeof donorPosition == 'undefined') {
+	            _this._donorPosition = _DonorPosition2.default.UNDEFINED;
 	        } else {
-	            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+	            throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
 	        }
 	        return _this;
 	    }
 	
 	    _createClass(SubstituentLinkage, [{
-	        key: 'linkedCarbon',
+	        key: 'donorPosition',
 	        get: function get() {
-	            return this._linkedCarbon;
+	            return this._donorPosition;
 	        },
-	        set: function set(linkedCarbon) {
-	            if (linkedCarbon instanceof _LinkedCarbon2.default) {
-	                this._linkedCarbon = linkedCarbon;
+	        set: function set(donorPosition) {
+	            if (donorPosition instanceof _DonorPosition2.default) {
+	                this._donorPosition = donorPosition;
 	            } else {
-	                throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+	                throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
 	            }
-	            return linkedCarbon;
+	            return donorPosition;
 	        }
 	    }]);
 	
@@ -3590,7 +3580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * TODO: We need to add something to freeze the sugar structure.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * TODO: We need to add something to freeze the Glycan structure.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * At the moment all the attributes are mutable unless ids with targets and sources.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
@@ -3620,12 +3610,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var Sugar = function () {
-	    function Sugar(id, rootNode) {
-	        _classCallCheck(this, Sugar);
+	var Glycan = function () {
+	    function Glycan(id, rootNode) {
+	        _classCallCheck(this, Glycan);
 	
 	        if (typeof id !== 'string' && typeof id !== 'number') {
-	            throw 'The sugar must have a string or number id.';
+	            throw 'The glycan must have a string or number id.';
 	        } else {
 	            this.id = id;
 	        }
@@ -3649,24 +3639,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    /**
-	     * Chech if the root of the Sugar is set.
+	     * Chech if the root of the Glycan is set.
 	     * @returns {boolean}
 	     */
 	
-	    _createClass(Sugar, [{
+	    _createClass(Glycan, [{
 	        key: 'rootIsSet',
 	        value: function rootIsSet() {
 	            return this.rootSet;
 	        }
 	
 	        /**
-	         * Get the Sugar Id
-	         * @returns {string} Sugar Id
+	         * Get the Glycan Id
+	         * @returns {string} Glycan Id
 	         */
 	
 	    }, {
-	        key: 'getSugarId',
-	        value: function getSugarId() {
+	        key: 'getGlycanId',
+	        value: function getGlycanId() {
 	            return this.id;
 	        }
 	
@@ -3695,7 +3685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	
 	            if (this.rootIsSet()) {
-	                throw 'The Root Node can only be set once. Create a new Sugar object.';
+	                throw 'The Root Node can only be set once. Create a new Glycan object.';
 	            }
 	
 	            this.rootNode = rootNode;
@@ -3862,10 +3852,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Add a new Monosaccharide to the Sugar with a pre-built Glycosidic Linkage.
+	         * Add a new Monosaccharide to the Glycan with a pre-built Glycosidic Linkage.
 	         * @param {Monosaccharide} childNode The monosaccharide to add
 	         * @param {GlycosidicLinkage} glycosidicLinkage The edge to add
-	         * @returns {Monosaccharide} The monosaccharide added to the Sugar.
+	         * @returns {Monosaccharide} The monosaccharide added to the Glycan.
 	         */
 	
 	    }, {
@@ -3882,7 +3872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Add a new Substituent to the Sugar with a pre-built Substituent Linkage
+	         * Add a new Substituent to the Glycan with a pre-built Substituent Linkage
 	         * @param {Substituent} childNode The substituent to add
 	         * @param {SubstituentLinkage}substituentLinkage The edge to add
 	         * @returns {Substituent} The substituent added to the Substituent.
@@ -3905,20 +3895,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
+	         * Add a new Monosaccharide to the Glycan without Glycosidic Linkage Object
 	         * @param {Node} parentNode The parentNode in the graph.(Monosaccharide or Substituent)
 	         * @param {Monosaccharide} childNode The Monosaccharide to add
-	         * @param {AnomerCarbon} anomerCarbon The anomerCarbon in the Glycosidic Linkage
-	         * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
+	         * @param {AcceptorPosition} AcceptorPosition The AcceptorPosition in the Glycosidic Linkage
+	         * @param {DonorPosition} donorPosition The donorPosition in the Glycosidic Linkage
 	         * @return {GlycosidicLinkage} the linkage created to add the node.
 	         */
 	
 	    }, {
 	        key: 'addMonosaccharideWithLinkage',
-	        value: function addMonosaccharideWithLinkage(parentNode, childNode, anomerCarbon, linkedCarbon) {
+	        value: function addMonosaccharideWithLinkage(parentNode, childNode, acceptorPosition, donorPosition) {
 	            if (childNode instanceof _Monosaccharide2.default) {
 	                try {
-	                    var glycosidicLinkage = new _GlycosidicLinkage2.default('GlyLin:' + parentNode.getId() + '-' + childNode.getId(), parentNode, childNode, anomerCarbon, linkedCarbon);
+	                    var glycosidicLinkage = new _GlycosidicLinkage2.default('GlyLin:' + parentNode.getId() + '-' + childNode.getId(), parentNode, childNode, acceptorPosition, donorPosition);
 	                    this.addMonosaccharide(childNode, glycosidicLinkage);
 	                    return glycosidicLinkage;
 	                } catch (err) {
@@ -3928,19 +3918,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
+	         * Add a new Monosaccharide to the Glycan without Glycosidic Linkage Object
 	         * @param {Node} parentNode The parentNode in the graph.(Monosaccharide or Substituent)
 	         * @param {Substituent} childNode The Monosaccharide to add
-	         * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
+	         * @param {DonorPosition} donorPosition The donorPosition in the Glycosidic Linkage
 	         * @return {SubstituentLinkage} the linkage created to add the node.
 	         */
 	
 	    }, {
 	        key: 'addSubstituentWithLinkage',
-	        value: function addSubstituentWithLinkage(parentNode, childNode, linkedCarbon) {
+	        value: function addSubstituentWithLinkage(parentNode, childNode, donorPosition) {
 	            if (childNode instanceof _Substituent2.default) {
 	                try {
-	                    var substituentLinkage = new _SubstituentLinkage2.default('SubLin:' + parentNode.getId() + '-' + childNode.getId(), parentNode, childNode, linkedCarbon);
+	                    var substituentLinkage = new _SubstituentLinkage2.default('SubLin:' + parentNode.getId() + '-' + childNode.getId(), parentNode, childNode, donorPosition);
 	                    this.addSubstituent(childNode, substituentLinkage);
 	                    return substituentLinkage;
 	                } catch (err) {
@@ -3949,7 +3939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	        }
 	        /**
-	         * Remove a node from the Sugar graph. This method works with Substituents and Monosaccharides
+	         * Remove a node from the Glycan graph. This method works with Substituents and Monosaccharides
 	         * @param {string} id The id of the node to be removed
 	         * @returns {Graph} Updated graph.
 	         */
@@ -3966,7 +3956,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Remove a Monosaccharide for the Sugar. It removes all the edges connected to the Monosaccharide.
+	         * Remove a Monosaccharide for the Glycan. It removes all the edges connected to the Monosaccharide.
 	         * Be carefull: The children will be detached from the tree.
 	         * @param {Monosaccharide} childNode The monosaccharide to be removed
 	         * @returns {Graph} Updated graph
@@ -3983,12 +3973,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw 'Error removing Monosaccharide: ' + err;
 	                }
 	            } else {
-	                throw 'This method can remove only monosaccharide from the Sugar';
+	                throw 'This method can remove only monosaccharide from the Glycan';
 	            }
 	        }
 	
 	        /**
-	         * Remove a Substituent for the Sugar. It removes all the edges connected to the Substituent.
+	         * Remove a Substituent for the Glycan. It removes all the edges connected to the Substituent.
 	         * Be carefull: The children will be detached from the tree.
 	         * @param {Substituent} childNode The substituent to be removed
 	         * @returns {Graph} Updated graph
@@ -4005,12 +3995,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw 'Error removing Substituent: ' + err;
 	                }
 	            } else {
-	                throw 'This method can remove only substituent from the Sugar';
+	                throw 'This method can remove only substituent from the Glycan';
 	            }
 	        }
 	
 	        /**
-	         * Remove a edge from the Sugar graph. This method works with Substituents and Monosaccharides
+	         * Remove a edge from the Glycan graph. This method works with Substituents and Monosaccharides
 	         * @param {string} id The id of the linkage to be removed
 	         * @returns {Graph} Updated graph.
 	         */
@@ -4027,7 +4017,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Remove a GlycosidicLinkage for the Sugar.
+	         * Remove a GlycosidicLinkage for the Glycan.
 	         * @param {GlycosidicLinkage} glycosidicLinkage The glycosidicLinkage to be removed
 	         * @returns {Graph} Updated graph
 	         */
@@ -4043,12 +4033,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw 'Error removing GlycosidicLinkage: ' + err;
 	                }
 	            } else {
-	                throw 'This method can remove only GlycosidicLinkages from the Sugar';
+	                throw 'This method can remove only GlycosidicLinkages from the Glycan';
 	            }
 	        }
 	
 	        /**
-	         * Remove a SubstituentLinkage for the Sugar.
+	         * Remove a SubstituentLinkage for the Glycan.
 	         * @param {SubstituentLinkage} childNode The substituentLinkage to be removed
 	         * @returns {Graph} Updated graph
 	         */
@@ -4064,7 +4054,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw 'Error removing Substituent: ' + err;
 	                }
 	            } else {
-	                throw 'This method can remove only substituent from the Sugar';
+	                throw 'This method can remove only substituent from the Glycan';
 	            }
 	        }
 	
@@ -4073,8 +4063,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * Please use id root for the root node!
 	         * Here is an example:
 	         *
-	         *   var mySugar = new Sugar();
-	         *   mySugar.addStructure({
+	         *   var myGlycan = new Glycan();
+	         *   myGlycan.addStructure({
 	         *     nodes: [
 	         *       {
 	         *         id: 'root',
@@ -4098,8 +4088,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	         *         id: 'e0',
 	         *         source: 'root',
 	         *         target: 'n1',
-	         *         linkedCarbon: '',
-	         *         anomerCarbon: '',
+	         *         donorPosition: '',
+	         *         acceptorPosition: '',
 	         *         linkageType:
 	         *       }
 	         *     ]
@@ -4124,9 +4114,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * The actual size of the sugar in terms of nodes.
+	         * The actual size of the Glycan in terms of nodes.
 	         * Each monosaccharide and substituent count as 1
-	         * @returns {number} The size of the sugar
+	         * @returns {number} The size of the Glycan
 	         */
 	
 	    }, {
@@ -4136,7 +4126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Clear the sugar object and set Root to undefined.
+	         * Clear the Glycan object and set Root to undefined.
 	         * Only the Id remains set (Id is immutable).
 	         */
 	
@@ -4149,10 +4139,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }]);
 	
-	    return Sugar;
+	    return Glycan;
 	}();
 	
-	exports.default = Sugar;
+	exports.default = Glycan;
 
 /***/ }),
 /* 22 */
@@ -4164,9 +4154,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: true
 	});
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _DonorPosition = __webpack_require__(8);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _DonorPosition2 = _interopRequireDefault(_DonorPosition);
+	
+	var _AcceptorPosition = __webpack_require__(4);
+	
+	var _AcceptorPosition2 = _interopRequireDefault(_AcceptorPosition);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -4174,7 +4168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                           * Created by Renaud on 17/07/2017.
 	                                                                                                                                                           */
 	
-	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max, entry, exit, linkedCarbon, anomerCarbon) {
+	var RepeatingUnit = function RepeatingUnit(id, nodes, min, max, entry, exit, donorPosition, acceptorPosition) {
 	    _classCallCheck(this, RepeatingUnit);
 	
 	    this.id = id;
@@ -4192,16 +4186,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.max = parseInt(max);
 	    }
 	
-	    if (linkedCarbon === "?") {
-	        this.linkedCarbon = _LinkedCarbon2.default.UNDEFINED;
+	    if (donorPosition === "?") {
+	        this.donorPosition = _DonorPosition2.default.UNDEFINED;
 	    } else {
-	        this.linkedCarbon = linkedCarbon;
+	        this.donorPosition = donorPosition;
 	    }
 	
-	    if (anomerCarbon === "?") {
-	        this.anomerCarbon = _LinkedCarbon2.default.UNDEFINED;
+	    if (acceptorPosition === "?") {
+	        this.acceptorPosition = _AcceptorPosition2.default.UNDEFINED;
 	    } else {
-	        this.anomerCarbon = anomerCarbon;
+	        this.acceptorPosition = acceptorPosition;
 	    }
 	};
 	
@@ -4222,9 +4216,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Version: 0.0.1
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 	
-	var _Sugar = __webpack_require__(21);
+	var _Glycan = __webpack_require__(21);
 	
-	var _Sugar2 = _interopRequireDefault(_Sugar);
+	var _Glycan2 = _interopRequireDefault(_Glycan);
 	
 	var _Anomericity = __webpack_require__(6);
 	
@@ -4250,13 +4244,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Monosaccharide2 = _interopRequireDefault(_Monosaccharide);
 	
-	var _AnomerCarbon = __webpack_require__(4);
+	var _AcceptorPosition = __webpack_require__(4);
 	
-	var _AnomerCarbon2 = _interopRequireDefault(_AnomerCarbon);
+	var _AcceptorPosition2 = _interopRequireDefault(_AcceptorPosition);
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _DonorPosition = __webpack_require__(8);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _DonorPosition2 = _interopRequireDefault(_DonorPosition);
 	
 	var _Substituent = __webpack_require__(20);
 	
@@ -4432,17 +4426,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        /**
-	         * Adds one residue to the sugar
+	         * Adds one residue to the glycan
 	         * @param residue e.g : ["3b","glc-HEX-1","5"]
-	         * @param linkedCarbon
-	         * @param anomerCarbon
+	         * @param donorPosition
+	         * @param acceptorPosition
 	         * @param repeatingUnit : String
 	         * @returns {*}
 	         */
 	
 	    }, {
 	        key: 'createResidue',
-	        value: function createResidue(residue, linkedCarbon, anomerCarbon, repeatingUnit) {
+	        value: function createResidue(residue, donorPosition, acceptorPosition, repeatingUnit) {
 	            // If we generate a Monosaccharide
 	            if (residue[0].substring(residue[0].length - 1) === "b") {
 	
@@ -4567,28 +4561,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (repeatingUnit !== undefined) {
 	                    node.repeatingUnit = repeatingUnit;
 	                }
-	                // If linkedCarbon and anomerCarbon are "r", we are building the root
-	                if (linkedCarbon === "r" && anomerCarbon === "r") {
-	                    this.sugar = new _Sugar2.default("Sugar", node);
+	                // If donorPosition and acceptorPosition are "r", we are building the root
+	                if (donorPosition === "r" && acceptorPosition === "r") {
+	                    this.glycan = new _Glycan2.default("Glycan", node);
 	                } else {
-	                    // Parse the AnomerCarbon
+	                    // Parse the AcceptorPosition
 	                    var ac;
 	                    var _iteratorNormalCompletion6 = true;
 	                    var _didIteratorError6 = false;
 	                    var _iteratorError6 = undefined;
 	
 	                    try {
-	                        for (var _iterator6 = _AnomerCarbon2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	                        for (var _iterator6 = _AcceptorPosition2.default[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
 	                            var anomC = _step6.value;
 	
-	                            if (anomerCarbon === "?") {
-	                                ac = _AnomerCarbon2.default.UNDEFINED;
+	                            if (acceptorPosition === "?") {
+	                                ac = _AcceptorPosition2.default.UNDEFINED;
 	                            }
-	                            if (parseInt(anomerCarbon) === anomC.value) {
+	                            if (parseInt(acceptorPosition) === anomC.value) {
 	                                ac = anomC;
 	                            }
 	                        }
-	                        // Parse the LinkedCarbon
+	                        // Parse the DonorPosition
 	                    } catch (err) {
 	                        _didIteratorError6 = true;
 	                        _iteratorError6 = err;
@@ -4610,13 +4604,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var _iteratorError7 = undefined;
 	
 	                    try {
-	                        for (var _iterator7 = _LinkedCarbon2.default[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	                        for (var _iterator7 = _DonorPosition2.default[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
 	                            var linkedC = _step7.value;
 	
-	                            if (linkedCarbon === "?") {
-	                                lc = _LinkedCarbon2.default.UNDEFINED;
+	                            if (donorPosition === "?") {
+	                                lc = _DonorPosition2.default.UNDEFINED;
 	                            }
-	                            if (parseInt(linkedCarbon) === linkedC.value) {
+	                            if (parseInt(donorPosition) === linkedC.value) {
 	                                lc = linkedC;
 	                            }
 	                        }
@@ -4635,7 +4629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
-	                    this.sugar.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
+	                    this.glycan.addMonosaccharideWithLinkage(this.clickedNode, node, ac, lc);
 	                }
 	                // Return the nodeId so we can access the node once it's been created
 	                return nodeId;
@@ -4684,7 +4678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        }
 	                    }
 	
-	                    // Parse sub's linkedCarbon
+	                    // Parse sub's donorPosition
 	                } catch (err) {
 	                    _didIteratorError9 = true;
 	                    _iteratorError9 = err;
@@ -4706,13 +4700,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var _iteratorError10 = undefined;
 	
 	                try {
-	                    for (var _iterator10 = _LinkedCarbon2.default[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+	                    for (var _iterator10 = _DonorPosition2.default[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
 	                        var linkedCS = _step10.value;
 	
-	                        if (linkedCarbon === "?") {
-	                            lcs = _LinkedCarbon2.default.UNDEFINED;
+	                        if (donorPosition === "?") {
+	                            lcs = _DonorPosition2.default.UNDEFINED;
 	                        }
-	                        if (parseInt(linkedCarbon) === linkedCS.value) {
+	                        if (parseInt(donorPosition) === linkedCS.value) {
 	                            lcs = linkedCS;
 	                        }
 	                    }
@@ -4735,19 +4729,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // Create substituent Object
 	                var substituent = new _Substituent2.default(subId, substituentType);
 	                // Check if when we add the sub at this particular position we get a new parent monosaccharide type
-	                // e.g Gal + NAc(linkedCarbon=2) => GalNAc
+	                // e.g Gal + NAc(donorPosition=2) => GalNAc
 	                var newType = this.getMono(this.clickedNode.monosaccharideType.name + this.getSub(subName).label);
-	                if (newType && _SubstituentsPositions2.default[newType.name].position == linkedCarbon) {
+	                if (newType && _SubstituentsPositions2.default[newType.name].position == donorPosition) {
 	                    this.updateNodeType(this.clickedNode, newType);
 	                } else {
 	                    var subLinkage = new _SubstituentLinkage2.default(this.randomString(7), this.clickedNode, substituent, lcs);
-	                    this.sugar.addSubstituent(substituent, subLinkage);
+	                    this.glycan.addSubstituent(substituent, subLinkage);
 	                }
 	            }
 	        }
 	
 	        /**
-	         * Find a node in the sugar, and change its type
+	         * Find a node in the glycan, and change its type
 	         * @param node
 	         * @param type
 	         */
@@ -4760,11 +4754,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _iteratorError11 = undefined;
 	
 	            try {
-	                for (var _iterator11 = this.sugar.graph.nodes()[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-	                    var sugarNode = _step11.value;
+	                for (var _iterator11 = this.glycan.graph.nodes()[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+	                    var glycanNode = _step11.value;
 	
-	                    if (node === sugarNode) {
-	                        sugarNode.monosaccharideType = type;
+	                    if (node === glycanNode) {
+	                        glycanNode.monosaccharideType = type;
 	                    }
 	                }
 	            } catch (err) {
@@ -4792,7 +4786,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        key: 'parseGlycoCT',
 	        value: function parseGlycoCT() {
 	            if (this.formula === "") {
-	                return new _Sugar2.default("Sugar");
+	                return new _Glycan2.default("Glycan");
 	            }
 	            // Get the text lines under the RES section
 	            var res = this.getSection("RES", this.formula);
@@ -4801,11 +4795,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                {
 	                    if (!res[0]) // wrong formula
 	                        {
-	                            return new _Sugar2.default("Sugar");
+	                            return new _Glycan2.default("Glycan");
 	                        }
-	                    // Create the root (LinkedCarbon and AnomerCarbon of root are unknwown from GlycoCT formula)
+	                    // Create the root (DonorPosition and AcceptorPosition of root are unknwown from GlycoCT formula)
 	                    this.createResidue(res[0].split(":"), "r", "r");
-	                    return this.sugar;
+	                    return this.glycan;
 	                } else {
 	                // Get the text lines under the LIN section
 	                links = this.getSection("LIN", this.formula);
@@ -4834,7 +4828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // We finally call the function that reads through the lines and calls the function to create nodes
 	            this.generateNodes(links, nodesIds, res, repInfo);
 	
-	            return this.sugar;
+	            return this.glycan;
 	        }
 	
 	        /**
@@ -4895,7 +4889,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (!createdUnits.includes(this.getLinkTarget(finalLinks[i]))) {
 	                            createdUnits.push(this.getLinkTarget(finalLinks[i]));
 	                            repeatingUnit = repUnitIndices[this.getLinkTarget(finalLinks[i])];
-	                            repeatingUnitObject = new _RepeatingUnit2.default(this.randomString(7), [], repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry, repeatingUnit.info.exit, repeatingUnit.info.linkedCarbon, repeatingUnit.info.anomerCarbon);
+	                            repeatingUnitObject = new _RepeatingUnit2.default(this.randomString(7), [], repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry, repeatingUnit.info.exit, repeatingUnit.info.donorPosition, repeatingUnit.info.acceptorPosition);
 	                            repNodesIds = this.getRepNodesIds(repeatingUnit.res);
 	                            repeatingUnitsObjects.push([repeatingUnitObject, repNodesIds]);
 	                        }
@@ -4906,7 +4900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (!createdUnits.includes(this.getLinkSource(finalLinks[i]))) {
 	                            createdUnits.push(this.getLinkSource(finalLinks[i]));
 	                            repeatingUnit = repUnitIndices[this.getLinkSource(finalLinks[i])];
-	                            repeatingUnitObject = new _RepeatingUnit2.default(this.randomString(7), [], repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry, repeatingUnit.info.exit, repeatingUnit.info.linkedCarbon, repeatingUnit.info.anomerCarbon);
+	                            repeatingUnitObject = new _RepeatingUnit2.default(this.randomString(7), [], repeatingUnit.info.min, repeatingUnit.info.max, repeatingUnit.info.entry, repeatingUnit.info.exit, repeatingUnit.info.donorPosition, repeatingUnit.info.acceptorPosition);
 	                            repNodesIds = this.getRepNodesIds(repeatingUnit.res);
 	                            repeatingUnitsObjects.push([repeatingUnitObject, repNodesIds]);
 	                        }
@@ -5057,7 +5051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	                    residueListById[residue.split(/\w:/)[0]] = residue.split(":");
 	                }
-	                // Now we read the links to build the whole sugar
+	                // Now we read the links to build the whole glycan
 	            } catch (err) {
 	                _didIteratorError14 = true;
 	                _iteratorError14 = err;
@@ -5089,15 +5083,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // Then we create the target node of the link
 	                    var targetId = parseInt(link.split(")")[1]);
 	                    var linkages = link.split(/[\(\)]+/)[1];
-	                    var linkedCarbon, anomerCarbon;
-	                    linkedCarbon = linkages.split("+")[0] === "-1" ? "?" : linkages.split("+")[0];
-	                    anomerCarbon = linkages.split("+")[1] === "-1" ? "?" : linkages.split("+")[1];
+	                    var donorPosition, acceptorPosition;
+	                    donorPosition = linkages.split("+")[0] === "-1" ? "?" : linkages.split("+")[0];
+	                    acceptorPosition = linkages.split("+")[1] === "-1" ? "?" : linkages.split("+")[1];
 	                    var _iteratorNormalCompletion15 = true;
 	                    var _didIteratorError15 = false;
 	                    var _iteratorError15 = undefined;
 	
 	                    try {
-	                        for (var _iterator15 = this.sugar.graph.nodes()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+	                        for (var _iterator15 = this.glycan.graph.nodes()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
 	                            var node = _step15.value;
 	                            // clickedNode = sourceNode
 	                            if (node.id === nodesIds[sourceId]) {
@@ -5120,7 +5114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	
 	                    repeatingUnit = this.findMatchingRep(targetId, repInfo);
-	                    nodeId = this.createResidue(residueListById[targetId], linkedCarbon, anomerCarbon, repeatingUnit);
+	                    nodeId = this.createResidue(residueListById[targetId], donorPosition, acceptorPosition, repeatingUnit);
 	                    residueListById[targetId] = "";
 	                    nodesIds[targetId] = nodeId;
 	                }
@@ -5134,7 +5128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _iteratorError16 = undefined;
 	
 	            try {
-	                for (var _iterator16 = this.sugar.graph.nodes()[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+	                for (var _iterator16 = this.glycan.graph.nodes()[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
 	                    var node = _step16.value;
 	
 	                    if (node.id == id) {
@@ -5230,7 +5224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        /**
 	         * Returns all the infos that we can read from the REP section for every RepeatingUnit
 	         * Output : [{"info", "res", "lin"},...]
-	         * "info": {"linkedCarbon", "anomerCarbon", "min", "max", "exit", "entry"}
+	         * "info": {"donorPosition", "acceptorPosition", "min", "max", "exit", "entry"}
 	         * @param array
 	         * @returns {Array}
 	         */
@@ -5255,7 +5249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (value.length != 0 && key !== "") {
 	                            min = key.split("=")[1].substring(0, 2) == "-1" ? "?" : key.split("=")[1].split("-")[0];
 	                            max = key.substring(key.length - 2) == "-1" ? "?" : key.split("-")[key.split("-").length - 1];
-	                            info = { "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+	                            info = { "donorPosition": key.split("(")[1].split("+")[0], "acceptorPosition": key.split(")")[0].split("+")[1],
 	                                "min": min, "max": max,
 	                                "exit": key.split("o")[0], "entry": key.split(")")[1].split("d")[0] };
 	                            output.push({ "info": info, "res": this.getSection("RES", value), "lin": this.getSection("LIN", value) });
@@ -5284,7 +5278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (value.length !== 0) {
 	                min = key.split("=")[1].substring(0, 2) == "-1" ? "?" : key.split("=")[1].split("-")[0];
 	                max = key.substring(key.length - 2) == "-1" ? "?" : key.split("-")[key.split("-").length - 1];
-	                info = { "linkedCarbon": key.split("(")[1].split("+")[0], "anomerCarbon": key.split(")")[0].split("+")[1],
+	                info = { "donorPosition": key.split("(")[1].split("+")[0], "acceptorPosition": key.split(")")[0].split("+")[1],
 	                    "min": min, "max": max,
 	                    "exit": key.split("o")[0], "entry": key.split(")")[1].split("d")[0] };
 	                output.push({ "info": info, "res": this.getSection("RES", value), "lin": this.getSection("LIN", value) });
@@ -5352,19 +5346,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _SubstituentsPositions2 = _interopRequireDefault(_SubstituentsPositions);
 	
-	var _LinkedCarbon = __webpack_require__(8);
+	var _DonorPosition = __webpack_require__(8);
 	
-	var _LinkedCarbon2 = _interopRequireDefault(_LinkedCarbon);
+	var _DonorPosition2 = _interopRequireDefault(_DonorPosition);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var GlycoCTWriter = function () {
-	    function GlycoCTWriter(sugar, tree) {
+	    function GlycoCTWriter(glycan, tree) {
 	        _classCallCheck(this, GlycoCTWriter);
 	
-	        this.sugar = sugar;
+	        this.glycan = glycan;
 	        this.tree = tree;
 	        this.res = [];
 	        this.rep = [];
@@ -5530,14 +5524,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    }, {
 	        key: "writeSubLink",
-	        value: function writeSubLink(i, source, target, linkedCarbon, anomerCarbon) {
+	        value: function writeSubLink(i, source, target, donorPosition, acceptorPosition) {
 	            var formula = "";
 	            // Substituent links start with index, and "d"
 	            formula += i + 1 + ":" + source + "d";
 	
-	            formula += "(" + linkedCarbon;
+	            formula += "(" + donorPosition;
 	            formula += "+";
-	            formula += anomerCarbon + ")";
+	            formula += acceptorPosition + ")";
 	
 	            // They end with "n"
 	            formula += target + "n";
@@ -5551,7 +5545,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    }, {
 	        key: "writeMonoLink",
-	        value: function writeMonoLink(i, source, target, linkedCarbon, anomerCarbon) {
+	        value: function writeMonoLink(i, source, target, donorPosition, acceptorPosition) {
 	            var prefix = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "o";
 	            var suffix = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : "d";
 	
@@ -5559,9 +5553,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Monosaccharide links start by either "n" if the source node is ending a Repeating Unit, or "o" otherwise
 	            formula += i + ":" + source + prefix;
 	
-	            formula += "(" + linkedCarbon;
+	            formula += "(" + donorPosition;
 	            formula += "+";
-	            formula += anomerCarbon + ")";
+	            formula += acceptorPosition + ")";
 	
 	            // They end with "n" if the target node starts a Repeating Unit, "d" otherwise
 	            formula += target + suffix;
@@ -5619,7 +5613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var _iteratorError5 = undefined;
 	
 	            try {
-	                for (var _iterator5 = this.sugar.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                for (var _iterator5 = this.glycan.graph.edges()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
 	                    var edge = _step5.value;
 	
 	                    if (edge.source == id1 && edge.target == id2 || edge.source == id2 && edge.target == id1) {
@@ -5852,7 +5846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                transform = _MonosaccharideGlycoCT2.default[resName].transform;
 	                            } else // It can be that the residue is a Mono+Sub (GalNAc...)
 	                            {
-	                                var monoName, subName, assocSubType, assocSub, linkedCarbon;
+	                                var monoName, subName, assocSubType, assocSub, donorPosition;
 	                                if (_MonosaccharideGlycoCT2.default[resName.substring(0, 3)] !== undefined) // If the 3 first letters make a monosaccharide
 	                                    {
 	                                        // We get the raw monosaccharide type, and we put the substituent in an array to be treated later
@@ -5864,9 +5858,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
 	                                        if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
 	                                            {
-	                                                linkedCarbon = _SubstituentsPositions2.default[resName].position;
+	                                                donorPosition = _SubstituentsPositions2.default[resName].position;
 	                                            }
-	                                        associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                                        associatedSubs.push([assocSub, i + 1 + offset, donorPosition]);
 	                                    } else if (_MonosaccharideGlycoCT2.default[resName.substring(0, 4)] !== undefined) // If the 4 first letters make a monosaccharide. e.g Nonu
 	                                    {
 	                                        // See above
@@ -5878,9 +5872,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        assocSub = new _Substituent2.default(this.randomString(7), assocSubType);
 	                                        if (_SubstituentsPositions2.default[resName] !== undefined) // Should always be defined
 	                                            {
-	                                                linkedCarbon = _SubstituentsPositions2.default[resName].position;
+	                                                donorPosition = _SubstituentsPositions2.default[resName].position;
 	                                            }
-	                                        associatedSubs.push([assocSub, i + 1 + offset, linkedCarbon]);
+	                                        associatedSubs.push([assocSub, i + 1 + offset, donorPosition]);
 	                                    }
 	                            }
 	
@@ -5964,9 +5958,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                for (i = 0; i < edges.length; i++) {
 	                    // We get the link information
 	                    var source = edges[i].sourceNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].sourceNode.getId()] : resId[edges[i].sourceNode.repeatingUnit.id];
-	                    var linkedCarbon = edges[i].linkedCarbon.value === "undefined" ? -1 : edges[i].linkedCarbon.value;
-	                    var anomerCarbon;
-	                    if (edges[i] instanceof _SubstituentLinkage2.default) anomerCarbon = 1;else if (edges[i].anomerCarbon.value === "undefined") anomerCarbon = 1;else anomerCarbon = edges[i].anomerCarbon.value;
+	                    var donorPosition = edges[i].donorPosition.value === "undefined" ? -1 : edges[i].donorPosition.value;
+	                    var acceptorPosition;
+	                    if (edges[i] instanceof _SubstituentLinkage2.default) acceptorPosition = 1;else if (edges[i].acceptorPosition.value === "undefined") acceptorPosition = 1;else acceptorPosition = edges[i].acceptorPosition.value;
 	
 	                    var target = edges[i].targetNode.repeatingUnit === undefined || unit !== "" ? resId[edges[i].targetNode.getId()] : resId[edges[i].targetNode.repeatingUnit.id];
 	
@@ -5989,9 +5983,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                        suffix = "n";
 	                                    }
 	                                }
-	                                formula += this.writeMonoLink(i + 1 + offset, source, target, linkedCarbon, anomerCarbon, prefix, suffix);
+	                                formula += this.writeMonoLink(i + 1 + offset, source, target, donorPosition, acceptorPosition, prefix, suffix);
 	                            } else {
-	                                formula += this.writeSubLink(i + offset, source, target, linkedCarbon, anomerCarbon);
+	                                formula += this.writeSubLink(i + offset, source, target, donorPosition, acceptorPosition);
 	                            }
 	                        } else {
 	                        offset--; // The following of the cheap fix above: As the link gets duplicated, "i" is 1 higher than wanted, so let's decrease "offset"
@@ -6124,9 +6118,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            lastResId = resInfo[0];
 	                            var exitId = lastResId;
 	                            formula += "REP" + repId[rep.id] + ":" + exitId + "o(";
-	                            formula += rep.linkedCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.linkedCarbon;
+	                            formula += rep.donorPosition === _DonorPosition2.default.UNDEFINED ? "-1" : rep.donorPosition;
 	                            formula += "+";
-	                            formula += rep.anomerCarbon === _LinkedCarbon2.default.UNDEFINED ? "-1" : rep.anomerCarbon;
+	                            formula += rep.acceptorPosition === AcceptorPosition.UNDEFINED ? "-1" : rep.acceptorPosition;
 	                            formula += ")" + entryId + "d=";
 	                            formula += rep.min === "?" ? "-1" : rep.min;
 	                            formula += "-";
@@ -6273,7 +6267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "parentLinkPos",
 	        value: function parentLinkPos(edge) {
-	            return edge.linkedCarbon.value === "undefined" ? 0 : edge.linkedCarbon.value;
+	            return edge.donorPosition.value === "undefined" ? 0 : edge.donorPosition.value;
 	        }
 	    }, {
 	        key: "bonds",
@@ -6283,7 +6277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: "childLinkPos",
 	        value: function childLinkPos(edge) {
-	            return edge.anomerCarbon.value === "undefined" ? 0 : edge.anomerCarbon.value;
+	            return edge.acceptorPosition.value === "undefined" ? 0 : edge.acceptorPosition.value;
 	        }
 	    }, {
 	        key: "linkageType",
@@ -6640,28 +6634,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 	
 	exports.default = ImageExporter;
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	/**
-	 * Created by Renaud on 26/07/2017.
-	 */
-	
-	var Controller = function Controller() {
-	  _classCallCheck(this, Controller);
-	};
-	
-	exports.default = Controller;
 
 /***/ })
 /******/ ])

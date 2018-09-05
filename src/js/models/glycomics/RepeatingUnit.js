@@ -3,9 +3,11 @@
  */
 
 
-import LinkedCarbon from "./dictionary/LinkedCarbon";
+import DonorPosition from "./dictionary/DonorPosition";
+import AcceptorPosition from "./dictionary/AcceptorPosition";
+
 export default class RepeatingUnit {
-    constructor(id,nodes,min,max,entry,exit,linkedCarbon,anomerCarbon)
+    constructor(id,nodes,min,max,entry,exit,donorPosition,acceptorPosition)
     {
         this.id = id;
         this.nodes = nodes;
@@ -22,16 +24,16 @@ export default class RepeatingUnit {
             this.max = parseInt(max);
         }
 
-        if (linkedCarbon === "?") {
-            this.linkedCarbon = LinkedCarbon.UNDEFINED;
+        if (donorPosition === "?") {
+            this.donorPosition = DonorPosition.UNDEFINED;
         } else {
-            this.linkedCarbon = linkedCarbon;
+            this.donorPosition = donorPosition;
         }
 
-        if (anomerCarbon === "?") {
-            this.anomerCarbon = LinkedCarbon.UNDEFINED;
+        if (acceptorPosition === "?") {
+            this.acceptorPosition = AcceptorPosition.UNDEFINED;
         } else {
-            this.anomerCarbon = anomerCarbon;
+            this.acceptorPosition = acceptorPosition;
         }
     }
 

@@ -3,55 +3,55 @@
  * Version: 0.0.1
  */
 import Edge from '../../dataStructure/GraphEdge';
-import AnomerCarbon from '../dictionary/AnomerCarbon';
-import LinkedCarbon from '../dictionary/LinkedCarbon';
+import AcceptorPosition from '../dictionary/AcceptorPosition';
+import DonorPosition from '../dictionary/DonorPosition';
 
 export default class GlycosidicLinkage extends Edge{
 
-    constructor(id, sourceNode, targetNode, anomerCarbon, linkedCarbon){
+    constructor(id, sourceNode, targetNode, acceptorPosition, donorPosition){
 
         super(id,sourceNode,targetNode);
 
-        if(anomerCarbon instanceof AnomerCarbon){
-            this._anomerCarbon = anomerCarbon;
-        } else if(typeof anomerCarbon == 'undefined') {
-            this._anomerCarbon = AnomerCarbon.UNDEFINED;
+        if(acceptorPosition instanceof AcceptorPosition){
+            this._acceptorPosition= acceptorPosition;
+        } else if(typeof acceptorPosition == 'undefined') {
+            this._acceptorPosition = AcceptorPosition.UNDEFINED;
         } else {
-            throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
+            throw "The Acceptor Position must be AcceptorPosition type. Please use the enum under src/js/glycomics/dictionary/AcceptorPosition.js";
         }
 
-        if(linkedCarbon instanceof LinkedCarbon){
-            this._linkedCarbon = linkedCarbon;
-        } else if(typeof linkedCarbon == 'undefined') {
-            this._linkedCarbon = LinkedCarbon.UNDEFINED;
+        if(donorPosition instanceof DonorPosition){
+            this._donorPosition = donorPosition;
+        } else if(typeof donorPosition == 'undefined') {
+            this._donorPosition = DonorPosition.UNDEFINED;
         } else {
-            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+            throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
         }
     }
 
-    get anomerCarbon(){
-        return this._anomerCarbon;
+    get acceptorPosition(){
+        return this._acceptorPosition;
     }
 
-    get linkedCarbon(){
-        return this._linkedCarbon;
+    get donorPosition(){
+        return this._donorPosition;
     }
 
-    set anomerCarbon(anomerCarbon){
-        if(anomerCarbon instanceof AnomerCarbon) {
-            this._anomerCarbon = anomerCarbon;
+    set acceptorPosition(acceptorPosition){
+        if(acceptorPosition instanceof AcceptorPosition) {
+            this._acceptorPosition = acceptorPosition;
         } else {
-            throw "The Anomer Carbon must be AnomerCarbon type. Please use the enum under src/js/glycomics/dictionary/AnomerCarbon.js";
+            throw "The Donor Position must be AcceptorPosition type. Please use the enum under src/js/glycomics/dictionary/AcceptorPosition.js";
         }
-        return anomerCarbon;
+        return acceptorPosition;
     }
 
-    set linkedCarbon(linkedCarbon){
-        if(linkedCarbon instanceof LinkedCarbon) {
-            this._linkedCarbon = linkedCarbon;
+    set donorPosition(donorPosition){
+        if(donorPosition instanceof DonorPosition) {
+            this._donorPosition = donorPosition;
         } else {
-            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+            throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
         }
-        return linkedCarbon;
+        return donorPosition;
     }
 }

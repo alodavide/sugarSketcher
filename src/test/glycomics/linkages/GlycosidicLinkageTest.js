@@ -4,8 +4,8 @@
  */
 
 import GlycosidicLinkage from "../../../js/models/glycomics/linkages/GlycosidicLinkage";
-import AnomerCarbon from "../../../js/models/glycomics/dictionary/AnomerCarbon";
-import LinkedCarbon from "../../../js/models/glycomics/dictionary/LinkedCarbon";
+import AcceptorPosition from "../../../js/models/glycomics/dictionary/AcceptorPosition";
+import DonorPosition from "../../../js/models/glycomics/dictionary/DonorPosition";
 import Node from "../../../js/models/dataStructure/GraphNode";
 
 QUnit.module("Test GlycosidicLinkage object", {
@@ -16,53 +16,53 @@ QUnit.test( "Create new glycosidic linkage" , function( assert ) {
     var source = new Node('source');
     var target = new Node('target');
 
-    var edge = new GlycosidicLinkage('test',source,target,AnomerCarbon.ONE,LinkedCarbon.TWO);
-    assert.ok(edge.anomerCarbon === AnomerCarbon.ONE,"Correct AnomerCarbon");
-    assert.ok(edge.linkedCarbon === LinkedCarbon.TWO,"Correct LinkedCarbon");
-    assert.ok(edge.anomerCarbon.value === 1,"Correct value");
-    assert.ok(edge.linkedCarbon.value === 2,"Correct value");
-    assert.notOk(edge.linkedCarbon.value === 3,"Uncorrect value ok");
-    assert.notOk(edge.anomerCarbon.value === 5,"Uncorrect value ok");
+    var edge = new GlycosidicLinkage('test',source,target,AcceptorPosition.ONE,DonorPosition.TWO);
+    assert.ok(edge.acceptorPosition === AcceptorPosition.ONE,"Correct AcceptorPosition");
+    assert.ok(edge.donorPosition === DonorPosition.TWO,"Correct DonorPosition");
+    assert.ok(edge.acceptorPosition.value === 1,"Correct value");
+    assert.ok(edge.donorPosition.value === 2,"Correct value");
+    assert.notOk(edge.donorPosition.value === 3,"Uncorrect value ok");
+    assert.notOk(edge.acceptorPosition.value === 5,"Uncorrect value ok");
 
-    var edge2 = new GlycosidicLinkage('test',source,target,AnomerCarbon.ONE,LinkedCarbon.TWO);
-    assert.ok(edge2.anomerCarbon === AnomerCarbon.ONE,"Correct AnomerCarbon");
-    assert.ok(edge2.linkedCarbon === LinkedCarbon.TWO,"Correct LinkedCarbon");
-    assert.ok(edge2.anomerCarbon.value === 1,"Correct value");
-    assert.ok(edge2.linkedCarbon.value === 2,"Correct value");
-    assert.notOk(edge2.linkedCarbon.value === 3,"Uncorrect value ok");
-    assert.notOk(edge2.anomerCarbon.value === 5,"Uncorrect value ok");
+    var edge2 = new GlycosidicLinkage('test',source,target,AcceptorPosition.ONE,DonorPosition.TWO);
+    assert.ok(edge2.acceptorPosition === AcceptorPosition.ONE,"Correct AcceptorPosition");
+    assert.ok(edge2.donorPosition === DonorPosition.TWO,"Correct DonorPosition");
+    assert.ok(edge2.acceptorPosition.value === 1,"Correct value");
+    assert.ok(edge2.donorPosition.value === 2,"Correct value");
+    assert.notOk(edge2.donorPosition.value === 3,"Uncorrect value ok");
+    assert.notOk(edge2.acceptorPosition.value === 5,"Uncorrect value ok");
 
-    edge2.anomerCarbon = AnomerCarbon.THREE;
-    edge2.linkedCarbon = LinkedCarbon.FOUR;
+    edge2.acceptorPosition = AcceptorPosition.THREE;
+    edge2.donorPosition = DonorPosition.FOUR;
 
-    assert.ok(edge2.anomerCarbon === AnomerCarbon.THREE,"Correct AnomerCarbon");
-    assert.ok(edge2.linkedCarbon === LinkedCarbon.FOUR,"Correct LinkedCarbon");
-    assert.ok(edge2.anomerCarbon.value === 3,"Correct value");
-    assert.ok(edge2.linkedCarbon.value === 4,"Correct value");
-    assert.notOk(edge2.linkedCarbon === LinkedCarbon.ONE,"Uncorrect value ok");
-    assert.notOk(edge2.anomerCarbon === AnomerCarbon.ONE,"Uncorrect value ok");
-    assert.notOk(edge2.linkedCarbon.value === 3,"Uncorrect value ok");
-    assert.notOk(edge2.anomerCarbon.value === 5,"Uncorrect value ok");
+    assert.ok(edge2.acceptorPosition === AcceptorPosition.THREE,"Correct AcceptorPosition");
+    assert.ok(edge2.donorPosition === DonorPosition.FOUR,"Correct DonorPosition");
+    assert.ok(edge2.acceptorPosition.value === 3,"Correct value");
+    assert.ok(edge2.donorPosition.value === 4,"Correct value");
+    assert.notOk(edge2.donorPosition === DonorPosition.ONE,"Uncorrect value ok");
+    assert.notOk(edge2.acceptorPosition === AcceptorPosition.ONE,"Uncorrect value ok");
+    assert.notOk(edge2.donorPosition.value === 3,"Uncorrect value ok");
+    assert.notOk(edge2.acceptorPosition.value === 5,"Uncorrect value ok");
 
     var edgeUndefined = new GlycosidicLinkage('test',source,target);
-    assert.ok(edgeUndefined.anomerCarbon === AnomerCarbon.UNDEFINED,"Correct AnomerCarbon");
-    assert.ok(edgeUndefined.linkedCarbon === LinkedCarbon.UNDEFINED,"Correct LinkedCarbon");
-    assert.ok(edgeUndefined.anomerCarbon.value === 'undefined',"Correct value");
-    assert.ok(edgeUndefined.linkedCarbon.value === 'undefined',"Correct value");
-    assert.notOk(edgeUndefined.linkedCarbon.value === 3,"Uncorrect value ok");
-    assert.notOk(edgeUndefined.anomerCarbon.value === 5,"Uncorrect value ok");
+    assert.ok(edgeUndefined.acceptorPosition === AcceptorPosition.UNDEFINED,"Correct AcceptorPosition");
+    assert.ok(edgeUndefined.donorPosition === DonorPosition.UNDEFINED,"Correct DonorPosition");
+    assert.ok(edgeUndefined.acceptorPosition.value === 'undefined',"Correct value");
+    assert.ok(edgeUndefined.donorPosition.value === 'undefined',"Correct value");
+    assert.notOk(edgeUndefined.donorPosition.value === 3,"Uncorrect value ok");
+    assert.notOk(edgeUndefined.acceptorPosition.value === 5,"Uncorrect value ok");
 
-    edgeUndefined.anomerCarbon = AnomerCarbon.TWO;
-    edgeUndefined.linkedCarbon = LinkedCarbon.SIX;
+    edgeUndefined.acceptorPosition = AcceptorPosition.TWO;
+    edgeUndefined.donorPosition = DonorPosition.SIX;
 
-    assert.ok(edgeUndefined.anomerCarbon === AnomerCarbon.TWO,"Correct AnomerCarbon");
-    assert.ok(edgeUndefined.linkedCarbon === LinkedCarbon.SIX,"Correct LinkedCarbon");
-    assert.ok(edgeUndefined.anomerCarbon.value === 2,"Correct value");
-    assert.ok(edgeUndefined.linkedCarbon.value === 6,"Correct value");
-    assert.notOk(edgeUndefined.linkedCarbon.value === 1,"Uncorrect value ok");
-    assert.notOk(edgeUndefined.anomerCarbon.value === 5,"Uncorrect value ok");
-    assert.notOk(edgeUndefined.anomerCarbon === AnomerCarbon.THREE,"Correct AnomerCarbon");
-    assert.notOk(edgeUndefined.linkedCarbon === LinkedCarbon.ONE,"Correct LinkedCarbon");
+    assert.ok(edgeUndefined.acceptorPosition === AcceptorPosition.TWO,"Correct AcceptorPosition");
+    assert.ok(edgeUndefined.donorPosition === DonorPosition.SIX,"Correct DonorPosition");
+    assert.ok(edgeUndefined.acceptorPosition.value === 2,"Correct value");
+    assert.ok(edgeUndefined.donorPosition.value === 6,"Correct value");
+    assert.notOk(edgeUndefined.donorPosition.value === 1,"Uncorrect value ok");
+    assert.notOk(edgeUndefined.acceptorPosition.value === 5,"Uncorrect value ok");
+    assert.notOk(edgeUndefined.acceptorPosition === AcceptorPosition.THREE,"Correct AcceptorPosition");
+    assert.notOk(edgeUndefined.donorPosition === DonorPosition.ONE,"Correct DonorPosition");
 });
 
 QUnit.test( "Create new glycosidic linkage Error Linakge" , function(assert) {
@@ -88,13 +88,13 @@ QUnit.test( "Create new glycosidic linkage Error Linakge" , function(assert) {
 
     assert.raises(function(){
         var g = new GlycosidicLinkage('test',source,target);
-        g.anomerCarbon = 'set';
+        g.acceptorPosition = 'set';
     });
 
 
     assert.raises(function(){
         var g = new GlycosidicLinkage('test','source1','target1');
-        g.linkedCarbon = 'set';
+        g.donorPosition = 'set';
     });
 });
 

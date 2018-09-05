@@ -3,7 +3,7 @@
  * Version: 0.0.1
  *
  *
- * TODO: We need to add something to freeze the sugar structure.
+ * TODO: We need to add something to freeze the Glycan structure.
  * At the moment all the attributes are mutable unless ids with targets and sources.
  *
  */
@@ -13,11 +13,11 @@ import GlycosidicLinkage from './linkages/GlycosidicLinkage';
 import SubstituentLinkage from './linkages/SubstituentLinkage';
 import Graph from '../dataStructure/Graph';
 
-export default class Sugar{
+export default class Glycan{
 
     constructor(id,rootNode){
         if (typeof id !== 'string' && typeof id !== 'number'){
-            throw 'The sugar must have a string or number id.';
+            throw 'The glycan must have a string or number id.';
         } else {
             this.id = id;
         }
@@ -42,7 +42,7 @@ export default class Sugar{
     }
 
     /**
-     * Chech if the root of the Sugar is set.
+     * Chech if the root of the Glycan is set.
      * @returns {boolean}
      */
 
@@ -51,11 +51,11 @@ export default class Sugar{
     }
 
     /**
-     * Get the Sugar Id
-     * @returns {string} Sugar Id
+     * Get the Glycan Id
+     * @returns {string} Glycan Id
      */
 
-    getSugarId(){
+    getGlycanId(){
         return this.id;
     }
 
@@ -79,7 +79,7 @@ export default class Sugar{
         }
 
         if (this.rootIsSet()){
-            throw 'The Root Node can only be set once. Create a new Sugar object.';
+            throw 'The Root Node can only be set once. Create a new Glycan object.';
         }
 
         this.rootNode = rootNode;
@@ -227,10 +227,10 @@ export default class Sugar{
 
 
     /**
-     * Add a new Monosaccharide to the Sugar with a pre-built Glycosidic Linkage.
+     * Add a new Monosaccharide to the Glycan with a pre-built Glycosidic Linkage.
      * @param {Monosaccharide} childNode The monosaccharide to add
      * @param {GlycosidicLinkage} glycosidicLinkage The edge to add
-     * @returns {Monosaccharide} The monosaccharide added to the Sugar.
+     * @returns {Monosaccharide} The monosaccharide added to the Glycan.
      */
 
     addMonosaccharide(childNode,glycosidicLinkage){
@@ -245,7 +245,7 @@ export default class Sugar{
     }
 
     /**
-     * Add a new Substituent to the Sugar with a pre-built Substituent Linkage
+     * Add a new Substituent to the Glycan with a pre-built Substituent Linkage
      * @param {Substituent} childNode The substituent to add
      * @param {SubstituentLinkage}substituentLinkage The edge to add
      * @returns {Substituent} The substituent added to the Substituent.
@@ -266,17 +266,17 @@ export default class Sugar{
     }
 
     /**
-     * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
+     * Add a new Monosaccharide to the Glycan without Glycosidic Linkage Object
      * @param {Node} parentNode The parentNode in the graph.(Monosaccharide or Substituent)
      * @param {Monosaccharide} childNode The Monosaccharide to add
-     * @param {AnomerCarbon} anomerCarbon The anomerCarbon in the Glycosidic Linkage
-     * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
+     * @param {AcceptorPosition} AcceptorPosition The AcceptorPosition in the Glycosidic Linkage
+     * @param {DonorPosition} donorPosition The donorPosition in the Glycosidic Linkage
      * @return {GlycosidicLinkage} the linkage created to add the node.
      */
-    addMonosaccharideWithLinkage(parentNode, childNode, anomerCarbon, linkedCarbon){
+    addMonosaccharideWithLinkage(parentNode, childNode, acceptorPosition, donorPosition){
         if(childNode instanceof Monosaccharide ){
          try{
-             var glycosidicLinkage = new GlycosidicLinkage('GlyLin:'+parentNode.getId()+'-'+childNode.getId(),parentNode,childNode,anomerCarbon,linkedCarbon);
+             var glycosidicLinkage = new GlycosidicLinkage('GlyLin:'+parentNode.getId()+'-'+childNode.getId(),parentNode,childNode,acceptorPosition,donorPosition);
              this.addMonosaccharide(childNode,glycosidicLinkage);
              return glycosidicLinkage;
          } catch(err) {
@@ -286,17 +286,17 @@ export default class Sugar{
     }
 
     /**
-     * Add a new Monosaccharide to the Sugar without Glycosidic Linkage Object
+     * Add a new Monosaccharide to the Glycan without Glycosidic Linkage Object
      * @param {Node} parentNode The parentNode in the graph.(Monosaccharide or Substituent)
      * @param {Substituent} childNode The Monosaccharide to add
-     * @param {LinkedCarbon} linkedCarbon The linkedCarbon in the Glycosidic Linkage
+     * @param {DonorPosition} donorPosition The donorPosition in the Glycosidic Linkage
      * @return {SubstituentLinkage} the linkage created to add the node.
      */
 
-    addSubstituentWithLinkage(parentNode, childNode, linkedCarbon){
+    addSubstituentWithLinkage(parentNode, childNode, donorPosition){
         if(childNode instanceof Substituent ){
             try{
-                var substituentLinkage = new SubstituentLinkage('SubLin:'+parentNode.getId()+'-'+childNode.getId(),parentNode,childNode,linkedCarbon);
+                var substituentLinkage = new SubstituentLinkage('SubLin:'+parentNode.getId()+'-'+childNode.getId(),parentNode,childNode,donorPosition);
                 this.addSubstituent(childNode, substituentLinkage);
                 return substituentLinkage;
             } catch(err) {
@@ -305,7 +305,7 @@ export default class Sugar{
         }
     }
     /**
-     * Remove a node from the Sugar graph. This method works with Substituents and Monosaccharides
+     * Remove a node from the Glycan graph. This method works with Substituents and Monosaccharides
      * @param {string} id The id of the node to be removed
      * @returns {Graph} Updated graph.
      */
@@ -319,7 +319,7 @@ export default class Sugar{
     }
 
     /**
-     * Remove a Monosaccharide for the Sugar. It removes all the edges connected to the Monosaccharide.
+     * Remove a Monosaccharide for the Glycan. It removes all the edges connected to the Monosaccharide.
      * Be carefull: The children will be detached from the tree.
      * @param {Monosaccharide} childNode The monosaccharide to be removed
      * @returns {Graph} Updated graph
@@ -333,12 +333,12 @@ export default class Sugar{
                 throw 'Error removing Monosaccharide: '+ err;
             }
         } else {
-            throw 'This method can remove only monosaccharide from the Sugar';
+            throw 'This method can remove only monosaccharide from the Glycan';
         }
     }
 
     /**
-     * Remove a Substituent for the Sugar. It removes all the edges connected to the Substituent.
+     * Remove a Substituent for the Glycan. It removes all the edges connected to the Substituent.
      * Be carefull: The children will be detached from the tree.
      * @param {Substituent} childNode The substituent to be removed
      * @returns {Graph} Updated graph
@@ -352,12 +352,12 @@ export default class Sugar{
                 throw 'Error removing Substituent: '+ err;
             }
         } else {
-            throw 'This method can remove only substituent from the Sugar';
+            throw 'This method can remove only substituent from the Glycan';
         }
     }
 
     /**
-     * Remove a edge from the Sugar graph. This method works with Substituents and Monosaccharides
+     * Remove a edge from the Glycan graph. This method works with Substituents and Monosaccharides
      * @param {string} id The id of the linkage to be removed
      * @returns {Graph} Updated graph.
      */
@@ -371,7 +371,7 @@ export default class Sugar{
     }
 
     /**
-     * Remove a GlycosidicLinkage for the Sugar.
+     * Remove a GlycosidicLinkage for the Glycan.
      * @param {GlycosidicLinkage} glycosidicLinkage The glycosidicLinkage to be removed
      * @returns {Graph} Updated graph
      */
@@ -384,12 +384,12 @@ export default class Sugar{
                 throw 'Error removing GlycosidicLinkage: '+ err;
             }
         } else {
-            throw 'This method can remove only GlycosidicLinkages from the Sugar';
+            throw 'This method can remove only GlycosidicLinkages from the Glycan';
         }
     }
 
     /**
-     * Remove a SubstituentLinkage for the Sugar.
+     * Remove a SubstituentLinkage for the Glycan.
      * @param {SubstituentLinkage} childNode The substituentLinkage to be removed
      * @returns {Graph} Updated graph
      */
@@ -402,7 +402,7 @@ export default class Sugar{
                 throw 'Error removing Substituent: '+ err;
             }
         } else {
-            throw 'This method can remove only substituent from the Sugar';
+            throw 'This method can remove only substituent from the Glycan';
         }
     }
 
@@ -411,8 +411,8 @@ export default class Sugar{
      * Please use id root for the root node!
      * Here is an example:
      *
-     *   var mySugar = new Sugar();
-     *   mySugar.addStructure({
+     *   var myGlycan = new Glycan();
+     *   myGlycan.addStructure({
      *     nodes: [
      *       {
      *         id: 'root',
@@ -436,8 +436,8 @@ export default class Sugar{
      *         id: 'e0',
      *         source: 'root',
      *         target: 'n1',
-     *         linkedCarbon: '',
-     *         anomerCarbon: '',
+     *         donorPosition: '',
+     *         acceptorPosition: '',
      *         linkageType:
      *       }
      *     ]
@@ -464,16 +464,16 @@ export default class Sugar{
 
 
     /**
-     * The actual size of the sugar in terms of nodes.
+     * The actual size of the Glycan in terms of nodes.
      * Each monosaccharide and substituent count as 1
-     * @returns {number} The size of the sugar
+     * @returns {number} The size of the Glycan
      */
     size(){
         return this.graph.nodes().length;
     }
 
     /**
-     * Clear the sugar object and set Root to undefined.
+     * Clear the Glycan object and set Root to undefined.
      * Only the Id remains set (Id is immutable).
      */
     clear(){

@@ -5,11 +5,11 @@
 
 import Anomericity from "../../js/models/glycomics/dictionary/Anomericity";
 import Isomer from "../../js/models/glycomics/dictionary/Isomer";
-import LinkedCarbon from "../../js/models/glycomics/dictionary/LinkedCarbon";
+import DonorPosition from "../../js/models/glycomics/dictionary/DonorPosition";
 import MonosaccharideType from "../../js/views/glycomics/dictionary/MonosaccharideType";
 import RingType from "../../js/models/glycomics/dictionary/RingType";
-import AnomerCarbon from "../../js/models/glycomics/dictionary/AnomerCarbon";
-import Sugar from "../../js/models/glycomics/Sugar";
+import AcceptorPosition from "../../js/models/glycomics/dictionary/AcceptorPosition";
+import Glycan from "../../js/models/glycomics/Glycan";
 import GlycoCTWriter from "../../js/models/io/glycoCT/GlycoCTWriter";
 import Monosaccharide from "../../js/models/glycomics/nodes/Monosaccharide";
 import GlycosidicLinkage from "../../js/models/glycomics/linkages/GlycosidicLinkage";
@@ -28,9 +28,9 @@ const ringExceptions = ["Kdn", "KdnNAc", "KdnGc", "KdnN", "Kdo", "Fru"];
 QUnit.module("Test GlycoCTWriterobject", {
 });
 
-QUnit.test( "Test empty sugar" , function( assert ) {
-    var sugar = new Sugar("Sugar");
-    var writer = new GlycoCTWriter(sugar);
+QUnit.test( "Test empty glycan" , function( assert ) {
+    var glycan = new Glycan("Glycan");
+    var writer = new GlycoCTWriter(glycan);
     var formula = writer.exportGlycoCT();
     assert.ok(formula === "", 'Check empty formula');
 });
@@ -38,9 +38,9 @@ QUnit.test( "Test empty sugar" , function( assert ) {
 
 QUnit.test( "Test one node" , function( assert ) {
     var root = new Monosaccharide("n1",MonosaccharideType.Gal,Anomericity.ALPHA, Isomer.D, RingType.P);
-    var sugar = new Sugar("Sugar", root);
+    var glycan = new Glycan("Glycan", root);
     var tree = {"depth":0,"node":root};
-    var writer = new GlycoCTWriter(sugar, tree);
+    var writer = new GlycoCTWriter(glycan, tree);
     var formula = writer.exportGlycoCT();
     assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5", 'Check one node');
 });
@@ -48,19 +48,19 @@ QUnit.test( "Test one node" , function( assert ) {
 
 QUnit.test( "Test three nodes" , function( assert ) {
     var root = new Monosaccharide("n1",MonosaccharideType.Gal,Anomericity.ALPHA, Isomer.D, RingType.P);
-    var sugar = new Sugar("Sugar", root);
+    var glycan = new Glycan("Glycan", root);
 
     var n2 = new Monosaccharide("n2",MonosaccharideType.Man, Anomericity.BETA, Isomer.L, RingType.F);
     var n3 = new Monosaccharide("n3",MonosaccharideType.Glc, Anomericity.UNDEFINED, Isomer.UNDEFINED, RingType.UNDEFINED);
 
-    var e1 = new GlycosidicLinkage("e1", root, n2, AnomerCarbon.ONE, LinkedCarbon.FOUR);
-    var e2 = new GlycosidicLinkage("e2", n2, n3, AnomerCarbon.UNDEFINED, LinkedCarbon.UNDEFINED);
+    var e1 = new GlycosidicLinkage("e1", root, n2, AcceptorPosition.ONE, DonorPosition.FOUR);
+    var e2 = new GlycosidicLinkage("e2", n2, n3, AcceptorPosition.UNDEFINED, DonorPosition.UNDEFINED);
 
-    sugar.addMonosaccharide(n2, e1);
-    sugar.addMonosaccharide(n3, e2);
+    glycan.addMonosaccharide(n2, e1);
+    glycan.addMonosaccharide(n3, e2);
 
     var tree = {"depth":0,"node":root,"children":[{"depth":1,"node":n2,"parent":{"node":root},"children":[{"depth":2,"node":n3,"parent":{"node":n2}}]}]};
-    var writer = new GlycoCTWriter(sugar, tree);
+    var writer = new GlycoCTWriter(glycan, tree);
     var formula = writer.exportGlycoCT();
     assert.ok(formula === "RES\n1b:a-dgal-HEX-1:5\n2b:b-lman-HEX-1:4\n3b:x-xglc-HEX-x:x\nLIN\n1:1o(4+1)2d\n2:2o(-1+1)3d", 'Check two nodes');
 });
@@ -73,9 +73,9 @@ QUnit.test( "Test three nodes" , function( assert ) {
 QUnit.test("Single monosaccharide kind", function(assert) {
     for (var monoType of MonosaccharideType) {
         var node = new Monosaccharide("id", monoType, Anomericity.ALPHA, Isomer.D, RingType.F);
-        var sugar = new Sugar("Sugar", node);
+        var glycan = new Glycan("Glycan", node);
         var tree = {"depth": 0, "node": node};
-        var writer = new GlycoCTWriter(sugar, tree);
+        var writer = new GlycoCTWriter(glycan, tree);
         var formula = writer.exportGlycoCT();
 
         if (monoType.name.substring(monoType.name.length - 3) !== "NAc" &&
@@ -105,9 +105,9 @@ QUnit.test("Single monosaccharide kind", function(assert) {
 QUnit.test("Monosaccharide + Substituant", function(assert) {
     for (var monoType of MonosaccharideType) {
         var node = new Monosaccharide("id", monoType, Anomericity.ALPHA, Isomer.D, RingType.F);
-        var sugar = new Sugar("Sugar", node);
+        var glycan = new Glycan("Glycan", node);
         var tree = {"depth": 0, "node": node};
-        var writer = new GlycoCTWriter(sugar, tree);
+        var writer = new GlycoCTWriter(glycan, tree);
         var formula = writer.exportGlycoCT();
 
         var checkFormula;
@@ -198,11 +198,11 @@ QUnit.test("Substituents", function(assert) {
     {
         var node = new Monosaccharide("id", MonosaccharideType.Hex, Anomericity.ALPHA, Isomer.D, RingType.F);
         var sub = new Substituent("id1", subType);
-        var link = new SubstituentLinkage("id2", node, sub, LinkedCarbon.ONE);
-        var sugar = new Sugar("Sugar", node);
-        sugar.addSubstituent(sub, link);
+        var link = new SubstituentLinkage("id2", node, sub, DonorPosition.ONE);
+        var glycan = new Glycan("Glycan", node);
+        glycan.addSubstituent(sub, link);
         var tree = {"depth": 0, "node": node, "children": [{"depth":1, "node":sub, "parent":{"node":node}}]};
-        var writer = new GlycoCTWriter(sugar, tree);
+        var writer = new GlycoCTWriter(glycan, tree);
         var formula = writer.exportGlycoCT();
 
         var checkFormula = "RES\n1b:a-HEX-1:4\n2s:"+SubstituentsGlycoCT[subType.name].glycoct+"\nLIN\n1:1d(1+1)2n";
@@ -212,13 +212,3 @@ QUnit.test("Substituents", function(assert) {
     }
 });
 
-/*QUnit.test("Repeating Units", function(assert) {
-    var root = new Monosaccharide("root",MonosaccharideType.Hex, Anomericity.ALPHA, Isomer.D, RingType.F);
-    root.node.repeatingUnit = new RepeatingUnit("rep1",[root],0,5,root,root);
-    var sugar = new Sugar("Sugar",root);
-    var tree = {"depth": 0, "node": root};
-    var writer = new GlycoCTWriter(sugar, tree);
-    var formula = writer.exportGlycoCT();
-    var checkFormula = "RES\n1r:r1\nREP\nREP1:2o(-1+1)2d=0-5\nRES\n2b:a-HEX-1:4";
-    assert.ok(formula === checkFormula, "Only one node repeated");
-});*/

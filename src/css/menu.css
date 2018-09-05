@@ -153,7 +153,7 @@
 }
 
 
-#anomericityTitleChoice, .choiceAnomericity, #isomerTitleChoice, .choiceIsomer, #linkedCarbonTitleChoice, .choiceLinkedCarbon {
+#anomericityTitleChoice, .choiceAnomericity, #isomerTitleChoice, .choiceIsomer, #donorPositionTitleChoice, .choiceDonorPosition {
     fill:#cc0000; !important;
 }
 

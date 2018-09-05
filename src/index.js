@@ -11,10 +11,10 @@ import GraphNode from './js/models/dataStructure/GraphNode';
 
 //Glycomics Structure
 //Dictionary
-import AnomerCarbon from './js/models/glycomics/dictionary/AnomerCarbon';
+import AcceptorPosition from './js/models/glycomics/dictionary/AcceptorPosition';
 import Anomericity from './js/models/glycomics/dictionary/Anomericity';
 import Isomer from './js/models/glycomics/dictionary/Isomer';
-import LinkedCarbon from './js/models/glycomics/dictionary/LinkedCarbon';
+import DonorPosition from './js/models/glycomics/dictionary/DonorPosition';
 import MonosaccharideType from './js/views/glycomics/dictionary/MonosaccharideType';
 import RingType from './js/models/glycomics/dictionary/RingType';
 import SubstituentType from './js/models/glycomics/dictionary/SubstituentType';
@@ -32,8 +32,8 @@ import SubstituentLinkage from './js/models/glycomics/linkages/SubstituentLinkag
 import Monosaccharide from './js/models/glycomics/nodes/Monosaccharide';
 import Substituent from './js/models/glycomics/nodes/Substituent';
 
-//Sugar
-import Sugar from './js/models/glycomics/Sugar';
+//Glycan
+import Glycan from './js/models/glycomics/Glycan';
 import RepeatingUnit from './js/models/glycomics/RepeatingUnit';
 
 //IO
@@ -43,13 +43,10 @@ import NodeComparator from './js/models/io/NodeComparator';
 import ImageExporter from './js/models/io/ImageExporter';
 
 
-//Controller
-import Controller from './js/controllers/Controller';
 
-
-export { Graph, GraphEdge, GraphNode, AnomerCarbon, Anomericity, Isomer, 
-    LinkedCarbon, MonosaccharideType, RingType, Monosaccharide, SubstituentType, 
-    GlycosidicLinkage, SubstituentLinkage, Substituent, Sugar, GlycoCTParser,
-    GlycoCTWriter, GlycoCTSubstituents, NodeComparator, RepeatingUnit, Controller,
+export { Graph, GraphEdge, GraphNode, AcceptorPosition, Anomericity, Isomer,
+    DonorPosition, MonosaccharideType, RingType, Monosaccharide, SubstituentType, 
+    GlycosidicLinkage, SubstituentLinkage, Substituent, Glycan, GlycoCTParser,
+    GlycoCTWriter, GlycoCTSubstituents, NodeComparator, RepeatingUnit,
     SubstituentsPositions, MonosaccharideGlycoCT, QuickModeMonosaccharides,
     Structures, ImageExporter};

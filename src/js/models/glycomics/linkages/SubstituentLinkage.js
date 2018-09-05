@@ -3,32 +3,32 @@
  * Version: 0.0.1
  */
 import Edge from '../../dataStructure/GraphEdge';
-import LinkedCarbon from '../dictionary/LinkedCarbon';
+import DonorPosition from '../dictionary/DonorPosition';
 
 
 export default class SubstituentLinkage extends Edge{
-    constructor(id,target,source,linkedCarbon){
+    constructor(id,target,source,donorPosition){
         super(id,target,source);
 
-        if(linkedCarbon instanceof LinkedCarbon){
-            this._linkedCarbon = linkedCarbon;
-        } else if(typeof linkedCarbon == 'undefined') {
-            this._linkedCarbon = LinkedCarbon.UNDEFINED;
+        if(donorPosition instanceof DonorPosition){
+            this._donorPosition = donorPosition;
+        } else if(typeof donorPosition == 'undefined') {
+            this._donorPosition = DonorPosition.UNDEFINED;
         } else {
-            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+            throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
         }
     }
 
-    get linkedCarbon(){
-        return this._linkedCarbon;
+    get donorPosition(){
+        return this._donorPosition;
     }
 
-    set linkedCarbon(linkedCarbon){
-        if(linkedCarbon instanceof LinkedCarbon) {
-            this._linkedCarbon = linkedCarbon;
+    set donorPosition(donorPosition){
+        if(donorPosition instanceof DonorPosition) {
+            this._donorPosition = donorPosition;
         } else {
-            throw "The Linked Carbon must be LinkedCarbon type. Please use the enum under src/js/glycomics/dictionary/LinkedCarbonTest.js";
+            throw "The Donor Position must be DonorPosition type. Please use the enum under src/js/glycomics/dictionary/DonorPosition.js";
         }
-        return linkedCarbon;
+        return donorPosition;
     }
 }

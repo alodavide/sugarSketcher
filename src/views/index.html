@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="../css/menu.css">
     <script type="text/javascript" src="../js/views/jquery.min.js"></script>
     <script type="text/javascript" src="../js/views/lodash.js"></script>
+    <script type="text/javascript" src="../js/sb.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="../js/views/d3.superformula.min.js"></script>
+    <script type="text/javascript" src="../js/views/app.js"></script>
+    <script type="text/javascript" src="../js/views/eventManager.js"></script>
+    <script type="text/javascript" src="../js/views/menu.js"></script>
+    <script type="text/javascript" src="../js/views/visualization.js"></script>
+    <script type="text/javascript" src="../js/views/chart.js"></script>
 </head>
 
 <body>
@@ -117,8 +125,8 @@
         <g id="chart">
             <g id="actionsCarbons">
                 <rect width="50" height="40" class="bar" id="carbonsHelp" x="-80" y="0" fill="#505656"></rect>
-                <rect width="490" height="40" y="0" x="0" rx="15" ry="15" id="anomerCarbonTitleChoice" class="bar choice"></rect>
-                <rect width="490" height="40" y="0" x="510" rx="15" ry="15" id="linkedCarbonTitleChoice" class="bar choice"></rect>
+                <rect width="490" height="40" y="0" x="0" rx="15" ry="15" id="acceptorPositionTitleChoice" class="bar choice"></rect>
+                <rect width="490" height="40" y="0" x="510" rx="15" ry="15" id="donorPositionTitleChoice" class="bar choice"></rect>
                 <rect width="40" height="40" class="bar" id="cancelChoiceCarbon" x="1010" y="0" fill="#505656"></rect>
                 <rect width="40" height="40" class="bar cancelResidue" x="1050" y="0" fill="#505656"></rect>
                 <rect width="1000" class="bar" height="30" id="carbonsMessageHelp" x="0" y="40" fill="#ffffff"></rect>
@@ -126,8 +134,8 @@
             <g id="labelsCarbons">
                 <text class="label carbonsLabel" x="-55" y="8">Help</text>
                 <text id="carbonsLabelHelp" class="label helpLabel" x="500" y="50">Hover blocks and select a value in each one to continue</text>
-                <text id="labelAnomerCarbonTitle" class="label" x="245" y="8">Anomer Carbon</text>
-                <text id ="labelLinkedCarbonTitle" class="label" x="755" y="8">Linked Carbon</text>
+                <text id="labelAcceptorPositionTitle" class="label" x="245" y="8">Acceptor Position</text>
+                <text id ="labelDonorPositionTitle" class="label" x="755" y="8">Donor Position</text>
                 <text class="label cancelLabel" x="1030" y="8"><<</text>
                 <text class="label cancelLabel" x="1070" y="8">X</text>
             </g>
@@ -164,12 +172,12 @@
     <svg id="svgQuickInfos">
         <g id="quickActions">
             <rect width="490" height="40" y="0" x="0" rx="15" ry="15" id="quickAnomericityTitleChoice" class="bar choice"></rect>
-            <rect width="490" height="40" y="0" x="510" rx="15" ry="15" id="quickLinkedCarbonTitleChoice" class="bar choice"></rect>
+            <rect width="490" height="40" y="0" x="510" rx="15" ry="15" id="quickDonorPositionTitleChoice" class="bar choice"></rect>
             <rect id="cancelQuickInfos" width="40" x="1010" height="40" class="bar" fill="#505656"></rect>
         </g>
         <g id="quickLabels">
             <text id ="quickLabelAnomericityTitle" class="label" x="245" y="8">Anomericity</text>
-            <text id ="quickLabelLinkedCarbonTitle" class="label" x="755" y="8">Linked Carbon</text>
+            <text id ="quickLabelDonorPositionTitle" class="label" x="755" y="8">Donor Position</text>
             <text class="label cancelLabel" x="1030" y="8"><<</text>
         </g>
     </svg>
@@ -186,16 +194,6 @@
     <div id="copyNode">Copy</div>
     <div id="pasteNode">Paste</div>
 </div>
-<script src="../js/sb.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="../js/views/d3.superformula.min.js"></script>
-<script src="../js/views/app.js"></script>
-<script src="../js/views/eventManager.js"></script>
-<script src="../js/views/menu.js"></script>
-<script src="../js/views/visualization.js"></script>
-<script src="../js/views/chart.js"></script>
-
-
 <svg id="svgMenu2">
     <g id="chart">
         <g id="actions2">

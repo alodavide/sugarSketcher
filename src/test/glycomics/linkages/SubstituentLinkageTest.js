@@ -4,7 +4,7 @@
  */
 
 import SubstituentLinkage from "../../../js/models/glycomics/linkages/SubstituentLinkage";
-import LinkedCarbon from "../../../js/models/glycomics/dictionary/LinkedCarbon";
+import DonorPosition from "../../../js/models/glycomics/dictionary/DonorPosition";
 import Node from "../../../js/models/dataStructure/GraphNode";
 
 QUnit.module("Test SubstituentLinkage object", {
@@ -15,34 +15,34 @@ QUnit.test( "Create new Substituents linkage" , function( assert ) {
     var source = new Node('source');
     var target = new Node('target');
     
-    var edge = new SubstituentLinkage('test',source,target,LinkedCarbon.ONE);
+    var edge = new SubstituentLinkage('test',source,target,DonorPosition.ONE);
 
-    assert.ok(edge.linkedCarbon === LinkedCarbon.ONE,"Correct LinkedCarbon");
-    assert.ok(edge.linkedCarbon.value === 1,"Correct LinkedCarbon Value");
-    assert.notOk(edge.linkedCarbon.value === LinkedCarbon.SIX,"Uncorrect LinkedCarbon");
-    assert.notOk(edge.linkedCarbon.value === 3,"Uncorrect LinkedCarbon value");
+    assert.ok(edge.donorPosition === DonorPosition.ONE,"Correct DonorPosition");
+    assert.ok(edge.donorPosition.value === 1,"Correct DonorPosition Value");
+    assert.notOk(edge.donorPosition.value === DonorPosition.SIX,"Uncorrect DonorPosition");
+    assert.notOk(edge.donorPosition.value === 3,"Uncorrect DonorPosition value");
 
-    var edge2 = new SubstituentLinkage('test',source,target,LinkedCarbon.UNDEFINED);
-    assert.ok(edge2.linkedCarbon === LinkedCarbon.UNDEFINED,"Correct LinkedCarbon undefined");
-    assert.ok(edge2.linkedCarbon.value === 'undefined',"Correct LinkedCarbon undefined Value");
-    assert.notOk(edge2.linkedCarbon.value === 3,"Uncorrect value undefined");
+    var edge2 = new SubstituentLinkage('test',source,target,DonorPosition.UNDEFINED);
+    assert.ok(edge2.donorPosition === DonorPosition.UNDEFINED,"Correct DonorPosition undefined");
+    assert.ok(edge2.donorPosition.value === 'undefined',"Correct DonorPosition undefined Value");
+    assert.notOk(edge2.donorPosition.value === 3,"Uncorrect value undefined");
 
     var edge3 = new SubstituentLinkage('test',source,target);
-    assert.ok(edge3.linkedCarbon === LinkedCarbon.UNDEFINED,"Correct LinkedCarbon undefined");
-    assert.ok(edge3.linkedCarbon.value === 'undefined',"Correct LinkedCarbon undefined Value");
-    assert.notOk(edge3.linkedCarbon.value === 3,"Uncorrect value undefined 2");
+    assert.ok(edge3.donorPosition === DonorPosition.UNDEFINED,"Correct DonorPosition undefined");
+    assert.ok(edge3.donorPosition.value === 'undefined',"Correct DonorPosition undefined Value");
+    assert.notOk(edge3.donorPosition.value === 3,"Uncorrect value undefined 2");
 
-    var edge4 = new SubstituentLinkage('test',source,target,LinkedCarbon.ONE);
-    assert.ok(edge4.linkedCarbon === LinkedCarbon.ONE,"Correct LinkedCarbon 4");
-    assert.ok(edge4.linkedCarbon.value === 1,"Correct LinkedCarbon value 4");
-    assert.notOk(edge4.linkedCarbon.value === LinkedCarbon.SIX,"Uncorrect LinkedCarbon 4");
-    assert.notOk(edge4.linkedCarbon.value === 3,"Uncorrect LinkedCarbon value 4");
+    var edge4 = new SubstituentLinkage('test',source,target,DonorPosition.ONE);
+    assert.ok(edge4.donorPosition === DonorPosition.ONE,"Correct DonorPosition 4");
+    assert.ok(edge4.donorPosition.value === 1,"Correct DonorPosition value 4");
+    assert.notOk(edge4.donorPosition.value === DonorPosition.SIX,"Uncorrect DonorPosition 4");
+    assert.notOk(edge4.donorPosition.value === 3,"Uncorrect DonorPosition value 4");
 
-    edge4.linkedCarbon = LinkedCarbon.TWO;
-    assert.ok(edge4.linkedCarbon === LinkedCarbon.TWO,"Correct LinkedCarbon after set");
-    assert.ok(edge4.linkedCarbon.value === 2,"Correct LinkedCarbon value after set");
-    assert.notOk(edge4.linkedCarbon === LinkedCarbon.ONE,"Uncorrected LinkedCarbon after set");
-    assert.notOk(edge4.linkedCarbon.value === 1,"Correct LinkedCarbon value after set");
+    edge4.donorPosition = DonorPosition.TWO;
+    assert.ok(edge4.donorPosition === DonorPosition.TWO,"Correct DonorPosition after set");
+    assert.ok(edge4.donorPosition.value === 2,"Correct DonorPosition value after set");
+    assert.notOk(edge4.donorPosition === DonorPosition.ONE,"Uncorrected DonorPosition after set");
+    assert.notOk(edge4.donorPosition.value === 1,"Correct DonorPosition value after set");
 
 });
 
@@ -68,6 +68,6 @@ QUnit.test( "Create new Substituent linkage Error Linkage" , function(assert) {
 
     assert.raises(function(){
         var s =new SubstituentLinkage('test',source,target);
-        s.linkedCarbon = 'ciao';
+        s.donorPosition = 'ciao';
     });
 });

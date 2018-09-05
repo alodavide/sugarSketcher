@@ -15,7 +15,7 @@ $(document).mousemove( function(e) { // Event fired on mouse move
 function updateTreeVisualization(newLink) {
     // If the tree is empty, we just initialize it with the node as a root
     if (typeof newLink === 'undefined') {
-        treeData = {"node":sugar.getRootNode(), "children":[]};
+        treeData = {"node":glycan.getRootNode(), "children":[]};
     } else { // If tree already has a root, add the node in the tree
         searchAndAddNodeInTree(treeData, newLink);
     }
@@ -52,9 +52,9 @@ function updateExistingNode() {
     var anomericity = getAnomericityWithSelection(infosTable[3]); // Anomericity
     var isomer = getIsomerWithSelection(infosTable[4]); // Isomer
     var ringType = getRingTypeWithSelection(infosTable[5]); // Ring type
-    var linkedCarbon = getLinkedCarbonWithSelection(infosTable[6]); // Linked carbon
-    var anomerCarbon = getAnomerCarbonWithSelection(infosTable[7]); // Anomer carbon
-    var monoToUpdate = sugar.getNodeById(clickedNode.id); // Get the node we want to update in the graph
+    var donorPosition = getDonorPositionWithSelection(infosTable[6]); // Donor position
+    var acceptorPosition = getAcceptorPositionWithSelection(infosTable[7]); // Acceptor position
+    var monoToUpdate = glycan.getNodeById(clickedNode.id); // Get the node we want to update in the graph
     monoToUpdate.anomericity = anomericity; // Update anomericity
     monoToUpdate.ringType = ringType; // Update ring type
     monoToUpdate.isomer = isomer; // Update isomer
@@ -66,18 +66,18 @@ function updateExistingNode() {
     monoToUpdate.monosaccharideType = newMonoType; // Update monosaccharide type
     if (monoToUpdate == treeData.node)
     {
-        rootLinkedCarbon = linkedCarbon;
-        rootAnomerCarbon = anomerCarbon;
+        rootDonorPosition = donorPosition;
+        rootAcceptorPosition = acceptorPosition;
     }
     else
     {
         var linkToUpdate = findLinkForMono(monoToUpdate); // Get the link to update (if exists)
-        var prevLinkedCarbon = linkToUpdate.linkedCarbon.value;
+        var prevDonorPosition = linkToUpdate.donorPosition.value;
         if (linkToUpdate != null) {
-            linkToUpdate.linkedCarbon = linkedCarbon; // Update linked carbon
-            linkToUpdate.anomerCarbon = anomerCarbon; // Update anomer carbon
+            linkToUpdate.donorPosition = donorPosition; // Update donor position
+            linkToUpdate.acceptorPosition = acceptorPosition; // Update acceptor position
         }
-        moveNodeAndChildren(findNodeInTree(treeData,monoToUpdate),XYvalues[linkedCarbon.value][1] - XYvalues[prevLinkedCarbon][1], XYvalues[linkedCarbon.value][0] - XYvalues[prevLinkedCarbon][0])
+        moveNodeAndChildren(findNodeInTree(treeData,monoToUpdate),XYvalues[donorPosition.value][1] - XYvalues[prevDonorPosition][1], XYvalues[donorPosition.value][0] - XYvalues[prevDonorPosition][0])
     }
     updateNodeInTree(treeData,monoToUpdate); // Update the node in the tree
 }
