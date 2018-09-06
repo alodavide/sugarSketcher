@@ -694,11 +694,15 @@ function updateMenu(chosenDivision) {
                 return d.display_division;
             });
     } else { // If we are displaying colors
+        var dropShape = d3.superformula()
+         .type("drop")
+         .size(2500)
+         .segments(3600);
         d3.select("#svgMenu").style("height", "50px"); // Update height to show circles and labels of monosaccharides
-        bars.enter().append("circle")
-            .attr("cy", 20)
-            .attr("cx", function (d, i) {
-                return menuDimensions.barWidth * i + menuDimensions.barWidth/2;
+        bars.enter().append("path")
+            .attr("d", dropShape)
+            .attr('transform', function(d, i) {
+                return "translate("+ parseInt(menuDimensions.barWidth*i+menuDimensions.barWidth/2)+",30) rotate(90)";
             })
             .attr("id", function (d) {
                 return d.division;
