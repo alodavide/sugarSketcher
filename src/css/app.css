@@ -86,13 +86,11 @@ div.tooltip {
     opacity:0;
 }
 
-#footer {
+#header {
     background-color: #eeeeee;
     font-family: Tahoma, Arial;
-    position: fixed;
     left:0;
     width:100%;
-    bottom: 0;
     height: 3.5em;
     text-align: center;
 }
@@ -100,6 +98,7 @@ div.tooltip {
 .expasyLogo{
     float: left;
     width: 250px;
+    padding-top: 10px;
 }
 
 .ibLogo{
@@ -107,8 +106,17 @@ div.tooltip {
     width: 100px;
 }
 
-.centerFooter{
-    font-size:14px;
+.canvas {
+    margin-top: 10px;
+}
+
+.centreHeader{
+    padding-top: 17px;
+    font-size:22px;
     display: inline-block;
     margin: 0 auto;
+}
+
+body {
+    margin: 0px;	
 }
