@@ -14,6 +14,9 @@ var quickIsomer = "";
 var quickRingType = "";
 var quickAcceptorPosition = "";
 
+var smilesinchiconvertbackendurl = "http://127.0.0.1:8889/getinchismiles.cgi" //local
+//var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
+
 // Function called when document is ready
 
 $(document).ready(function() {
@@ -240,6 +243,10 @@ var menu2Action = [
             division: "typeFormula",
             display_division: "Import"
         }]
+    },
+    {
+        division: "inchismiles",
+        display_division: "InChI+InChIKey+SMILES",
     }
     ];
 
@@ -531,11 +538,11 @@ function updateMenu(chosenDivision) {
     var textNodes2 = labels2.selectAll("text").data(menu2Action);
 
     bars2.enter().append("rect")
-        .attr("width", 1000 / 3)
+        .attr("width", 1000 / 4)
         .attr("height", 40)
         .attr("y", 0)
         .attr("x", function (d, i) {
-            return (1000 / 3) * i;
+            return (1000 / 4) * i;
         })
         .attr("id", function (d) {
             return d.division;
@@ -566,6 +573,37 @@ function updateMenu(chosenDivision) {
 
                 d3.select("#structuresDiv").style("display", "block");
             }
+            else if (d.division == "inchismiles")
+            {
+                var writer = new sb.GlycoCTWriter(glycan, treeData);
+                var glycoctVal = writer.exportGlycoCT();
+                d3.xhr(smilesinchiconvertbackendurl)
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .post("structure=" + encodeURIComponent(glycoctVal), function(error, response){
+                        d3.select("#formula").style("display","block");
+                        d3.select("#validateFormula").style("display", "none");
+                        d3.select("#structuresDiv").style("display", "none");
+                        var inchismilesText = response.responseText;
+                        $('#formula').val(inchismilesText);
+                        $('#formula').select();
+                        $('#formula').focus();        
+                        try {
+                            var successful = document.execCommand('copy');
+                            d3.select("#copyMsg")
+                                .transition(1000)
+                                .style("color", "green")
+                                .style("opacity", 1)
+                                .text("The formula has been copied to the Clipboard.");
+                        } catch (err) {
+                            d3.select("#copyMsg")
+                                .transition(1000)
+                                .style("color", "black")
+                                .style("opacity", 1)
+                                .text("Please use Ctrl+C.");
+                        }
+                        d3.select("#validateFormula").style("display", "none");
+                });
+            }
         }).on("mouseover", function (d) {
         // On hover of addNode, we display its two subdivisions
         if (d.division == "io") {
@@ -574,15 +612,15 @@ function updateMenu(chosenDivision) {
                 manageHoverIO(d, actions2);
                 if (labels2.selectAll("text")[0][2])
                     labels2.selectAll("text")[0][2].remove();
-                labels2.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 9000 / 12).attr("y", 8);
-                labels2.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 11000 / 12).attr("y", 8);
+                labels2.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 9000 / 16).attr("y", 8);
+                labels2.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 11000 / 16).attr("y", 8);
             }
         }
     });
     textNodes2.enter().append("text")
         .attr("class", "label")
         .attr("x", function (d, i) {
-            var barWidth = 333.3333333333333;
+            var barWidth = 250;
             return (barWidth * i) + (barWidth / 2);
         })
         .attr("y", function () {

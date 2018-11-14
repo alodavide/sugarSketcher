@@ -298,7 +298,7 @@ function manageHoverIO(menuItem,actions)
     actions.append("rect")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[0].division)
-        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("width", 1000/8) // Width is 1/6 of the total menu width
         .attr("height", 40) // Height is the same as the menu one
         .attr("x", x)
         .attr("y", y)
@@ -352,9 +352,9 @@ function manageHoverIO(menuItem,actions)
     actions.append("rect")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[1].division)
-        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("width", 1000/8) // Width is 1/6 of the total menu width
         .attr("height", 40) // Height is the same as the menu one
-        .attr("x", x+1000/6) // Place this rect at the same x as the addNode title
+        .attr("x", x+1000/8) // Place this rect at the same x as the addNode title
         .attr("y", y)
         .attr("rx", 15) // Corners for the rect
         .attr("ry", 15) // Corners for the rect
