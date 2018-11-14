@@ -18,7 +18,7 @@ import SubstituentType from "../../js/models/glycomics/dictionary/SubstituentTyp
 import Substituent from "../../js/models/glycomics/nodes/Substituent";
 import SubstituentLinkage from "../../js/models/glycomics/linkages/SubstituentLinkage";
 import SubstituentsGlycoCT from "../../js/models/io/glycoCT/SubstituentsGlycoCT";
-import GlycoCTParser from "../../js/models/io/glycoCT/GlycoCTparser";
+import GlycoCTParser from "../../js/models/io/glycoCT/GlycoCTParser";
 import RepeatingUnit from "../../js/models/glycomics/RepeatingUnit";
 
 
