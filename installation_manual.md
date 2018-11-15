@@ -13,4 +13,4 @@
  - sudo dpkg -i marvin_linux_18.25.deb
 * deploy js app (2 options)
 a) edit menu.js (variable smilesinchiconvertbackendurl to correct backend url), build (gulp webpack) and copy js app files to designated location
-b) copy already buil js app files to designated location and edit sb.js (variable smilesinchiconvertbackendurl to correct backend url)
+b) copy already buil js app files to designated location and edit menu.js (variable smilesinchiconvertbackendurl to correct backend url)

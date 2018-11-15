@@ -14,8 +14,8 @@ var quickIsomer = "";
 var quickRingType = "";
 var quickAcceptorPosition = "";
 
-var smilesinchiconvertbackendurl = "http://127.0.0.1:8889/getinchismiles.cgi" //local
-//var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
+//var smilesinchiconvertbackendurl = "http://127.0.0.1:8889/getinchismiles.cgi" //local
+var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
 
 // Function called when document is ready
 
