@@ -71,7 +71,9 @@ inchikey=$(cat "${tmpoutdir}/sortinchikey")
 smiles=$(cat ${tmpoutdir}/*.smi)
 
 echo "${inchi}" > "./output"
+echo "" >> "./output"
 echo "${inchikey}" >> "./output"
+echo "" >> "./output"
 #echo "InChIKey=${inchikey}" >> "./output"	# Obabel InChIKey
 echo "SMILES=${smiles}" >> "./output"
 
