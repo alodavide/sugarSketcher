@@ -209,12 +209,13 @@ function manageHoverAddNode(menuItem,actions) {
     d3.select("#svgMenu").select("#addNode").remove(); // Remove the add Node rect
     d3.select("#repeatUnit").style("opacity", "0.2"); // Lower opacity of add Structure
     d3.select("#updateNode").style("opacity", "0.2"); // Lower opacity of update Node
+    d3.select("#help").style("opacity", "0.2"); // Lower opacity of update Node
 
     // Add Monosaccharide rect and label
     actions.append("rect")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[1].division)
-        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("width", 1000/8) // Width is 1/6 of the total menu width
         .attr("height", 40) // Height is the same as the menu one
         .attr("x", x) // Place this rect at the same x as the addNode title
         .attr("rx", 15) // Corners for the rect
@@ -238,8 +239,8 @@ function manageHoverAddNode(menuItem,actions) {
     actions.append("rect")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[0].division)
-        .attr("width", 1000/6).attr("height", 40)
-        .attr("x", 1000/6)
+        .attr("width", 1000/8).attr("height", 40)
+        .attr("x", 1000/8)
         .attr("rx", 15)
         .attr("ry", 15)
         .on("mouseout", function() {
@@ -298,7 +299,7 @@ function manageHoverIO(menuItem,actions)
     actions.append("rect")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[0].division)
-        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("width", 1000/8) // Width is 1/6 of the total menu width
         .attr("height", 40) // Height is the same as the menu one
         .attr("x", x)
         .attr("y", y)
@@ -352,9 +353,9 @@ function manageHoverIO(menuItem,actions)
     actions.append("rect")
         .attr("class", "bar choice")
         .attr("id", menuItem.subDivisions[1].division)
-        .attr("width", 1000/6) // Width is 1/6 of the total menu width
+        .attr("width", 1000/8) // Width is 1/6 of the total menu width
         .attr("height", 40) // Height is the same as the menu one
-        .attr("x", x+1000/6) // Place this rect at the same x as the addNode title
+        .attr("x", x+1000/8) // Place this rect at the same x as the addNode title
         .attr("y", y)
         .attr("rx", 15) // Corners for the rect
         .attr("ry", 15) // Corners for the rect
