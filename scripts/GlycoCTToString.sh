@@ -70,12 +70,13 @@ inchi=$(cat "${tmpoutdir}/inchis.txt")
 inchikey=$(cat "${tmpoutdir}/sortinchikey")
 smiles=$(cat ${tmpoutdir}/*.smi)
 
-echo "${inchi}" > "./output"
-echo "" >> "./output"
-echo "${inchikey}" >> "./output"
-echo "" >> "./output"
-#echo "InChIKey=${inchikey}" >> "./output"	# Obabel InChIKey
-echo "SMILES=${smiles}" >> "./output"
-
- 
-
+if [[ -z "${inchi}" ]];then
+  echo "Could not produce chemical codes. The structure should be fully defined." > "./output"
+else
+  echo "${inchi}" > "./output"
+  echo "" >> "./output"
+  echo "${inchikey}" >> "./output"
+  echo "" >> "./output"
+  #echo "InChIKey=${inchikey}" >> "./output"    # Obabel InChIKey
+  echo "SMILES=${smiles}" >> "./output"
+fi
