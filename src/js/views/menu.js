@@ -176,31 +176,31 @@ var colorDivisions = [{
     display_division: '#FFFFFF'
 }, {
     division: "blueColor",
-    display_division: '#0080FF'
+    display_division: '#0090BC'
 }, {
     division: "greenColor",
-    display_division: '#00FF00'
+    display_division: '#00A651'
 }, {
     division: "yellowColor",
-    display_division: '#FFD900'
+    display_division: '#FFD400'
 }, {
     division: "orangeColor",
-    display_division: '#FF8000'
+    display_division: '#F47920'
 }, {
     division: "pinkColor",
-    display_division: '#FF87C2'
+    display_division: '#F69EA1'
 }, {
     division: "purpleColor",
-    display_division: '#9E1FFF'
+    display_division: '#A54399'
 }, {
     division:"lightBlueColor",
-    display_division: '#96F2F7'
+    display_division: '#8FCCE9'
 }, {
     division:"brownColor",
-    display_division: '#977335'
+    display_division: '#A17A4D'
 }, {
     division:"redColor",
-    display_division: '#FF0000'
+    display_division: '#ED1C24'
 }];
 
 // Menu, stocking the divisions of our menu, and subdivisions
