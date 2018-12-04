@@ -3,7 +3,7 @@
  */
 
 
-import GlycoCTParser from "../../js/models/io/glycoCT/GlycoCTparser";
+import GlycoCTParser from "../../js/models/io/glycoCT/GlycoCTParser";
 import Anomericity from "../../js/models/glycomics/dictionary/Anomericity";
 import Isomer from "../../js/models/glycomics/dictionary/Isomer";
 import DonorPosition from "../../js/models/glycomics/dictionary/DonorPosition";

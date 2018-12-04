@@ -1613,42 +1613,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Glc: {
 	        shape: 'circle',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: false
 	    },
 	    Man: {
 	        shape: 'circle',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    Gal: {
 	        shape: 'circle',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: false
 	    },
 	    Gul: {
 	        shape: 'circle',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: false
 	    },
 	    Alt: {
 	        shape: 'circle',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    },
 	    All: {
 	        shape: 'circle',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: false
 	    },
 	    Tal: {
 	        shape: 'circle',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: false
 	    },
 	    Ido: {
 	        shape: 'circle',
-	        color: '#977335',
+	        color: '#A17A4D',
 	        bisected: false
 	    },
 	    HexNAc: {
@@ -1658,42 +1658,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    GlcNAc: {
 	        shape: 'square',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: false
 	    },
 	    ManNAc: {
 	        shape: 'square',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    GalNAc: {
 	        shape: 'square',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: false
 	    },
 	    GulNAc: {
 	        shape: 'square',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: false
 	    },
 	    AltNAc: {
 	        shape: 'square',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    },
 	    AllNAc: {
 	        shape: 'square',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: false
 	    },
 	    TalNAc: {
 	        shape: 'square',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: false
 	    },
 	    IdoNAc: {
 	        shape: 'square',
-	        color: '#977335',
+	        color: '#A17A4D',
 	        bisected: false
 	    },
 	    HexN: {
@@ -1703,42 +1703,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    GlcN: {
 	        shape: 'square',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: true
 	    },
 	    ManN: {
 	        shape: 'square',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: true
 	    },
 	    GalN: {
 	        shape: 'square',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: true
 	    },
 	    GulN: {
 	        shape: 'square',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: true
 	    },
 	    AltN: {
 	        shape: 'square',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: true
 	    },
 	    AllN: {
 	        shape: 'square',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: true
 	    },
 	    TalN: {
 	        shape: 'square',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: true
 	    },
 	    IdoN: {
 	        shape: 'square',
-	        color: '#977335',
+	        color: '#A17A4D',
 	        bisected: true
 	    },
 	    HexA: {
@@ -1748,42 +1748,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    GlcA: {
 	        shape: 'diamond',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: true
 	    },
 	    ManA: {
 	        shape: 'diamond',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: true
 	    },
 	    GalA: {
 	        shape: 'diamond',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: true
 	    },
 	    GulA: {
 	        shape: 'diamond',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: true
 	    },
 	    AltA: {
 	        shape: 'diamond',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: true
 	    },
 	    AllA: {
 	        shape: 'diamond',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: true
 	    },
 	    TalA: {
 	        shape: 'diamond',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: true
 	    },
 	    IdoA: {
 	        shape: 'diamond',
-	        color: '#977335',
+	        color: '#A17A4D',
 	        bisected: true
 	    },
 	    dHex: {
@@ -1793,27 +1793,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Qui: {
 	        shape: 'triangle',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: false
 	    },
 	    Rha: {
 	        shape: 'triangle',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    SixdAlt: {
 	        shape: 'triangle',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    },
 	    SixdTal: {
 	        shape: 'triangle',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: false
 	    },
 	    Fuc: {
 	        shape: 'triangle',
-	        color: '#FF0000',
+	        color: '#ED1C24',
 	        bisected: false
 	    },
 	    dHexNAc: {
@@ -1823,17 +1823,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    QuiNAc: {
 	        shape: 'triangle',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: true
 	    },
 	    RhaNAc: {
 	        shape: 'triangle',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: true
 	    },
 	    FucNAc: {
 	        shape: 'triangle',
-	        color: '#FF0000',
+	        color: '#ED1C24',
 	        bisected: true
 	    },
 	    ddHex: {
@@ -1843,32 +1843,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Oli: {
 	        shape: 'rectangle',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: false
 	    },
 	    Tyv: {
 	        shape: 'rectangle',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    Abe: {
 	        shape: 'rectangle',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: false
 	    },
 	    Par: {
 	        shape: 'rectangle',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    },
 	    Dig: {
 	        shape: 'rectangle',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: false
 	    },
 	    Col: {
 	        shape: 'rectangle',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: false
 	    },
 	    Pen: {
@@ -1878,22 +1878,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Ara: {
 	        shape: 'star',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    Lyx: {
 	        shape: 'star',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: false
 	    },
 	    Xyl: {
 	        shape: 'star',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: false
 	    },
 	    Rib: {
 	        shape: 'star',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    },
 	    Nonu: {
@@ -1903,27 +1903,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Kdn: {
 	        shape: 'diamond',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    Neu5Ac: {
 	        shape: 'diamond',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: false
 	    },
 	    Neu5Gc: {
 	        shape: 'diamond',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: false
 	    },
 	    Neu: {
 	        shape: 'diamond',
-	        color: '#977335',
+	        color: '#A17A4D',
 	        bisected: false
 	    },
 	    Sia: {
 	        shape: 'diamond',
-	        color: '#FF0000',
+	        color: '#ED1C24',
 	        bisected: false
 	    },
 	
@@ -1934,42 +1934,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Bac: {
 	        shape: 'Hexagon',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: false
 	    },
 	    LDManHep: {
 	        shape: 'Hexagon',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    Kdo: {
 	        shape: 'Hexagon',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: false
 	    },
 	    Dha: {
 	        shape: 'Hexagon',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: false
 	    },
 	    DDManHep: {
 	        shape: 'Hexagon',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    },
 	    MurNAc: {
 	        shape: 'Hexagon',
-	        color: '#9E1FFF',
+	        color: '#A54399',
 	        bisected: false
 	    },
 	    MurNGc: {
 	        shape: 'Hexagon',
-	        color: '#96F2F7',
+	        color: '#8FCCE9',
 	        bisected: false
 	    },
 	    Mur: {
 	        shape: 'Hexagon',
-	        color: '#977335',
+	        color: '#A17A4D',
 	        bisected: false
 	    },
 	
@@ -1980,27 +1980,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    Api: {
 	        shape: 'Pentagon',
-	        color: '#0080FF',
+	        color: '#0090BC',
 	        bisected: false
 	    },
 	    Fru: {
 	        shape: 'Pentagon',
-	        color: '#00FF00',
+	        color: '#00A651',
 	        bisected: false
 	    },
 	    Tag: {
 	        shape: 'Pentagon',
-	        color: '#FFD900',
+	        color: '#FFD400',
 	        bisected: false
 	    },
 	    Sor: {
 	        shape: 'Pentagon',
-	        color: '#FF8000',
+	        color: '#F47920',
 	        bisected: false
 	    },
 	    Psi: {
 	        shape: 'Pentagon',
-	        color: '#FF87C2',
+	        color: '#F69EA1',
 	        bisected: false
 	    }
 	});
