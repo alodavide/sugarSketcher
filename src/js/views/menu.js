@@ -594,9 +594,9 @@ function updateMenu(chosenDivision) {
                             inchismilesText = response.Error;
                         }
                         else{
-                            inchismilesText = "SMILES=" + response.SMILES + "\n\n"
-                            + "InChI=" + response.InChI + "\n\n"
-                            + "InChIKey=" + response.InChIKey
+                            inchismilesText = "InChI=" + response.InChI + "\n\n"
+                            + "InChIKey=" + response.InChIKey + "\n\n"
+                            + "SMILES=" + response.SMILES
                         }
                         
                         $('#formula').val(inchismilesText);
