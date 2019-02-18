@@ -15,7 +15,9 @@ var quickRingType = "";
 var quickAcceptorPosition = "";
 
 //var smilesinchiconvertbackendurl = "http://127.0.0.1:8889/getinchismiles.cgi" //local
-var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
+//var smilesinchiconvertbackendurl = "http://127.0.0.1:8000/convert" //local rest
+var smilesinchiconvertbackendurl = "http://147.251.253.249/glycoctconverter/convert"; //prod ceitec rest
+//var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
 
 // Function called when document is ready
 
@@ -580,13 +582,23 @@ function updateMenu(chosenDivision) {
             {
                 var writer = new sb.GlycoCTWriter(glycan, treeData);
                 var glycoctVal = writer.exportGlycoCT();
-                d3.xhr(smilesinchiconvertbackendurl)
+                d3.json(smilesinchiconvertbackendurl)
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .post("structure=" + encodeURIComponent(glycoctVal), function(error, response){
                         d3.select("#formula").style("display","block");
                         d3.select("#validateFormula").style("display", "none");
                         d3.select("#structuresDiv").style("display", "none");
-                        var inchismilesText = response.responseText;
+                        
+                        var inchismilesText = "";
+                        if("Error" in response){
+                            inchismilesText = response.Error;
+                        }
+                        else{
+                            inchismilesText = "SMILES=" + response.SMILES + "\n\n"
+                            + "InChI=" + response.InChI + "\n\n"
+                            + "InChIKey=" + response.InChIKey
+                        }
+                        
                         $('#formula').val(inchismilesText);
                         $('#formula').select();
                         $('#formula').focus();        
