@@ -580,6 +580,14 @@ function updateMenu(chosenDivision) {
             }
             else if (d.division == "inchismiles")
             {
+                d3.select("#formula").style("display","none");
+                d3.select("#validateFormula").style("display", "none");
+                d3.select("#copyMsg").style("display", "none");
+                d3.select("#structuresDiv").style("display", "none");
+                d3.select("#exportImage").style("display", "none");
+
+                d3.select("#loading").style("display", "block");
+                
                 var writer = new sb.GlycoCTWriter(glycan, treeData);
                 var glycoctVal = writer.exportGlycoCT();
                 d3.json(smilesinchiconvertbackendurl)
@@ -617,6 +625,7 @@ function updateMenu(chosenDivision) {
                                 .text("Please use Ctrl+C.");
                         }
                         d3.select("#validateFormula").style("display", "none");
+                        d3.select("#loading").style("display", "none");
                 });
             }
         }).on("mouseover", function (d) {
