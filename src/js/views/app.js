@@ -1,3 +1,9 @@
+function usedAsPlugin(){
+    return document.location.search.replace("?", "").toLowerCase().indexOf("plugin") >= 0 
+        && document.location.search.replace("?", "").toLowerCase().indexOf("plugin=false") == -1 
+        && document.location.search.replace("?", "").toLowerCase().indexOf("plugin=0") == -1;
+}
+
 var treeData = {};
 var shapes = {};
 var clickedNode = null;
@@ -7,7 +13,7 @@ var copiedNode = null;
 var rootDonorPosition, rootAcceptorPosition;
 
 const gap = 50; // Distance between two nodes
-const origin = [200, 600];
+const origin = [(usedAsPlugin())?70:200, 600];
 const circleRadius = 15; // Radius of a circle shape
 
 var ctrl; // Boolean if ctrl is held
@@ -170,7 +176,6 @@ function getSelectedNodeIndex(node)
     return -1;
 }
 
-
 var zoomListener = d3.behavior.zoom().scaleExtent([0.1, 3]).on("zoom", zoom);
 
 // Create the svgTree svg with fixed width and height
@@ -178,7 +183,7 @@ var vis = d3.select('#viz')
     .append('svg')
     .attr('id', 'svgTree')
     .attr('width', 1000)
-    .attr('height', 550)
+    .attr('height', (usedAsPlugin())?200:550)
     .call(zoomListener) // Listener for the svg
     .append("svg:g").attr("transform", "translate(50, 20)");
 
