@@ -15,11 +15,99 @@ var quickRingType = "";
 var quickAcceptorPosition = "";
 
 //var smilesinchiconvertbackendurl = "http://127.0.0.1:8889/getinchismiles.cgi" //local
-var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
+//var smilesinchiconvertbackendurl = "http://127.0.0.1:8000/convert" //local rest
+//var smilesinchiconvertbackendurl = "http://147.251.253.249/glycoctconverter/convert"; //prod ceitec rest old - deleted VM
+//var smilesinchiconvertbackendurl = "http://129.194.71.205/cgi-bin/sugarsketcher.cgi" //test
+var smilesinchiconvertbackendurl = "https://webchem.ncbr.muni.cz/glyconvert/api/convert"; //prod ceitec rest
+
+function usedAsPlugin(){
+    return document.location.search.replace("?", "").toLowerCase().indexOf("plugin") >= 0 
+        && document.location.search.replace("?", "").toLowerCase().indexOf("plugin=false") == -1 
+        && document.location.search.replace("?", "").toLowerCase().indexOf("plugin=0") == -1;
+}
+
+function convertToSmilesInChIInChIKey(onComplete){  
+    var writer = new sb.GlycoCTWriter(glycan, treeData);
+    var glycoctVal = writer.exportGlycoCT();
+    d3.json(smilesinchiconvertbackendurl)
+        .header("Content-Type", "application/x-www-form-urlencoded")
+        .post("structure=" + encodeURIComponent(glycoctVal), function(error, response){
+            d3.select("#formula").style("display","block");
+            d3.select("#validateFormula").style("display", "none");
+            d3.select("#structuresDiv").style("display", "none");
+            
+            var inchismilesText = "";
+            if("Error" in response){
+                inchismilesText = response.Error;
+            }
+            else{
+                inchismilesText = "InChI=" + response.InChI + "\n\n"
+                + "InChIKey=" + response.InChIKey + "\n\n"
+                + "SMILES=" + response.SMILES
+            }
+            
+            if(onComplete !== undefined){
+                onComplete(inchismilesText);
+            }
+    });
+}
+
+var partnerOrigin = null;
+
+function getDocumentHeight(){
+    var body = document.body,
+    html = document.documentElement;
+
+    return Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+}
+
+window.addEventListener('message', function(e) {
+    console.log(e);
+    if(e.data === undefined || e.data.command === undefined){
+        console.warn("SugarSketcher: Received unknown message via postMessage. Ignoring...");
+        return;
+    }
+    if(partnerOrigin == null){
+        partnerOrigin = e.origin;
+        console.log(`SugarSketcher: Setting partners origin: ${partnerOrigin}`);
+    }
+    switch(e.data.command){
+        case "ping": testCom(e);break;
+        case "import": console.log("SugarSketcher: Importing GlycoCT...");break;
+        case "export": console.log("SugarSketcher: Exporting GlycoCT...");break;
+        case "convertSMILESInChIInChIKey": console.log("SugarSketcher: Converting to SMILES+InChI+InChIKey...");break;
+        case "convertPDB": console.log("SugarSketcher: Converting to PDB...");break;
+        case "getSize": sendMsg("resize", {height: getDocumentHeight()}); break;
+        default: console.warn("SugarSketcher: Received unknown message via postMessage. Ignoring...");break;
+    }
+}, false);
+
+function sendMsg(cmd, data){
+    if(partnerOrigin == null){
+        console.warn("SugarSketcher: Partner origin unknown! Cannot send messages!");
+        return;
+    }
+    window.parent.postMessage({command: cmd, data: data}, partnerOrigin);
+}
+
+function testCom(evt){
+    console.log("in iframe");
+    console.log(evt.data);
+    console.log(evt.origin);
+    window.parent.postMessage(evt.data, evt.origin);
+}
 
 // Function called when document is ready
 
 $(document).ready(function() {
+    if (usedAsPlugin()){
+        $("#header").css("display", "none");
+        $("body").css("margin", "0px");
+        $("#structuresDiv").css("margin-bottom", "0px").css("height", "auto").css("padding-bottom", "5px");
+        $("#savedImg").css("display", "none");
+        $(".canvas").css("margin-top", "0px");
+    }
+    
     progress = 0;
     ctrl = false;
     exporting = false;
@@ -222,6 +310,9 @@ var menuAction = [{
     division: "updateNode",
     display_division: "Update Node",
     subDivisions: "shape"
+},{
+    division: "help",
+    display_division: "Help"
 }];
 
 var menu2Action = [
@@ -248,7 +339,20 @@ var menu2Action = [
         division: "inchismiles",
         display_division: "InChI+InChIKey+SMILES",
     }
+];
+
+if (usedAsPlugin()){
+    menu2Action = [
+        {
+            division: "addStructure",
+            display_division: "Load Structure"
+        },
+        {
+            division: "quickMode",
+            display_division: "Toggle Quick Mode"
+        },
     ];
+}
 
 
 //Managing displaying more rows for subs
@@ -276,7 +380,7 @@ substituentDisplayMore.on("click", function() {
             var currentXLabels = 90; // x to place labels
             var currentXRects = 0; // x to place rects
             moreSubs.selectAll("rect").data(subTypes.slice(currentIndex, currentIndex + 5), function(d){return d;}).enter().append("rect")
-                .attr("width", 180) // 1/5 of the menu
+                .attr("width", 100) // 1/5 of the menu
                 .attr("height", 40) // Fixed height
                 .attr("x",function() {
                     var tmp = currentXRects; // Temporary variable to stock current x of rects
@@ -538,11 +642,11 @@ function updateMenu(chosenDivision) {
     var textNodes2 = labels2.selectAll("text").data(menu2Action);
 
     bars2.enter().append("rect")
-        .attr("width", 1000 / 4)
+        .attr("width", 1000 / (usedAsPlugin()?2:4))
         .attr("height", 40)
         .attr("y", 0)
         .attr("x", function (d, i) {
-            return (1000 / 4) * i;
+            return (1000 / (usedAsPlugin()?2:4)) * i;
         })
         .attr("id", function (d) {
             return d.division;
@@ -572,36 +676,42 @@ function updateMenu(chosenDivision) {
                 d3.select("#copyMsg").style("display", "none");
 
                 d3.select("#structuresDiv").style("display", "block");
+
+                if (usedAsPlugin()){
+                    sendMsg("resize", {
+                        height: getDocumentHeight()
+                    });
+                }
             }
             else if (d.division == "inchismiles")
             {
-                var writer = new sb.GlycoCTWriter(glycan, treeData);
-                var glycoctVal = writer.exportGlycoCT();
-                d3.xhr(smilesinchiconvertbackendurl)
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .post("structure=" + encodeURIComponent(glycoctVal), function(error, response){
-                        d3.select("#formula").style("display","block");
-                        d3.select("#validateFormula").style("display", "none");
-                        d3.select("#structuresDiv").style("display", "none");
-                        var inchismilesText = response.responseText;
-                        $('#formula').val(inchismilesText);
-                        $('#formula').select();
-                        $('#formula').focus();        
-                        try {
-                            var successful = document.execCommand('copy');
-                            d3.select("#copyMsg")
-                                .transition(1000)
-                                .style("color", "green")
-                                .style("opacity", 1)
-                                .text("The formula has been copied to the Clipboard.");
-                        } catch (err) {
-                            d3.select("#copyMsg")
-                                .transition(1000)
-                                .style("color", "black")
-                                .style("opacity", 1)
-                                .text("Please use Ctrl+C.");
-                        }
-                        d3.select("#validateFormula").style("display", "none");
+                d3.select("#formula").style("display","none");
+                d3.select("#validateFormula").style("display", "none");
+                d3.select("#copyMsg").style("display", "none");
+                d3.select("#structuresDiv").style("display", "none");
+                d3.select("#exportImage").style("display", "none");
+
+                d3.select("#loading").style("display", "block");
+                convertToSmilesInChIInChIKey(function(inchismilesText){
+                    $('#formula').val(inchismilesText);
+                    $('#formula').select();
+                    $('#formula').focus();        
+                    try {
+                        var successful = document.execCommand('copy');
+                        d3.select("#copyMsg")
+                            .transition(1000)
+                            .style("color", "green")
+                            .style("opacity", 1)
+                            .text("The formula has been copied to the Clipboard.");
+                    } catch (err) {
+                        d3.select("#copyMsg")
+                            .transition(1000)
+                            .style("color", "black")
+                            .style("opacity", 1)
+                            .text("Please use Ctrl+C.");
+                    }
+                    d3.select("#validateFormula").style("display", "none");
+                    d3.select("#loading").style("display", "none");
                 });
             }
         }).on("mouseover", function (d) {
@@ -620,7 +730,7 @@ function updateMenu(chosenDivision) {
     textNodes2.enter().append("text")
         .attr("class", "label")
         .attr("x", function (d, i) {
-            var barWidth = 250;
+            var barWidth = 1000 / (usedAsPlugin()?2:4);
             return (barWidth * i) + (barWidth / 2);
         })
         .attr("y", function () {
@@ -669,7 +779,11 @@ function updateMenu(chosenDivision) {
                     infosTable.push(d.division);
                     updateMenu(d.division);
                 }
-                else if (d.division == "repeatUnit")
+                else if (d.division == "help"){
+		//Location on the help file
+		    window.open('doc/Tutorial_SugarSketcher_v5.pdf' , '_blank');
+		}               
+		else if (d.division == "repeatUnit")
                 {
                     if (glycan)
                     {
@@ -716,8 +830,8 @@ function updateMenu(chosenDivision) {
                 manageHoverAddNode(d, actions);
                 // Add the two labels for monosaccharide and substituents
                 labels.selectAll("text")[0][0].remove();
-                labels.append("text").attr("class", "label").text(d.subDivisions[1].display_division).attr("x", 1000 / 12).attr("y", 8);
-                labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 250).attr("y", 8);
+                labels.append("text").attr("class", "labelSmall").text(d.subDivisions[1].display_division).attr("x", 1000/16).attr("y", 11);
+                labels.append("text").attr("class", "label").text(d.subDivisions[0].display_division).attr("x", 20 +1000/6).attr("y", 8);
             }
         });
         textNodes.enter().append("text")
